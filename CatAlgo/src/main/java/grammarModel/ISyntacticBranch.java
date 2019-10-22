@@ -1,12 +1,10 @@
 package grammarModel;
 
-import propertyPoset.IPosetMaxChains;
-
 public interface ISyntacticBranch extends ISyntacticStructure {
 	
 	String getPosetFullName();
 	
-	IPosetMaxChains getPosetMaxChains();
+	ISyntacticChains getPosetMaxChains();
 	
 	String setPosetID();
 	

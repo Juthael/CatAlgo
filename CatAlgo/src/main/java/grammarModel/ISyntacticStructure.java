@@ -2,13 +2,11 @@ package grammarModel;
 
 import java.util.List;
 
-import propertyPoset.IPosetMaxChains;
-
 public interface ISyntacticStructure extends Cloneable {
 	
 	String getName();
 	
-	List<List<String>> getListOfChains();
+	List<List<String>> getListOfStringChains();
 	
 	List<Long> getListOfListIDs();
 	
@@ -16,7 +14,7 @@ public interface ISyntacticStructure extends Cloneable {
 	
 	ISyntacticStructure clone();
 	
-	IPosetMaxChains getPosetMaxChains();
+	ISyntacticChains getChains();
 	
 	String getPosetFullName();
 	
