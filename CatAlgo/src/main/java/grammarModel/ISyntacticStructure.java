@@ -3,21 +3,21 @@ package grammarModel;
 import java.util.List;
 
 public interface ISyntacticStructure extends Cloneable {
-	
+
 	String getName();
 	
-	List<List<String>> getListOfStringChains();
+	List<List<String>> getListOfChains();
 	
-	List<Long> getListOfListIDs();
+	List<Long> getListOfLeafIDs();
 	
 	ISyntacticChains getSyntacticChains();
 	
 	ISyntacticStructure clone();
 	
-	ISyntacticChains getChains();
+	IPosetMaxChains getPosetMaxChains();
 	
 	String getPosetFullName();
 	
 	List<ISyntacticStructure> getListOfComponents();
-
+	
 }

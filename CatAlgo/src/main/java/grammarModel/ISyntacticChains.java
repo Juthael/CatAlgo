@@ -1,21 +1,7 @@
 package grammarModel;
 
-import java.util.List;
+public interface ISyntacticChains extends IChains {
 
-import exceptions.grammarModelException;
-
-public interface ISyntacticChains {
-
-	List<List<String>> getChains();
-	
-	boolean hasNext();
-	
-	String next() throws grammarModelException;
-	
-	long getCurrentElementLeafID();	
-	
-	void resetIndexes();
-	
-	boolean equals(Object otherChains);
+	long getCurrentElementLeafID();
 	
 }

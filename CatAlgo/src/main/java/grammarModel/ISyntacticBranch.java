@@ -1,12 +1,10 @@
 package grammarModel;
 
+import java.util.Map;
+
 public interface ISyntacticBranch extends ISyntacticStructure {
 	
-	String getPosetFullName();
-	
-	ISyntacticChains getPosetMaxChains();
-	
-	String setPosetID();
+	void setPosetID(Map<IChains, String> chainsToIndex);
 	
 	boolean replaceComponent(ISyntacticBranch newComp, long compID);
 
