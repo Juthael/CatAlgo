@@ -29,7 +29,7 @@ public interface ISyntacticStructure extends Cloneable {
 	
 	List<List<String>> getListOfPosetMaxStringChains() throws grammarModelException;
 	
-	List<Long> getListOfLeafIDs();
+	List<Integer> getListOfLeafIDs();
 	
 	boolean getIDHasBeenSet();
 		

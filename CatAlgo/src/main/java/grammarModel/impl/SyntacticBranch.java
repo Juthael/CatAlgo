@@ -54,8 +54,8 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 		return posetChains;
 	}
 
-	public List<Long> getListOfLeafIDs() {
-		List<Long> leafIDs = new ArrayList<Long>();
+	public List<Integer> getListOfLeafIDs() {
+		List<Integer> leafIDs = new ArrayList<Integer>();
 		for (ISyntacticStructure component : getListOfComponents()) {
 			leafIDs.addAll(component.getListOfLeafIDs());
 		}

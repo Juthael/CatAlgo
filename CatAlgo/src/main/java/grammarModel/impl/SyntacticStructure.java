@@ -2,7 +2,6 @@ package grammarModel.impl;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import exceptions.grammarModelException;
@@ -26,7 +25,7 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 
 	public ISyntacticChains getSyntacticChains() {
 		List<List<String>> listOfChains = getListOfSyntacticStringChains();
-		List<Long> leafIDs = getListOfLeafIDs();
+		List<Integer> leafIDs = getListOfLeafIDs();
 		ISyntacticChains synChains = new SyntacticChains(listOfChains, leafIDs);
 		return synChains;
 	}
