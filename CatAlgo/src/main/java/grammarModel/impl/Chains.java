@@ -11,14 +11,21 @@ public abstract class Chains implements IChains {
 	protected int currentChainIndex;
 	protected int currentElementIndex;
 	
-	public Chains(List<List<String>> listOfChains) {
-		this.listOfChains = listOfChains;
-		currentChainIndex = 0;
-		currentElementIndex = 0;
+	public Chains(List<List<String>> listOfChains) throws grammarModelException {
+		if (!listOfChains.isEmpty()) {
+			this.listOfChains = listOfChains;
+			currentChainIndex = 0;
+			currentElementIndex = 0;
+		}
+		else throw new grammarModelException("Chains constructor : parameter is empty.");
 	}
 
 	public List<List<String>> getChains() {
 		return listOfChains;
+	}
+	
+	public String getRoot() {
+		return listOfChains.get(0).get(0);
 	}
 
 	public boolean hasNext() {

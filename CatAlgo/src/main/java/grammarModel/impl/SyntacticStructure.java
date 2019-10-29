@@ -23,14 +23,14 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 		return name;
 	}
 
-	public ISyntacticChains getSyntacticChains() {
+	public ISyntacticChains getSyntacticChains() throws grammarModelException {
 		List<List<String>> listOfChains = getListOfSyntacticStringChains();
 		List<Integer> leafIDs = getListOfLeafIDs();
 		ISyntacticChains synChains = new SyntacticChains(listOfChains, leafIDs);
 		return synChains;
 	}
 	
-	public Set<ISyntacticChains> getSetOfSyntacticChains() {
+	public Set<ISyntacticChains> getSetOfSyntacticChains() throws grammarModelException {
 		Set<ISyntacticChains> setOfChains = new HashSet<ISyntacticChains>();
 		setOfChains.add(getSyntacticChains());
 		for (ISyntacticStructure component : getListOfComponents()) {

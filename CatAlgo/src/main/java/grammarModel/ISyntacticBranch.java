@@ -2,6 +2,6 @@ package grammarModel;
 
 public interface ISyntacticBranch extends ISyntacticStructure {
 	
-	boolean replaceComponent(ISyntacticBranch newComp, long compID);
+	boolean replaceComponent(ISyntacticBranch newComp, int compID);
 
 }

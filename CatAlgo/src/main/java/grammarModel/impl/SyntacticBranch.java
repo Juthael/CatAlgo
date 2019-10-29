@@ -66,7 +66,7 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 		return iDHasBeenSet;
 	}
 	
-	public void setPosetID(Map<ISyntacticChains, String> chainsToIndex) {
+	public void setPosetID(Map<ISyntacticChains, String> chainsToIndex) throws grammarModelException {
 		posetID = chainsToIndex.get(getSyntacticChains());
 		for (ISyntacticStructure component : getListOfComponents()) {
 			component.setPosetID(chainsToIndex);
@@ -74,6 +74,6 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 		iDHasBeenSet = true;
 	}
 	
-	public abstract boolean replaceComponent(ISyntacticBranch newComp, long compID);	
+	public abstract boolean replaceComponent(ISyntacticBranch newComp, int compID);	
 
 }
