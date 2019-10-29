@@ -1,5 +1,7 @@
 package grammars.copyCat.disjunctions;
 
-public interface IValueOrRelation {
+import grammarModel.ISyntacticStructure;
+
+public interface IValueOrRelation extends ISyntacticStructure {
 
 }

@@ -1,5 +1,7 @@
 package grammars.copyCat.disjunctions;
 
-public interface IRule {
+import grammarModel.ISyntacticStructure;
+
+public interface IRule extends ISyntacticStructure {
 
 }

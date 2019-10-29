@@ -1,5 +1,7 @@
 package grammars.copyCat.disjunctions;
 
-public interface ISpecifiedProminentPosition {
+import grammarModel.ISyntacticStructure;
+
+public interface ISpecifiedProminentPosition extends ISyntacticStructure {
 
 }

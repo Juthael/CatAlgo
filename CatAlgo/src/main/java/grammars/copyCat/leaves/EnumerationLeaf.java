@@ -4,15 +4,15 @@ import grammarModel.ISyntacticLeaf;
 import grammarModel.ISyntacticStructure;
 import grammarModel.impl.SyntacticLeaf;
 
-public class LetterLeaf extends SyntacticLeaf implements ISyntacticLeaf {
+public class EnumerationLeaf extends SyntacticLeaf implements ISyntacticLeaf {
 
-	public LetterLeaf() {
-		super("letteR");
+	public EnumerationLeaf() {
+		super("enumeratioN");
 	}
 
 	@Override
 	public ISyntacticStructure clone() {
-		return new LetterLeaf();
+		return new EnumerationLeaf();
 	}
 
 }

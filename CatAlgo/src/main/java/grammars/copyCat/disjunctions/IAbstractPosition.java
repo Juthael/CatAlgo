@@ -1,5 +1,7 @@
 package grammars.copyCat.disjunctions;
 
-public interface IAbstractPosition {
+import grammarModel.ISyntacticStructure;
+
+public interface IAbstractPosition extends ISyntacticStructure {
 
 }

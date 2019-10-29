@@ -1,5 +1,7 @@
 package grammars.copyCat.disjunctions;
 
-public interface IEndPosition {
+import grammarModel.ISyntacticStructure;
+
+public interface IEndPosition extends ISyntacticStructure {
 
 }
