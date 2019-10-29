@@ -30,16 +30,34 @@ public class ProminentPosition extends SyntacticBranch implements ISyntacticBran
 		return components;
 	}
 
-	@Override
-	public boolean replaceComponent(ISyntacticBranch newComp, int compID) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean replaceComponent(ISyntacticBranch newComp, Integer compID) {	
+		boolean compReplaced = false;
+		if (promPosition.getListOfLeafIDs().contains(compID)) {
+			if (promPosition.getListOfLeafIDs().size() == 1) {
+				promPosition = (ISpecifiedProminentPosition) newComp;
+				compReplaced = true;
+			}
+			else {
+				compReplaced = promPosition.replaceComponent(newComp, compID);
+			}
+		}
+		else if (position.getListOfLeafIDs().contains(compID)) {
+			if (position.getListOfLeafIDs().size() == 1) {
+				position = (Position) newComp;
+				compReplaced = true;
+			}
+			else {
+				compReplaced = position.replaceComponent(newComp, compID);
+			}
+		}
+		return compReplaced;
 	}
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		ISpecifiedProminentPosition promPosClone = (ISpecifiedProminentPosition) promPosition.clone();
+		Position positionClone = (Position) position.clone();
+		return new ProminentPosition(promPosClone, positionClone);
 	}
 
 }

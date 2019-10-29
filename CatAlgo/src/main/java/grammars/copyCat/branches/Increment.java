@@ -26,16 +26,24 @@ public class Increment extends SyntacticBranch implements ISyntacticBranch {
 		return components;
 	}
 
-	@Override
-	public boolean replaceComponent(ISyntacticBranch newComp, int compID) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean replaceComponent(ISyntacticBranch newComp, Integer compID) {
+		boolean compReplaced = false;
+		if (valOrRel.getListOfLeafIDs().contains(compID)) {
+			if (valOrRel.getListOfLeafIDs().size() == 1) {
+				valOrRel = (IValueOrRelation) newComp;
+				compReplaced = true;
+			}
+			else {
+				compReplaced = valOrRel.replaceComponent(newComp, compID);
+			}
+		}
+		return compReplaced;
 	}
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		IValueOrRelation valOrRelClone = (IValueOrRelation) valOrRel.clone();
+		return new Increment(valOrRelClone);
 	}
 
 }

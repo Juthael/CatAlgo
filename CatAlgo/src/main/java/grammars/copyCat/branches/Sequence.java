@@ -29,16 +29,34 @@ public class Sequence extends SyntacticBranch implements ISyntacticBranch, IRule
 		return components;
 	}
 
-	@Override
-	public boolean replaceComponent(ISyntacticBranch newComp, int compID) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean replaceComponent(ISyntacticBranch newComp, Integer compID) {	
+		boolean compReplaced = false;
+		if (firstValue.getListOfLeafIDs().contains(compID)) {
+			if (firstValue.getListOfLeafIDs().size() == 1) {
+				firstValue = (FirstValue) newComp;
+				compReplaced = true;
+			}
+			else {
+				compReplaced = firstValue.replaceComponent(newComp, compID);
+			}
+		}
+		else if (increment.getListOfLeafIDs().contains(compID)) {
+			if (increment.getListOfLeafIDs().size() == 1) {
+				increment = (Increment) newComp;
+				compReplaced = true;
+			}
+			else {
+				compReplaced = increment.replaceComponent(newComp, compID);
+			}
+		}
+		return compReplaced;
 	}
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		FirstValue firstValueClone = (FirstValue) firstValue.clone();
+		Increment incrementClone = (Increment) increment.clone();
+		return new Sequence(firstValueClone, incrementClone);
 	}
 
 }

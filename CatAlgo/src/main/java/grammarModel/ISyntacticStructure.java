@@ -34,5 +34,7 @@ public interface ISyntacticStructure extends Cloneable {
 	boolean getIDHasBeenSet();
 		
 	void setPosetID(Map<ISyntacticChains, String> chainsToIndex) throws GrammarModelException;
+	
+	boolean replaceComponent(ISyntacticBranch newComp, Integer compID);
 		
 }

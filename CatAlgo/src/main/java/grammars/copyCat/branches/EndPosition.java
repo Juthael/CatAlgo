@@ -27,16 +27,24 @@ public class EndPosition extends SyntacticBranch implements ISyntacticBranch, IS
 		return components;
 	}
 
-	@Override
-	public boolean replaceComponent(ISyntacticBranch newComp, int compID) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean replaceComponent(ISyntacticBranch newComp, Integer compID) {
+		boolean compReplaced = false;
+		if (endPosition.getListOfLeafIDs().contains(compID)) {
+			if (endPosition.getListOfLeafIDs().size() == 1) {
+				endPosition = (IEndPosition) newComp;
+				compReplaced = true;
+			}
+			else {
+				compReplaced = endPosition.replaceComponent(newComp, compID);
+			}
+		}
+		return compReplaced;
 	}
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		IEndPosition endPositionClone = (IEndPosition) endPosition.clone();
+		return new EndPosition(endPositionClone);
 	}
 
 }

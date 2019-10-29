@@ -29,16 +29,34 @@ public class Letter extends SyntacticBranch implements ISyntacticBranch {
 		return components;
 	}
 
-	@Override
-	public boolean replaceComponent(ISyntacticBranch newComp, int compID) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean replaceComponent(ISyntacticBranch newComp, Integer compID) {	
+		boolean compReplaced = false;
+		if (letterValue.getListOfLeafIDs().contains(compID)) {
+			if (letterValue.getListOfLeafIDs().size() == 1) {
+				letterValue = (LetterValue) newComp;
+				compReplaced = true;
+			}
+			else {
+				compReplaced = letterValue.replaceComponent(newComp, compID);
+			}
+		}
+		else if (position.getListOfLeafIDs().contains(compID)) {
+			if (position.getListOfLeafIDs().size() == 1) {
+				position = (IAbstractPosition) newComp;
+				compReplaced = true;
+			}
+			else {
+				compReplaced = position.replaceComponent(newComp, compID);
+			}
+		} 
+		return compReplaced;
 	}
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		LetterValue letterValueClone = (LetterValue) letterValue.clone();
+		IAbstractPosition positionClone = (IAbstractPosition) position.clone();
+		return new Letter(letterValueClone, positionClone);
 	}
 
 }

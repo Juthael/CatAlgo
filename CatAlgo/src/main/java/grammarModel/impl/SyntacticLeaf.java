@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import exceptions.GrammarModelException;
+import grammarModel.ISyntacticBranch;
 import grammarModel.ISyntacticChains;
 import grammarModel.ISyntacticLeaf;
 import grammarModel.ISyntacticStructure;
@@ -61,6 +62,10 @@ public abstract class SyntacticLeaf extends SyntacticStructure implements ISynta
 	}
 
 	public void setPosetID(Map<ISyntacticChains, String> chainsToIndex) {
+	}
+	
+	public boolean replaceComponent(ISyntacticBranch newComp, Integer compID) {
+		return false;
 	}
 
 }

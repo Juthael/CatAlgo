@@ -9,7 +9,6 @@ import java.util.Set;
 import exceptions.GrammarModelException;
 import grammarModel.ISyntacticBranch;
 import grammarModel.ISyntacticChains;
-import grammarModel.ISyntacticLeaf;
 import grammarModel.ISyntacticStructure;
 import grammarModel.ISyntacticTree;
 
@@ -26,27 +25,23 @@ public abstract class SyntacticTree extends SyntacticBranch implements ISyntacti
 		return listOfComponents;
 	}
 
-	@Override
-	public boolean replaceComponent(ISyntacticBranch newComp, int compID) {
-		boolean componentReplaced = false;
+	public boolean replaceComponent(ISyntacticBranch newComp, Integer compID) {
+		boolean compReplaced = false;
 		ListIterator<ISyntacticStructure> compIt = listOfComponents.listIterator();
-		while (compIt.hasNext()) {
+		while (compIt.hasNext() && compReplaced == false) {
 			ISyntacticStructure comp = compIt.next();
-			if (comp instanceof grammarModel.ISyntacticLeaf) {
-				ISyntacticLeaf compLeaf = (ISyntacticLeaf) comp;
-				if (compLeaf.getLeafID() == compID) {
+			List<Integer> compLeafIDs = comp.getListOfLeafIDs();
+			if (compLeafIDs.contains(compID)) {
+				if (compLeafIDs.size() == 1) {
 					compIt.set(newComp);
-					componentReplaced = true;
+					compReplaced = true;
 				}
-			}
-			else {
-				if (comp.getListOfLeafIDs().contains(compID)) {
-					ISyntacticBranch compBranch = (ISyntacticBranch) comp;
-					componentReplaced = compBranch.replaceComponent(newComp, compID);
+				else {
+					compReplaced = comp.replaceComponent(newComp, compID);
 				}
 			}
 		}
-		return componentReplaced;
+		return compReplaced;
 	}
 	
 	public void setPosetID() throws GrammarModelException {

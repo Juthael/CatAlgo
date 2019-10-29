@@ -73,7 +73,5 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 		}
 		iDHasBeenSet = true;
 	}
-	
-	public abstract boolean replaceComponent(ISyntacticBranch newComp, int compID);	
 
 }

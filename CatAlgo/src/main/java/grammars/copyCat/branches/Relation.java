@@ -30,16 +30,34 @@ public class Relation extends SyntacticBranch implements ISyntacticBranch, IValu
 		return components;
 	}
 
-	@Override
-	public boolean replaceComponent(ISyntacticBranch newComp, int compID) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean replaceComponent(ISyntacticBranch newComp, Integer compID) {	
+		boolean compReplaced = false;
+		if (size.getListOfLeafIDs().contains(compID)) {
+			if (size.getListOfLeafIDs().size() == 1) {
+				size = (Size) newComp;
+				compReplaced = true;
+			}
+			else {
+				compReplaced = size.replaceComponent(newComp, compID);
+			}
+		}
+		else if (rule.getListOfLeafIDs().contains(compID)) {
+			if (rule.getListOfLeafIDs().size() == 1) {
+				rule = (IRule) newComp;
+				compReplaced = true;
+			}
+			else {
+				compReplaced = rule.replaceComponent(newComp, compID);
+			}
+		}
+		return compReplaced;
 	}
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		Size sizeClone = (Size) size.clone();
+		IRule ruleClone = (IRule) rule.clone();
+		return new Relation(sizeClone, ruleClone);
 	}
 
 }
