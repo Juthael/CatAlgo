@@ -6,7 +6,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
-import exceptions.grammarModelException;
+import exceptions.GrammarModelException;
 import grammarModel.ISyntacticBranch;
 import grammarModel.ISyntacticChains;
 import grammarModel.ISyntacticLeaf;
@@ -49,7 +49,7 @@ public abstract class SyntacticTree extends SyntacticBranch implements ISyntacti
 		return componentReplaced;
 	}
 	
-	public void setPosetID() throws grammarModelException {
+	public void setPosetID() throws GrammarModelException {
 		Set<ISyntacticChains> setOfSynChains = getSetOfSyntacticChains();
 		Map<String, Integer> rootToIndex = new HashMap<String, Integer>();
 		Map<ISyntacticChains, String> chainsToIndex = new HashMap<ISyntacticChains, String>();

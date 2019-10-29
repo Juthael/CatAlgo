@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import exceptions.grammarModelException;
+import exceptions.GrammarModelException;
 import grammarModel.IPosetMaxChains;
 import propertyPoset.IImplication;
 
@@ -12,7 +12,7 @@ public class PosetMaxChains extends Chains implements IPosetMaxChains {
 	
 	private Set<IImplication> implications;
 	
-	public PosetMaxChains(List<List<String>> listOfChains, Set<IImplication> implications) throws grammarModelException {
+	public PosetMaxChains(List<List<String>> listOfChains, Set<IImplication> implications) throws GrammarModelException {
 		super(listOfChains);
 		this.implications = implications;
 	}

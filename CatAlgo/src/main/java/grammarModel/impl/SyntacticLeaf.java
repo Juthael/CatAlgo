@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import exceptions.grammarModelException;
+import exceptions.GrammarModelException;
 import grammarModel.ISyntacticChains;
 import grammarModel.ISyntacticLeaf;
 import grammarModel.ISyntacticStructure;
@@ -20,7 +20,7 @@ public abstract class SyntacticLeaf extends SyntacticStructure implements ISynta
 		ID_COUNT++;
 	}
 
-	public String getPosetFullName() throws grammarModelException {
+	public String getPosetFullName() throws GrammarModelException {
 		return getName();
 	}
 
@@ -37,7 +37,7 @@ public abstract class SyntacticLeaf extends SyntacticStructure implements ISynta
 		return synChains;
 	}
 
-	public List<List<String>> getListOfPosetMaxStringChains() throws grammarModelException {
+	public List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException {
 		List<List<String>> posetChains = new ArrayList<List<String>>();
 		List<String> posetChain = new ArrayList<String>();
 		posetChain.add(getPosetFullName());

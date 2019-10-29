@@ -1,9 +1,9 @@
 package grammarModel;
 
-import exceptions.grammarModelException;
+import exceptions.GrammarModelException;
 
 public interface ISyntacticTree extends ISyntacticBranch {
 	
-	void setPosetID() throws grammarModelException;
+	void setPosetID() throws GrammarModelException;
 
 }

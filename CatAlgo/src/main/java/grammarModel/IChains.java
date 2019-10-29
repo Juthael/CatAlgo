@@ -2,7 +2,7 @@ package grammarModel;
 
 import java.util.List;
 
-import exceptions.grammarModelException;
+import exceptions.GrammarModelException;
 
 public interface IChains {
 	
@@ -12,7 +12,7 @@ public interface IChains {
 	
 	boolean hasNext();
 	
-	String next() throws grammarModelException;
+	String next() throws GrammarModelException;
 	
 	void resetIndexes();
 	

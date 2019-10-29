@@ -2,7 +2,7 @@ package grammarModel.impl;
 
 import java.util.List;
 
-import exceptions.grammarModelException;
+import exceptions.GrammarModelException;
 import grammarModel.IChains;
 
 public abstract class Chains implements IChains {
@@ -11,13 +11,13 @@ public abstract class Chains implements IChains {
 	protected int currentChainIndex;
 	protected int currentElementIndex;
 	
-	public Chains(List<List<String>> listOfChains) throws grammarModelException {
+	public Chains(List<List<String>> listOfChains) throws GrammarModelException {
 		if (!listOfChains.isEmpty()) {
 			this.listOfChains = listOfChains;
 			currentChainIndex = 0;
 			currentElementIndex = 0;
 		}
-		else throw new grammarModelException("Chains constructor : parameter is empty.");
+		else throw new GrammarModelException("Chains constructor : parameter is empty.");
 	}
 
 	public List<List<String>> getChains() {
@@ -35,7 +35,7 @@ public abstract class Chains implements IChains {
 		else return false;
 	}
 
-	public String next() throws grammarModelException {
+	public String next() throws GrammarModelException {
 		String nextElement;
 		if ( hasNextChainElement() )
 			currentElementIndex++;
@@ -43,7 +43,7 @@ public abstract class Chains implements IChains {
 			currentElementIndex = 0;
 			currentChainIndex++;
 		}
-		else throw new grammarModelException("Chains.next() : no next element.");
+		else throw new GrammarModelException("Chains.next() : no next element.");
 		nextElement = listOfChains.get(currentChainIndex).get(currentElementIndex);
 		return nextElement;
 	}

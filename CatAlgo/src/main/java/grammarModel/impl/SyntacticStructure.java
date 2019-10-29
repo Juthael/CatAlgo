@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import exceptions.grammarModelException;
+import exceptions.GrammarModelException;
 import grammarModel.IPosetMaxChains;
 import grammarModel.ISyntacticChains;
 import grammarModel.ISyntacticStructure;
@@ -23,14 +23,14 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 		return name;
 	}
 
-	public ISyntacticChains getSyntacticChains() throws grammarModelException {
+	public ISyntacticChains getSyntacticChains() throws GrammarModelException {
 		List<List<String>> listOfChains = getListOfSyntacticStringChains();
 		List<Integer> leafIDs = getListOfLeafIDs();
 		ISyntacticChains synChains = new SyntacticChains(listOfChains, leafIDs);
 		return synChains;
 	}
 	
-	public Set<ISyntacticChains> getSetOfSyntacticChains() throws grammarModelException {
+	public Set<ISyntacticChains> getSetOfSyntacticChains() throws GrammarModelException {
 		Set<ISyntacticChains> setOfChains = new HashSet<ISyntacticChains>();
 		setOfChains.add(getSyntacticChains());
 		for (ISyntacticStructure component : getListOfComponents()) {
@@ -39,7 +39,7 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 		return setOfChains;
 	}
 	
-	public IPosetMaxChains getPosetMaxChains() throws grammarModelException {
+	public IPosetMaxChains getPosetMaxChains() throws GrammarModelException {
 		IPosetMaxChains posetMaxChains;
 		List<List<String>> listOfPosetMaxChains = getListOfPosetMaxStringChains();
 		Set<IImplication> relation = getImplications();
@@ -47,7 +47,7 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 		return posetMaxChains;
 	}
 	
-	public Set<IImplication> getImplications() throws grammarModelException {
+	public Set<IImplication> getImplications() throws GrammarModelException {
 		Set<IImplication> implications = new HashSet<IImplication>();
 		String posetFullName = getPosetFullName();
 		IImplication reflexive = new Implication(posetFullName, posetFullName);

@@ -2,14 +2,14 @@ package grammarModel.impl;
 
 import java.util.List;
 
-import exceptions.grammarModelException;
+import exceptions.GrammarModelException;
 import grammarModel.ISyntacticChains;
 
 public class SyntacticChains extends Chains implements ISyntacticChains {
 
 	private List<Integer> leafIDs;
 	
-	public SyntacticChains(List<List<String>> listOfChains, List<Integer> leafIDs) throws grammarModelException {
+	public SyntacticChains(List<List<String>> listOfChains, List<Integer> leafIDs) throws GrammarModelException {
 		super(listOfChains);
 		this.leafIDs = leafIDs;
 	}

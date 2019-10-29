@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import exceptions.grammarModelException;
+import exceptions.GrammarModelException;
 import grammarModel.ISyntacticBranch;
 import grammarModel.ISyntacticChains;
 import grammarModel.ISyntacticLeaf;
@@ -22,9 +22,9 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 		super(name);
 	}
 
-	public String getPosetFullName() throws grammarModelException {
+	public String getPosetFullName() throws GrammarModelException {
 		if (iDHasBeenSet == false) {
-			throw new grammarModelException("SyntacticBranch.getPosetFullName() : "
+			throw new GrammarModelException("SyntacticBranch.getPosetFullName() : "
 					+ "cannot return poset full name since ID hasn't been set.");
 		}
 		else return getName().concat(posetID);
@@ -42,7 +42,7 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 		return synChains;
 	}
 	
-	public List<List<String>> getListOfPosetMaxStringChains() throws grammarModelException{
+	public List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException{
 		List<List<String>> posetChains = new ArrayList<List<String>>();
 		for (ISyntacticStructure component : getListOfComponents()) {
 			List<List<String>> compPosetChains = component.getListOfPosetMaxStringChains();
@@ -66,7 +66,7 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 		return iDHasBeenSet;
 	}
 	
-	public void setPosetID(Map<ISyntacticChains, String> chainsToIndex) throws grammarModelException {
+	public void setPosetID(Map<ISyntacticChains, String> chainsToIndex) throws GrammarModelException {
 		posetID = chainsToIndex.get(getSyntacticChains());
 		for (ISyntacticStructure component : getListOfComponents()) {
 			component.setPosetID(chainsToIndex);

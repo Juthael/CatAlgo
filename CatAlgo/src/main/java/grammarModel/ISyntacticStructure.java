@@ -4,35 +4,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import exceptions.grammarModelException;
+import exceptions.GrammarModelException;
 import propertyPoset.IImplication;
 
 public interface ISyntacticStructure extends Cloneable {
 
 	String getName();
 	
-	ISyntacticChains getSyntacticChains() throws grammarModelException;
+	ISyntacticChains getSyntacticChains() throws GrammarModelException;
 	
-	Set<ISyntacticChains> getSetOfSyntacticChains() throws grammarModelException;
+	Set<ISyntacticChains> getSetOfSyntacticChains() throws GrammarModelException;
 	
-	IPosetMaxChains getPosetMaxChains() throws grammarModelException;
+	IPosetMaxChains getPosetMaxChains() throws GrammarModelException;
 	
-	Set<IImplication> getImplications() throws grammarModelException;
+	Set<IImplication> getImplications() throws GrammarModelException;
 	
 	ISyntacticStructure clone();
 	
-	String getPosetFullName() throws grammarModelException;
+	String getPosetFullName() throws GrammarModelException;
 	
 	List<ISyntacticStructure> getListOfComponents();
 	
 	List<List<String>> getListOfSyntacticStringChains();
 	
-	List<List<String>> getListOfPosetMaxStringChains() throws grammarModelException;
+	List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException;
 	
 	List<Integer> getListOfLeafIDs();
 	
 	boolean getIDHasBeenSet();
 		
-	void setPosetID(Map<ISyntacticChains, String> chainsToIndex) throws grammarModelException;
+	void setPosetID(Map<ISyntacticChains, String> chainsToIndex) throws GrammarModelException;
 		
 }
