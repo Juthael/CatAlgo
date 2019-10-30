@@ -6,7 +6,7 @@ import java.util.Set;
 
 import exceptions.GrammarModelException;
 import grammarModel.IPosetMaxChains;
-import grammarModel.ISyntacticChains;
+import grammarModel.ISynTreeChains;
 import grammarModel.ISyntacticStructure;
 import propertyPoset.IImplication;
 import propertyPoset.impl.Implication;
@@ -23,15 +23,15 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 		return name;
 	}
 
-	public ISyntacticChains getSyntacticChains() throws GrammarModelException {
+	public ISynTreeChains getSyntacticChains() throws GrammarModelException {
 		List<List<String>> listOfChains = getListOfSyntacticStringChains();
 		List<Integer> leafIDs = getListOfLeafIDs();
-		ISyntacticChains synChains = new SyntacticChains(listOfChains, leafIDs);
+		ISynTreeChains synChains = new SynTreeChains(listOfChains, leafIDs);
 		return synChains;
 	}
 	
-	public Set<ISyntacticChains> getSetOfSyntacticChains() throws GrammarModelException {
-		Set<ISyntacticChains> setOfChains = new HashSet<ISyntacticChains>();
+	public Set<ISynTreeChains> getSetOfSyntacticChains() throws GrammarModelException {
+		Set<ISynTreeChains> setOfChains = new HashSet<ISynTreeChains>();
 		setOfChains.add(getSyntacticChains());
 		for (ISyntacticStructure component : getListOfComponents()) {
 			setOfChains.addAll(component.getSetOfSyntacticChains());

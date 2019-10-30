@@ -2,18 +2,18 @@ package grammarModel.impl;
 
 import java.util.List;
 
-import grammarModel.ISeedling;
+import grammarModel.IOriginalGrafts;
 import grammarModel.ISyntacticBranch;
 
-public abstract class Seedling implements ISeedling {
+public abstract class OriginalGrafts implements IOriginalGrafts {
 
 	private List<ISyntacticBranch> signalElements;
 	
-	public Seedling(List<ISyntacticBranch> signalElements) {
+	public OriginalGrafts(List<ISyntacticBranch> signalElements) {
 		this.signalElements = signalElements;
 	}
 
-	public String getSignalDescription() {
+	public String getGraftsDescription() {
 		StringBuilder sB = new StringBuilder();
 		String newLine = System.lineSeparator();
 		for (ISyntacticBranch signalElement : signalElements) {

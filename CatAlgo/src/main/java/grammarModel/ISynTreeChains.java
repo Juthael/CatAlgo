@@ -1,6 +1,6 @@
 package grammarModel;
 
-public interface ISyntacticChains extends IChains {
+public interface ISynTreeChains extends IChains {
 
 	long getCurrentElementLeafID();
 	

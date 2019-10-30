@@ -3,13 +3,13 @@ package grammarModel.impl;
 import java.util.List;
 
 import exceptions.GrammarModelException;
-import grammarModel.ISyntacticChains;
+import grammarModel.ISynTreeChains;
 
-public class SyntacticChains extends Chains implements ISyntacticChains {
+public class SynTreeChains extends Chains implements ISynTreeChains {
 
 	private List<Integer> leafIDs;
 	
-	public SyntacticChains(List<List<String>> listOfChains, List<Integer> leafIDs) throws GrammarModelException {
+	public SynTreeChains(List<List<String>> listOfChains, List<Integer> leafIDs) throws GrammarModelException {
 		super(listOfChains);
 		this.leafIDs = leafIDs;
 	}

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import exceptions.GrammarModelException;
 import grammarModel.ISyntacticBranch;
-import grammarModel.ISyntacticChains;
+import grammarModel.ISynTreeChains;
 import grammarModel.ISyntacticLeaf;
 import grammarModel.ISyntacticStructure;
 
@@ -66,7 +66,7 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 		return iDHasBeenSet;
 	}
 	
-	public void setPosetID(Map<ISyntacticChains, String> chainsToIndex) throws GrammarModelException {
+	public void setPosetID(Map<ISynTreeChains, String> chainsToIndex) throws GrammarModelException {
 		posetID = chainsToIndex.get(getSyntacticChains());
 		for (ISyntacticStructure component : getListOfComponents()) {
 			component.setPosetID(chainsToIndex);

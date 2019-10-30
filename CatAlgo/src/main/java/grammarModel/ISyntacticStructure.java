@@ -11,9 +11,9 @@ public interface ISyntacticStructure extends Cloneable {
 
 	String getName();
 	
-	ISyntacticChains getSyntacticChains() throws GrammarModelException;
+	ISynTreeChains getSyntacticChains() throws GrammarModelException;
 	
-	Set<ISyntacticChains> getSetOfSyntacticChains() throws GrammarModelException;
+	Set<ISynTreeChains> getSetOfSyntacticChains() throws GrammarModelException;
 	
 	IPosetMaxChains getPosetMaxChains() throws GrammarModelException;
 	
@@ -33,7 +33,7 @@ public interface ISyntacticStructure extends Cloneable {
 	
 	boolean getIDHasBeenSet();
 		
-	void setPosetID(Map<ISyntacticChains, String> chainsToIndex) throws GrammarModelException;
+	void setPosetID(Map<ISynTreeChains, String> chainsToIndex) throws GrammarModelException;
 	
 	boolean replaceComponent(ISyntacticBranch newComp, Integer compID);
 		
