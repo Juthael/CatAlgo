@@ -2,7 +2,7 @@ package grammars.copyCat;
 
 import java.util.Map;
 
-import grammarModel.IOriginalGrafts;
+import grammarModel.IGrafts;
 import grammarModel.ISyntacticBranch;
 import grammarModel.ISyntacticTree;
 import grammarModel.ITreeGenerator;
@@ -13,7 +13,7 @@ public class CopycatTreeGenerator implements ITreeGenerator {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Map<ISyntacticTree, String> getTreeToVerbalDescription(IOriginalGrafts originalGrafts) {
+	public Map<ISyntacticTree, String> getTreeToVerbalDescription(IGrafts grafts) {
 		// TODO Auto-generated method stub
 		return null;
 	}	
@@ -28,7 +28,7 @@ public class CopycatTreeGenerator implements ITreeGenerator {
 		return null;
 	}
 
-	public IOriginalGrafts getSignalFromString(String stringChains) {
+	public IGrafts getSignalFromString(String stringChains) {
 		// TODO Auto-generated method stub
 		return null;
 	}

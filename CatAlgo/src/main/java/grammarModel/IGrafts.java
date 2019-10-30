@@ -1,6 +1,6 @@
 package grammarModel;
 
-public interface IOriginalGrafts {
+public interface IGrafts {
 	
 	String getGraftsDescription();
 

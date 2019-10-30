@@ -2,15 +2,15 @@ package grammarModel.impl;
 
 import java.util.List;
 
-import grammarModel.IOriginalGrafts;
+import grammarModel.IGrafts;
 import grammarModel.ISyntacticBranch;
 
-public abstract class OriginalGrafts implements IOriginalGrafts {
+public abstract class Grafts implements IGrafts {
 
 	private List<ISyntacticBranch> signalElements;
 	
-	public OriginalGrafts(List<ISyntacticBranch> signalElements) {
-		this.signalElements = signalElements;
+	public Grafts(List<ISyntacticBranch> branches) {
+		this.signalElements = branches;
 	}
 
 	public String getGraftsDescription() {
