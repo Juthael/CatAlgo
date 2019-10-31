@@ -9,17 +9,11 @@ import grammarModel.structure.ISyntacticBranch;
 
 public class ConnectableGrafts extends Grafts implements IConnectableGrafts {
 
-	private int age;
 	private boolean connected = false;
 	private boolean readyToMakeATree = false;
 	
-	public ConnectableGrafts(List<ISyntacticBranch> branches, int age) {
+	public ConnectableGrafts(List<ISyntacticBranch> branches) {
 		super(branches);
-		this.age = age;
-	}
-
-	public int getGraftsAge() {
-		return age;
 	}
 	
 	public boolean areConnected() {
