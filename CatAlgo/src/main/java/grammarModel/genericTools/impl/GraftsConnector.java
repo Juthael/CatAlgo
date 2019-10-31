@@ -10,11 +10,16 @@ public abstract class GraftsConnector implements IGraftsConnector {
 
 	private List<ISyntacticBranch> branches;
 	private boolean connexionComplete = false;
+	private boolean readyToMakeATree = false;
 	
 	public GraftsConnector() {
 	}
 
 	public abstract boolean connexionComplete(List<ISyntacticBranch> branches);
+	
+	public boolean graftsAreReadyToMakeATree() {
+		return readyToMakeATree;
+	}
 
 	public List<ISyntacticBranch> getConnectedBranches() throws GrammarModelException {
 		if (connexionComplete == true) {

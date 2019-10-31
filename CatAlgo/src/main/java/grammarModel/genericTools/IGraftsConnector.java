@@ -9,6 +9,8 @@ public interface IGraftsConnector {
 	
 	boolean connexionComplete(List<ISyntacticBranch> branches) ;
 	
+	boolean graftsAreReadyToMakeATree();
+	
 	List<ISyntacticBranch> getConnectedBranches() throws GrammarModelException;
 
 }

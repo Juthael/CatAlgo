@@ -11,6 +11,7 @@ public class ConnectableGrafts extends Grafts implements IConnectableGrafts {
 
 	private int age;
 	private boolean connected = false;
+	private boolean readyToMakeATree = false;
 	
 	public ConnectableGrafts(List<ISyntacticBranch> branches, int age) {
 		super(branches);
@@ -24,12 +25,17 @@ public class ConnectableGrafts extends Grafts implements IConnectableGrafts {
 	public boolean areConnected() {
 		return connected;
 	}
+	
+	public boolean areReadyToMakeATree() {
+		return readyToMakeATree;
+	}
 
 	public boolean attemptConnexion(IGraftsConnector connector) throws GrammarModelException {
 		if (connected == false) {
 			if (connector.connexionComplete(super.branches)) {
 				super.branches = connector.getConnectedBranches();
 				connected = true;
+				readyToMakeATree = connector.graftsAreReadyToMakeATree();
 			}
 			return connected;
 		}
