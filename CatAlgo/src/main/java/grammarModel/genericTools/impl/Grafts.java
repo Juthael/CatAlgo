@@ -8,10 +8,16 @@ import grammarModel.structure.ISyntacticBranch;
 public class Grafts implements IGrafts {
 
 	protected List<ISyntacticBranch> branches;
+	private int nBOfGrafts;
 	
 	public Grafts(List<ISyntacticBranch> branches) {
 		this.branches = branches;
+		nBOfGrafts = branches.size();
 	}
+	
+	public int getNbOfGrafts() {
+		return nBOfGrafts;
+	}	
 
 	public String getGraftsDescription() {
 		StringBuilder sB = new StringBuilder();

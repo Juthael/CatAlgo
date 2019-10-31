@@ -6,8 +6,6 @@ public interface IConnectableGrafts extends IGrafts {
 	
 	int getGraftsAge();
 	
-	int getNbOfGrafts();
-	
 	boolean attemptConnexion(IGraftsConnector connector) throws GrammarModelException;
 	
 	boolean areConnected();

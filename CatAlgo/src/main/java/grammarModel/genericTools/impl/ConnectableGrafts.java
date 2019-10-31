@@ -10,21 +10,15 @@ import grammarModel.structure.ISyntacticBranch;
 public class ConnectableGrafts extends Grafts implements IConnectableGrafts {
 
 	private int age;
-	private int nBOfGrafts;
-	private boolean connected;
+	private boolean connected = false;
 	
 	public ConnectableGrafts(List<ISyntacticBranch> branches, int age) {
 		super(branches);
 		this.age = age;
-		nBOfGrafts = branches.size();
 	}
 
 	public int getGraftsAge() {
 		return age;
-	}
-
-	public int getNbOfGrafts() {
-		return nBOfGrafts;
 	}
 	
 	public boolean areConnected() {
@@ -32,7 +26,7 @@ public class ConnectableGrafts extends Grafts implements IConnectableGrafts {
 	}
 
 	public boolean attemptConnexion(IGraftsConnector connector) throws GrammarModelException {
-		if (connected != true) {
+		if (connected == false) {
 			if (connector.connexionComplete(super.branches)) {
 				super.branches = connector.getConnectedBranches();
 				connected = true;
