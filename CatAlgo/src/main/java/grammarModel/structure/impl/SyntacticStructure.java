@@ -1,13 +1,15 @@
-package grammarModel.impl;
+package grammarModel.structure.impl;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import exceptions.GrammarModelException;
-import grammarModel.IPosetMaxChains;
-import grammarModel.ISynTreeChains;
-import grammarModel.ISyntacticStructure;
+import grammarModel.genericTools.IPosetMaxChains;
+import grammarModel.genericTools.ISynTreeChains;
+import grammarModel.genericTools.impl.PosetMaxChains;
+import grammarModel.genericTools.impl.SynTreeChains;
+import grammarModel.structure.ISyntacticStructure;
 import propertyPoset.IImplication;
 import propertyPoset.impl.Implication;
 

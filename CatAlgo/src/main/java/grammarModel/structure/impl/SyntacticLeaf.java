@@ -1,14 +1,14 @@
-package grammarModel.impl;
+package grammarModel.structure.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import exceptions.GrammarModelException;
-import grammarModel.ISyntacticBranch;
-import grammarModel.ISynTreeChains;
-import grammarModel.ISyntacticLeaf;
-import grammarModel.ISyntacticStructure;
+import grammarModel.genericTools.ISynTreeChains;
+import grammarModel.structure.ISyntacticBranch;
+import grammarModel.structure.ISyntacticLeaf;
+import grammarModel.structure.ISyntacticStructure;
 
 public abstract class SyntacticLeaf extends SyntacticStructure implements ISyntacticLeaf {
 

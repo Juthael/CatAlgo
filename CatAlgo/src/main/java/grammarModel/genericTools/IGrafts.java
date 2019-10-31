@@ -1,4 +1,4 @@
-package grammarModel;
+package grammarModel.genericTools;
 
 public interface IGrafts {
 	

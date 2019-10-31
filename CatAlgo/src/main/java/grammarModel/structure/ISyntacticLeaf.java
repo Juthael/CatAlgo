@@ -1,4 +1,4 @@
-package grammarModel;
+package grammarModel.structure;
 
 public interface ISyntacticLeaf extends ISyntacticStructure {
 	

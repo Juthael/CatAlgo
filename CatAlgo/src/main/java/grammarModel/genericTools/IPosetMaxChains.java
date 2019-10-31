@@ -1,4 +1,4 @@
-package grammarModel;
+package grammarModel.genericTools;
 
 import java.util.Set;
 

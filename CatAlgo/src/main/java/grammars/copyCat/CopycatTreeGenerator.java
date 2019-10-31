@@ -2,10 +2,10 @@ package grammars.copyCat;
 
 import java.util.Map;
 
-import grammarModel.IGrafts;
-import grammarModel.ISyntacticBranch;
-import grammarModel.ISyntacticTree;
-import grammarModel.ITreeGenerator;
+import grammarModel.genericTools.IGrafts;
+import grammarModel.genericTools.ITreeGenerator;
+import grammarModel.structure.ISyntacticBranch;
+import grammarModel.structure.ISyntacticTree;
 
 public class CopycatTreeGenerator implements ITreeGenerator {
 

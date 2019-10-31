@@ -1,23 +1,23 @@
-package grammarModel.impl;
+package grammarModel.genericTools.impl;
 
 import java.util.List;
 
-import grammarModel.IGrafts;
-import grammarModel.ISyntacticBranch;
+import grammarModel.genericTools.IGrafts;
+import grammarModel.structure.ISyntacticBranch;
 
-public abstract class Grafts implements IGrafts {
+public class Grafts implements IGrafts {
 
-	private List<ISyntacticBranch> signalElements;
+	protected List<ISyntacticBranch> branches;
 	
 	public Grafts(List<ISyntacticBranch> branches) {
-		this.signalElements = branches;
+		this.branches = branches;
 	}
 
 	public String getGraftsDescription() {
 		StringBuilder sB = new StringBuilder();
 		String newLine = System.lineSeparator();
-		for (ISyntacticBranch signalElement : signalElements) {
-			List<List<String>> chains = signalElement.getListOfSyntacticStringChains();
+		for (ISyntacticBranch branch : branches) {
+			List<List<String>> chains = branch.getListOfSyntacticStringChains();
 			for (List<String> chain : chains) {
 				for (int i=0 ; i <= chain.size()-1 ; i++) {
 					sB.append(chain.get(i));

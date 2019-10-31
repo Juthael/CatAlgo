@@ -1,8 +1,8 @@
 package grammars.copyCat.leaves;
 
-import grammarModel.ISyntacticLeaf;
-import grammarModel.ISyntacticStructure;
-import grammarModel.impl.SyntacticLeaf;
+import grammarModel.structure.ISyntacticLeaf;
+import grammarModel.structure.ISyntacticStructure;
+import grammarModel.structure.impl.SyntacticLeaf;
 
 public class RelationLeaf extends SyntacticLeaf implements ISyntacticLeaf {
 

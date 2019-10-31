@@ -1,9 +1,9 @@
-package grammarModel.impl;
+package grammarModel.genericTools.impl;
 
 import java.util.List;
 
 import exceptions.GrammarModelException;
-import grammarModel.ISynTreeChains;
+import grammarModel.genericTools.ISynTreeChains;
 
 public class SynTreeChains extends Chains implements ISynTreeChains {
 

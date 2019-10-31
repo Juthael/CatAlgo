@@ -1,4 +1,4 @@
-package grammarModel;
+package grammarModel.structure;
 
 import exceptions.GrammarModelException;
 

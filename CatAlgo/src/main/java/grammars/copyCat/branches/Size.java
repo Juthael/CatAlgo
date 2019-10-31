@@ -3,9 +3,9 @@ package grammars.copyCat.branches;
 import java.util.ArrayList;
 import java.util.List;
 
-import grammarModel.ISyntacticBranch;
-import grammarModel.ISyntacticStructure;
-import grammarModel.impl.SyntacticBranch;
+import grammarModel.structure.ISyntacticBranch;
+import grammarModel.structure.ISyntacticStructure;
+import grammarModel.structure.impl.SyntacticBranch;
 import grammars.copyCat.disjunctions.IValueOrRelation;
 import grammars.copyCat.leaves.SizeLeaf;
 

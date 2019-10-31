@@ -1,9 +1,9 @@
-package grammarModel.impl;
+package grammarModel.genericTools.impl;
 
 import java.util.List;
 
 import exceptions.GrammarModelException;
-import grammarModel.IChains;
+import grammarModel.genericTools.IChains;
 
 public abstract class Chains implements IChains {
 

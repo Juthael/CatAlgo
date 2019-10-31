@@ -1,10 +1,12 @@
-package grammarModel;
+package grammarModel.structure;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import exceptions.GrammarModelException;
+import grammarModel.genericTools.IPosetMaxChains;
+import grammarModel.genericTools.ISynTreeChains;
 import propertyPoset.IImplication;
 
 public interface ISyntacticStructure extends Cloneable {

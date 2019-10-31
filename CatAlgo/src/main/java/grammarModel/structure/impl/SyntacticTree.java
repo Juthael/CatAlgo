@@ -1,4 +1,4 @@
-package grammarModel.impl;
+package grammarModel.structure.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Set;
 
 import exceptions.GrammarModelException;
-import grammarModel.ISyntacticBranch;
-import grammarModel.ISynTreeChains;
-import grammarModel.ISyntacticStructure;
-import grammarModel.ISyntacticTree;
+import grammarModel.genericTools.ISynTreeChains;
+import grammarModel.structure.ISyntacticBranch;
+import grammarModel.structure.ISyntacticStructure;
+import grammarModel.structure.ISyntacticTree;
 
 public abstract class SyntacticTree extends SyntacticBranch implements ISyntacticTree {
 
