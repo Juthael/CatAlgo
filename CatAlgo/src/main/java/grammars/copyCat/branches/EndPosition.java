@@ -27,7 +27,7 @@ public class EndPosition extends SyntacticBranch implements ISyntacticBranch, IS
 		return components;
 	}
 
-	public boolean replaceComponent(ISyntacticBranch newComp, Integer compID) {
+	public boolean replaceComponent(ISyntacticStructure newComp, Integer compID) {
 		boolean compReplaced = false;
 		if (endPosition.getListOfLeafIDs().contains(compID)) {
 			if (endPosition.getListOfLeafIDs().size() == 1) {

@@ -29,7 +29,7 @@ public class Letter extends SyntacticBranch implements ISyntacticBranch {
 		return components;
 	}
 
-	public boolean replaceComponent(ISyntacticBranch newComp, Integer compID) {	
+	public boolean replaceComponent(ISyntacticStructure newComp, Integer compID) {	
 		boolean compReplaced = false;
 		if (letterValue.getListOfLeafIDs().contains(compID)) {
 			if (letterValue.getListOfLeafIDs().size() == 1) {

@@ -37,6 +37,6 @@ public interface ISyntacticStructure extends Cloneable {
 		
 	void setPosetID(Map<ISynTreeChains, String> chainsToIndex) throws GrammarModelException;
 	
-	boolean replaceComponent(ISyntacticBranch newComp, Integer compID);
+	boolean replaceComponent(ISyntacticStructure newComp, Integer compID);
 		
 }

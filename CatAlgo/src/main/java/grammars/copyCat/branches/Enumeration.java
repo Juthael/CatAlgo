@@ -27,7 +27,7 @@ public class Enumeration extends SyntacticBranch implements ISyntacticBranch, IR
 		return components;
 	}
 
-	public boolean replaceComponent(ISyntacticBranch newComp, Integer compID) {
+	public boolean replaceComponent(ISyntacticStructure newComp, Integer compID) {
 		boolean compReplaced = false;
 		if (valOrRel.getListOfLeafIDs().contains(compID)) {
 			if (valOrRel.getListOfLeafIDs().size() == 1) {

@@ -30,7 +30,7 @@ public class Relation extends SyntacticBranch implements ISyntacticBranch, IValu
 		return components;
 	}
 
-	public boolean replaceComponent(ISyntacticBranch newComp, Integer compID) {	
+	public boolean replaceComponent(ISyntacticStructure newComp, Integer compID) {	
 		boolean compReplaced = false;
 		if (size.getListOfLeafIDs().contains(compID)) {
 			if (size.getListOfLeafIDs().size() == 1) {

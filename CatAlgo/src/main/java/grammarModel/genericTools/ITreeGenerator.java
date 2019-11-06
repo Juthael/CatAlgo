@@ -6,6 +6,6 @@ import grammarModel.structure.ISyntacticTree;
 
 public interface ITreeGenerator {
 		
-	Map<ISyntacticTree, String> getTreeToVerbalDescription(IGrafts grafts);
+	Map<ISyntacticTree, String> getTreeToVerbalDescription(String signal);
 
 }

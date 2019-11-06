@@ -30,7 +30,7 @@ public class ProminentPosition extends SyntacticBranch implements ISyntacticBran
 		return components;
 	}
 
-	public boolean replaceComponent(ISyntacticBranch newComp, Integer compID) {	
+	public boolean replaceComponent(ISyntacticStructure newComp, Integer compID) {	
 		boolean compReplaced = false;
 		if (promPosition.getListOfLeafIDs().contains(compID)) {
 			if (promPosition.getListOfLeafIDs().size() == 1) {
