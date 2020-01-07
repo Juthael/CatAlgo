@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import exceptions.GrammarModelException;
-import grammarModel.genericTools.ISynTreeChains;
+import grammarModel.genericTools.ISyntacticChains;
 import grammarModel.structure.ISyntacticBranch;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntacticTree;
@@ -45,10 +45,10 @@ public abstract class SyntacticTree extends SyntacticBranch implements ISyntacti
 	}
 	
 	public void setPosetID() throws GrammarModelException {
-		Set<ISynTreeChains> setOfSynChains = getSetOfSyntacticChains();
+		Set<ISyntacticChains> setOfSynChains = getSetOfSyntacticChains();
 		Map<String, Integer> rootToIndex = new HashMap<String, Integer>();
-		Map<ISynTreeChains, String> chainsToIndex = new HashMap<ISynTreeChains, String>();
-		for (ISynTreeChains chains : setOfSynChains) {
+		Map<ISyntacticChains, String> chainsToIndex = new HashMap<ISyntacticChains, String>();
+		for (ISyntacticChains chains : setOfSynChains) {
 			String root = chains.getRoot();
 			if (!rootToIndex.containsKey(root)) {
 				rootToIndex.put(root, 0);

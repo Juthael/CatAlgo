@@ -6,20 +6,24 @@ import java.util.Set;
 
 import exceptions.GrammarModelException;
 import grammarModel.genericTools.IPosetMaxChains;
-import grammarModel.genericTools.ISynTreeChains;
+import grammarModel.genericTools.ISyntacticChains;
 import propertyPoset.IImplication;
 
 public interface ISyntacticStructure extends Cloneable {
 
 	String getName();
 	
-	ISynTreeChains getSyntacticChains() throws GrammarModelException;
+	ISyntacticChains getSyntacticChains() throws GrammarModelException;
 	
-	Set<ISynTreeChains> getSetOfSyntacticChains() throws GrammarModelException;
+	Set<ISyntacticChains> getSetOfSyntacticChains() throws GrammarModelException;
 	
 	IPosetMaxChains getPosetMaxChains() throws GrammarModelException;
 	
 	Set<IImplication> getImplications() throws GrammarModelException;
+	
+	boolean isRedundant();
+	
+	void markRedundancies();
 	
 	ISyntacticStructure clone();
 	
@@ -31,11 +35,17 @@ public interface ISyntacticStructure extends Cloneable {
 	
 	List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException;
 	
-	List<Integer> getListOfLeafIDs();
+	List<Long> getListOfLeafIDs();
+	
+	String getStringOfTerminals();
 	
 	boolean getIDHasBeenSet();
+	
+	boolean hasThisProperty(String prop);
+	
+	void setAsRedundant();
 		
-	void setPosetID(Map<ISynTreeChains, String> chainsToIndex) throws GrammarModelException;
+	void setPosetID(Map<ISyntacticChains, String> chainsToIndex) throws GrammarModelException;
 	
 	boolean replaceComponent(ISyntacticStructure newComp, Integer compID);
 		

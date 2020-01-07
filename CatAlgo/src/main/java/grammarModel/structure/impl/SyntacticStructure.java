@@ -6,9 +6,9 @@ import java.util.Set;
 
 import exceptions.GrammarModelException;
 import grammarModel.genericTools.IPosetMaxChains;
-import grammarModel.genericTools.ISynTreeChains;
+import grammarModel.genericTools.ISyntacticChains;
 import grammarModel.genericTools.impl.PosetMaxChains;
-import grammarModel.genericTools.impl.SynTreeChains;
+import grammarModel.genericTools.impl.SyntacticChains;
 import grammarModel.structure.ISyntacticStructure;
 import propertyPoset.IImplication;
 import propertyPoset.impl.Implication;
@@ -16,24 +16,27 @@ import propertyPoset.impl.Implication;
 public abstract class SyntacticStructure implements ISyntacticStructure {
 
 	private String name;
+	private boolean redundant;
 	
 	public SyntacticStructure(String name) {
 		this.name = name;
+		redundant = false;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public ISynTreeChains getSyntacticChains() throws GrammarModelException {
+	public ISyntacticChains getSyntacticChains() throws GrammarModelException {
+		ISyntacticChains synChains;
 		List<List<String>> listOfChains = getListOfSyntacticStringChains();
-		List<Integer> leafIDs = getListOfLeafIDs();
-		ISynTreeChains synChains = new SynTreeChains(listOfChains, leafIDs);
+		List<Long> leafIDs = getListOfLeafIDs();
+		synChains = new SyntacticChains(listOfChains, leafIDs);
 		return synChains;
 	}
 	
-	public Set<ISynTreeChains> getSetOfSyntacticChains() throws GrammarModelException {
-		Set<ISynTreeChains> setOfChains = new HashSet<ISynTreeChains>();
+	public Set<ISyntacticChains> getSetOfSyntacticChains() throws GrammarModelException {
+		Set<ISyntacticChains> setOfChains = new HashSet<ISyntacticChains>();
 		setOfChains.add(getSyntacticChains());
 		for (ISyntacticStructure component : getListOfComponents()) {
 			setOfChains.addAll(component.getSetOfSyntacticChains());
@@ -63,6 +66,27 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 			}
 		}
 		return implications;
+	}
+	
+	public boolean isRedundant() {
+		return redundant;
+	}
+	
+	public void markRedundancies() {
+		List<ISyntacticStructure> components = getListOfComponents();
+		for (int i=0 ; i < components.size() ; i++) {
+			String currTerminals = components.get(i).getStringOfTerminals();
+			for (int j=i+1 ; j < components.size() ; j++) {
+				if (!components.get(i).isRedundant()) {
+					String comparedTerminals = components.get(j).getStringOfTerminals();
+					if (comparedTerminals.contains(currTerminals)) {
+						components.get(i).setAsRedundant();
+					}					
+				}
+				j++;
+			}
+			i++;
+		}
 	}
 	
 	public abstract ISyntacticStructure clone();

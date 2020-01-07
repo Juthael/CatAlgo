@@ -15,7 +15,7 @@ public abstract class Chains implements IChains {
 		if (!listOfChains.isEmpty()) {
 			this.listOfChains = listOfChains;
 			currentChainIndex = 0;
-			currentElementIndex = 0;
+			currentElementIndex = -1;
 		}
 		else throw new GrammarModelException("Chains constructor : parameter is empty.");
 	}
@@ -50,7 +50,7 @@ public abstract class Chains implements IChains {
 
 	public void resetIndexes() {
 		currentChainIndex = 0;
-		currentElementIndex = 0;
+		currentElementIndex = -1;
 	}
 
 	public boolean equals(Object otherChains) {
@@ -67,13 +67,13 @@ public abstract class Chains implements IChains {
 	}
 	
 	private boolean hasNextChainElement() {
-		if (listOfChains.get(currentChainIndex).size() >= currentElementIndex + 1)
+		if (listOfChains.get(currentChainIndex).size() >= currentElementIndex + 2)
 			return true;
 		else return false;
 	}
 
 	private boolean hasNextChain() {
-		if (listOfChains.size() >= currentChainIndex + 1)
+		if (listOfChains.size() >= currentChainIndex + 2)
 			return true;
 		else return false;
 	}	
