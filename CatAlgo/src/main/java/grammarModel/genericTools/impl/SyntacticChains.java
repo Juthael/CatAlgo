@@ -2,8 +2,10 @@ package grammarModel.genericTools.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import exceptions.GrammarModelException;
 import grammarModel.genericTools.ISyntacticChains;
@@ -21,16 +23,55 @@ public class SyntacticChains extends Chains implements ISyntacticChains {
 		return leafIDs.get(currentChainIndex);
 	}
 	
-	public Map<String, Long> getDimensionToLeafID(){
-		Map<String, Long> dimensionToLeafID = new HashMap<String, Long>();
+	public Map<List<String>, Set<Long>> getPathToLeafIDs() throws GrammarModelException {
+		Map<List<String>, Set<Long>> pathToLeafID = new HashMap<List<String>, Set<Long>>();
 		List<List<String>> chains = super.getChains();
-		for (int i=0 ; i < chains.size() ; i++) {
-			List<String> dimension = new ArrayList<String>();
-			dimension.addAll(chains.get(i));
-			dimension.remove(dimension.size() - 1);
-			dimen
-			// Il peut y avoir plusieurs ID de la même dimension ???
+		try {
+			for (int i=0 ; i < chains.size() ; i++) {
+				List<String> path = new ArrayList<String>();
+				path.addAll(chains.get(i));
+				path.remove(path.size() - 1);
+				if (pathToLeafID.containsKey(path)) {
+					pathToLeafID.get(path).add(leafIDs.get(i));
+				}
+				else {
+					Set<Long> newSetOfIDs = new HashSet<Long>();
+					newSetOfIDs.add(leafIDs.get(i));
+					pathToLeafID.put(path, newSetOfIDs);
+				}
+			}	
 		}
+		catch (Exception e) {
+			throw new GrammarModelException("SyntacticChains.getDimensionToLeafIDs() : error. " 
+					+ System.lineSeparator() + e.getMessage());
+		}
+		return pathToLeafID;
+	}
+	
+	public String getLeaf(Long leafID) throws GrammarModelException {
+		String leaf;
+		int IDindex = 0;
+		boolean indexFound = false;
+		while(indexFound == false && IDindex < leafIDs.size()) {
+			if (leafID == leafIDs.get(IDindex)) 
+				indexFound = true;
+			else IDindex++;
+		}
+		if(indexFound == true) {
+			List<String> targetChain = listOfChains.get(IDindex);
+			leaf = targetChain.get(targetChain.size() - 1);
+		}
+		else throw new GrammarModelException("SyntacticChains.getLeaf() : leaf not found.");
+		return leaf;
+	}
+	
+	public boolean hasProperty(String property) throws GrammarModelException {
+		boolean propertyFound = false;
+		resetIndexes();
+		while (propertyFound == false && this.hasNext()) {
+			propertyFound = this.next().equals(property);
+		}
+		return propertyFound;
 	}
 
 }

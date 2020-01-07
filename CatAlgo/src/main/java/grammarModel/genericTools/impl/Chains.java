@@ -20,14 +20,17 @@ public abstract class Chains implements IChains {
 		else throw new GrammarModelException("Chains constructor : parameter is empty.");
 	}
 
+	@Override
 	public List<List<String>> getChains() {
 		return listOfChains;
 	}
 	
+	@Override
 	public String getRoot() {
 		return listOfChains.get(0).get(0);
 	}
 
+	@Override
 	public boolean hasNext() {
 		if ( hasNextChainElement() || hasNextChain() ) {
 			return true;
@@ -35,6 +38,7 @@ public abstract class Chains implements IChains {
 		else return false;
 	}
 
+	@Override
 	public String next() throws GrammarModelException {
 		String nextElement;
 		if ( hasNextChainElement() )
@@ -48,11 +52,13 @@ public abstract class Chains implements IChains {
 		return nextElement;
 	}
 
+	@Override
 	public void resetIndexes() {
 		currentChainIndex = 0;
 		currentElementIndex = -1;
 	}
 
+	@Override
 	public boolean equals(Object otherChains) {
 		if (this == otherChains) {
 			return true;

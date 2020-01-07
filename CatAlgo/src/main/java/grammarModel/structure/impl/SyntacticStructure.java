@@ -83,9 +83,7 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 						components.get(i).setAsRedundant();
 					}					
 				}
-				j++;
 			}
-			i++;
 		}
 	}
 	
