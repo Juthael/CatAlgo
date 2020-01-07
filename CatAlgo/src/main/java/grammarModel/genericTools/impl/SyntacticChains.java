@@ -19,10 +19,12 @@ public class SyntacticChains extends Chains implements ISyntacticChains {
 		this.leafIDs = leafIDs;
 	}
 
+	@Override
 	public long getCurrentLeafID() {
 		return leafIDs.get(currentChainIndex);
 	}
 	
+	@Override
 	public Map<List<String>, Set<Long>> getPathToLeafIDs() throws GrammarModelException {
 		Map<List<String>, Set<Long>> pathToLeafID = new HashMap<List<String>, Set<Long>>();
 		List<List<String>> chains = super.getChains();
@@ -48,6 +50,7 @@ public class SyntacticChains extends Chains implements ISyntacticChains {
 		return pathToLeafID;
 	}
 	
+	@Override
 	public String getLeaf(Long leafID) throws GrammarModelException {
 		String leaf;
 		int IDindex = 0;
@@ -65,6 +68,7 @@ public class SyntacticChains extends Chains implements ISyntacticChains {
 		return leaf;
 	}
 	
+	@Override
 	public boolean hasProperty(String property) throws GrammarModelException {
 		boolean propertyFound = false;
 		resetIndexes();

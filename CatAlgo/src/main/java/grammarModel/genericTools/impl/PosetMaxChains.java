@@ -31,6 +31,7 @@ public class PosetMaxChains extends Chains implements IPosetMaxChains {
 		return super.getChains();
 	}
 	
+	@Override
 	public Set<String> getProperties() {
 		Set<String> properties = new HashSet<String>();
 		for (List<String> chain : listOfChains) {
@@ -41,10 +42,12 @@ public class PosetMaxChains extends Chains implements IPosetMaxChains {
 		return properties;
 	}
 
+	@Override
 	public Set<IImplication> getImplications() {
 		return implications;
 	}
 	
+	@Override
 	public void resetIndexes() {
 		super.resetIndexes();
 		currentConsequentIndex = -1;
