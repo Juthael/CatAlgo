@@ -27,6 +27,7 @@ public class PosetMaxChains extends Chains implements IPosetMaxChains {
 		this.implications = implications;
 	}	
 
+	@Override
 	public List<List<String>> getMaximalChains() {
 		return super.getChains();
 	}
@@ -53,6 +54,11 @@ public class PosetMaxChains extends Chains implements IPosetMaxChains {
 		currentConsequentIndex = -1;
 	}
 	
+	/**
+	 * 
+	 * @return the set of implications associated with the semilattice, if it hasn't been given as a constructor parameter.
+	 * @throws GrammarModelException
+	 */
 	private Set<IImplication> setSetOfImplications() throws GrammarModelException{
 		Set<IImplication> implications = new HashSet<IImplication>();
 		while (this.hasNextImplication()) {
@@ -62,10 +68,21 @@ public class PosetMaxChains extends Chains implements IPosetMaxChains {
 		return implications;
 	}
 	
+	/**
+	 * 
+	 * @return true if another implication is to be found by navigating the chains (even if it is a redundant one, 
+	 * because the set of implications already contains it)
+	 */
 	private boolean hasNextImplication() {
 		return super.hasNext();
 	}
 	
+	/**
+	 * 
+	 * @return the next implication found by navigating the chains (may be redundant, if the set of implications already 
+	 * contains it)
+	 * @throws GrammarModelException
+	 */
 	private IImplication getNextImplication() throws GrammarModelException {
 		IImplication currentImplication;
 		try {
@@ -89,6 +106,11 @@ public class PosetMaxChains extends Chains implements IPosetMaxChains {
 		return currentImplication;
 	}
 	
+	/**
+	 * 
+	 * @return true if another consequent is to be found for the current antecedent in the current chain. 
+	 * @throws GrammarModelException
+	 */
 	private boolean hasNextConsequent() {
 		if (super.listOfChains.get(currentChainIndex).size() >= currentConsequentIndex +2)
 			return true;

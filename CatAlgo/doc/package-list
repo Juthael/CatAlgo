@@ -1,1 +1,10 @@
+exceptions
+grammarModel.genericTools
 grammarModel.genericTools.impl
+grammarModel.structure
+grammarModel.structure.impl
+grammars.copyCat.branches
+grammars.copyCat.disjunctions
+grammars.copyCat.leaves
+propertyPoset
+propertyPoset.impl
