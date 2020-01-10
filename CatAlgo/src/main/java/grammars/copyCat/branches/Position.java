@@ -35,7 +35,7 @@ public class Position extends SyntacticBranch implements ISyntacticBranch, IAbst
 				compReplaced = true;
 			}
 			else {
-				compReplaced = valOrRel.replaceComponent(newComp, compID);
+				compReplaced = valOrRel.replaceComponents(newComp, compID);
 			}
 		}
 		return compReplaced;

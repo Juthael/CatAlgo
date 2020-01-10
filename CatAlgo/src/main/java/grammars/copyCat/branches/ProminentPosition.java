@@ -38,7 +38,7 @@ public class ProminentPosition extends SyntacticBranch implements ISyntacticBran
 				compReplaced = true;
 			}
 			else {
-				compReplaced = promPosition.replaceComponent(newComp, compID);
+				compReplaced = promPosition.replaceComponents(newComp, compID);
 			}
 		}
 		else if (position.getListOfLeafIDs().contains(compID)) {

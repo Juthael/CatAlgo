@@ -46,7 +46,7 @@ public class Letter extends SyntacticBranch implements ISyntacticBranch {
 				compReplaced = true;
 			}
 			else {
-				compReplaced = position.replaceComponent(newComp, compID);
+				compReplaced = position.replaceComponents(newComp, compID);
 			}
 		} 
 		return compReplaced;

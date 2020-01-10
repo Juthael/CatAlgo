@@ -11,7 +11,7 @@ import grammarModel.structure.ISyntacticStructure;
 
 public abstract class SyntacticLeaf extends SyntacticStructure implements ISyntacticLeaf {
 
-	private final int leafID;
+	private final long leafID;
 	private static int ID_COUNT = 0;
 	
 	public SyntacticLeaf(String name) {
@@ -20,15 +20,18 @@ public abstract class SyntacticLeaf extends SyntacticStructure implements ISynta
 		ID_COUNT++;
 	}
 
-	public String getPosetFullName() throws GrammarModelException {
+	@Override
+	public String getPosetElementName() throws GrammarModelException {
 		return getName();
 	}
 
+	@Override
 	public List<ISyntacticStructure> getListOfComponents() {
 		List<ISyntacticStructure> comp = new ArrayList<ISyntacticStructure>();
 		return comp;
 	}
 
+	@Override
 	public List<List<String>> getListOfSyntacticStringChains() {
 		List<List<String>> synChains = new ArrayList<List<String>>();
 		List<String> synChain = new ArrayList<String>();
@@ -37,33 +40,44 @@ public abstract class SyntacticLeaf extends SyntacticStructure implements ISynta
 		return synChains;
 	}
 
+	@Override
 	public List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException {
 		List<List<String>> posetChains = new ArrayList<List<String>>();
 		List<String> posetChain = new ArrayList<String>();
-		posetChain.add(getPosetFullName());
+		posetChain.add(getPosetElementName());
 		posetChains.add(posetChain);
 		return posetChains;
 		
 	}
 	
-	public int getLeafID() {
+	@Override
+	public long getLeafID() {
 		return leafID;
 	}
 
-	public List<Integer> getListOfLeafIDs() {
-		List<Integer> iDs = new ArrayList<Integer>();
+	@Override
+	public List<Long> getListOfLeafIDs() {
+		List<Long> iDs = new ArrayList<Long>();
 		iDs.add(leafID);
 		return iDs;
 	}
+	
+	@Override
+	public String getStringOfTerminals() {
+		return getName();
+	}
 
+	@Override
 	public boolean getIDHasBeenSet() {
 		return true;
 	}
-
-	public void setPosetID(Map<ISyntacticChains, String> chainsToIndex) {
+	
+	@Override
+	public void setPosetElementID(Map<ISyntacticChains, String> chainsToIndex) {
 	}
 	
-	public boolean replaceComponent(ISyntacticStructure newComp, Integer compID) {
+	@Override
+	public boolean replaceComponents(ISyntacticStructure newComp, List<Long> compID) {
 		return false;
 	}
 

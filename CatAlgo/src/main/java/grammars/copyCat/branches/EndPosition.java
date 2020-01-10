@@ -35,7 +35,7 @@ public class EndPosition extends SyntacticBranch implements ISyntacticBranch, IS
 				compReplaced = true;
 			}
 			else {
-				compReplaced = endPosition.replaceComponent(newComp, compID);
+				compReplaced = endPosition.replaceComponents(newComp, compID);
 			}
 		}
 		return compReplaced;

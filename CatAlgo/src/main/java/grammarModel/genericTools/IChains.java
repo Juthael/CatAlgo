@@ -4,10 +4,10 @@ import java.util.List;
 
 import exceptions.GrammarModelException;
 /**
- * An IChains contains an indexed list of indexed lists of Strings, with navigation functionalities (a 'chain' 
- * is a list of Strings). 
- * Can be extended as ISyntacticChains (spanning chains of a syntactic tree) or IPosetMaxChains 
- * (spanning chains of a lower semilattice).
+ * IChains contains an indexed list of indexed lists of Strings, with navigation functionalities (a 'chain' 
+ * is a list of Strings, so IChains is a list of chains). 
+ * Can be extended as a ISyntacticChains (every path of a syntactic tree leading from its start element to a terminal) 
+ * or a IPosetMaxChains (spanning chains of a lower semilattice).
  *  
  * @author Gael Tregouet
  *

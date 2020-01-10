@@ -47,7 +47,7 @@ public class Relation extends SyntacticBranch implements ISyntacticBranch, IValu
 				compReplaced = true;
 			}
 			else {
-				compReplaced = rule.replaceComponent(newComp, compID);
+				compReplaced = rule.replaceComponents(newComp, compID);
 			}
 		}
 		return compReplaced;

@@ -34,7 +34,7 @@ public class Increment extends SyntacticBranch implements ISyntacticBranch {
 				compReplaced = true;
 			}
 			else {
-				compReplaced = valOrRel.replaceComponent(newComp, compID);
+				compReplaced = valOrRel.replaceComponents(newComp, compID);
 			}
 		}
 		return compReplaced;

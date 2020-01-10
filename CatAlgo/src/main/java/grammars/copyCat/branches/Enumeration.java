@@ -35,7 +35,7 @@ public class Enumeration extends SyntacticBranch implements ISyntacticBranch, IR
 				compReplaced = true;
 			}
 			else {
-				compReplaced = valOrRel.replaceComponent(newComp, compID);
+				compReplaced = valOrRel.replaceComponents(newComp, compID);
 			}
 		}
 		return compReplaced;
