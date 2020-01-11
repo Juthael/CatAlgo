@@ -24,10 +24,11 @@ import propertyPoset.IImplication;
 public interface ISyntacticStructure extends Cloneable {
 
 	/**
-	 * @return the name (or type) of the node from which the syntactic structure is derived. 
-	 * This name refers to a grammatical element of the context-free grammar at use. 
+	 * @return the name (or type) of this structure, which is also the name of the generating node in the syntactic tree 
+	 * from which its components are derived : it therefore refers to a grammatical element of the context-free grammar 
+	 * at use. 
 	 * Two different syntactic structures can have the same name if this name is a non-terminal element (or 'variable') 
-	 * of a context-free grammar that can lead to different derivations.
+	 * of the context-free grammar that can lead to different derivations.
 	 */
 	String getName();
 	
@@ -108,8 +109,10 @@ public interface ISyntacticStructure extends Cloneable {
 	String getPosetElementName() throws GrammarModelException;
 	
 	/**
-	 * @return the list of component structures. Those component structures represent nodes of a syntactic tree, 
-	 * directly derived from the node represented by this structure. 
+	 * @return the list of component structures. The composition relationship between ISyntacticStructure objects 
+	 * being an equivalent to the derivation relationship between nodes of a syntactic tree, component structures 
+	 * represent the nodes of a syntactic tree that are directly derived from the generating node of this structure
+	 * (the one that gives this structure its name). 
 	 */
 	List<ISyntacticStructure> getListOfComponents();
 	

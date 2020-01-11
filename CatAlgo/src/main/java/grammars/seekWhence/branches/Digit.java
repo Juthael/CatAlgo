@@ -1,0 +1,55 @@
+package grammars.seekWhence.branches;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import grammarModel.structure.ISyntacticBranch;
+import grammarModel.structure.ISyntacticStructure;
+import grammarModel.structure.impl.SyntacticBranch;
+import grammars.seekWhence.disjunctions.IValueOrRelation;
+import grammars.seekWhence.leaves.DigiT;
+
+/**
+ * Digit represents a variable symbol of the context-free grammar associated with the microworld 'SeekWhence'. 
+ * Any instance of this class represents a 'syntactic branch', i.e. the whole derivation of a non-terminal node in a
+ * syntactic tree.
+ * @author Gael Tregouet
+ *
+ */
+public final class Digit extends SyntacticBranch implements ISyntacticBranch {
+	
+	private static final String NAME = "Digit";
+	private final DigiT digiT;
+	private IValueOrRelation valOrRel;
+	private final Position position;
+
+	public Digit(DigiT digiT, IValueOrRelation valOrRel, Position position) {
+		this.digiT = digiT;
+		this.valOrRel = valOrRel;
+		this.position = position;
+		super.tree = true;
+	}
+
+	@Override
+	public String getName() {
+		return NAME;
+	}
+	
+	@Override
+	public List<ISyntacticStructure> getListOfComponents() {
+		List<ISyntacticStructure> components = new ArrayList<ISyntacticStructure>();
+		components.add(digiT);
+		components.add(valOrRel);
+		components.add(position);
+		return components;
+	}
+
+	@Override
+	public ISyntacticStructure clone() {
+		DigiT digiTClone = (DigiT) digiT.clone();
+		IValueOrRelation valOrRelClone = (IValueOrRelation) valOrRel.clone();
+		Position positionClone = (Position) position.clone();
+		return new Digit(digiTClone, valOrRelClone, positionClone);
+	}
+
+}

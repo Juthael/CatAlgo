@@ -18,17 +18,10 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 	private ISyntacticLeaf labelLeaf;
 	private String posetID = "";
 	private boolean iDHasBeenSet = false;
-	private boolean tree;
+	protected boolean tree = false;
 	
-	public SyntacticBranch(String name) {
-		super(name);
-		tree = false;
+	public SyntacticBranch() {
 	}
-	
-	public SyntacticBranch(String name, boolean tree) {
-		super(name);
-		this.tree = tree;
-	}	
 
 	@Override
 	public boolean replaceComponents(ISyntacticStructure newComp, List<Long> compIDs) {

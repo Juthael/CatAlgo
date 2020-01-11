@@ -14,9 +14,13 @@ public abstract class SyntacticLeaf extends SyntacticStructure implements ISynta
 	private final long leafID;
 	private static int ID_COUNT = 0;
 	
-	public SyntacticLeaf(String name) {
-		super(name);
+	public SyntacticLeaf() {
 		leafID = ID_COUNT;
+		ID_COUNT++;
+	}
+	
+	public SyntacticLeaf(long leafID) {
+		this.leafID = leafID;
 		ID_COUNT++;
 	}
 

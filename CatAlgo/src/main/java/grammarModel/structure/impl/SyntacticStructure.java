@@ -15,17 +15,10 @@ import propertyPoset.impl.Implication;
 
 public abstract class SyntacticStructure implements ISyntacticStructure {
 
-	private String name;
 	protected boolean redundant;
 	
-	public SyntacticStructure(String name) {
-		this.name = name;
+	public SyntacticStructure() {
 		redundant = false;
-	}
-
-	@Override
-	public String getName() {
-		return name;
 	}
 
 	@Override
@@ -76,7 +69,7 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 	@Override
 	public boolean hasThisProperty(String prop) {
 		boolean hasThisProperty = false;
-		if (prop.equals(name)) {
+		if (prop.equals(getName())) {
 			hasThisProperty = true;
 		}
 		else {

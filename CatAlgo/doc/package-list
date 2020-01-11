@@ -4,8 +4,8 @@ grammarModel.genericTools
 grammarModel.genericTools.impl
 grammarModel.structure
 grammarModel.structure.impl
-grammars.copyCat.branches
-grammars.copyCat.disjunctions
-grammars.copyCat.leaves
+grammars.seekWhence.branches
+grammars.seekWhence.disjunctions
+grammars.seekWhence.leaves
 propertyPoset
 propertyPoset.impl

@@ -5,10 +5,11 @@ import java.util.Map;
 import java.util.Set;
 
 import exceptions.GrammarModelException;
+import grammarModel.structure.ISyntacticStructure;
 /**
  * A ISyntacticChains is a list (endowed with navigation functionalities) of all the paths of a syntactic structure 
  * from its generated node to one of its terminals.
- *   
+ * @see ISyntacticStructure
  * @author Gael Tregouet
  *
  */

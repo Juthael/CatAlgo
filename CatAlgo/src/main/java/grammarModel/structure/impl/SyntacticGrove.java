@@ -12,13 +12,19 @@ import grammarModel.structure.ISyntacticStructure;
 
 public class SyntacticGrove extends SyntacticBranch implements ISyntacticGrove {
 
+	private String name;
 	private List<ISyntacticStructure> listOfTrees;
 	
 	public SyntacticGrove(String name, List<ISyntacticStructure> listOfTrees) {
-		super(name);
+		this.name = name;
 		this.listOfTrees = listOfTrees;
 	}
 
+	@Override
+	public String getName() {
+		return name;
+	}
+	
 	@Override
 	public List<ISyntacticStructure> getListOfComponents() {
 		return listOfTrees;
