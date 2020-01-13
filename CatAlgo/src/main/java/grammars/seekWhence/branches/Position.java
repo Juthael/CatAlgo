@@ -7,7 +7,7 @@ import grammarModel.structure.ISyntacticBranch;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.impl.SyntacticBranch;
 import grammars.seekWhence.disjunctions.IAlternation;
-import grammars.seekWhence.disjunctions.ITermOrVarValue;
+import grammars.seekWhence.disjunctions.IValueOrValuE;
 import grammars.seekWhence.leaves.PositioN;
 
 /**
@@ -22,12 +22,12 @@ public final class Position extends SyntacticBranch implements ISyntacticBranch 
 	private static final String NAME = "Position";
 	private final PositioN positioN;
 	private IAlternation iAlternation;
-	private ITermOrVarValue positionValue;
+	private IValueOrValuE valueOrValuE;
 	
-	public Position(PositioN positioN, IAlternation iAlternation, ITermOrVarValue positionValue) {
+	public Position(PositioN positioN, IAlternation iAlternation, IValueOrValuE valueOrValuE) {
 		this.positioN = positioN;
 		this.iAlternation = iAlternation;
-		this.positionValue = positionValue;
+		this.valueOrValuE = valueOrValuE;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public final class Position extends SyntacticBranch implements ISyntacticBranch 
 		List<ISyntacticStructure> components = new ArrayList<ISyntacticStructure>();
 		components.add(positioN);
 		components.add(iAlternation);
-		components.add(positionValue);
+		components.add(valueOrValuE);
 		return components;
 	}
 
@@ -48,7 +48,7 @@ public final class Position extends SyntacticBranch implements ISyntacticBranch 
 	public ISyntacticStructure clone() {
 		PositioN positioNClone = (PositioN) positioN.clone();
 		IAlternation iAlternationClone = (IAlternation) iAlternation.clone();
-		ITermOrVarValue positionValueClone = (ITermOrVarValue) positionValue.clone();
+		IValueOrValuE positionValueClone = (IValueOrValuE) valueOrValuE.clone();
 		return new Position(positioNClone, iAlternationClone, positionValueClone);
 	}
 

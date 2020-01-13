@@ -20,11 +20,11 @@ public final class EveryXElem extends SyntacticBranch implements ISyntacticBranc
 	
 	private static final String NAME = "EveryXElem";
 	private final EveryXEleM everyXEleM;
-	private final ValuE value;
+	private final ValuE valuE;
 
-	public EveryXElem(EveryXEleM everyXEleM, ValuE value) {
+	public EveryXElem(EveryXEleM everyXEleM, ValuE valuE) {
 		this.everyXEleM = everyXEleM;
-		this.value = value;
+		this.valuE = valuE;
 	}
 
 	@Override
@@ -36,14 +36,14 @@ public final class EveryXElem extends SyntacticBranch implements ISyntacticBranc
 	public List<ISyntacticStructure> getListOfComponents() {
 		List<ISyntacticStructure> components = new ArrayList<ISyntacticStructure>();
 		components.add(everyXEleM);
-		components.add(value);
+		components.add(valuE);
 		return components;
 	}
 
 	@Override
 	public ISyntacticStructure clone() {
 		EveryXEleM everyXEleMClone = (EveryXEleM) everyXEleM.clone();
-		ValuE valuEClone = (ValuE) value.clone();
+		ValuE valuEClone = (ValuE) valuE.clone();
 		return new EveryXElem(everyXEleMClone, valuEClone);
 	}
 

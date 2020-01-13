@@ -7,5 +7,7 @@ grammarModel.structure.impl
 grammars.seekWhence.branches
 grammars.seekWhence.disjunctions
 grammars.seekWhence.leaves
+grammars.seekWhence.treeGenUtils
+grammars.seekWhence.treeGenUtils.exception
 propertyPoset
 propertyPoset.impl

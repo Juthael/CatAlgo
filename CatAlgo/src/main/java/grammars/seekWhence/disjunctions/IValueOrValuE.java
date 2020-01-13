@@ -8,6 +8,6 @@ import grammarModel.structure.ISyntacticStructure;
  * @author Gael Tregouet
  *
  */
-public interface ITermOrVarValue extends ISyntacticStructure {
+public interface IValueOrValuE extends ISyntacticStructure {
 
 }
