@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import exceptions.GrammarModelException;
 import grammarModel.GrammarModelConstants;
+import grammarModel.exceptions.GrammarModelException;
 import grammarModel.genericTools.ISyntacticChains;
 import grammarModel.structure.ISyntacticBranch;
 import grammarModel.structure.ISyntacticLeaf;

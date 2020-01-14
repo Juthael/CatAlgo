@@ -1,4 +1,4 @@
-package grammars.seekWhence.treeGenUtils;
+package grammarModel.genericTools.impl;
 
 import java.nio.file.Path;
 
@@ -7,13 +7,13 @@ import grammars.seekWhence.treeGenUtils.exception.SwFileReaderException;
 import grammars.seekWhence.treeGenUtils.exception.SwTreeGenException;
 
 /**
- * ISwFileReader allows the generation of a 'syntactic grove' out of a text file, provided it contains lists of paths 
+ * IGenericFileReader allows the generation of a 'syntactic grove' out of a text file, provided it contains lists of paths 
  * of syntactic trees generated using the 'SeekWhence' context-free grammar.
  * @see ISyntacticGrove
  * @author Gael Tregouet
  *
  */
-public interface ISwFileReader {
+public interface IGenericFileReader {
 	
 	/**
 	 * Writing rules to be respected in order to avoid throwing an exception : <br>

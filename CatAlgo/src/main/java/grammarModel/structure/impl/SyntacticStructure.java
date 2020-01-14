@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import exceptions.GrammarModelException;
+import grammarModel.exceptions.GrammarModelException;
 import grammarModel.genericTools.IPosetMaxChains;
 import grammarModel.genericTools.ISyntacticChains;
 import grammarModel.genericTools.impl.PosetMaxChains;

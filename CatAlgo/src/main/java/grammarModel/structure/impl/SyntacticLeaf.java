@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import exceptions.GrammarModelException;
+import grammarModel.exceptions.GrammarModelException;
 import grammarModel.genericTools.ISyntacticChains;
 import grammarModel.structure.ISyntacticLeaf;
 import grammarModel.structure.ISyntacticStructure;

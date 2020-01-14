@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import exceptions.GrammarModelException;
+import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 /**
  * A ISyntacticChains is a list (endowed with navigation functionalities) of all the paths of a syntactic structure 

@@ -2,7 +2,7 @@ package grammarModel.structure;
 
 import java.util.List;
 
-import exceptions.GrammarModelException;
+import grammarModel.exceptions.GrammarModelException;
 
 /**
  * ISyntacticGrove is a container of syntactic trees, i.e. syntactic branches whose name is the start element of

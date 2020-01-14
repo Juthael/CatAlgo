@@ -3,7 +3,7 @@ package grammarModel.structure;
 import java.util.List;
 import java.util.Map;
 
-import exceptions.GrammarModelException;
+import grammarModel.exceptions.GrammarModelException;
 import grammarModel.genericTools.ISyntacticChains;
 
 /**

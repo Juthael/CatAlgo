@@ -2,7 +2,7 @@ package grammarModel.genericTools;
 
 import java.util.List;
 
-import exceptions.GrammarModelException;
+import grammarModel.exceptions.GrammarModelException;
 /**
  * IChains contains an indexed list of indexed lists of Strings, with navigation functionalities (a 'chain' 
  * is a list of Strings, so IChains is a list of chains). 

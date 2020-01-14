@@ -2,7 +2,7 @@ package grammarModel.genericTools.impl;
 
 import java.util.List;
 
-import exceptions.GrammarModelException;
+import grammarModel.exceptions.GrammarModelException;
 import grammarModel.genericTools.IChains;
 
 /**

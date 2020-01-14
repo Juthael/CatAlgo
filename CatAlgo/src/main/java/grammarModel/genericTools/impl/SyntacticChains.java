@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import exceptions.GrammarModelException;
+import grammarModel.exceptions.GrammarModelException;
 import grammarModel.genericTools.ISyntacticChains;
 
 public class SyntacticChains extends Chains implements ISyntacticChains {
