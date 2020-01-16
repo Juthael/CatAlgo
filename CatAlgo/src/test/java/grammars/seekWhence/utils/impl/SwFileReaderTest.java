@@ -28,6 +28,6 @@ public class SwFileReaderTest {
 			System.out.print(e.getMessage());
 		}
 		assertTrue(aGroveHasBeenReturned);
-	}
+	}	
 
 }

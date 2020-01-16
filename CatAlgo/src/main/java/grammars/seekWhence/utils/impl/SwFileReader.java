@@ -23,6 +23,7 @@ import grammars.seekWhence.branches.Size;
 import grammars.seekWhence.branches.StartAt;
 import grammars.seekWhence.branches.Symmetry;
 import grammars.seekWhence.branches.SymmetryWithCenter;
+import grammars.seekWhence.branches.Value;
 import grammars.seekWhence.disjunctions.IAlternation;
 import grammars.seekWhence.disjunctions.IRule;
 import grammars.seekWhence.disjunctions.IValueOrRelation;
@@ -85,7 +86,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = alternationRule;
+				putStructureIntoArray(alternationRule, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "AlternationRulE" : 
@@ -108,7 +109,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = alternationRulE;
+				putStructureIntoArray(alternationRulE, treeIndex, pathIndex, nodeIndex);	
 			}
 			break;
 		case "ArithSeq" : 
@@ -134,7 +135,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = arithSeq;
+				putStructureIntoArray(arithSeq, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "ArithSeQ" : 
@@ -157,7 +158,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = arithSeQ;
+				putStructureIntoArray(arithSeQ, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "BouncingCycle" : 
@@ -182,7 +183,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = bouncingCycle;
+				putStructureIntoArray(bouncingCycle, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "BouncingCyclE" : 
@@ -205,7 +206,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = bouncingCyclE;
+				putStructureIntoArray(bouncingCyclE, treeIndex, pathIndex, nodeIndex);
 			}
 			break;	
 		case "Center" : 
@@ -230,7 +231,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = center;
+				putStructureIntoArray(center, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "CenteR" : 
@@ -253,7 +254,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = centeR;
+				putStructureIntoArray(centeR, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "Cycle" : 
@@ -278,7 +279,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = cycle;
+				putStructureIntoArray(cycle, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "CyclE" : 
@@ -301,7 +302,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = cyclE;
+				putStructureIntoArray(cyclE, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "Digit" : 
@@ -327,7 +328,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = digit;
+				putStructureIntoArray(digit, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "DigiT" : 
@@ -350,7 +351,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = digiT;
+				putStructureIntoArray(digiT, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "Enumeration" : 
@@ -375,7 +376,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = enumeration;
+				putStructureIntoArray(enumeration, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "EnumeratioN" : 
@@ -398,7 +399,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = enumeratioN;
+				putStructureIntoArray(enumeratioN, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "EveryXElem" : 
@@ -423,7 +424,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = everyXElem;
+				putStructureIntoArray(everyXElem, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "EveryXEleM" : 
@@ -446,7 +447,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = everyXEleM;
+				putStructureIntoArray(everyXEleM, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "FirstValue" : 
@@ -471,7 +472,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = firstValue;
+				putStructureIntoArray(firstValue, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "FirstValuE" : 
@@ -494,7 +495,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = firstValuE;
+				putStructureIntoArray(firstValuE, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "Increment" : 
@@ -519,7 +520,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = increment;
+				putStructureIntoArray(increment, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "IncremenT" : 
@@ -542,7 +543,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = incremenT;
+				putStructureIntoArray(incremenT, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "NoAlterN" : 
@@ -565,7 +566,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = noAlterN;
+				putStructureIntoArray(noAlterN, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "Position" : 
@@ -591,7 +592,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = position;
+				putStructureIntoArray(position, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "PositioN" : 
@@ -614,7 +615,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = positioN;
+				putStructureIntoArray(positioN, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "ReflectedPart" : 
@@ -639,7 +640,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = reflectedPart;
+				putStructureIntoArray(reflectedPart, treeIndex, pathIndex, nodeIndex);
 			}
 			break;	
 		case "ReflectedParT" : 
@@ -662,7 +663,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = reflectedParT;
+				putStructureIntoArray(reflectedParT, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "Relation" : 
@@ -688,7 +689,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = relation;
+				putStructureIntoArray(relation, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "RelatioN" : 
@@ -711,7 +712,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = relatioN;
+				putStructureIntoArray(relatioN, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "Size" : 
@@ -736,7 +737,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = size;
+				putStructureIntoArray(size, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "SizE" : 
@@ -759,7 +760,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = sizE;
+				putStructureIntoArray(sizE, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "StartAt" : 
@@ -784,7 +785,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = startAt;
+				putStructureIntoArray(startAt, treeIndex, pathIndex, nodeIndex);
 			}
 			break;	
 		case "StartAT" : 
@@ -807,7 +808,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = startAT;
+				putStructureIntoArray(startAT, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "Symmetry" :
@@ -833,7 +834,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 								+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 								+ " ; Node : " + Integer.toString(nodeIndex));
 					}
-					structures[treeIndex][pathIndex][nodeIndex] = symmetry;	
+					putStructureIntoArray(symmetry, treeIndex, pathIndex, nodeIndex);
 				}
 				else if (components.size() == 4) {
 					SymmetryWithCenter symmWithCenter;
@@ -851,7 +852,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 								+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 								+ " ; Node : " + Integer.toString(nodeIndex));
 					}
-					structures[treeIndex][pathIndex][nodeIndex] = symmWithCenter;						
+					putStructureIntoArray(symmWithCenter, treeIndex, pathIndex, nodeIndex);			
 				}
 			}
 			break;
@@ -875,7 +876,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = symmetrY;
+				putStructureIntoArray(symmetrY, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		case "SymmetryWithCenteR" : 
@@ -898,16 +899,43 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = symmetryWithCenteR;
+				putStructureIntoArray(symmetryWithCenteR, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
 		default : 
 			if(nodeIndex+1 < treeDescriptions[treeIndex][pathIndex].length) {
-				throw new FileReaderException("SwFileReader.buildSyntacticStructure() :  unrecognized "
-						+ "non-terminal node name '" + nodeName + "'." 
-						+ System.lineSeparator()
-						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
-						+ " ; Node : " + Integer.toString(nodeIndex));
+				if (isInteger(nodeName)) {
+					if (components.size() != 2) {
+						throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'Value' number "
+								+ "of components should be 2 instead of " + Integer.toString(components.size()) + "." 
+								+ System.lineSeparator()
+								+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
+								+ " ; Node : " + Integer.toString(nodeIndex));
+					}
+					else {
+						Value value;
+						try {
+							ValuE valuE = (ValuE) components.get(0);
+							IValueOrValuE whichValue = (IValueOrValuE) components.get(1);
+							value = new Value(valuE, whichValue);
+						}
+						catch (Exception e) {
+							throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+									+ "a 'Value' syntactic branch. " + e.getMessage() 
+									+ System.lineSeparator()
+									+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
+									+ " ; Node : " + Integer.toString(nodeIndex));
+						}
+						putStructureIntoArray(value, treeIndex, pathIndex, nodeIndex);
+					}
+				}
+				else {
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() :  unrecognized "
+							+ "non-terminal node name '" + nodeName + "'." 
+							+ System.lineSeparator()
+							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
+							+ " ; Node : " + Integer.toString(nodeIndex));					
+				}
 			}
 			else {
 				ValuE valuE;
@@ -921,10 +949,28 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
 				}
-				structures[treeIndex][pathIndex][nodeIndex] = valuE;
+				putStructureIntoArray(valuE, treeIndex, pathIndex, nodeIndex);
 			}
 			break;					
 		}
 	}
-
+	
+	private static boolean isInteger(String s) {
+		boolean integer = true;
+		if(s.isEmpty())
+			integer = false;
+		else {
+			int i = 0;
+			while (integer == true && i < s.length()) {
+				char current = s.charAt(i);
+				if(current == '-') {
+					if (i != 0 || s.length() == 1)
+						integer = false;
+				}
+				else integer = Character.isDigit(current);
+				i++;
+			}
+		}
+		return integer;
+	}
 }

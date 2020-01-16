@@ -199,7 +199,7 @@ public abstract class GenericFileReader implements IGenericFileReader {
 		else {
 			currentPathIndex++;
 		}
-		castComponentsAndInstantiateStructure(nodeName, components, treeIndex, currentPathIndex, nodeIndex);
+		castComponentsAndInstantiateStructure(nodeName, components, treeIndex, pathIndex, nodeIndex);
 		return currentPathIndex;
 	}	
 	
@@ -217,5 +217,28 @@ public abstract class GenericFileReader implements IGenericFileReader {
 	 */
 	protected abstract void castComponentsAndInstantiateStructure(String nodeName, List<ISyntacticStructure> components, 
 			int treeIndex, int pathIndex, int nodeIndex) throws FileReaderException;
+	
+	/**
+	 * @param structure structure to be stored
+	 * @param treeIndex first 'structures' array coordinate
+	 * @param pathIndex second 'structures' array coordinate
+	 * @param nodeIndex third 'structures' array coordinate
+	 * @throws FileReaderException 
+	 */
+	protected void putStructureIntoArray(ISyntacticStructure structure, int treeIndex, int pathIndex, int nodeIndex) 
+			throws FileReaderException {
+		try {
+			structures[treeIndex][pathIndex][nodeIndex] = structure;
+		}
+		catch (Exception e) {
+			//HERE
+			System.out.println("");
+			throw new FileReaderException("GenericFileReader.castComponentsAndInstantiateStructure() : could not "
+					+ "put the new structure into the 'structures' array. Node : " + structure.getName() + 
+					", treeIndex : " + Integer.toString(treeIndex) + ", pathIndex : " + Integer.toString(pathIndex) 
+					+ ", nodeIndex : " + Integer.toString(nodeIndex) + System.lineSeparator() + "Message : "
+					+ System.lineSeparator() + e.getMessage());
+		}
+	}
 
 }

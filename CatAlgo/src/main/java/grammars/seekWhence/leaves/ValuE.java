@@ -3,6 +3,8 @@ package grammars.seekWhence.leaves;
 import grammarModel.structure.ISyntacticLeaf;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.impl.SyntacticLeaf;
+import grammars.seekWhence.disjunctions.IValueOrRelation;
+import grammars.seekWhence.disjunctions.IValueOrValuE;
 
 /**
  * ValuE represents a terminal symbol of the context-free grammar associated with the microworld 'SeekWhence'. 
@@ -10,7 +12,7 @@ import grammarModel.structure.impl.SyntacticLeaf;
  * @author Gael Tregouet
  *
  */
-public final class ValuE extends SyntacticLeaf implements ISyntacticLeaf {
+public final class ValuE extends SyntacticLeaf implements ISyntacticLeaf, IValueOrRelation, IValueOrValuE {
 
 	public final String value;
 	
