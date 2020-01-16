@@ -1,15 +1,11 @@
-package grammars.seekWhence.treeGenUtils.impl;
+package grammars.seekWhence.utils.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
-import grammarModel.structure.ISyntacticGrove;
+import grammarModel.exceptions.FileReaderException;
+import grammarModel.genericTools.IGenericFileReader;
+import grammarModel.genericTools.impl.GenericFileReader;
 import grammarModel.structure.ISyntacticStructure;
-import grammarModel.structure.impl.SyntacticGrove;
 import grammars.seekWhence.branches.AlternationRule;
 import grammars.seekWhence.branches.ArithSeq;
 import grammars.seekWhence.branches.BouncingCycle;
@@ -50,166 +46,25 @@ import grammars.seekWhence.leaves.StartAT;
 import grammars.seekWhence.leaves.SymmetrY;
 import grammars.seekWhence.leaves.SymmetryWithCenteR;
 import grammars.seekWhence.leaves.ValuE;
-import grammars.seekWhence.treeGenUtils.ISwFileReader;
-import grammars.seekWhence.treeGenUtils.exception.SwFileReaderException;
-import grammars.seekWhence.treeGenUtils.exception.SwTreeGenException;
 
-public class SwFileReader implements ISwFileReader {
-
-	//to do : genericFileReaderException, genericFileReader, classwithMain
-	
-	String[][][] treeDescriptions;
-	ISyntacticStructure[][][] structures;
+/**
+ * ISwFileReader is a IGenericFileReader using the 'SeekWhence' context-free grammar.
+ * @author Gael Tregouet
+ *
+ */
+public class SwFileReader extends GenericFileReader implements IGenericFileReader {
 	
 	public SwFileReader() {
+		super.ctxtName = "SeekWhenceCtxt";
 	}
-
+		
 	@Override
-	public ISyntacticGrove getSyntacticGrove(Path path) throws SwTreeGenException, SwFileReaderException {
-		List<ISyntacticStructure> trees = new ArrayList<ISyntacticStructure>();
-		treeDescriptions = setDescriptions(path);
-		structures = setStructures(treeDescriptions);
-		for (int treeIndex=0 ; treeIndex < treeDescriptions.length ; treeIndex++)
-			trees.add(buildTree(treeIndex));
-		return new SyntacticGrove("SeekWhenceCtxt", trees);
-	}
-	
-	private String[][][] setDescriptions(Path path) throws SwFileReaderException {
-		String[][][] treeDescripts = new String[getNumberOfTrees(path)][][];
-		int treeDescriptsIndex = 0;
-		BufferedReader reader;
-		try {
-			reader = Files.newBufferedReader(path);
-		}
-		catch (Exception e) {
-			throw new SwFileReaderException("SwFileReader.setDescriptions() : BufferedReader couldn't be instantiated."
-					+ System.lineSeparator() + e.getMessage());
-		}
-		String line;
-		String[][] treeDescript;
-		List<String> currentTreePaths = new ArrayList<String>(); 
-		do {
-			try {
-				line = reader.readLine();
-			}
-			catch (IOException e) {
-				throw new SwFileReaderException("SwFileReader.setDescriptions() : IOException thrown."
-						+ System.lineSeparator() + e.getMessage());
-			}
-			if (!line.equals("/")) {
-				currentTreePaths.add(line);
-			}
-			else {
-				if (!currentTreePaths.isEmpty()) {
-					treeDescript = new String[currentTreePaths.size()][];
-					for (int i=0 ; i < currentTreePaths.size() ; i++) {
-						treeDescript[i] = currentTreePaths.get(i).split("/");
-					}
-					treeDescripts[treeDescriptsIndex] = treeDescript;
-					treeDescriptsIndex++;
-					currentTreePaths = new ArrayList<String>();
-				}
-			}
-		}
-		while (line != null);
-		return treeDescripts;
-	}
-	
-	private int getNumberOfTrees(Path path) throws SwFileReaderException {
-		int numberOfTrees = 0;
-		BufferedReader reader;
-		try {
-			reader = Files.newBufferedReader(path);
-		}
-		catch (Exception e) {
-			throw new SwFileReaderException("SwFileReader.getNumberOfTrees() : reader couldn't be instantiated."
-					+ System.lineSeparator() + e.getMessage());
-		}
-		String line;
-		List<String> currentTreePaths = new ArrayList<String>(); 
-		do {
-			try {
-				line = reader.readLine();
-			}
-			catch (IOException e) {
-				throw new SwFileReaderException("SwFileReader.getNumberOfTrees() : IOException thrown."
-						+ System.lineSeparator() + e.getMessage());
-			}
-			if (line != null) {
-				if (line.equals("/"))
-					numberOfTrees++;
-			}
-		}
-		while (line != null);
-		return numberOfTrees;
-	}
-	
-	private String[][] getSingleTreeDescription(List<String> paths){
-		//to implement
-		return null;
-	}
-	
-	private ISyntacticStructure[][][] setStructures(String[][][] treeDescriptions) {
-		ISyntacticStructure[][][] structures = new ISyntacticStructure[treeDescriptions.length][][];
-		for (int treeIndex=0 ; treeIndex < treeDescriptions.length ; treeIndex++) {
-			structures[treeIndex] = new ISyntacticStructure[treeDescriptions[treeIndex].length][];
-			for (int pathIndex=0 ; pathIndex < treeDescriptions[treeIndex].length ; pathIndex++) {
-				structures[treeIndex][pathIndex] = new ISyntacticStructure[treeDescriptions[treeIndex][pathIndex].length];
-			}
-		}
-		return structures;
-	}
-	
-	private Digit buildTree(int treeIndex) throws SwFileReaderException {
-		int pathMaxLength = setPathMaxLength(treeIndex);
-		for (int nodeIndex=pathMaxLength-1 ; nodeIndex >= 0 ; nodeIndex--) {
-			int pathIndex = 0;
-			while (pathIndex < treeDescriptions[treeIndex].length) {
-				if (nodeIndex < treeDescriptions[treeIndex][pathIndex].length) {
-					pathIndex = buildSyntacticStructure(treeIndex, pathIndex, nodeIndex);
-				}
-				else pathIndex++;
-			}
-		}
-		return (Digit) structures[treeIndex][0][0];
-	}
-	
-	private int buildSyntacticStructure(int treeIndex, int pathIndex, int nodeIndex) throws SwFileReaderException {
-		int currentPathIndex = pathIndex;
-		String nodeName = treeDescriptions[treeIndex][pathIndex][nodeIndex];
-		List<ISyntacticStructure> components = new ArrayList<ISyntacticStructure>();
-		if (nodeIndex+1 < treeDescriptions[treeIndex][pathIndex].length) {
-			while(currentPathIndex < treeDescriptions[treeIndex].length
-					&& nodeIndex+1 < treeDescriptions[treeIndex][currentPathIndex].length
-					&& treeDescriptions[treeIndex][currentPathIndex][nodeIndex].equals(nodeName)) {
-				if (structures[treeIndex][currentPathIndex][nodeIndex+1] != null) {
-					components.add(structures[treeIndex][currentPathIndex][nodeIndex+1]);
-				}
-				currentPathIndex++;
-			}
-		}
-		else {
-			currentPathIndex++;
-		}
-		castComponentsAndInstantiateStructure(nodeName, components, treeIndex, currentPathIndex, nodeIndex);
-		return currentPathIndex;
-	}	
-	
-	private int setPathMaxLength(int treeIndex) {
-		int pathMaxLength = 0;
-		for (String[] path : treeDescriptions[treeIndex]) {
-			if (pathMaxLength < path.length)
-				pathMaxLength = path.length;
-		}
-		return pathMaxLength;
-	}
-	
-	public void castComponentsAndInstantiateStructure(String nodeName, List<ISyntacticStructure> components, 
-			int treeIndex, int pathIndex, int nodeIndex) throws SwFileReaderException {
+	protected void castComponentsAndInstantiateStructure(String nodeName, List<ISyntacticStructure> components, 
+			int treeIndex, int pathIndex, int nodeIndex) throws FileReaderException {
 		switch(nodeName) {
 		case "AlternationRule" : 
 			if (components.size() != 3) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'AlternationRule' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'AlternationRule' number "
 						+ "of components should be 3 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -224,7 +79,7 @@ public class SwFileReader implements ISwFileReader {
 					alternationRule = new AlternationRule(alternationRulE, everyXElem, startAt);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'AlternationRule' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -235,7 +90,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "AlternationRulE" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'AlternationRulE' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'AlternationRulE' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -247,7 +102,7 @@ public class SwFileReader implements ISwFileReader {
 					alternationRulE = new AlternationRulE();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'AlternationRulE' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -258,7 +113,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "ArithSeq" : 
 			if (components.size() != 3) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'ArithSeq' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'ArithSeq' number "
 						+ "of components should be 3 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -273,7 +128,7 @@ public class SwFileReader implements ISwFileReader {
 					arithSeq = new ArithSeq(arithSeQ, firstValue, increment);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'ArithSeq' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -284,7 +139,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "ArithSeQ" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'ArithSeQ' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'ArithSeQ' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -296,7 +151,7 @@ public class SwFileReader implements ISwFileReader {
 					arithSeQ = new ArithSeQ();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'ArithSeQ' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -307,7 +162,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "BouncingCycle" : 
 			if (components.size() != 2) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'BouncingCycle' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'BouncingCycle' number "
 						+ "of components should be 2 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -321,7 +176,7 @@ public class SwFileReader implements ISwFileReader {
 					bouncingCycle = new BouncingCycle(bouncingCyclE, valuE);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'BouncingCycle' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -332,7 +187,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "BouncingCyclE" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'BouncingCyclE' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'BouncingCyclE' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -344,7 +199,7 @@ public class SwFileReader implements ISwFileReader {
 					bouncingCyclE = new BouncingCyclE();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'BouncingCyclE' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -355,7 +210,7 @@ public class SwFileReader implements ISwFileReader {
 			break;	
 		case "Center" : 
 			if (components.size() != 2) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'Center' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'Center' number "
 						+ "of components should be 2 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -369,7 +224,7 @@ public class SwFileReader implements ISwFileReader {
 					center = new Center(centeR, valOrRel);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'Center' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -380,7 +235,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "CenteR" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'CenteR' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'CenteR' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -392,7 +247,7 @@ public class SwFileReader implements ISwFileReader {
 					centeR = new CenteR();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'CenteR' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -403,7 +258,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "Cycle" : 
 			if (components.size() != 2) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'Cycle' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'Cycle' number "
 						+ "of components should be 2 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -417,7 +272,7 @@ public class SwFileReader implements ISwFileReader {
 					cycle = new Cycle(cyclE, valuE);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'Cycle' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -428,7 +283,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "CyclE" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'CyclE' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'CyclE' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -440,7 +295,7 @@ public class SwFileReader implements ISwFileReader {
 					cyclE = new CyclE();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'CyclE' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -451,7 +306,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "Digit" : 
 			if (components.size() != 3) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'Digit' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'Digit' number "
 						+ "of components should be 3 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -466,7 +321,7 @@ public class SwFileReader implements ISwFileReader {
 					digit = new Digit(digiT, valOrRel, position);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'Digit' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -477,7 +332,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "DigiT" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'DigiT' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'DigiT' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -489,7 +344,7 @@ public class SwFileReader implements ISwFileReader {
 					digiT = new DigiT();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'DigiT' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -500,7 +355,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "Enumeration" : 
 			if (components.size() != 2) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'Enumeration' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'Enumeration' number "
 						+ "of components should be 2 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -514,7 +369,7 @@ public class SwFileReader implements ISwFileReader {
 					enumeration = new Enumeration(enumeratioN, valOrRel);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'Enumeration' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -525,7 +380,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "EnumeratioN" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'EnumeratioN' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'EnumeratioN' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -537,7 +392,7 @@ public class SwFileReader implements ISwFileReader {
 					enumeratioN = new EnumeratioN();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'EnumeratioN' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -548,7 +403,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "EveryXElem" : 
 			if (components.size() != 2) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'EveryXElem' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'EveryXElem' number "
 						+ "of components should be 2 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -562,7 +417,7 @@ public class SwFileReader implements ISwFileReader {
 					everyXElem = new EveryXElem(everyXEleM, valuE);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'EveryXElem' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -573,7 +428,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "EveryXEleM" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'EveryXEleM' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'EveryXEleM' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -585,7 +440,7 @@ public class SwFileReader implements ISwFileReader {
 					everyXEleM = new EveryXEleM();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'EveryXEleM' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -596,7 +451,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "FirstValue" : 
 			if (components.size() != 2) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'FirstValue' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'FirstValue' number "
 						+ "of components should be 2 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -610,7 +465,7 @@ public class SwFileReader implements ISwFileReader {
 					firstValue = new FirstValue(firstValuE, valOrRel);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'FirstValue' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -621,7 +476,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "FirstValuE" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'FirstValuE' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'FirstValuE' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -633,7 +488,7 @@ public class SwFileReader implements ISwFileReader {
 					firstValuE = new FirstValuE();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'FirstValuE' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -644,7 +499,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "Increment" : 
 			if (components.size() != 2) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'Increment' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'Increment' number "
 						+ "of components should be 2 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -658,7 +513,7 @@ public class SwFileReader implements ISwFileReader {
 					increment = new Increment(incremenT, valOrRel);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'Increment' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -669,7 +524,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "IncremenT" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'IncremenT' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'IncremenT' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -681,7 +536,7 @@ public class SwFileReader implements ISwFileReader {
 					incremenT = new IncremenT();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'IncremenT' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -692,7 +547,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "NoAlterN" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'NoAlterN' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'NoAlterN' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -704,7 +559,7 @@ public class SwFileReader implements ISwFileReader {
 					noAlterN = new NoAlterN();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'NoAlterN' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -715,7 +570,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "Position" : 
 			if (components.size() != 3) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'Position' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'Position' number "
 						+ "of components should be 3 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -730,7 +585,7 @@ public class SwFileReader implements ISwFileReader {
 					position = new Position(positioN, iAlternation, valueOrValuE);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'Position' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -741,7 +596,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "PositioN" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'PositioN' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'PositioN' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -753,7 +608,7 @@ public class SwFileReader implements ISwFileReader {
 					positioN = new PositioN();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'PositioN' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -764,7 +619,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "ReflectedPart" : 
 			if (components.size() != 2) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'ReflectedPart' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'ReflectedPart' number "
 						+ "of components should be 2 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -778,7 +633,7 @@ public class SwFileReader implements ISwFileReader {
 					reflectedPart = new ReflectedPart(reflectedParT, valOrRel);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'ReflectedPart' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -789,7 +644,7 @@ public class SwFileReader implements ISwFileReader {
 			break;	
 		case "ReflectedParT" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'ReflectedParT' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'ReflectedParT' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -801,7 +656,7 @@ public class SwFileReader implements ISwFileReader {
 					reflectedParT = new ReflectedParT();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'ReflectedParT' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -812,7 +667,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "Relation" : 
 			if (components.size() != 3) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'Relation' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'Relation' number "
 						+ "of components should be 3 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -827,7 +682,7 @@ public class SwFileReader implements ISwFileReader {
 					relation = new Relation(relatioN, size, iRule);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'Relation' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -838,7 +693,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "RelatioN" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'RelatioN' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'RelatioN' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -850,7 +705,7 @@ public class SwFileReader implements ISwFileReader {
 					relatioN = new RelatioN();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'RelatioN' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -861,7 +716,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "Size" : 
 			if (components.size() != 2) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'Size' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'Size' number "
 						+ "of components should be 2 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -875,7 +730,7 @@ public class SwFileReader implements ISwFileReader {
 					size = new Size(sizE, valOrRel);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'Size' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -886,7 +741,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "SizE" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'SizE' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'SizE' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -898,7 +753,7 @@ public class SwFileReader implements ISwFileReader {
 					sizE = new SizE();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'SizE' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -909,7 +764,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "StartAt" : 
 			if (components.size() != 2) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'StartAt' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'StartAt' number "
 						+ "of components should be 2 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -923,7 +778,7 @@ public class SwFileReader implements ISwFileReader {
 					startAt = new StartAt(startAT, valuE);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'StartAt' syntactic branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -934,7 +789,7 @@ public class SwFileReader implements ISwFileReader {
 			break;	
 		case "StartAT" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'StartAT' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'StartAT' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -946,7 +801,7 @@ public class SwFileReader implements ISwFileReader {
 					startAT = new StartAT();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'StartAT' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -957,7 +812,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "Symmetry" :
 			if (components.size() != 2 && components.size() != 4) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'Symmetry' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'Symmetry' number "
 						+ "of components can't be " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -972,7 +827,7 @@ public class SwFileReader implements ISwFileReader {
 						symmetry = new Symmetry(symmetrY, reflectedPart);
 					}
 					catch (Exception e) {
-						throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+						throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 								+ "a 'Symmetry' syntactic branch. " + e.getMessage() 
 								+ System.lineSeparator()
 								+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -990,7 +845,7 @@ public class SwFileReader implements ISwFileReader {
 						symmWithCenter = new SymmetryWithCenter(symmetrY, reflectedPart, symmWithCenteR, center);
 					}
 					catch (Exception e) {
-						throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+						throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 								+ "a 'SymmetryWithCenter' syntactic branch. " + e.getMessage() 
 								+ System.lineSeparator()
 								+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -1002,7 +857,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "SymmetrY" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'SymmetrY' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'SymmetrY' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -1014,7 +869,7 @@ public class SwFileReader implements ISwFileReader {
 					symmetrY = new SymmetrY();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'SymmetrY' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -1025,7 +880,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		case "SymmetryWithCenteR" : 
 			if (!components.isEmpty()) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : 'SymmetryWithCenteR' number "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() : 'SymmetryWithCenteR' number "
 						+ "of components should be 0 instead of " + Integer.toString(components.size()) + "." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -1037,7 +892,7 @@ public class SwFileReader implements ISwFileReader {
 					symmetryWithCenteR = new SymmetryWithCenteR();
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'SymmetryWithCenteR' syntactic leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -1048,7 +903,7 @@ public class SwFileReader implements ISwFileReader {
 			break;
 		default : 
 			if(nodeIndex+1 < treeDescriptions[treeIndex][pathIndex].length) {
-				throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() :  unrecognized "
+				throw new FileReaderException("SwFileReader.buildSyntacticStructure() :  unrecognized "
 						+ "non-terminal node name '" + nodeName + "'." 
 						+ System.lineSeparator()
 						+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
@@ -1060,7 +915,7 @@ public class SwFileReader implements ISwFileReader {
 					valuE = new ValuE(nodeName);
 				}
 				catch (Exception e) {
-					throw new SwFileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
+					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
 							+ "a 'ValuE' syntactic leaf with param '" + nodeName + "'." + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 

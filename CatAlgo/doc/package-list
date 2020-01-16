@@ -1,5 +1,5 @@
-exceptions
 grammarModel
+grammarModel.exceptions
 grammarModel.genericTools
 grammarModel.genericTools.impl
 grammarModel.structure
@@ -7,7 +7,6 @@ grammarModel.structure.impl
 grammars.seekWhence.branches
 grammars.seekWhence.disjunctions
 grammars.seekWhence.leaves
-grammars.seekWhence.treeGenUtils
-grammars.seekWhence.treeGenUtils.exception
+grammars.seekWhence.treeGenUtils.impl
 propertyPoset
 propertyPoset.impl

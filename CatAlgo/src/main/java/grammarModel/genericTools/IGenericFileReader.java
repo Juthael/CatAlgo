@@ -1,23 +1,23 @@
-package grammars.seekWhence.treeGenUtils;
+package grammarModel.genericTools;
 
 import java.nio.file.Path;
 
+import grammarModel.exceptions.FileReaderException;
 import grammarModel.structure.ISyntacticGrove;
-import grammars.seekWhence.treeGenUtils.exception.SwFileReaderException;
-import grammars.seekWhence.treeGenUtils.exception.SwTreeGenException;
 
 /**
- * ISwFileReader allows the generation of a 'syntactic grove' out of a text file, provided it contains lists of paths 
- * of syntactic trees generated using the 'SeekWhence' context-free grammar.
+ * IGenericFileReader allows the generation of a 'syntactic grove' out of a text file, provided it contains lists of paths 
+ * of syntactic trees generated using a context-free grammar.
  * @see ISyntacticGrove
  * @author Gael Tregouet
  *
  */
-public interface ISwFileReader {
+public interface IGenericFileReader {
 	
 	/**
+	 * Generates a 'syntactic grove' (ISyntacticGrove) out of a Path parameter pointing to a text file.
 	 * Writing rules to be respected in order to avoid throwing an exception : <br>
-	 * 1-The text contains one or more descriptions of syntactic trees generated using the 'SeekWhence' context-free 
+	 * 1-The text contains one or more descriptions of syntactic trees generated using a context-free 
 	 * grammar. <br>
 	 * 2-Every tree description begins with a line containing only the character '/' <br>
 	 * 3-Descriptions of syntactic trees take the form of the list of spanning paths a tree contains (i.e. paths 
@@ -31,9 +31,9 @@ public interface ISwFileReader {
 	 * a/e/f/g/i <br>
 	 * a/e/f/j <br>
 	 * where {a} is the start element, {b,e,f,g} are variable elements and {c,d,h,i,j} are terminals.
-	 * @param textFile is a text file (UTF-8) that must respect the rules described above.
+	 * @param path points to a text file (UTF-8) that must respect the rules described above.
 	 * @return a 'syntactic grove', i.e. a list of syntactic trees with some more functionalities. 
 	 */
-	ISyntacticGrove getSyntacticGrove(Path path) throws SwTreeGenException, SwFileReaderException;
+	ISyntacticGrove getSyntacticGrove(Path path) throws FileReaderException;
 
 }
