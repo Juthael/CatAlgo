@@ -1,13 +1,9 @@
 package grammarModel.structure.impl;
 
-import static org.junit.Assert.fail;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.junit.Test;
 
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.genericTools.ISyntacticChains;

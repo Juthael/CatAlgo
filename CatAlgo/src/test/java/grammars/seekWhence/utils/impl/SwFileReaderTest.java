@@ -4,10 +4,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import grammarModel.structure.ISyntacticGrove;
+
+@SuppressWarnings("unused")
 public class SwFileReaderTest {
 
 	@BeforeClass
@@ -20,8 +24,21 @@ public class SwFileReaderTest {
 		Path backburnDozen1 = Paths.get("D:","GoogleDrive","0_Doctorat","Modèle","grammars",
 				"tests","seekWhence","BlackburnDozen","BlackburnDozen1","BD1_1_12_123.txt");
 		SwFileReader fileReader = new SwFileReader();
+		ISyntacticGrove grove;
 		try {
-			fileReader.getSyntacticGrove(backburnDozen1);
+			grove = fileReader.getSyntacticGrove(backburnDozen1);
+			/*
+			List<List<String>> paths = grove.getListOfSyntacticStringChains();
+			StringBuilder sB = new StringBuilder();
+			for (List<String> path : paths) {
+				for (int i = 0 ; i < path.size() ; i++) {
+					sB.append(path.get(i));
+					if (i < path.size() - 1)
+						sB.append("/");
+				}
+				sB.append(System.lineSeparator());
+			}
+			*/
 			aGroveHasBeenReturned = true;
 		}
 		catch (Exception e) {
