@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.BeforeClass;
@@ -14,6 +15,7 @@ import grammarModel.structure.ISyntacticGrove;
 import grammars.seekWhence.utils.impl.SwFileReader;
 import propertyPoset.IImplication;
 
+@SuppressWarnings("unused")
 public class PosetMaxChainsTest {
 
 	public static ISyntacticGrove grove;
@@ -62,7 +64,7 @@ public class PosetMaxChainsTest {
 			}
 			if (implicationsReturned) {
 				implications = posetChains.getImplications();
-				//printImplications(implications);
+				// printImplications(implications);
 			}
 		}
 		implicationsReturned = (implications != null && !implications.isEmpty());		
@@ -114,17 +116,32 @@ public class PosetMaxChainsTest {
 		}
 		if (sameSetOfImplications) {
 			implications1 = posetChains1.getImplications();
+			// printImplications(implications1);
 			implications2 = posetChains2.getImplications();
+			// printImplications(implications2);
 			if (implications1 == null || implications2 == null || implications1.isEmpty() || implications2.isEmpty())
 				sameSetOfImplications = false;
 			else {
 				sameSetOfImplications = (implications1.equals(implications2));
+				if (!sameSetOfImplications) {
+					/*
+					Set<IImplication> inSet1ButNotInSet2 = new HashSet<IImplication>();
+					Set<IImplication> inSet2ButNotInSet1 = new HashSet<IImplication>();
+					inSet1ButNotInSet2.addAll(implications1);
+					inSet2ButNotInSet1.addAll(implications2);
+					inSet1ButNotInSet2.removeAll(implications2);
+					inSet2ButNotInSet1.removeAll(implications1);
+					System.out.println("IN SET 1 BUT NOT IN SET 2 :");
+					printImplications(inSet1ButNotInSet2);
+					System.out.println("IN SET 2 BUT NOT IN SET 1 :");
+					printImplications(inSet2ButNotInSet1);
+					*/
+				}
 			}
 		}
 		assertTrue(sameSetOfImplications);
 	}
 	
-	@SuppressWarnings("unused")
 	private static void printImplications(Set<IImplication> implications) {
 		int i = 1;
 		for (IImplication implication : implications) {

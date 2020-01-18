@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import grammarModel.GrammarModelConstants;
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.genericTools.IPosetMaxChains;
 import grammarModel.genericTools.ISyntacticChains;
@@ -35,7 +36,8 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 		Set<ISyntacticChains> setOfChains = new HashSet<ISyntacticChains>();
 		setOfChains.add(getSyntacticChains());
 		for (ISyntacticStructure component : getListOfComponents()) {
-			setOfChains.addAll(component.getSetOfSyntacticChains());
+			if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !component.isRedundant())
+				setOfChains.addAll(component.getSetOfSyntacticChains());
 		}
 		return setOfChains;
 	}
@@ -56,11 +58,13 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 		IImplication reflexive = new Implication(posetFullName, posetFullName);
 		implications.add(reflexive);
 		for (ISyntacticStructure component : getListOfComponents()) {
-			Set<IImplication> compImplications = component.getImplications();
-			implications.addAll(compImplications);
-			for (IImplication compImplication : compImplications) {
-				IImplication newImpl = new Implication(posetFullName, compImplication.getConsequent());
-				implications.add(newImpl);
+			if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !component.isRedundant()) {
+				Set<IImplication> compImplications = component.getImplications();
+				implications.addAll(compImplications);
+				for (IImplication compImplication : compImplications) {
+					IImplication newImpl = new Implication(posetFullName, compImplication.getConsequent());
+					implications.add(newImpl);
+				}
 			}
 		}
 		return implications;
@@ -100,6 +104,10 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 					}					
 				}
 			}
+		}
+		for (ISyntacticStructure component : components) {
+			if (!component.isRedundant())
+				component.markRedundancies();
 		}
 	}
 	

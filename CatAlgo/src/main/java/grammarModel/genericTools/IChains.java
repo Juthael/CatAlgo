@@ -40,6 +40,12 @@ public interface IChains {
 	String next() throws GrammarModelException;
 	
 	/**
+	 * For debugging use only.
+	 * @return chains concatenated in a single string.
+	 */
+	String getChainsInASingleString();		
+	
+	/**
 	 * Reset indexes in order to re-initialize navigation. 	
 	 */
 	void resetIndexes();

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import grammarModel.GrammarModelConstants;
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.genericTools.ISyntacticChains;
 import grammarModel.structure.ISyntacticLeaf;
@@ -38,18 +39,22 @@ public abstract class SyntacticLeaf extends SyntacticStructure implements ISynta
 	@Override
 	public List<List<String>> getListOfSyntacticStringChains() {
 		List<List<String>> synChains = new ArrayList<List<String>>();
-		List<String> synChain = new ArrayList<String>();
-		synChain.add(getName());
-		synChains.add(synChain);
+		if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !this.isRedundant()) {
+			List<String> synChain = new ArrayList<String>();
+			synChain.add(getName());
+			synChains.add(synChain);
+		}
 		return synChains;
 	}
 
 	@Override
 	public List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException {
 		List<List<String>> posetChains = new ArrayList<List<String>>();
-		List<String> posetChain = new ArrayList<String>();
-		posetChain.add(getPosetElementName());
-		posetChains.add(posetChain);
+		if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !this.isRedundant()) {
+			List<String> posetChain = new ArrayList<String>();
+			posetChain.add(getPosetElementName());
+			posetChains.add(posetChain);
+		}
 		return posetChains;
 		
 	}

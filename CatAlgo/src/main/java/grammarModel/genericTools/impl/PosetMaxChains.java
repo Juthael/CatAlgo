@@ -87,6 +87,8 @@ public class PosetMaxChains extends Chains implements IPosetMaxChains {
 		IImplication currentImplication;
 		try {
 			if (this.hasNextConsequent()) {
+				if (currentAntecedent == null)
+					currentAntecedent = super.next();
 				currentConsequentIndex++;
 			}
 			else {

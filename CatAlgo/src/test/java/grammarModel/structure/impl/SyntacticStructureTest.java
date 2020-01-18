@@ -11,12 +11,17 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import grammarModel.exceptions.GrammarModelException;
+import grammarModel.genericTools.IChains;
 import grammarModel.genericTools.IPosetMaxChains;
 import grammarModel.genericTools.ISyntacticChains;
+import grammarModel.structure.ISyntacticBranch;
 import grammarModel.structure.ISyntacticGrove;
 import grammarModel.structure.ISyntacticStructure;
 import grammars.seekWhence.utils.impl.SwFileReader;
+import propertyPoset.IImplication;
 
+@SuppressWarnings("unused")
 public class SyntacticStructureTest {
 
 	public static ISyntacticGrove grove;
@@ -103,7 +108,28 @@ public class SyntacticStructureTest {
 	
 	@Test
 	public void whenGetImplicationsIsCalledThenASetOfImplicationsIsReturned() {
-		fail("Not yet implemented");
+		boolean implicationsReturned = true;
+		ISyntacticGrove grove1 = (ISyntacticGrove) grove.clone();
+		try {
+			grove1.setPosetElementID();
+		}
+		catch (Exception e){
+			implicationsReturned = false;
+			System.out.println("SyntacticStructureTest.whenGetImplicationsIsCalledThenASetOfImplicationsIsReturned() : "
+					+ System.lineSeparator() + "error during posetID setting." + System.lineSeparator()
+					+ e.getMessage());
+		}
+		Set<IImplication> implications = null;
+		try {
+			 implications = grove1.getImplications();
+		} catch (GrammarModelException e) {
+			implicationsReturned = false;
+			System.out.println("SyntacticStructureTest.whenGetImplicationsIsCalledThenASetOfImplicationsIsReturned() : "
+					+ System.lineSeparator() + "cannot retrieve implications" + System.lineSeparator()
+					+ e.getMessage());
+		}
+		implicationsReturned = (implications != null && !implications.isEmpty());
+		assertTrue(implicationsReturned);
 	}	
 	
 	@Test
@@ -119,30 +145,51 @@ public class SyntacticStructureTest {
 		boolean redundanciesRetrieved;
 		ISyntacticGrove grove1 = (ISyntacticGrove) grove.clone();
 		try {
-			grove1.markRedundancies();
+			grove1.setPosetElementID();
+		} catch (GrammarModelException e) {
+			System.out.println("SyntacticStructureTest.whenRedundancyIsMarkedThenRedundantComponentsCanBeRetrieved() : "
+					+ System.lineSeparator() + "cannot set Poset Element ID." + System.lineSeparator() 
+					+ e.getMessage());
 		}
+		List<ISyntacticStructure> trees = grove1.getListOfComponents();
+		/*
+		for (ISyntacticStructure tree : trees) {
+			try {
+				System.out.println(tree.getPosetMaxChains().getChainsInASingleString());
+			}
+			catch (Exception e) {
+				System.out.println("SyntacticStructureTest.whenRedundancyIsMarkedThenRedundantComponentsCanBeRetrieved() : "
+						+ System.lineSeparator() + "cannot retrieve chains." + System.lineSeparator() 
+						+ e.getMessage());
+			}
+		}
+		*/
+		try {
+			grove1.markRedundancies();
+		}	
 		catch (Exception e) {
 			redundanciesRetrieved = false;
-			System.out.println("SyntacticGroveTest.whenRedundancyIsMarkedThenRedundantComponentsCanBeRetrieved() : "
+			System.out.println("SyntacticStructureTest.whenRedundancyIsMarkedThenRedundantComponentsCanBeRetrieved() : "
 					+ System.lineSeparator() + "error during redundancy marking" + System.lineSeparator() 
 					+ e.getMessage());
 		}
+		/*
+		for (ISyntacticStructure tree : trees) {
+			try {
+				System.out.println(tree.getPosetMaxChains().getChainsInASingleString());
+			}
+			catch (Exception e) {
+				System.out.println("SyntacticStructureTest.whenRedundancyIsMarkedThenRedundantComponentsCanBeRetrieved() : "
+						+ System.lineSeparator() + "cannot retrieve chains." + System.lineSeparator() 
+						+ e.getMessage());
+			}
+		}
+		*/			
 		List<ISyntacticStructure> redundantStructures = new ArrayList<ISyntacticStructure>();
 		List<ISyntacticStructure> allStructures = getAllStructures(grove1);
 		for (ISyntacticStructure structure : allStructures) {
 			if (structure.isRedundant()) {
 				redundantStructures.add(structure);
-			}
-		}
-		for (ISyntacticStructure redStructure : redundantStructures) {
-			try {
-				printChains(redStructure.getSyntacticChains());
-			}
-			catch (Exception e) {
-				redundanciesRetrieved = false;
-				System.out.println("SyntacticGroveTest.whenRedundancyIsMarkedThenRedundantComponentsCanBeRetrieved() : "
-						+ System.lineSeparator() + "error during syntactic chains generation" + System.lineSeparator() 
-						+ e.getMessage());
 			}
 		}
 		redundanciesRetrieved = !redundantStructures.isEmpty();
@@ -167,11 +214,11 @@ public class SyntacticStructureTest {
 		assertTrue(structureReturned);
 	}	
 	
+	@SuppressWarnings("unused")
 	private static void printChains(ISyntacticChains chains) {
-		// printChains(chains.getChains());
+		printChains(chains.getChains());
 	}
 	
-	@SuppressWarnings("unused")
 	private static void printChains(List<List<String>> paths) {
 		StringBuilder sB = new StringBuilder();
 		for (List<String> path : paths) {

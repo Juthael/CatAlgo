@@ -231,8 +231,6 @@ public abstract class GenericFileReader implements IGenericFileReader {
 			structures[treeIndex][pathIndex][nodeIndex] = structure;
 		}
 		catch (Exception e) {
-			//HERE
-			System.out.println("");
 			throw new FileReaderException("GenericFileReader.castComponentsAndInstantiateStructure() : could not "
 					+ "put the new structure into the 'structures' array. Node : " + structure.getName() + 
 					", treeIndex : " + Integer.toString(treeIndex) + ", pathIndex : " + Integer.toString(pathIndex) 

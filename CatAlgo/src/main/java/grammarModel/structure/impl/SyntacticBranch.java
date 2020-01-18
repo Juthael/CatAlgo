@@ -56,10 +56,12 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 	public List<List<String>> getListOfSyntacticStringChains(){
 		List<List<String>> synChains = new ArrayList<List<String>>();
 		for (ISyntacticStructure component : getListOfComponents()) {
-			List<List<String>> compSynChains = component.getListOfSyntacticStringChains();
-			for (List<String> chain : compSynChains) {
-				chain.add(0, getName());
-				synChains.add(chain);
+			if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !component.isRedundant()) {
+				List<List<String>> compSynChains = component.getListOfSyntacticStringChains();
+				for (List<String> chain : compSynChains) {
+					chain.add(0, getName());
+					synChains.add(chain);
+				}
 			}
 		}
 		return synChains;
@@ -69,10 +71,12 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 	public List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException {
 		List<List<String>> posetChains = new ArrayList<List<String>>();
 		for (ISyntacticStructure component : getListOfComponents()) {
-			List<List<String>> compPosetChains = component.getListOfPosetMaxStringChains();
-			for (List<String> chain : compPosetChains) {
-				chain.add(0, getPosetElementName());
-				posetChains.add(chain);
+			if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !component.isRedundant()) {
+				List<List<String>> compPosetChains = component.getListOfPosetMaxStringChains();
+				for (List<String> chain : compPosetChains) {
+					chain.add(0, getPosetElementName());
+					posetChains.add(chain);
+				}
 			}
 		}
 		return posetChains;
@@ -116,7 +120,9 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 	public void setPosetElementID(Map<ISyntacticChains, String> chainsToIndex) throws GrammarModelException {
 		posetID = chainsToIndex.get(getSyntacticChains());
 		for (ISyntacticStructure component : getListOfComponents()) {
-			component.setPosetElementID(chainsToIndex);
+			if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !component.isRedundant()) {
+				component.setPosetElementID(chainsToIndex);
+			}
 		}
 		iDHasBeenSet = true;
 	}

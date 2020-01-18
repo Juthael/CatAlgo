@@ -5,12 +5,15 @@ import static org.junit.Assert.assertTrue;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import grammarModel.genericTools.IChains;
+import grammarModel.genericTools.ISyntacticChains;
 import grammarModel.structure.ISyntacticGrove;
 import grammars.seekWhence.utils.impl.SwFileReader;
 
@@ -43,7 +46,7 @@ public class ChainsTest {
 		}
 		catch (Exception e) {
 			allElementsInstantiable = false;
-			System.out.println("ChainsTest. whenChainsInstantiatedThenAllElementsAreAttainableViaNext() : "
+			System.out.println("ChainsTest.whenChainsInstantiatedThenAllElementsAreAttainableViaNext() : "
 					+ System.lineSeparator() + "chains cannot be instantiated." + System.lineSeparator() 
 					+ e.getMessage());
 		}
@@ -53,7 +56,7 @@ public class ChainsTest {
 			}
 			catch (Exception e) {
 				allElementsInstantiable = false;
-				System.out.println("ChainsTest. whenChainsInstantiatedThenAllElementsAreAttainableViaNext() : "
+				System.out.println("ChainsTest.whenChainsInstantiatedThenAllElementsAreAttainableViaNext() : "
 						+ System.lineSeparator() + "next element cannot be returned." + System.lineSeparator() 
 						+ e.getMessage());
 			}
@@ -70,5 +73,58 @@ public class ChainsTest {
 		else allElementsInstantiable = list1.equals(list2);
 		assertTrue(allElementsInstantiable);
 	}
+	
+	@Test
+	public void whenIdenticalChainsAreComparedThenEqualsReturnsTrue() {
+		ISyntacticGrove groveClone = (ISyntacticGrove) grove.clone();
+		boolean equals = true;
+		ISyntacticChains chains1 = null;
+		ISyntacticChains chains2 = null;
+		try {
+			chains1 = grove.getSyntacticChains();
+			chains2 = groveClone.getSyntacticChains();
+			if (chains1 == null || chains2 == null)
+				throw new Exception("one or both chains variable is null");
+		}
+		catch (Exception e){
+			equals = false;
+			System.out.println("ChainsTest.whenIdenticalChainsAreComparedThenEqualsReturnsTrue() : "
+					+ System.lineSeparator() + "chains cannot be instantiated." + System.lineSeparator() 
+					+ e.getMessage());
+		}
+		if (equals) {
+			equals = chains1.equals(chains2);
+		}
+	}
+	
+	@Test
+	public void whenTwoIdenticalChainsAreAddedToASetThenTheSetSizeIs1() {
+		Set<ISyntacticChains> setOfChains = new HashSet<ISyntacticChains>();
+		ISyntacticGrove groveClone = (ISyntacticGrove) grove.clone();
+		boolean sizeIs1 = true;
+		ISyntacticChains chains1 = null;
+		ISyntacticChains chains2 = null;
+		try {
+			chains1 = grove.getSyntacticChains();
+			chains2 = groveClone.getSyntacticChains();
+			if (chains1 == null || chains2 == null)
+				throw new Exception("one or both chains variable is null");
+		}
+		catch (Exception e){
+			sizeIs1 = false;
+			System.out.println("ChainsTest.whenIdenticalChainsAreComparedThenEqualsReturnsTrue() : "
+					+ System.lineSeparator() + "chains cannot be instantiated." + System.lineSeparator() 
+					+ e.getMessage());
+		}
+		if (sizeIs1) {
+			sizeIs1 = chains1.equals(chains2);
+			if (sizeIs1) {
+				setOfChains.add(chains1);
+				setOfChains.add(chains2);
+				sizeIs1 = (setOfChains.size() == 1);
+			}
+		}
+		assertTrue(sizeIs1);
+	}	
 
 }
