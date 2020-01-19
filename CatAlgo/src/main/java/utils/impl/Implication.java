@@ -1,6 +1,6 @@
-package propertyPoset.impl;
+package utils.impl;
 
-import propertyPoset.IImplication;
+import utils.IImplication;
 
 public class Implication implements IImplication {
 

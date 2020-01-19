@@ -1,4 +1,4 @@
-package grammarModel.genericTools;
+package utils;
 
 import java.util.List;
 

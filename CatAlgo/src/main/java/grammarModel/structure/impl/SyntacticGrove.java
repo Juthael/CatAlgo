@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.genericTools.ISyntacticChains;
 import grammarModel.structure.ISyntacticGrove;
 import grammarModel.structure.ISyntacticStructure;
+import grammarModel.utils.ISyntacticChains;
 
 public class SyntacticGrove extends SyntacticBranch implements ISyntacticGrove {
 

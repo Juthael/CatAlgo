@@ -10,10 +10,11 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import grammarModel.genericTools.IPosetMaxChains;
 import grammarModel.structure.ISyntacticGrove;
 import grammars.seekWhence.utils.impl.SwFileReader;
-import propertyPoset.IImplication;
+import utils.IImplication;
+import utils.IPosetMaxChains;
+import utils.impl.PosetMaxChains;
 
 @SuppressWarnings("unused")
 public class PosetMaxChainsTest {

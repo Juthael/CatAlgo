@@ -1,4 +1,4 @@
-package grammarModel.genericTools;
+package grammarModel.utils;
 
 import java.util.List;
 import java.util.Map;
@@ -6,6 +6,7 @@ import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
+import utils.IChains;
 /**
  * A ISyntacticChains is a list (endowed with navigation functionalities) of all the paths of a syntactic structure 
  * from its generated node to one of its terminals.

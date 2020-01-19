@@ -1,4 +1,4 @@
-package grammarModel.genericTools.impl;
+package grammarModel.utils.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.genericTools.ISyntacticChains;
+import grammarModel.utils.ISyntacticChains;
+import utils.impl.Chains;
 
 public class SyntacticChains extends Chains implements ISyntacticChains {
 

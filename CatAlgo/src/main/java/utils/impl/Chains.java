@@ -1,10 +1,10 @@
-package grammarModel.genericTools.impl;
+package utils.impl;
 
 import java.util.List;
 
 import grammarModel.GrammarModelConstants;
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.genericTools.IChains;
+import utils.IChains;
 
 /**
  *  

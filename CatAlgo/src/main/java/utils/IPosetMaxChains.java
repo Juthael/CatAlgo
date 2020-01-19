@@ -1,9 +1,7 @@
-package grammarModel.genericTools;
+package utils;
 
 import java.util.List;
 import java.util.Set;
-
-import propertyPoset.IImplication;
 
 /**
  * PosetMaxChains represents the spanning chains of a lower semilattice. It provides navigation functionalities and an access to 

@@ -12,8 +12,8 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import grammarModel.genericTools.ISyntacticChains;
 import grammarModel.structure.ISyntacticGrove;
+import grammarModel.utils.ISyntacticChains;
 import grammars.seekWhence.utils.impl.SwFileReader;
 
 public class SyntacticChainsTest {

@@ -12,10 +12,10 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import grammarModel.genericTools.IChains;
-import grammarModel.genericTools.ISyntacticChains;
 import grammarModel.structure.ISyntacticGrove;
+import grammarModel.utils.ISyntacticChains;
 import grammars.seekWhence.utils.impl.SwFileReader;
+import utils.IChains;
 
 public class ChainsTest {
 

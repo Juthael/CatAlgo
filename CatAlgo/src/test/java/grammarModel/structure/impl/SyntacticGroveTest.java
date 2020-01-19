@@ -10,10 +10,10 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import grammarModel.genericTools.IChains;
 import grammarModel.structure.ISyntacticGrove;
 import grammarModel.structure.ISyntacticStructure;
 import grammars.seekWhence.utils.impl.SwFileReader;
+import utils.IChains;
 
 public class SyntacticGroveTest {
 

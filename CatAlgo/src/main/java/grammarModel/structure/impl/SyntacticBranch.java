@@ -7,10 +7,10 @@ import java.util.Map;
 
 import grammarModel.GrammarModelConstants;
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.genericTools.ISyntacticChains;
 import grammarModel.structure.ISyntacticBranch;
 import grammarModel.structure.ISyntacticLeaf;
 import grammarModel.structure.ISyntacticStructure;
+import grammarModel.utils.ISyntacticChains;
 
 public abstract class SyntacticBranch extends SyntacticStructure implements ISyntacticBranch {
 

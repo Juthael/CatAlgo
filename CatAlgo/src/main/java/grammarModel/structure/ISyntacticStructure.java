@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.genericTools.IPosetMaxChains;
-import grammarModel.genericTools.ISyntacticChains;
-import propertyPoset.IImplication;
+import grammarModel.utils.ISyntacticChains;
+import utils.IImplication;
+import utils.IPosetMaxChains;
 
 /**
  * ISyntacticStructure is an abstract class that is used to represent the nodes of a syntactic tree. 

@@ -1,4 +1,4 @@
-package grammarModel.genericTools.impl;
+package grammarModel.utils.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import grammarModel.exceptions.FileReaderException;
-import grammarModel.genericTools.IGenericFileReader;
 import grammarModel.structure.ISyntacticBranch;
 import grammarModel.structure.ISyntacticGrove;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.impl.SyntacticGrove;
+import grammarModel.utils.IGenericFileReader;
 
 /**
  * GenericFileReader is an abstract implementation of IGenericFileReader. Its single abstract 'protected' method is 

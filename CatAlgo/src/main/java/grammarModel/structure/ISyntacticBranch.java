@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.genericTools.ISyntacticChains;
+import grammarModel.utils.ISyntacticChains;
 
 /**
  * ISyntacticBranch is a syntactic structure that represents the derivation of a non-terminal node in a syntactic

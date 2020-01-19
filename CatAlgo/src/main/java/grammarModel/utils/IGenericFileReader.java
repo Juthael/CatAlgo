@@ -1,4 +1,4 @@
-package grammarModel.genericTools;
+package grammarModel.utils;
 
 import java.nio.file.Path;
 

@@ -12,14 +12,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.genericTools.IChains;
-import grammarModel.genericTools.IPosetMaxChains;
-import grammarModel.genericTools.ISyntacticChains;
 import grammarModel.structure.ISyntacticBranch;
 import grammarModel.structure.ISyntacticGrove;
 import grammarModel.structure.ISyntacticStructure;
+import grammarModel.utils.ISyntacticChains;
 import grammars.seekWhence.utils.impl.SwFileReader;
-import propertyPoset.IImplication;
+import utils.IChains;
+import utils.IImplication;
+import utils.IPosetMaxChains;
 
 @SuppressWarnings("unused")
 public class SyntacticStructureTest {

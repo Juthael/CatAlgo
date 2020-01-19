@@ -6,13 +6,13 @@ import java.util.Set;
 
 import grammarModel.GrammarModelConstants;
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.genericTools.IPosetMaxChains;
-import grammarModel.genericTools.ISyntacticChains;
-import grammarModel.genericTools.impl.PosetMaxChains;
-import grammarModel.genericTools.impl.SyntacticChains;
 import grammarModel.structure.ISyntacticStructure;
-import propertyPoset.IImplication;
-import propertyPoset.impl.Implication;
+import grammarModel.utils.ISyntacticChains;
+import grammarModel.utils.impl.SyntacticChains;
+import utils.IImplication;
+import utils.IPosetMaxChains;
+import utils.impl.Implication;
+import utils.impl.PosetMaxChains;
 
 public abstract class SyntacticStructure implements ISyntacticStructure {
 

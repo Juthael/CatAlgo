@@ -1,13 +1,12 @@
-package grammarModel.genericTools.impl;
+package utils.impl;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.genericTools.IPosetMaxChains;
-import propertyPoset.IImplication;
-import propertyPoset.impl.Implication;
+import utils.IImplication;
+import utils.IPosetMaxChains;
 
 public class PosetMaxChains extends Chains implements IPosetMaxChains {
 	

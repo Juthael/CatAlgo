@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.genericTools.ISyntacticChains;
+import grammarModel.utils.ISyntacticChains;
 
 /**
  * ISyntacticLeaf is a terminal syntactic structure, representing the terminal node of a syntactic tree. 

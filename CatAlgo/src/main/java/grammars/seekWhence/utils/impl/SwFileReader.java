@@ -3,9 +3,9 @@ package grammars.seekWhence.utils.impl;
 import java.util.List;
 
 import grammarModel.exceptions.FileReaderException;
-import grammarModel.genericTools.IGenericFileReader;
-import grammarModel.genericTools.impl.GenericFileReader;
 import grammarModel.structure.ISyntacticStructure;
+import grammarModel.utils.IGenericFileReader;
+import grammarModel.utils.impl.GenericFileReader;
 import grammars.seekWhence.branches.AlternationRule;
 import grammars.seekWhence.branches.ArithSeq;
 import grammars.seekWhence.branches.BouncingCycle;
