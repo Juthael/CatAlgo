@@ -41,13 +41,14 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	public String getStringOfTerminals();
 	
 	/**
-	 * @return true, since the poset element ID of a syntax leaf is set by its constructor.
+	 * @return true, since the poset element ID of a syntax leaf is its name.
 	 */
 	@Override
 	public boolean getIDHasBeenSet();
 	
 	/**
-	 * The poset element ID of a syntax leaf is set by its constructor ; so this inherited method has no effect.
+	 * The poset element ID of a syntax leaf is its name, set by its constructor ; so this inherited method
+	 * is overridden in order to have no-effect.
 	 */
 	@Override
 	public void setPosetElementID(Map<ITreePaths, String> pathsToIndex);

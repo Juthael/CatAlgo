@@ -6,8 +6,8 @@ import grammarModel.exceptions.FileReaderException;
 import grammarModel.structure.ISyntaxGrove;
 
 /**
- * IGenericFileReader allows the generation of a 'syntax grove' out of a text file, provided it contains lists of paths 
- * of syntax trees generated using a context-free grammar.
+ * IGenericFileReader allows the generation of a {@link ISyntaxGrove} out of a text file, provided it contains lists of 
+ * paths of syntax trees generated using a context-free grammar.
  * @see ISyntaxGrove
  * @author Gael Tregouet
  *
@@ -15,7 +15,7 @@ import grammarModel.structure.ISyntaxGrove;
 public interface IGenericFileReader {
 	
 	/**
-	 * Generates a 'syntax grove' (ISyntaxGrove) out of a Path parameter pointing to a text file.
+	 * Generates a 'syntax grove' ({@link ISyntaxGrove}) out of a {@link Path} parameter pointing to a text file.
 	 * Writing rules to be respected in order to avoid throwing an exception : <br>
 	 * 1-The text contains one or more descriptions of syntax trees generated using a context-free 
 	 * grammar. <br>

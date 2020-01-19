@@ -11,7 +11,8 @@ import grammars.seekWhence.leaves.BouncingCyclE;
 import grammars.seekWhence.leaves.ValuE;
 
 /**
- * BouncingCycle represents a variable symbol of the context-free grammar associated with the microworld 'SeekWhence'. 
+ * BouncingCycle, as any {@link ISyntaxBranch}, implements a rule of a context-free grammar. The one at use here 
+ * is associated with the microworld 'SeekWhence'.  
  * Any instance of this class represents a 'syntax branch', i.e. the whole derivation of a non-terminal node in a
  * syntax tree.
  * @author Gael Tregouet

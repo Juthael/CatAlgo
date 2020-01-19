@@ -7,9 +7,10 @@ import grammarModel.exceptions.GrammarModelException;
 import grammarModel.utils.ITreePaths;
 
 /**
- * ISyntaxBranch represents a derivation rule of a context-free grammar, whose 'left' term is a 
- * non-terminal symbol. To do so, it uses the composition relationship that defines a type in 
- * object-oriented programming as an equivalent of the derivation relationship. 
+ * ISyntaxBranch is a {@link ISyntacticStructure} that represents a derivation rule of a 
+ * context-free grammar, i.e. a rule whose 'left' term is a non-terminal symbol. As any 
+ * {@link ISyntacticStructure} does, it uses the composition relationship as an equivalent 
+ * of the derivation relationship. <br> 
  * Thus, any instance of ISyntaxBranch constitutes an actual derivation of a non-terminal symbol 
  * in a syntax tree. 
  * If this symbol (that gives the structure its name) is the start element of the grammar at use, 

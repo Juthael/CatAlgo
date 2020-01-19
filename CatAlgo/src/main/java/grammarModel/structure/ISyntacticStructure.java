@@ -10,18 +10,20 @@ import utils.IImplication;
 import utils.IPosetMaxChains;
 
 /**
- * ISyntacticStructure represents a derivation rule of a context-free grammar. <br>
+ * ISyntacticStructure represents a derivation rule of a context-free grammar (the rule remains unspecified, 
+ * since this class is abstract ; so one can rather say that ISyntacticStructure represents the 'principle' 
+ * of a rule). <br>
  * The composition relationship that defines a type in object-oriented programming ("any instance of class A has 
  * an instance of class B and an instance of class C for components") is used as an equivalent to the derivation 
  * relationship of a context-free grammar ("the symbol A can be substituted by the string of symbols "BC").  
  * Thus, any instance of ISyntacticStructure constitutes an actual derivation of a given symbol in a syntax 
  * tree (or the non-derivation of a terminal symbol). That is why ISyntacticStructure can be extended in order 
  * to be instantiated as : <br> 
- * 1/ a syntax tree terminal node, or syntax 'leaf' (ISyntaxLeaf) <br> 
- * 2/ the derivation from a non-terminal node, or syntax 'branch' (ISyntaxBranch) 
- * 3/ a whole syntax tree (also a ISyntaxBranch, but whose name is the start element of the context-free 
- * grammar at use) 
- * 4/ also, a list of syntax trees (ISyntaxGrove).
+ * 1/ a syntax tree terminal node, or syntax 'leaf' : {@link ISyntaxLeaf} <br> 
+ * 2/ the derivation from a non-terminal node, or syntax 'branch' : {@link ISyntaxBranch} 
+ * 3/ a whole syntax tree  : also a {@link ISyntaxBranch}, but whose name is the start element of the context-free 
+ * grammar at use
+ * 4/ also, a list of syntax trees : {@link ISyntaxGrove}.
  *  
  * @author Gael Tregouet
  *
@@ -100,7 +102,7 @@ public interface ISyntacticStructure extends Cloneable {
 	/**
 	 * A 'poset element name' is used to generate the property poset spanning chains from the syntactic structure, 
 	 * and ultimately the property poset itself.
-	 * It is a concatenation of the syntactic element 'name' with an index generated to assure that that structures 
+	 * It is a concatenation of the syntactic element 'name' with an index generated to make sure that that structures 
 	 * belonging to the same 'syntactic glove' can't return the same 'poset element name' if they don't have the same 
 	 * components. 
 	 * Put another way : two nodes from syntax trees belonging to the same glove (and possibly having the same name) 
@@ -134,15 +136,15 @@ public interface ISyntacticStructure extends Cloneable {
 	List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException;
 	
 	/**
-	 * @return the list of IDs associated with every syntax leaf that can be derived from this structure's generating 
-	 * node. 
+	 * @return the list of IDs associated with every syntax leaf ({@link ISyntaxLeaf}) that can be derived from this 
+	 * structure's generating node. 
 	 * (All {@link ISyntaxLeaf} have a leafID). 
 	 */
 	List<Long> getListOfLeafIDs();
 	
 	/**
-	 * @return a concatenation (with a separator) of the syntax leaves (or terminals) that can be derived from 
-	 * this structure's generating node. If the node is itself a terminal (because the structure is a syntax leaf),  
+	 * @return a concatenation (with a separator) of the names of the syntax leaves (or terminals) that can be derived from 
+	 * this structure's generating node. If the node is itself a terminal (because the structure {@link ISyntaxLeaf}),  
 	 * its name is returned.  
 	 */
 	String getStringOfTerminals();
@@ -161,16 +163,16 @@ public interface ISyntacticStructure extends Cloneable {
 		
 	/**
 	 * Provides this structure (and its components, sub-components, etc.) with a 'poset element ID', mapped with 
-	 * its generated list of paths.
-	 * @see ISyntaxGrove
+	 * its generated list of paths. This method is called by {@link ISyntaxGrove}.
 	 * @param pathsToIndex a map that associates tree paths with a unique ID. 
 	 * @throws GrammarModelException
 	 */
 	void setPosetElementID(Map<ITreePaths, String> pathsToIndex) throws GrammarModelException;
 	
 	/**
-	 * Replaces a target leaf component by a new component. 
-	 * Syntax tree growth involves the replacement of leaves by new branches (or, rarely, by new leaves). 
+	 * Replaces a target leaf ({@link ISyntaxLeaf}) component by a new component. 
+	 * Syntax tree 'growth' involves the replacement of leaves by new branches ({@link ISyntaxBranch}) ; 
+	 * or, rarely, by new leaves. 
 	 * These new components are injected in the structure whith the IDs of the leaf they are meant to replace. If one 
 	 * of the structure component is a target leaf, then it is replaced ; otherwise, the same method is recursively 
 	 * called on every non-terminal component, with the same parameters.  

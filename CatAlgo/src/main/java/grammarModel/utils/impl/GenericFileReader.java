@@ -15,8 +15,8 @@ import grammarModel.structure.impl.SyntaxGrove;
 import grammarModel.utils.IGenericFileReader;
 
 /**
- * GenericFileReader is an abstract implementation of IGenericFileReader. Its single abstract 'protected' method is 
- * the only one that depends on the context-free grammar at use. 
+ * GenericFileReader is an abstract implementation of {@link IGenericFileReader}. Its single abstract member is 
+ * a 'protected' method that depends on the context-free grammar at use. 
  * @author Gael Tregouet
  *
  */
@@ -41,7 +41,7 @@ public abstract class GenericFileReader implements IGenericFileReader {
 	
 	/**
 	 * Called in the constructor to instantiate 'treeDescriptions', which contains the paths of all the trees in the grove.
-	 * @param path Path pointing to a text file (UTF-8) containing a list of paths (one list per tree)
+	 * @param path points to a text file (UTF-8) containing a list of paths (one list per tree)
 	 * @return String[][][] an array of paths formed as follows : [treeIndex][pathIndex][nodeIndex]
 	 * @throws FileReaderException
 	 * @see IGenericFileReader
@@ -89,7 +89,7 @@ public abstract class GenericFileReader implements IGenericFileReader {
 	
 	/**
 	 * 
-	 * @param path Path pointing to a text file (UTF-8) containing a list of paths (one list per tree)
+	 * @param path points to a text file (UTF-8) containing a list of paths (one list per tree)
 	 * @return the number of trees, which is also the number of minimal objects in the context
 	 * @throws FileReaderException
 	 */
