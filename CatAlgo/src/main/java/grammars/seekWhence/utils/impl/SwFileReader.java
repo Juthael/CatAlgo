@@ -81,7 +81,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'AlternationRule' syntactic branch. " + e.getMessage() 
+							+ "a 'AlternationRule' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -104,7 +104,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'AlternationRulE' syntactic leaf. " + e.getMessage() 
+							+ "a 'AlternationRulE' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -130,7 +130,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'ArithSeq' syntactic branch. " + e.getMessage() 
+							+ "a 'ArithSeq' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -153,7 +153,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'ArithSeQ' syntactic leaf. " + e.getMessage() 
+							+ "a 'ArithSeQ' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -178,7 +178,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'BouncingCycle' syntactic branch. " + e.getMessage() 
+							+ "a 'BouncingCycle' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -201,7 +201,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'BouncingCyclE' syntactic leaf. " + e.getMessage() 
+							+ "a 'BouncingCyclE' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -226,7 +226,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'Center' syntactic branch. " + e.getMessage() 
+							+ "a 'Center' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -249,7 +249,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'CenteR' syntactic leaf. " + e.getMessage() 
+							+ "a 'CenteR' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -274,7 +274,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'Cycle' syntactic branch. " + e.getMessage() 
+							+ "a 'Cycle' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -297,7 +297,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'CyclE' syntactic leaf. " + e.getMessage() 
+							+ "a 'CyclE' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -323,7 +323,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'Digit' syntactic branch. " + e.getMessage() 
+							+ "a 'Digit' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -346,7 +346,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'DigiT' syntactic leaf. " + e.getMessage() 
+							+ "a 'DigiT' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -371,7 +371,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'Enumeration' syntactic branch. " + e.getMessage() 
+							+ "a 'Enumeration' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -394,7 +394,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'EnumeratioN' syntactic leaf. " + e.getMessage() 
+							+ "a 'EnumeratioN' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -419,7 +419,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'EveryXElem' syntactic branch. " + e.getMessage() 
+							+ "a 'EveryXElem' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -442,7 +442,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'EveryXEleM' syntactic leaf. " + e.getMessage() 
+							+ "a 'EveryXEleM' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -467,7 +467,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'FirstValue' syntactic branch. " + e.getMessage() 
+							+ "a 'FirstValue' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -490,7 +490,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'FirstValuE' syntactic leaf. " + e.getMessage() 
+							+ "a 'FirstValuE' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -515,7 +515,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'Increment' syntactic branch. " + e.getMessage() 
+							+ "a 'Increment' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -538,7 +538,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'IncremenT' syntactic leaf. " + e.getMessage() 
+							+ "a 'IncremenT' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -561,7 +561,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'NoAlterN' syntactic leaf. " + e.getMessage() 
+							+ "a 'NoAlterN' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -587,7 +587,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'Position' syntactic branch. " + e.getMessage() 
+							+ "a 'Position' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -610,7 +610,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'PositioN' syntactic leaf. " + e.getMessage() 
+							+ "a 'PositioN' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -635,7 +635,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'ReflectedPart' syntactic branch. " + e.getMessage() 
+							+ "a 'ReflectedPart' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -658,7 +658,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'ReflectedParT' syntactic leaf. " + e.getMessage() 
+							+ "a 'ReflectedParT' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -684,7 +684,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'Relation' syntactic branch. " + e.getMessage() 
+							+ "a 'Relation' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -707,7 +707,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'RelatioN' syntactic leaf. " + e.getMessage() 
+							+ "a 'RelatioN' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -732,7 +732,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'Size' syntactic branch. " + e.getMessage() 
+							+ "a 'Size' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -755,7 +755,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'SizE' syntactic leaf. " + e.getMessage() 
+							+ "a 'SizE' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -780,7 +780,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'StartAt' syntactic branch. " + e.getMessage() 
+							+ "a 'StartAt' syntax branch. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -803,7 +803,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'StartAT' syntactic leaf. " + e.getMessage() 
+							+ "a 'StartAT' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -829,7 +829,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 					}
 					catch (Exception e) {
 						throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-								+ "a 'Symmetry' syntactic branch. " + e.getMessage() 
+								+ "a 'Symmetry' syntax branch. " + e.getMessage() 
 								+ System.lineSeparator()
 								+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 								+ " ; Node : " + Integer.toString(nodeIndex));
@@ -847,7 +847,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 					}
 					catch (Exception e) {
 						throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-								+ "a 'SymmetryWithCenter' syntactic branch. " + e.getMessage() 
+								+ "a 'SymmetryWithCenter' syntax branch. " + e.getMessage() 
 								+ System.lineSeparator()
 								+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 								+ " ; Node : " + Integer.toString(nodeIndex));
@@ -871,7 +871,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'SymmetrY' syntactic leaf. " + e.getMessage() 
+							+ "a 'SymmetrY' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -894,7 +894,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'SymmetryWithCenteR' syntactic leaf. " + e.getMessage() 
+							+ "a 'SymmetryWithCenteR' syntax leaf. " + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));
@@ -921,7 +921,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 						}
 						catch (Exception e) {
 							throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-									+ "a 'Value' syntactic branch. " + e.getMessage() 
+									+ "a 'Value' syntax branch. " + e.getMessage() 
 									+ System.lineSeparator()
 									+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 									+ " ; Node : " + Integer.toString(nodeIndex));
@@ -944,7 +944,7 @@ public class SwFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				catch (Exception e) {
 					throw new FileReaderException("SwFileReader.buildSyntacticStructure() : failed to build "
-							+ "a 'ValuE' syntactic leaf with param '" + nodeName + "'." + e.getMessage() 
+							+ "a 'ValuE' syntax leaf with param '" + nodeName + "'." + e.getMessage() 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
 							+ " ; Node : " + Integer.toString(nodeIndex));

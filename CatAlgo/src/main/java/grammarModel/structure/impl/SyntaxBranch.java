@@ -7,20 +7,20 @@ import java.util.Map;
 
 import grammarModel.GrammarModelConstants;
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.structure.ISyntacticBranch;
-import grammarModel.structure.ISyntacticLeaf;
+import grammarModel.structure.ISyntaxBranch;
+import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.ISyntacticStructure;
-import grammarModel.utils.ISyntacticChains;
+import grammarModel.utils.ITreePaths;
 
-public abstract class SyntacticBranch extends SyntacticStructure implements ISyntacticBranch {
+public abstract class SyntaxBranch extends SyntacticStructure implements ISyntaxBranch {
 
 	@SuppressWarnings("unused")
-	private ISyntacticLeaf labelLeaf;
+	private ISyntaxLeaf labelLeaf;
 	private String posetID = "";
 	private boolean iDHasBeenSet = false;
 	protected boolean tree = false;
 	
-	public SyntacticBranch() {
+	public SyntaxBranch() {
 	}
 
 	@Override
@@ -46,18 +46,18 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 	@Override
 	public String getPosetElementName() throws GrammarModelException {
 		if (iDHasBeenSet == false) {
-			throw new GrammarModelException("SyntacticBranch.getPosetFullName() : "
+			throw new GrammarModelException("SyntaxBranch.getPosetFullName() : "
 					+ "cannot return poset full name since ID hasn't been set.");
 		}
 		else return getName().concat(posetID);
 	}
 	
 	@Override
-	public List<List<String>> getListOfSyntacticStringChains(){
+	public List<List<String>> getListOfTreeStringPaths(){
 		List<List<String>> synChains = new ArrayList<List<String>>();
 		for (ISyntacticStructure component : getListOfComponents()) {
 			if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !component.isRedundant()) {
-				List<List<String>> compSynChains = component.getListOfSyntacticStringChains();
+				List<List<String>> compSynChains = component.getListOfTreeStringPaths();
 				for (List<String> chain : compSynChains) {
 					chain.add(0, getName());
 					synChains.add(chain);
@@ -117,8 +117,8 @@ public abstract class SyntacticBranch extends SyntacticStructure implements ISyn
 	}
 	
 	@Override
-	public void setPosetElementID(Map<ISyntacticChains, String> chainsToIndex) throws GrammarModelException {
-		posetID = chainsToIndex.get(getSyntacticChains());
+	public void setPosetElementID(Map<ITreePaths, String> chainsToIndex) throws GrammarModelException {
+		posetID = chainsToIndex.get(getTreePaths());
 		for (ISyntacticStructure component : getListOfComponents()) {
 			if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !component.isRedundant()) {
 				component.setPosetElementID(chainsToIndex);

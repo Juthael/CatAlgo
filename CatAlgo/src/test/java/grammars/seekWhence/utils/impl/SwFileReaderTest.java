@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import grammarModel.structure.ISyntacticGrove;
+import grammarModel.structure.ISyntaxGrove;
 
 @SuppressWarnings("unused")
 public class SwFileReaderTest {
@@ -24,7 +24,7 @@ public class SwFileReaderTest {
 		Path backburnDozen1 = Paths.get("D:","GoogleDrive","0_Doctorat","Modèle","grammars",
 				"tests","seekWhence","BlackburnDozen","BlackburnDozen1","BD1_1_12_123.txt");
 		SwFileReader fileReader = new SwFileReader();
-		ISyntacticGrove grove;
+		ISyntaxGrove grove;
 		try {
 			grove = fileReader.getSyntacticGrove(backburnDozen1);
 			/*

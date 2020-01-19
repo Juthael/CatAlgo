@@ -7,8 +7,8 @@ import java.util.Set;
 import grammarModel.GrammarModelConstants;
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
-import grammarModel.utils.ISyntacticChains;
-import grammarModel.utils.impl.SyntacticChains;
+import grammarModel.utils.ITreePaths;
+import grammarModel.utils.impl.TreePaths;
 import utils.IImplication;
 import utils.IPosetMaxChains;
 import utils.impl.Implication;
@@ -23,23 +23,23 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 	}
 
 	@Override
-	public ISyntacticChains getSyntacticChains() throws GrammarModelException {
-		ISyntacticChains synChains;
-		List<List<String>> listOfChains = getListOfSyntacticStringChains();
+	public ITreePaths getTreePaths() throws GrammarModelException {
+		ITreePaths treePaths;
+		List<List<String>> listOfPaths = getListOfTreeStringPaths();
 		List<Long> leafIDs = getListOfLeafIDs();
-		synChains = new SyntacticChains(listOfChains, leafIDs);
-		return synChains;
+		treePaths = new TreePaths(listOfPaths, leafIDs);
+		return treePaths;
 	}
 	
 	@Override
-	public Set<ISyntacticChains> getSetOfSyntacticChains() throws GrammarModelException {
-		Set<ISyntacticChains> setOfChains = new HashSet<ISyntacticChains>();
-		setOfChains.add(getSyntacticChains());
+	public Set<ITreePaths> getSetOfTreePaths() throws GrammarModelException {
+		Set<ITreePaths> setOfPaths = new HashSet<ITreePaths>();
+		setOfPaths.add(getTreePaths());
 		for (ISyntacticStructure component : getListOfComponents()) {
 			if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !component.isRedundant())
-				setOfChains.addAll(component.getSetOfSyntacticChains());
+				setOfPaths.addAll(component.getSetOfTreePaths());
 		}
-		return setOfChains;
+		return setOfPaths;
 	}
 	
 	@Override

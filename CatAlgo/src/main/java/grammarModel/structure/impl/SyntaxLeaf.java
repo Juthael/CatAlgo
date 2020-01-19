@@ -6,21 +6,21 @@ import java.util.Map;
 
 import grammarModel.GrammarModelConstants;
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.structure.ISyntacticLeaf;
+import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.ISyntacticStructure;
-import grammarModel.utils.ISyntacticChains;
+import grammarModel.utils.ITreePaths;
 
-public abstract class SyntacticLeaf extends SyntacticStructure implements ISyntacticLeaf {
+public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLeaf {
 
 	private final long leafID;
 	private static int ID_COUNT = 0;
 	
-	public SyntacticLeaf() {
+	public SyntaxLeaf() {
 		leafID = ID_COUNT;
 		ID_COUNT++;
 	}
 	
-	public SyntacticLeaf(long leafID) {
+	public SyntaxLeaf(long leafID) {
 		this.leafID = leafID;
 		ID_COUNT++;
 	}
@@ -37,14 +37,14 @@ public abstract class SyntacticLeaf extends SyntacticStructure implements ISynta
 	}
 
 	@Override
-	public List<List<String>> getListOfSyntacticStringChains() {
-		List<List<String>> synChains = new ArrayList<List<String>>();
+	public List<List<String>> getListOfTreeStringPaths() {
+		List<List<String>> treePaths = new ArrayList<List<String>>();
 		if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !this.isRedundant()) {
-			List<String> synChain = new ArrayList<String>();
-			synChain.add(getName());
-			synChains.add(synChain);
+			List<String> treePath = new ArrayList<String>();
+			treePath.add(getName());
+			treePaths.add(treePath);
 		}
-		return synChains;
+		return treePaths;
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public abstract class SyntacticLeaf extends SyntacticStructure implements ISynta
 	}
 	
 	@Override
-	public void setPosetElementID(Map<ISyntacticChains, String> chainsToIndex) {
+	public void setPosetElementID(Map<ITreePaths, String> chainsToIndex) {
 	}
 	
 	@Override

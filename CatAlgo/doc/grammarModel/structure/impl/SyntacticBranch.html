@@ -299,7 +299,7 @@ implements <a href="../../../grammarModel/structure/ISyntacticBranch.html" title
  It is a concatenation of the syntactic element 'name' with an index generated to assure that that structures 
  belonging to the same 'syntactic glove' can't return the same 'poset element name' if they don't have the same 
  components. 
- Put another way : two nodes from syntactic trees belonging to the same glove (and possibly having the same name) 
+ Put another way : two nodes from syntax trees belonging to the same glove (and possibly having the same name) 
  can't generate the same 'poset element name' if they don't also generate the same derivation.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -367,9 +367,9 @@ implements <a href="../../../grammarModel/structure/ISyntacticBranch.html" title
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../grammarModel/structure/ISyntacticStructure.html#getListOfLeafIDs--">getListOfLeafIDs</a></code>&nbsp;in interface&nbsp;<code><a href="../../../grammarModel/structure/ISyntacticStructure.html" title="interface in grammarModel.structure">ISyntacticStructure</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the list of IDs associated with every syntactic leaf that can be derived from this structure's generating 
+<dd>the list of IDs associated with every syntax leaf that can be derived from this structure's generating 
  node. 
- (All syntactic leaves have a leafID).</dd>
+ (All syntax leaves have a leafID).</dd>
 </dl>
 </li>
 </ul>
@@ -386,8 +386,8 @@ implements <a href="../../../grammarModel/structure/ISyntacticBranch.html" title
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../grammarModel/structure/ISyntacticStructure.html#getStringOfTerminals--">getStringOfTerminals</a></code>&nbsp;in interface&nbsp;<code><a href="../../../grammarModel/structure/ISyntacticStructure.html" title="interface in grammarModel.structure">ISyntacticStructure</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a concatenation (with a separator) of the chain of syntactic leaves (or terminals) that can be derived from 
- this structure's generating node. If the node is itself a terminal (because the structure is a syntactic leaf),  
+<dd>a concatenation (with a separator) of the chain of syntax leaves (or terminals) that can be derived from 
+ this structure's generating node. If the node is itself a terminal (because the structure is a syntax leaf),  
  its name is returned.</dd>
 </dl>
 </li>
@@ -420,7 +420,7 @@ implements <a href="../../../grammarModel/structure/ISyntacticBranch.html" title
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../grammarModel/structure/ISyntacticBranch.html#isATree--">isATree</a></code>&nbsp;in interface&nbsp;<code><a href="../../../grammarModel/structure/ISyntacticBranch.html" title="interface in grammarModel.structure">ISyntacticBranch</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>true if this syntactic branch is a tree, i.e. if its name is the start element of the context-free
+<dd>true if this syntax branch is a tree, i.e. if its name is the start element of the context-free
  grammar at use.</dd>
 </dl>
 </li>
@@ -442,7 +442,7 @@ implements <a href="../../../grammarModel/structure/ISyntacticBranch.html" title
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../grammarModel/structure/ISyntacticStructure.html#setPosetElementID-java.util.Map-">setPosetElementID</a></code>&nbsp;in interface&nbsp;<code><a href="../../../grammarModel/structure/ISyntacticStructure.html" title="interface in grammarModel.structure">ISyntacticStructure</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>chainsToIndex</code> - a map that associates syntactic chains with a unique ID.</dd>
+<dd><code>chainsToIndex</code> - a map that associates tree paths with a unique ID.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../../grammarModel/exceptions/GrammarModelException.html" title="class in grammarModel.exceptions">GrammarModelException</a></code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>

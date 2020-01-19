@@ -165,7 +165,7 @@ implements <a href="../../../grammarModel/genericTools/IGenericFileReader.html" 
 <td class="colFirst"><code><a href="../../../grammarModel/structure/ISyntacticGrove.html" title="interface in grammarModel.structure">ISyntacticGrove</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../grammarModel/genericTools/impl/GenericFileReader.html#getSyntacticGrove-java.nio.file.Path-">getSyntacticGrove</a></span>(java.nio.file.Path&nbsp;path)</code>
 <div class="block">Writing rules to be respected in order to avoid throwing an exception : <br>
- 1-The text contains one or more descriptions of syntactic trees generated using a context-free 
+ 1-The text contains one or more descriptions of syntax trees generated using a context-free 
  grammar.</div>
 </td>
 </tr>
@@ -218,10 +218,10 @@ implements <a href="../../../grammarModel/genericTools/IGenericFileReader.html" 
                                   throws <a href="../../../grammarModel/exceptions/FileReaderException.html" title="class in grammarModel.exceptions">FileReaderException</a></pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../grammarModel/genericTools/IGenericFileReader.html#getSyntacticGrove-java.nio.file.Path-">IGenericFileReader</a></code></span></div>
 <div class="block">Writing rules to be respected in order to avoid throwing an exception : <br>
- 1-The text contains one or more descriptions of syntactic trees generated using a context-free 
+ 1-The text contains one or more descriptions of syntax trees generated using a context-free 
  grammar. <br>
  2-Every tree description begins with a line containing only the character '/' <br>
- 3-Descriptions of syntactic trees take the form of the list of spanning paths a tree contains (i.e. paths 
+ 3-Descriptions of syntax trees take the form of the list of spanning paths a tree contains (i.e. paths 
  from the root element of the tree to any of its terminals). <br>
  4-A path is a concatenation of symbols (i.e., strings) from the 'SeekWhence' grammar, separated by the 
  character '/'. New path, new line. No empty line. <br>
@@ -236,7 +236,7 @@ implements <a href="../../../grammarModel/genericTools/IGenericFileReader.html" 
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../grammarModel/genericTools/IGenericFileReader.html#getSyntacticGrove-java.nio.file.Path-">getSyntacticGrove</a></code>&nbsp;in interface&nbsp;<code><a href="../../../grammarModel/genericTools/IGenericFileReader.html" title="interface in grammarModel.genericTools">IGenericFileReader</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a 'syntactic grove', i.e. a list of syntactic trees with some more functionalities.</dd>
+<dd>a 'syntax grove', i.e. a list of syntax trees with some more functionalities.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../../grammarModel/exceptions/FileReaderException.html" title="class in grammarModel.exceptions">FileReaderException</a></code></dd>
 </dl>

@@ -8,16 +8,16 @@ import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 import utils.IChains;
 /**
- * A ISyntacticChains is a list (endowed with navigation functionalities) of all the paths of a syntactic structure 
- * from its generated node to one of its terminals.
+ * A ITreePaths is a list (endowed with navigation functionalities) of all the paths of a syntactic structure 
+ * from its root to one of its terminals.
  * @see ISyntacticStructure
  * @author Gael Tregouet
  *
  */
-public interface ISyntacticChains extends IChains {
+public interface ITreePaths extends IChains {
 
 	/**
-	 * @return the ID of the current chain terminal (or 'leaf'). 
+	 * @return the ID of the current path terminal (or 'leaf'). 
 	 */
 	long getCurrentLeafID();
 	
@@ -39,7 +39,7 @@ public interface ISyntacticChains extends IChains {
 	/**
 	 * 
 	 * @param property the name of the property that is looked for. 
-	 * @return true if any of the chains (or 'paths') owns this property. 
+	 * @return true if any of the paths owns this property. 
 	 * @throws GrammarModelException
 	 */
 	boolean hasProperty(String property) throws GrammarModelException;

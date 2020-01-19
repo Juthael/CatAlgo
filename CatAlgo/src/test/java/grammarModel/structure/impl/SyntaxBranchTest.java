@@ -10,12 +10,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import grammarModel.GrammarModelConstants;
-import grammarModel.structure.ISyntacticGrove;
+import grammarModel.structure.ISyntaxGrove;
 import grammars.seekWhence.utils.impl.SwFileReader;
 
-public class SyntacticBranchTest {
+public class SyntaxBranchTest {
 
-	public static ISyntacticGrove grove;
+	public static ISyntaxGrove grove;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -27,7 +27,7 @@ public class SyntacticBranchTest {
 			// printChains(grove.getListOfSyntacticStringChains());
 		}
 		catch (Exception e) {
-			System.out.println("SyntacticBranchTest.setUpBeforClass() : " + System.lineSeparator() + e.getMessage());
+			System.out.println("SyntaxBranchTest.setUpBeforClass() : " + System.lineSeparator() + e.getMessage());
 		}
 	}
 
@@ -36,13 +36,13 @@ public class SyntacticBranchTest {
 		boolean nonEmptyListReturned = true;
 		List<List<String>> listOfSyntacticStringChains;
 		try {
-			listOfSyntacticStringChains = grove.getListOfSyntacticStringChains();
+			listOfSyntacticStringChains = grove.getListOfTreeStringPaths();
 			if (listOfSyntacticStringChains == null || listOfSyntacticStringChains.isEmpty())
 				throw new Exception("'listOfSyntacticStringChains' variable is either null or empty.");
 		}
 		catch (Exception e) {
 			nonEmptyListReturned = false;
-			System.out.println("SyntacticBranchTest."
+			System.out.println("SyntaxBranchTest."
 					+ "whenGetListOfSyntacticStringChainsIsCalledThenANonEmptyListIsReturned() : "
 					+ System.lineSeparator() + "cannot retrieve syntactic string chains." 
 					+ System.lineSeparator() + e.getMessage());
@@ -52,14 +52,14 @@ public class SyntacticBranchTest {
 	
 	@Test
 	public void whenGetListOfPosetMaxStringChainsIsCalledThenANonEmptyListIsReturned()  {
-		ISyntacticGrove groveClone = (ISyntacticGrove) grove.clone();
+		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
 		boolean nonEmptyListReturned = true;
 		try {
 			groveClone.setPosetElementID();
 		}
 		catch (Exception e){
 			nonEmptyListReturned = false;
-			System.out.println("SyntacticBranchTest.whenGetListOfPosetMaxStringChainsIsCalledThenANonEmptyListIsReturned() : "
+			System.out.println("SyntaxBranchTest.whenGetListOfPosetMaxStringChainsIsCalledThenANonEmptyListIsReturned() : "
 					+ System.lineSeparator() + "error during poset ID setting." 
 					+ System.lineSeparator() + e.getMessage());
 		}
@@ -71,7 +71,7 @@ public class SyntacticBranchTest {
 		}
 		catch (Exception e) {
 			nonEmptyListReturned = false;
-			System.out.println("SyntacticBranchTest."
+			System.out.println("SyntaxBranchTest."
 					+ "whenGetListOfPosetMaxStringChainsIsCalledThenANonEmptyListIsReturned() : "
 					+ System.lineSeparator() + "cannot retrieve poset string chains." 
 					+ System.lineSeparator() + e.getMessage());
@@ -89,7 +89,7 @@ public class SyntacticBranchTest {
 		}
 		catch (Exception e) {
 			nonEmptyListReturned = false;
-			System.out.println("SyntacticBranchTest."
+			System.out.println("SyntaxBranchTest."
 					+ "whenGetListOfLeafIDsIsCalledThenANonEmptyListIsReturned() : "
 					+ System.lineSeparator() + "cannot retrieve poset IDs." 
 					+ System.lineSeparator() + e.getMessage());
@@ -107,7 +107,7 @@ public class SyntacticBranchTest {
 		}
 		catch (Exception e) {
 			nonEmptyStringReturned = false;
-			System.out.println("SyntacticBranchTest."
+			System.out.println("SyntaxBranchTest."
 					+ "whenGetStringOfTerminalsIsCalledThenANonEmptyStringIsReturned() : "
 					+ System.lineSeparator() + "cannot retrieve terminals String." 
 					+ System.lineSeparator() + e.getMessage());
@@ -129,7 +129,7 @@ public class SyntacticBranchTest {
 		}
 		catch (Exception e) {
 			sameNbOfLeafIDsAndTerminals = false;
-			System.out.println("SyntacticBranchTest."
+			System.out.println("SyntaxBranchTest."
 					+ "whenNumberOfLeafIDsAndTerminalComparedThenProveEquals() : "
 					+ System.lineSeparator() + "cannot retrieve terminals String." 
 					+ System.lineSeparator() + e.getMessage());
@@ -142,7 +142,7 @@ public class SyntacticBranchTest {
 			}
 			catch (Exception e) {
 				sameNbOfLeafIDsAndTerminals = false;
-				System.out.println("SyntacticBranchTest."
+				System.out.println("SyntaxBranchTest."
 						+ "whenNumberOfLeafIDsAndTerminalComparedThenProveEquals() : "
 						+ System.lineSeparator() + "cannot retrieve leaf IDs." 
 						+ System.lineSeparator() + e.getMessage());

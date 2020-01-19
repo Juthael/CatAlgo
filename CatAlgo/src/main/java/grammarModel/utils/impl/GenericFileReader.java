@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import grammarModel.exceptions.FileReaderException;
-import grammarModel.structure.ISyntacticBranch;
-import grammarModel.structure.ISyntacticGrove;
+import grammarModel.structure.ISyntaxBranch;
+import grammarModel.structure.ISyntaxGrove;
 import grammarModel.structure.ISyntacticStructure;
-import grammarModel.structure.impl.SyntacticGrove;
+import grammarModel.structure.impl.SyntaxGrove;
 import grammarModel.utils.IGenericFileReader;
 
 /**
@@ -30,13 +30,13 @@ public abstract class GenericFileReader implements IGenericFileReader {
 	}
 
 	@Override
-	public ISyntacticGrove getSyntacticGrove(Path path) throws FileReaderException {
+	public ISyntaxGrove getSyntacticGrove(Path path) throws FileReaderException {
 		List<ISyntacticStructure> trees = new ArrayList<ISyntacticStructure>();
 		treeDescriptions = setDescriptions(path);
 		structures = setStructures(treeDescriptions);
 		for (int treeIndex=0 ; treeIndex < treeDescriptions.length ; treeIndex++)
 			trees.add(buildTree(treeIndex));
-		return new SyntacticGrove(ctxtName, trees);
+		return new SyntaxGrove(ctxtName, trees);
 	}
 	
 	/**
@@ -121,7 +121,7 @@ public abstract class GenericFileReader implements IGenericFileReader {
 	}	
 	
 	/**
-	 * @param treeDescriptions String[][][] containing every path in every syntactic tree describing a minimal object in the context 
+	 * @param treeDescriptions String[][][] containing every path in every syntax tree describing a minimal object in the context 
 	 * @return ISyntacticStructure[][][], a syntactic structure array with the same dimensions as the treeDescriptions array
 	 */
 	private ISyntacticStructure[][][] setStructures(String[][][] treeDescriptions) {
@@ -136,14 +136,14 @@ public abstract class GenericFileReader implements IGenericFileReader {
 	}	
 	
 	/**
-	 * Builds a syntactic tree incrementally, starting with its leaves, ending with its root. 
+	 * Builds a syntax tree incrementally, starting with its leaves, ending with its root. 
 	 * Each element attainable at a path index 'x' (x>0) is a component of another element at the path index 'x-1'.
-	 * The only element with a path index x=0 is the root of the syntactic tree.     
+	 * The only element with a path index x=0 is the root of the syntax tree.     
 	 * @param treeIndex index of the tree in the treeDescriptions array
-	 * @return a syntactic tree, i.e. a syntactic branch whose name is the start element of the context-free grammar at use
+	 * @return a syntax tree, i.e. a syntax branch whose name is the start element of the context-free grammar at use
 	 * @throws FileReaderException
 	 */
-	private ISyntacticBranch buildTree(int treeIndex) throws FileReaderException {
+	private ISyntaxBranch buildTree(int treeIndex) throws FileReaderException {
 		int pathMaxLength = setPathMaxLength(treeIndex);
 		for (int nodeIndex=pathMaxLength-1 ; nodeIndex >= 0 ; nodeIndex--) {
 			int pathIndex = 0;
@@ -154,7 +154,7 @@ public abstract class GenericFileReader implements IGenericFileReader {
 				else pathIndex++;
 			}
 		}
-		return (ISyntacticBranch) structures[treeIndex][0][0];
+		return (ISyntaxBranch) structures[treeIndex][0][0];
 	}
 	
 	/**

@@ -4,15 +4,16 @@ import java.util.List;
 import java.util.Map;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.utils.ISyntacticChains;
+import grammarModel.utils.ITreePaths;
 
 /**
- * ISyntacticLeaf is a terminal syntactic structure, representing the terminal node of a syntactic tree. 
- * It has no component and is only characterized by its name and ID. 
+ * ISyntaxLeaf is a {@link ISyntacticStructure} representing a terminal symbol in a context-free grammar. <br>
+ * Thus, any instance of ISyntaxLeaf is a leaf in a syntax tree. <br> 
+ * A ISyntaxLeaf instance has no component and is only characterized by its name and ID. 
  * @author Gael Tregouet
  *
  */
-public interface ISyntacticLeaf extends ISyntacticStructure {
+public interface ISyntaxLeaf extends ISyntacticStructure {
 	
 	
 	@Override
@@ -22,7 +23,7 @@ public interface ISyntacticLeaf extends ISyntacticStructure {
 	public List<ISyntacticStructure> getListOfComponents();
 	
 	@Override
-	public List<List<String>> getListOfSyntacticStringChains();
+	public List<List<String>> getListOfTreeStringPaths();
 	
 	@Override
 	public List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException;
@@ -40,19 +41,19 @@ public interface ISyntacticLeaf extends ISyntacticStructure {
 	public String getStringOfTerminals();
 	
 	/**
-	 * @return true, since the poset element ID of a syntactic leaf is set by its constructor.
+	 * @return true, since the poset element ID of a syntax leaf is set by its constructor.
 	 */
 	@Override
 	public boolean getIDHasBeenSet();
 	
 	/**
-	 * The poset element ID of a syntactic leaf is set by its constructor ; so this inherited method has no effect.
+	 * The poset element ID of a syntax leaf is set by its constructor ; so this inherited method has no effect.
 	 */
 	@Override
-	public void setPosetElementID(Map<ISyntacticChains, String> chainsToIndex);
+	public void setPosetElementID(Map<ITreePaths, String> pathsToIndex);
 	
 	/**
-	 * This inherited method is irrelevant for a syntactic leaf, since it has no component. Has no reason to be 
+	 * This inherited method is irrelevant for a syntax leaf, since it has no component. Has no reason to be 
 	 * called, but if so, does not cause any error. 
 	 */
 	@Override

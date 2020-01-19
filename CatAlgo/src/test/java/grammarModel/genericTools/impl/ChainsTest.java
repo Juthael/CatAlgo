@@ -12,14 +12,14 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import grammarModel.structure.ISyntacticGrove;
-import grammarModel.utils.ISyntacticChains;
+import grammarModel.structure.ISyntaxGrove;
+import grammarModel.utils.ITreePaths;
 import grammars.seekWhence.utils.impl.SwFileReader;
 import utils.IChains;
 
 public class ChainsTest {
 
-	public static ISyntacticGrove grove;
+	public static ISyntaxGrove grove;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -42,7 +42,7 @@ public class ChainsTest {
 		List<String> list2 = new ArrayList<String>();
 		IChains chains = null;
 		try {
-			chains =  grove.getSyntacticChains();
+			chains =  grove.getTreePaths();
 		}
 		catch (Exception e) {
 			allElementsInstantiable = false;
@@ -61,7 +61,7 @@ public class ChainsTest {
 						+ e.getMessage());
 			}
 		}
-		List<List<String>> listOfStringChains = grove.getListOfSyntacticStringChains();
+		List<List<String>> listOfStringChains = grove.getListOfTreeStringPaths();
 		for (List<String> stringChain : listOfStringChains) {
 			for (String element : stringChain) {
 				list2.add(element);
@@ -76,13 +76,13 @@ public class ChainsTest {
 	
 	@Test
 	public void whenIdenticalChainsAreComparedThenEqualsReturnsTrue() {
-		ISyntacticGrove groveClone = (ISyntacticGrove) grove.clone();
+		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
 		boolean equals = true;
-		ISyntacticChains chains1 = null;
-		ISyntacticChains chains2 = null;
+		ITreePaths chains1 = null;
+		ITreePaths chains2 = null;
 		try {
-			chains1 = grove.getSyntacticChains();
-			chains2 = groveClone.getSyntacticChains();
+			chains1 = grove.getTreePaths();
+			chains2 = groveClone.getTreePaths();
 			if (chains1 == null || chains2 == null)
 				throw new Exception("one or both chains variable is null");
 		}
@@ -99,14 +99,14 @@ public class ChainsTest {
 	
 	@Test
 	public void whenTwoIdenticalChainsAreAddedToASetThenTheSetSizeIs1() {
-		Set<ISyntacticChains> setOfChains = new HashSet<ISyntacticChains>();
-		ISyntacticGrove groveClone = (ISyntacticGrove) grove.clone();
+		Set<ITreePaths> setOfChains = new HashSet<ITreePaths>();
+		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
 		boolean sizeIs1 = true;
-		ISyntacticChains chains1 = null;
-		ISyntacticChains chains2 = null;
+		ITreePaths chains1 = null;
+		ITreePaths chains2 = null;
 		try {
-			chains1 = grove.getSyntacticChains();
-			chains2 = groveClone.getSyntacticChains();
+			chains1 = grove.getTreePaths();
+			chains2 = groveClone.getTreePaths();
 			if (chains1 == null || chains2 == null)
 				throw new Exception("one or both chains variable is null");
 		}

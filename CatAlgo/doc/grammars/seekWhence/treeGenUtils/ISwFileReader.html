@@ -102,8 +102,8 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public interface <span class="typeNameLabel">ISwFileReader</span></pre>
-<div class="block">ISwFileReader allows the generation of a 'syntactic grove' out of a text file, provided it contains lists of paths 
- of syntactic trees generated using the 'SeekWhence' context-free grammar.</div>
+<div class="block">ISwFileReader allows the generation of a 'syntax grove' out of a text file, provided it contains lists of paths 
+ of syntax trees generated using the 'SeekWhence' context-free grammar.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
 <dd>Gael Tregouet</dd>
@@ -132,7 +132,7 @@ var activeTableTab = "activeTableTab";
 <td class="colFirst"><code><a href="../../../grammarModel/structure/ISyntacticGrove.html" title="interface in grammarModel.structure">ISyntacticGrove</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../grammars/seekWhence/treeGenUtils/ISwFileReader.html#getSyntacticGrove-java.lang.Object-">getSyntacticGrove</a></span>(java.lang.Object&nbsp;textFile)</code>
 <div class="block">Writing rules to be respected in order to avoid throwing an exception : <br>
- 1-The text contains one or more descriptions of syntactic trees generated using the 'SeekWhence' context-free 
+ 1-The text contains one or more descriptions of syntax trees generated using the 'SeekWhence' context-free 
  grammar.</div>
 </td>
 </tr>
@@ -160,10 +160,10 @@ var activeTableTab = "activeTableTab";
 <pre><a href="../../../grammarModel/structure/ISyntacticGrove.html" title="interface in grammarModel.structure">ISyntacticGrove</a>&nbsp;getSyntacticGrove(java.lang.Object&nbsp;textFile)
                            throws <a href="../../../grammars/seekWhence/treeGenUtils/exception/SwTreeGenException.html" title="class in grammars.seekWhence.treeGenUtils.exception">SwTreeGenException</a></pre>
 <div class="block">Writing rules to be respected in order to avoid throwing an exception : <br>
- 1-The text contains one or more descriptions of syntactic trees generated using the 'SeekWhence' context-free 
+ 1-The text contains one or more descriptions of syntax trees generated using the 'SeekWhence' context-free 
  grammar. <br>
  2-Every tree description begins with a line containing only the character '/'
- 3-Descriptions of syntactic trees take the form of the list of spanning paths a tree contains (i.e. paths 
+ 3-Descriptions of syntax trees take the form of the list of spanning paths a tree contains (i.e. paths 
  from the root element of the tree to any of its terminals). <br>
  4-A path is a concatenation of symbols (i.e., strings) from the 'SeekWhence' grammar, separated by the 
  character '/'. New path, new line. No empty line. <br>
@@ -178,7 +178,7 @@ var activeTableTab = "activeTableTab";
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>textFile</code> - is a text file that must respect the rules described above.</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a 'syntactic grove', i.e. a list of syntactic trees with some more functionalities.</dd>
+<dd>a 'syntax grove', i.e. a list of syntax trees with some more functionalities.</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code><a href="../../../grammars/seekWhence/treeGenUtils/exception/SwTreeGenException.html" title="class in grammars.seekWhence.treeGenUtils.exception">SwTreeGenException</a></code></dd>
 </dl>

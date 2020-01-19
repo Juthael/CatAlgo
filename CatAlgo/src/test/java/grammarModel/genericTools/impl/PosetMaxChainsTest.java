@@ -10,7 +10,7 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import grammarModel.structure.ISyntacticGrove;
+import grammarModel.structure.ISyntaxGrove;
 import grammars.seekWhence.utils.impl.SwFileReader;
 import utils.IImplication;
 import utils.IPosetMaxChains;
@@ -19,7 +19,7 @@ import utils.impl.PosetMaxChains;
 @SuppressWarnings("unused")
 public class PosetMaxChainsTest {
 
-	public static ISyntacticGrove grove;
+	public static ISyntaxGrove grove;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -38,7 +38,7 @@ public class PosetMaxChainsTest {
 	@Test
 	public void whenGetImplicationsCalledThenReturnsImplications() {
 		boolean implicationsReturned = true;
-		ISyntacticGrove groveClone = (ISyntacticGrove) grove.clone();
+		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
 		Set<IImplication> implications = null;
 		try {
 			groveClone.setPosetElementID();
@@ -75,7 +75,7 @@ public class PosetMaxChainsTest {
 	@Test
 	public void eitherWayOfInstantiatingPosetMaxChainsGivesTheSameSetOfImplications() {
 		boolean sameSetOfImplications = true;
-		ISyntacticGrove groveClone = (ISyntacticGrove) grove.clone();
+		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
 		IPosetMaxChains posetChains1 = null;
 		IPosetMaxChains posetChains2 = null;
 		Set<IImplication> implications1 = null;

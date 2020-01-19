@@ -8,14 +8,14 @@ import java.util.Map;
 import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.utils.ISyntacticChains;
+import grammarModel.utils.ITreePaths;
 import utils.impl.Chains;
 
-public class SyntacticChains extends Chains implements ISyntacticChains {
+public class TreePaths extends Chains implements ITreePaths {
 
 	private List<Long> leafIDs;
 	
-	public SyntacticChains(List<List<String>> listOfChains, List<Long> leafIDs) throws GrammarModelException {
+	public TreePaths(List<List<String>> listOfChains, List<Long> leafIDs) throws GrammarModelException {
 		super(listOfChains);
 		this.leafIDs = leafIDs;
 	}
@@ -28,11 +28,11 @@ public class SyntacticChains extends Chains implements ISyntacticChains {
 	@Override
 	public Map<List<String>, Set<Long>> getPathToLeafIDs() throws GrammarModelException {
 		Map<List<String>, Set<Long>> pathToLeafID = new HashMap<List<String>, Set<Long>>();
-		List<List<String>> chains = super.getChains();
+		List<List<String>> paths = super.getChains();
 		try {
-			for (int i=0 ; i < chains.size() ; i++) {
+			for (int i=0 ; i < paths.size() ; i++) {
 				List<String> path = new ArrayList<String>();
-				path.addAll(chains.get(i));
+				path.addAll(paths.get(i));
 				path.remove(path.size() - 1);
 				if (pathToLeafID.containsKey(path)) {
 					pathToLeafID.get(path).add(leafIDs.get(i));
@@ -45,7 +45,7 @@ public class SyntacticChains extends Chains implements ISyntacticChains {
 			}	
 		}
 		catch (Exception e) {
-			throw new GrammarModelException("SyntacticChains.getDimensionToLeafIDs() : error. " 
+			throw new GrammarModelException("TreePaths.getDimensionToLeafIDs() : error. " 
 					+ System.lineSeparator() + e.getMessage());
 		}
 		return pathToLeafID;
@@ -65,7 +65,7 @@ public class SyntacticChains extends Chains implements ISyntacticChains {
 			List<String> targetChain = listOfChains.get(IDindex);
 			leaf = targetChain.get(targetChain.size() - 1);
 		}
-		else throw new GrammarModelException("SyntacticChains.getLeaf() : leaf not found.");
+		else throw new GrammarModelException("TreePaths.getLeaf() : leaf not found.");
 		return leaf;
 	}
 	

@@ -5,18 +5,23 @@ import java.util.Map;
 import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.utils.ISyntacticChains;
+import grammarModel.utils.ITreePaths;
 import utils.IImplication;
 import utils.IPosetMaxChains;
 
 /**
- * ISyntacticStructure is an abstract class that is used to represent the nodes of a syntactic tree. 
- * The composition relationship between ISyntacticStructure objects is an equivalent to the derivation relationship 
- * between nodes of a syntactic tree. Therefore, ISyntacticStructure can be extended in order to represent : 
- * 1/ a syntactic tree terminal node (or 'syntactic leaf') 2/ the derivation from a non-terminal node ('syntactic branch') 
- * 3/ a whole syntactic tree (also a 'syntactic branch', but whose name is the start element of the context-free 
+ * ISyntacticStructure represents a derivation rule of a context-free grammar. <br>
+ * The composition relationship that defines a type in object-oriented programming ("any instance of class A has 
+ * an instance of class B and an instance of class C for components") is used as an equivalent to the derivation 
+ * relationship of a context-free grammar ("the symbol A can be substituted by the string of symbols "BC").  
+ * Thus, any instance of ISyntacticStructure constitutes an actual derivation of a given symbol in a syntax 
+ * tree (or the non-derivation of a terminal symbol). That is why ISyntacticStructure can be extended in order 
+ * to be instantiated as : <br> 
+ * 1/ a syntax tree terminal node, or syntax 'leaf' (ISyntaxLeaf) <br> 
+ * 2/ the derivation from a non-terminal node, or syntax 'branch' (ISyntaxBranch) 
+ * 3/ a whole syntax tree (also a ISyntaxBranch, but whose name is the start element of the context-free 
  * grammar at use) 
- * 4/ a list of syntactic trees (called a 'syntactic glove').
+ * 4/ also, a list of syntax trees (ISyntaxGrove).
  *  
  * @author Gael Tregouet
  *
@@ -24,7 +29,7 @@ import utils.IPosetMaxChains;
 public interface ISyntacticStructure extends Cloneable {
 
 	/**
-	 * @return the name (or type) of this structure, which is also the name of the generating node in the syntactic tree 
+	 * @return the name (or type) of this structure, which is also the name of the generating node in the syntax tree 
 	 * from which its components are derived : it therefore refers to a grammatical element of the context-free grammar 
 	 * at use. 
 	 * Two different syntactic structures can have the same name if this name is a non-terminal element (or 'variable') 
@@ -33,18 +38,18 @@ public interface ISyntacticStructure extends Cloneable {
 	String getName();
 	
 	/**
-	 * @return a list of chains that contains all the spanning paths of the syntactic structure (from its 
+	 * @return a list of paths that contains all the spanning paths of the syntactic structure (from its 
 	 * generating node to one of its terminals).   
 	 * @throws GrammarModelException
 	 */
-	ISyntacticChains getSyntacticChains() throws GrammarModelException;
+	ITreePaths getTreePaths() throws GrammarModelException;
 	
 	/**
 	 * @return the set of spanning paths associated with this structure, plus all the sets associated with any of 
 	 * its components, sub-components. etc. 
 	 * @throws GrammarModelException
 	 */
-	Set<ISyntacticChains> getSetOfSyntacticChains() throws GrammarModelException;
+	Set<ITreePaths> getSetOfTreePaths() throws GrammarModelException;
 	
 	/**
 	 * @return the set of spanning chains of the poset (lower semilattice) that can be derived from this 
@@ -98,7 +103,7 @@ public interface ISyntacticStructure extends Cloneable {
 	 * It is a concatenation of the syntactic element 'name' with an index generated to assure that that structures 
 	 * belonging to the same 'syntactic glove' can't return the same 'poset element name' if they don't have the same 
 	 * components. 
-	 * Put another way : two nodes from syntactic trees belonging to the same glove (and possibly having the same name) 
+	 * Put another way : two nodes from syntax trees belonging to the same glove (and possibly having the same name) 
 	 * can't generate the same 'poset element name' if they don't also generate the same derivation.
 	 * 
 	 * @see IPosetMaxChains, IOriginalPropertyPoset
@@ -110,8 +115,8 @@ public interface ISyntacticStructure extends Cloneable {
 	
 	/**
 	 * @return the list of component structures. The composition relationship between ISyntacticStructure objects 
-	 * being an equivalent to the derivation relationship between nodes of a syntactic tree, component structures 
-	 * represent the nodes of a syntactic tree that are directly derived from the generating node of this structure
+	 * being an equivalent to the derivation relationship between nodes of a syntax tree, component structures 
+	 * represent the nodes of a syntax tree that are directly derived from the generating node of this structure
 	 * (the one that gives this structure its name). 
 	 */
 	List<ISyntacticStructure> getListOfComponents();
@@ -120,7 +125,7 @@ public interface ISyntacticStructure extends Cloneable {
 	 * @return  a list of lists of strings, representing all the spanning paths of the syntactic structure 
 	 * (leading from its generating node to one of its terminals).
 	 */
-	List<List<String>> getListOfSyntacticStringChains();
+	List<List<String>> getListOfTreeStringPaths();
 	
 	/**
 	 * @return  a list of lists of strings, representing the set of spanning chains of the poset (lower semilattice) 
@@ -129,15 +134,15 @@ public interface ISyntacticStructure extends Cloneable {
 	List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException;
 	
 	/**
-	 * @return the list of IDs associated with every syntactic leaf that can be derived from this structure's generating 
+	 * @return the list of IDs associated with every syntax leaf that can be derived from this structure's generating 
 	 * node. 
-	 * (All syntactic leaves have a leafID). 
+	 * (All {@link ISyntaxLeaf} have a leafID). 
 	 */
 	List<Long> getListOfLeafIDs();
 	
 	/**
-	 * @return a concatenation (with a separator) of the chain of syntactic leaves (or terminals) that can be derived from 
-	 * this structure's generating node. If the node is itself a terminal (because the structure is a syntactic leaf),  
+	 * @return a concatenation (with a separator) of the syntax leaves (or terminals) that can be derived from 
+	 * this structure's generating node. If the node is itself a terminal (because the structure is a syntax leaf),  
 	 * its name is returned.  
 	 */
 	String getStringOfTerminals();
@@ -150,22 +155,22 @@ public interface ISyntacticStructure extends Cloneable {
 	/**
 	 * @param prop property name, referring to an element of the context-free grammar at use. 
 	 * @return true if the parameter is the name of this structure generating node, or the name of any derived
-	 * node in the syntactic tree.  
+	 * node in the syntax tree.  
 	 */
 	boolean hasThisProperty(String prop);
 		
 	/**
 	 * Provides this structure (and its components, sub-components, etc.) with a 'poset element ID', mapped with 
-	 * its generated list of chains.
-	 * @see ISyntacticGrove
-	 * @param chainsToIndex a map that associates syntactic chains with a unique ID. 
+	 * its generated list of paths.
+	 * @see ISyntaxGrove
+	 * @param pathsToIndex a map that associates tree paths with a unique ID. 
 	 * @throws GrammarModelException
 	 */
-	void setPosetElementID(Map<ISyntacticChains, String> chainsToIndex) throws GrammarModelException;
+	void setPosetElementID(Map<ITreePaths, String> pathsToIndex) throws GrammarModelException;
 	
 	/**
 	 * Replaces a target leaf component by a new component. 
-	 * Syntactic tree growth involves the replacement of leaves by new branches (or, rarely, by new leaves). 
+	 * Syntax tree growth involves the replacement of leaves by new branches (or, rarely, by new leaves). 
 	 * These new components are injected in the structure whith the IDs of the leaf they are meant to replace. If one 
 	 * of the structure component is a target leaf, then it is replaced ; otherwise, the same method is recursively 
 	 * called on every non-terminal component, with the same parameters.  

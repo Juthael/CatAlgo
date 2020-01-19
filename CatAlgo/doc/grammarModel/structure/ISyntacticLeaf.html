@@ -111,7 +111,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public interface <span class="typeNameLabel">ISyntacticLeaf</span>
 extends <a href="../../grammarModel/structure/ISyntacticStructure.html" title="interface in grammarModel.structure">ISyntacticStructure</a></pre>
-<div class="block">ISyntacticLeaf is a terminal syntactic structure, representing the terminal node of a syntactic tree. 
+<div class="block">ISyntacticLeaf is a terminal syntactic structure, representing the terminal node of a syntax tree. 
  It has no component and is only characterized by its name and ID.</div>
 <dl>
 <dt><span class="simpleTagLabel">Author:</span></dt>
@@ -174,13 +174,13 @@ extends <a href="../../grammarModel/structure/ISyntacticStructure.html" title="i
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../grammarModel/structure/ISyntacticLeaf.html#replaceComponents-grammarModel.structure.ISyntacticStructure-java.util.List-">replaceComponents</a></span>(<a href="../../grammarModel/structure/ISyntacticStructure.html" title="interface in grammarModel.structure">ISyntacticStructure</a>&nbsp;newComp,
                  java.util.List&lt;java.lang.Long&gt;&nbsp;compID)</code>
-<div class="block">This inherited method is irrelevant for a syntactic leaf, since it has no component.</div>
+<div class="block">This inherited method is irrelevant for a syntax leaf, since it has no component.</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../grammarModel/structure/ISyntacticLeaf.html#setPosetElementID-java.util.Map-">setPosetElementID</a></span>(java.util.Map&lt;<a href="../../grammarModel/genericTools/ISyntacticChains.html" title="interface in grammarModel.genericTools">ISyntacticChains</a>,java.lang.String&gt;&nbsp;chainsToIndex)</code>
-<div class="block">The poset element ID of a syntactic leaf is set by its constructor ; so this inherited method has no effect.</div>
+<div class="block">The poset element ID of a syntax leaf is set by its constructor ; so this inherited method has no effect.</div>
 </td>
 </tr>
 </table>
@@ -219,7 +219,7 @@ extends <a href="../../grammarModel/structure/ISyntacticStructure.html" title="i
  It is a concatenation of the syntactic element 'name' with an index generated to assure that that structures 
  belonging to the same 'syntactic glove' can't return the same 'poset element name' if they don't have the same 
  components. 
- Put another way : two nodes from syntactic trees belonging to the same glove (and possibly having the same name) 
+ Put another way : two nodes from syntax trees belonging to the same glove (and possibly having the same name) 
  can't generate the same 'poset element name' if they don't also generate the same derivation.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -245,8 +245,8 @@ extends <a href="../../grammarModel/structure/ISyntacticStructure.html" title="i
 <dd><code><a href="../../grammarModel/structure/ISyntacticStructure.html#getListOfComponents--">getListOfComponents</a></code>&nbsp;in interface&nbsp;<code><a href="../../grammarModel/structure/ISyntacticStructure.html" title="interface in grammarModel.structure">ISyntacticStructure</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the list of component structures. The composition relationship between ISyntacticStructure objects 
- being an equivalent to the derivation relationship between nodes of a syntactic tree, component structures 
- represent the nodes of a syntactic tree that are directly derived from the generating node of this structure
+ being an equivalent to the derivation relationship between nodes of a syntax tree, component structures 
+ represent the nodes of a syntax tree that are directly derived from the generating node of this structure
  (the one that gives this structure its name).</dd>
 </dl>
 </li>
@@ -310,9 +310,9 @@ extends <a href="../../grammarModel/structure/ISyntacticStructure.html" title="i
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../grammarModel/structure/ISyntacticStructure.html#getListOfLeafIDs--">getListOfLeafIDs</a></code>&nbsp;in interface&nbsp;<code><a href="../../grammarModel/structure/ISyntacticStructure.html" title="interface in grammarModel.structure">ISyntacticStructure</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the list of IDs associated with every syntactic leaf that can be derived from this structure's generating 
+<dd>the list of IDs associated with every syntax leaf that can be derived from this structure's generating 
  node. 
- (All syntactic leaves have a leafID).</dd>
+ (All syntax leaves have a leafID).</dd>
 </dl>
 </li>
 </ul>
@@ -327,8 +327,8 @@ extends <a href="../../grammarModel/structure/ISyntacticStructure.html" title="i
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../grammarModel/structure/ISyntacticStructure.html#getStringOfTerminals--">getStringOfTerminals</a></code>&nbsp;in interface&nbsp;<code><a href="../../grammarModel/structure/ISyntacticStructure.html" title="interface in grammarModel.structure">ISyntacticStructure</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>a concatenation (with a separator) of the chain of syntactic leaves (or terminals) that can be derived from 
- this structure's generating node. If the node is itself a terminal (because the structure is a syntactic leaf),  
+<dd>a concatenation (with a separator) of the chain of syntax leaves (or terminals) that can be derived from 
+ this structure's generating node. If the node is itself a terminal (because the structure is a syntax leaf),  
  its name is returned.</dd>
 </dl>
 </li>
@@ -344,7 +344,7 @@ extends <a href="../../grammarModel/structure/ISyntacticStructure.html" title="i
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../grammarModel/structure/ISyntacticStructure.html#getIDHasBeenSet--">getIDHasBeenSet</a></code>&nbsp;in interface&nbsp;<code><a href="../../grammarModel/structure/ISyntacticStructure.html" title="interface in grammarModel.structure">ISyntacticStructure</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>true, since the poset element ID of a syntactic leaf is set by its constructor.</dd>
+<dd>true, since the poset element ID of a syntax leaf is set by its constructor.</dd>
 </dl>
 </li>
 </ul>
@@ -355,12 +355,12 @@ extends <a href="../../grammarModel/structure/ISyntacticStructure.html" title="i
 <li class="blockList">
 <h4>setPosetElementID</h4>
 <pre>void&nbsp;setPosetElementID(java.util.Map&lt;<a href="../../grammarModel/genericTools/ISyntacticChains.html" title="interface in grammarModel.genericTools">ISyntacticChains</a>,java.lang.String&gt;&nbsp;chainsToIndex)</pre>
-<div class="block">The poset element ID of a syntactic leaf is set by its constructor ; so this inherited method has no effect.</div>
+<div class="block">The poset element ID of a syntax leaf is set by its constructor ; so this inherited method has no effect.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../grammarModel/structure/ISyntacticStructure.html#setPosetElementID-java.util.Map-">setPosetElementID</a></code>&nbsp;in interface&nbsp;<code><a href="../../grammarModel/structure/ISyntacticStructure.html" title="interface in grammarModel.structure">ISyntacticStructure</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>chainsToIndex</code> - a map that associates syntactic chains with a unique ID.</dd>
+<dd><code>chainsToIndex</code> - a map that associates tree paths with a unique ID.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../grammarModel/structure/ISyntacticGrove.html" title="interface in grammarModel.structure"><code>ISyntacticGrove</code></a></dd>
 </dl>
@@ -374,7 +374,7 @@ extends <a href="../../grammarModel/structure/ISyntacticStructure.html" title="i
 <h4>replaceComponents</h4>
 <pre>boolean&nbsp;replaceComponents(<a href="../../grammarModel/structure/ISyntacticStructure.html" title="interface in grammarModel.structure">ISyntacticStructure</a>&nbsp;newComp,
                           java.util.List&lt;java.lang.Long&gt;&nbsp;compID)</pre>
-<div class="block">This inherited method is irrelevant for a syntactic leaf, since it has no component. Has no reason to be 
+<div class="block">This inherited method is irrelevant for a syntax leaf, since it has no component. Has no reason to be 
  called, but if so, does not cause any error.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>

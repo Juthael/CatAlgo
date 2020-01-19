@@ -6,7 +6,7 @@ import grammarModel.exceptions.GrammarModelException;
 /**
  * IChains contains an indexed list of indexed lists of Strings, with navigation functionalities (a 'chain' 
  * is a list of Strings, so IChains is a list of chains). 
- * Can be extended as a ISyntacticChains (every path of a syntactic tree leading from its start element to a terminal) 
+ * Can be extended as a ITreePaths (every path of a syntax tree leading from its start element to a terminal) 
  * or a IPosetMaxChains (spanning chains of a lower semilattice).
  *  
  * @author Gael Tregouet
@@ -20,7 +20,7 @@ public interface IChains {
 	List<List<String>> getChains();
 	
 	/**
-	 * @return the common first element of all chains (be it the start element of a syntactic tree, or the minimum of 
+	 * @return the common first element of all chains (be it the start element of a syntax tree, or the minimum of 
 	 * a lower semilattice).
 	 */
 	String getRoot();

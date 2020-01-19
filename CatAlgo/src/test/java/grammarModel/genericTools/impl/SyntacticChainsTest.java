@@ -12,13 +12,13 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import grammarModel.structure.ISyntacticGrove;
-import grammarModel.utils.ISyntacticChains;
+import grammarModel.structure.ISyntaxGrove;
+import grammarModel.utils.ITreePaths;
 import grammars.seekWhence.utils.impl.SwFileReader;
 
 public class SyntacticChainsTest {
 
-	public static ISyntacticGrove grove;
+	public static ISyntaxGrove grove;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -37,9 +37,9 @@ public class SyntacticChainsTest {
 	@Test
 	public void whenGetPathToLeafIDsCalledThenMapIsReturned() {
 		boolean mapReturned = true;
-		ISyntacticGrove groveClone = (ISyntacticGrove) grove.clone();
+		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
 		try {
-			Map<List<String>, Set<Long>> pathToLeafIDs = groveClone.getSyntacticChains().getPathToLeafIDs();
+			Map<List<String>, Set<Long>> pathToLeafIDs = groveClone.getTreePaths().getPathToLeafIDs();
 			if (pathToLeafIDs.isEmpty())
 				mapReturned = false;
 		}
@@ -54,14 +54,14 @@ public class SyntacticChainsTest {
 	@Test
 	public void whenGetLeafCalledWithIDThenLeafReturned() {
 		boolean leafReturned = true;
-		ISyntacticChains synChains = null;
-		ISyntacticGrove groveClone = (ISyntacticGrove) grove.clone();
+		ITreePaths synChains = null;
+		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
 		try {
-			synChains = groveClone.getSyntacticChains();
+			synChains = groveClone.getTreePaths();
 		}
 		catch (Exception e) {
 			System.out.println("SyntacticChainsTest.whenGetLeafCalledWithIDThenLeafReturned() : " 
-		+ "cannot instantiate ISyntacticChains. " + System.lineSeparator() + e.getMessage());
+		+ "cannot instantiate ITreePaths. " + System.lineSeparator() + e.getMessage());
 		}
 		Map<List<String>, Set<Long>> pathToLeafIDs = null;
 		try {
@@ -105,17 +105,17 @@ public class SyntacticChainsTest {
 	@Test
 	public void whenHasPropertyCalledThenCorrectBooleanValueReturned() {
 		boolean valueReturnedIsCorrect = true;
-		ISyntacticChains synChains = null;
-		ISyntacticGrove groveClone = (ISyntacticGrove) grove.clone();
+		ITreePaths synChains = null;
+		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
 		try {
-			synChains = groveClone.getSyntacticChains();
+			synChains = groveClone.getTreePaths();
 			if (synChains == null)
 				throw new Exception("synChains variable is null.");
 		}
 		catch (Exception e) {
 			valueReturnedIsCorrect = false;
 			System.out.println("SyntacticChainsTest.whenHasPropertyCalledThenCorrectBooleanValueReturned() : " 
-					+ System.lineSeparator() + "ISyntacticChains instantiation failed. " 
+					+ System.lineSeparator() + "ITreePaths instantiation failed. " 
 					+ System.lineSeparator() + e.getMessage());
 		}
 		if (valueReturnedIsCorrect == true) {

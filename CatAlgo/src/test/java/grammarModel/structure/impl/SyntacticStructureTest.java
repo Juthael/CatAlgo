@@ -12,10 +12,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.structure.ISyntacticBranch;
-import grammarModel.structure.ISyntacticGrove;
+import grammarModel.structure.ISyntaxBranch;
+import grammarModel.structure.ISyntaxGrove;
 import grammarModel.structure.ISyntacticStructure;
-import grammarModel.utils.ISyntacticChains;
+import grammarModel.utils.ITreePaths;
 import grammars.seekWhence.utils.impl.SwFileReader;
 import utils.IChains;
 import utils.IImplication;
@@ -24,7 +24,7 @@ import utils.IPosetMaxChains;
 @SuppressWarnings("unused")
 public class SyntacticStructureTest {
 
-	public static ISyntacticGrove grove;
+	public static ISyntaxGrove grove;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -43,10 +43,9 @@ public class SyntacticStructureTest {
 	@Test
 	public void whenGetSyntacticChainsIsCalledThenSyntacticChainsAreReturned() {
 		boolean syntacticChainsReturned;
-		@SuppressWarnings("unused")
-		ISyntacticChains chains;
+		ITreePaths chains;
 		try {
-			chains = grove.getSyntacticChains();
+			chains = grove.getTreePaths();
 			syntacticChainsReturned = true;
 			// printChains(chains);
 		}
@@ -61,11 +60,11 @@ public class SyntacticStructureTest {
 	@Test
 	public void whenGetSetOfSyntacticChainsIsCalledThenSetOfSyntacticChainsIsReturned() {
 		boolean setOfSyntacticChainsReturned;
-		Set<ISyntacticChains> setOfChains;
+		Set<ITreePaths> setOfChains;
 		try {
-			setOfChains = grove.getSetOfSyntacticChains();
+			setOfChains = grove.getSetOfTreePaths();
 			setOfSyntacticChainsReturned = true;
-			for (@SuppressWarnings("unused") ISyntacticChains chains : setOfChains) {
+			for (ITreePaths chains : setOfChains) {
 				// printChains(chains);
 			}
 		}
@@ -81,7 +80,7 @@ public class SyntacticStructureTest {
 	@Test
 	public void whenGetPosetMaxChainsIsCalledThenPosetMaxChainsAreReturned() {
 		boolean posetChainsReturned;
-		ISyntacticGrove grove1 = (ISyntacticGrove) grove.clone();
+		ISyntaxGrove grove1 = (ISyntaxGrove) grove.clone();
 		try {
 			grove1.setPosetElementID();
 		}
@@ -109,7 +108,7 @@ public class SyntacticStructureTest {
 	@Test
 	public void whenGetImplicationsIsCalledThenASetOfImplicationsIsReturned() {
 		boolean implicationsReturned = true;
-		ISyntacticGrove grove1 = (ISyntacticGrove) grove.clone();
+		ISyntaxGrove grove1 = (ISyntaxGrove) grove.clone();
 		try {
 			grove1.setPosetElementID();
 		}
@@ -143,7 +142,7 @@ public class SyntacticStructureTest {
 	@Test
 	public void whenRedundancyIsMarkedThenRedundantComponentsCanBeRetrieved() {
 		boolean redundanciesRetrieved;
-		ISyntacticGrove grove1 = (ISyntacticGrove) grove.clone();
+		ISyntaxGrove grove1 = (ISyntaxGrove) grove.clone();
 		try {
 			grove1.setPosetElementID();
 		} catch (GrammarModelException e) {
@@ -199,7 +198,6 @@ public class SyntacticStructureTest {
 	@Test
 	public void whenClonedThenASyntacticStructureIsReturned() {
 		boolean structureReturned;
-		@SuppressWarnings("unused")
 		ISyntacticStructure clone;
 		try {
 			clone = grove.clone();
@@ -214,8 +212,7 @@ public class SyntacticStructureTest {
 		assertTrue(structureReturned);
 	}	
 	
-	@SuppressWarnings("unused")
-	private static void printChains(ISyntacticChains chains) {
+	private static void printChains(ITreePaths chains) {
 		printChains(chains.getChains());
 	}
 	

@@ -10,14 +10,14 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import grammarModel.structure.ISyntacticGrove;
+import grammarModel.structure.ISyntaxGrove;
 import grammarModel.structure.ISyntacticStructure;
 import grammars.seekWhence.utils.impl.SwFileReader;
 import utils.IChains;
 
-public class SyntacticGroveTest {
+public class SyntaxGroveTest {
 
-	public static ISyntacticGrove grove;
+	public static ISyntaxGrove grove;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -29,20 +29,20 @@ public class SyntacticGroveTest {
 			// printChains(grove.getListOfSyntacticStringChains());
 		}
 		catch (Exception e) {
-			System.out.println("SyntacticGroveTest.setUpBeforClass() : " + System.lineSeparator() + e.getMessage());
+			System.out.println("SyntaxGroveTest.setUpBeforClass() : " + System.lineSeparator() + e.getMessage());
 		}
 	}
 	
 	@Test
 	public void whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() {
 		boolean everyStructureHasAnID = true;
-		ISyntacticGrove grove1 = (ISyntacticGrove) grove.clone();
+		ISyntaxGrove grove1 = (ISyntaxGrove) grove.clone();
 		try {
 			grove1.setPosetElementID();
 		}
 		catch (Exception e) {
 			everyStructureHasAnID = false;
-			System.out.println("SyntacticGroveTest.whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() : "
+			System.out.println("SyntaxGroveTest.whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() : "
 					+ System.lineSeparator() +  "error during posetID setting." + System.lineSeparator()
 					+ e.getMessage());
 		}
@@ -50,7 +50,7 @@ public class SyntacticGroveTest {
 			List<ISyntacticStructure> allcomponents = getAllComponents(grove1);
 			if (allcomponents.size() <= 1) {
 				everyStructureHasAnID = false;
-				System.out.println("SyntacticGroveTest.whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() : "
+				System.out.println("SyntaxGroveTest.whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() : "
 						+ System.lineSeparator() +  "error during components retrieval." + System.lineSeparator());
 			}
 			else {
@@ -59,7 +59,7 @@ public class SyntacticGroveTest {
 					ISyntacticStructure currentComponent = allcomponents.get(allComponentsIndex);
 					if (!currentComponent.getIDHasBeenSet()) {
 						everyStructureHasAnID = false;
-						System.out.println("SyntacticGroveTest"
+						System.out.println("SyntaxGroveTest"
 								+ ".whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() : "
 								+ System.lineSeparator() +  "ID hasn't been set for at least one element." 
 								+ System.lineSeparator());				
@@ -70,7 +70,7 @@ public class SyntacticGroveTest {
 							// System.out.println(currentPosetElementName);
 							if (currentPosetElementName.isEmpty()) {
 								everyStructureHasAnID = false;
-								System.out.println("SyntacticGroveTest"
+								System.out.println("SyntaxGroveTest"
 										+ ".whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() : "
 										+ System.lineSeparator() +  "one poset element name at least is empty." + 
 										System.lineSeparator());
@@ -78,7 +78,7 @@ public class SyntacticGroveTest {
 						}
 						catch (Exception e) {
 							everyStructureHasAnID = false;
-							System.out.println("SyntacticGroveTest"
+							System.out.println("SyntaxGroveTest"
 									+ ".whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() : "
 									+ System.lineSeparator() +  "a poset element name couldn't be retrieved." + System.lineSeparator()
 									+ e.getMessage());

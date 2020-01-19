@@ -6,16 +6,16 @@ import java.util.Map;
 import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.structure.ISyntacticGrove;
+import grammarModel.structure.ISyntaxGrove;
 import grammarModel.structure.ISyntacticStructure;
-import grammarModel.utils.ISyntacticChains;
+import grammarModel.utils.ITreePaths;
 
-public class SyntacticGrove extends SyntacticBranch implements ISyntacticGrove {
+public class SyntaxGrove extends SyntaxBranch implements ISyntaxGrove {
 
 	private String name;
 	private List<ISyntacticStructure> listOfTrees;
 	
-	public SyntacticGrove(String name, List<ISyntacticStructure> listOfTrees) {
+	public SyntaxGrove(String name, List<ISyntacticStructure> listOfTrees) {
 		this.name = name;
 		this.listOfTrees = listOfTrees;
 	}
@@ -46,11 +46,11 @@ public class SyntacticGrove extends SyntacticBranch implements ISyntacticGrove {
 	
 	@Override
 	public void setPosetElementID() throws GrammarModelException {
-		Set<ISyntacticChains> setOfSynChains = getSetOfSyntacticChains();
+		Set<ITreePaths> setOfITreePaths = getSetOfTreePaths();
 		Map<String, Integer> rootToIndex = new HashMap<String, Integer>();
-		Map<ISyntacticChains, String> chainsToIndex = new HashMap<ISyntacticChains, String>();
-		for (ISyntacticChains chains : setOfSynChains) {
-			String root = chains.getRoot();
+		Map<ITreePaths, String> pathsToIndex = new HashMap<ITreePaths, String>();
+		for (ITreePaths paths : setOfITreePaths) {
+			String root = paths.getRoot();
 			if (!rootToIndex.containsKey(root)) {
 				rootToIndex.put(root, 0);
 			}
@@ -59,14 +59,14 @@ public class SyntacticGrove extends SyntacticBranch implements ISyntacticGrove {
 				index++;
 				rootToIndex.put(root, index);
 			}
-			chainsToIndex.put(chains, rootToIndex.get(root).toString());
+			pathsToIndex.put(paths, rootToIndex.get(root).toString());
 		}
-		setPosetElementID(chainsToIndex);
+		setPosetElementID(pathsToIndex);
 	}
 
 	@Override
 	public ISyntacticStructure clone() {
-		return new SyntacticGrove(getName(), getListOfComponents());
+		return new SyntaxGrove(getName(), getListOfComponents());
 	}
 
 }

@@ -3,21 +3,21 @@ package grammars.seekWhence.branches;
 import java.util.ArrayList;
 import java.util.List;
 
-import grammarModel.structure.ISyntacticBranch;
+import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntacticStructure;
-import grammarModel.structure.impl.SyntacticBranch;
+import grammarModel.structure.impl.SyntaxBranch;
 import grammars.seekWhence.disjunctions.IRule;
 import grammars.seekWhence.disjunctions.IValueOrRelation;
 import grammars.seekWhence.leaves.RelatioN;
 
 /**
  * Relation represents a variable symbol of the context-free grammar associated with the microworld 'SeekWhence'. 
- * Any instance of this class represents a 'syntactic branch', i.e. the whole derivation of a non-terminal node in a
- * syntactic tree.
+ * Any instance of this class represents a 'syntax branch', i.e. the whole derivation of a non-terminal node in a
+ * syntax tree.
  * @author Gael Tregouet
  *
  */
-public final class Relation extends SyntacticBranch implements ISyntacticBranch, IValueOrRelation {
+public final class Relation extends SyntaxBranch implements ISyntaxBranch, IValueOrRelation {
 
 	private static final String NAME = "Relation";
 	private final RelatioN relatioN;

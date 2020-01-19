@@ -3,24 +3,24 @@ package grammarModel.utils;
 import java.nio.file.Path;
 
 import grammarModel.exceptions.FileReaderException;
-import grammarModel.structure.ISyntacticGrove;
+import grammarModel.structure.ISyntaxGrove;
 
 /**
- * IGenericFileReader allows the generation of a 'syntactic grove' out of a text file, provided it contains lists of paths 
- * of syntactic trees generated using a context-free grammar.
- * @see ISyntacticGrove
+ * IGenericFileReader allows the generation of a 'syntax grove' out of a text file, provided it contains lists of paths 
+ * of syntax trees generated using a context-free grammar.
+ * @see ISyntaxGrove
  * @author Gael Tregouet
  *
  */
 public interface IGenericFileReader {
 	
 	/**
-	 * Generates a 'syntactic grove' (ISyntacticGrove) out of a Path parameter pointing to a text file.
+	 * Generates a 'syntax grove' (ISyntaxGrove) out of a Path parameter pointing to a text file.
 	 * Writing rules to be respected in order to avoid throwing an exception : <br>
-	 * 1-The text contains one or more descriptions of syntactic trees generated using a context-free 
+	 * 1-The text contains one or more descriptions of syntax trees generated using a context-free 
 	 * grammar. <br>
 	 * 2-Every tree description begins with a line containing only the character '/' <br>
-	 * 3-Descriptions of syntactic trees take the form of the list of spanning paths a tree contains (i.e. paths 
+	 * 3-Descriptions of syntax trees take the form of the list of spanning paths a tree contains (i.e. paths 
 	 * from the root element of the tree to any of its terminals). <br>
 	 * 4-A path is a concatenation of symbols (i.e., strings) from the 'SeekWhence' grammar, separated by the 
 	 * character '/'. New path, new line. No empty line. <br>
@@ -32,8 +32,8 @@ public interface IGenericFileReader {
 	 * a/e/f/j <br>
 	 * where {a} is the start element, {b,e,f,g} are variable elements and {c,d,h,i,j} are terminals.
 	 * @param path points to a text file (UTF-8) that must respect the rules described above.
-	 * @return a 'syntactic grove', i.e. a list of syntactic trees with some more functionalities. 
+	 * @return a 'syntax grove', i.e. a list of syntax trees with some more functionalities. 
 	 */
-	ISyntacticGrove getSyntacticGrove(Path path) throws FileReaderException;
+	ISyntaxGrove getSyntacticGrove(Path path) throws FileReaderException;
 
 }
