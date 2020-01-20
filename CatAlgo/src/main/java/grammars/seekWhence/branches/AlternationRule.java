@@ -24,6 +24,13 @@ public final class AlternationRule extends SyntaxBranch implements ISyntaxBranch
 	private final EveryXElem everyXElem;
 	private final StartAt startAt;
 
+	/**
+	 * As any {@link ISyntaxBranch}, AlternationRule is a derivable element of a context-free grammar, whose 
+	 * derivation rule is expressed by its constructor. 
+	 * 
+	 * The derivation relationship being implemented as a composition relationship, this class represents the 
+	 * left-hand side of the rule, and its constructor's list of arguments are the right-hand side.  
+	 */
 	public AlternationRule(AlternationRulE alternationRulE, EveryXElem everyXElem, StartAt startAt) {
 		this.alternationRulE = alternationRulE;
 		this.everyXElem = everyXElem;

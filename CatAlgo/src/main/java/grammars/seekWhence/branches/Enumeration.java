@@ -24,6 +24,13 @@ public final class Enumeration extends SyntaxBranch implements ISyntaxBranch, IR
 	private final EnumeratioN enumeratioN;
 	private IValueOrRelation valOrRel;
 
+	/**
+	 * As any {@link ISyntaxBranch}, Enumeration is a derivable element of a context-free grammar, whose 
+	 * derivation rule is expressed by its constructor. 
+	 * 
+	 * The derivation relationship being implemented as a composition relationship, this class represents the 
+	 * left-hand side of the rule, and its constructor's list of arguments are the right-hand side.  
+	 */
 	public Enumeration(EnumeratioN enumeratioN, IValueOrRelation valOrRel) {
 		this.enumeratioN = enumeratioN;
 		this.valOrRel = valOrRel;

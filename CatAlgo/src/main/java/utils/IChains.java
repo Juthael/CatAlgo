@@ -3,11 +3,12 @@ package utils;
 import java.util.List;
 
 import grammarModel.exceptions.GrammarModelException;
+import grammarModel.utils.ITreePaths;
 /**
  * IChains contains an indexed list of indexed lists of Strings, with navigation functionalities (a 'chain' 
  * is a list of Strings, so IChains is a list of chains). 
- * Can be extended as a ITreePaths (every path of a syntax tree leading from its start element to a terminal) 
- * or a IPosetMaxChains (spanning chains of a lower semilattice).
+ * Can be extended as a {@link ITreePaths} (every path of a syntax tree leading from its start element to a terminal) 
+ * or a {@link IPosetMaxChains} (spanning chains of a lower semilattice).
  *  
  * @author Gael Tregouet
  *

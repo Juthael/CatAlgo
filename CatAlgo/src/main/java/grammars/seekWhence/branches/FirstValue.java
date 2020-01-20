@@ -23,6 +23,13 @@ public final class FirstValue extends SyntaxBranch implements ISyntaxBranch {
 	private final FirstValuE firstValuE;
 	private IValueOrRelation valOrRel;
 
+	/**
+	 * As any {@link ISyntaxBranch}, FirstValue is a derivable element of a context-free grammar, whose 
+	 * derivation rule is expressed by its constructor. 
+	 * 
+	 * The derivation relationship being implemented as a composition relationship, this class represents the 
+	 * left-hand side of the rule, and its constructor's list of arguments are the right-hand side.  
+	 */
 	public FirstValue(FirstValuE firstValuE, IValueOrRelation valOrRel) {
 		this.firstValuE = firstValuE;
 		this.valOrRel = valOrRel;

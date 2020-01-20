@@ -23,6 +23,13 @@ public final class StartAt extends SyntaxBranch implements ISyntaxBranch {
 	private final StartAT startAT = new StartAT();
 	private final ValuE valuE;
 	
+	/**
+	 * As any {@link ISyntaxBranch}, StartAt is a derivable element of a context-free grammar, whose 
+	 * derivation rule is expressed by its constructor. 
+	 * 
+	 * The derivation relationship being implemented as a composition relationship, this class represents the 
+	 * left-hand side of the rule, and its constructor's list of arguments are the right-hand side.  
+	 */
 	public StartAt(StartAT startAT, ValuE valuE) {
 		this.valuE = valuE;
 	}

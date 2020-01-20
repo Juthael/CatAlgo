@@ -25,6 +25,13 @@ public final class Relation extends SyntaxBranch implements ISyntaxBranch, IValu
 	private final Size size;
 	private final IRule rule;
 	
+	/**
+	 * As any {@link ISyntaxBranch}, Relation is a derivable element of a context-free grammar, whose 
+	 * derivation rule is expressed by its constructor. 
+	 * 
+	 * The derivation relationship being implemented as a composition relationship, this class represents the 
+	 * left-hand side of the rule, and its constructor's list of arguments are the right-hand side.  
+	 */
 	public Relation(RelatioN relatioN, Size size, IRule rule) {
 		this.relatioN = relatioN;
 		this.size = size;

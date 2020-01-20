@@ -23,6 +23,13 @@ public final class Size extends SyntaxBranch implements ISyntaxBranch {
 	private final SizE sizE;
 	private IValueOrRelation valOrRel;
 
+	/**
+	 * As any {@link ISyntaxBranch}, Size is a derivable element of a context-free grammar, whose 
+	 * derivation rule is expressed by its constructor. 
+	 * 
+	 * The derivation relationship being implemented as a composition relationship, this class represents the 
+	 * left-hand side of the rule, and its constructor's list of arguments are the right-hand side.  
+	 */
 	public Size(SizE sizE, IValueOrRelation valOrRel) {
 		this.sizE = sizE;
 		this.valOrRel = valOrRel;

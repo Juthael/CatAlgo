@@ -23,6 +23,13 @@ public final class Center extends SyntaxBranch implements ISyntaxBranch {
 	private final CenteR centeR;
 	private IValueOrRelation valOrRel;
 
+	/**
+	 * As any {@link ISyntaxBranch}, Center is a derivable element of a context-free grammar, whose 
+	 * derivation rule is expressed by its constructor. 
+	 * 
+	 * The derivation relationship being implemented as a composition relationship, this class represents the 
+	 * left-hand side of the rule, and its constructor's list of arguments are the right-hand side.  
+	 */
 	public Center(CenteR centeR, IValueOrRelation valOrRel) {
 		this.centeR = centeR;
 		this.valOrRel = valOrRel;

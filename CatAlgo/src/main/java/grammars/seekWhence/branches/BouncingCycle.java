@@ -24,6 +24,13 @@ public final class BouncingCycle extends SyntaxBranch implements ISyntaxBranch, 
 	private final BouncingCyclE bouncingCyclE;
 	private final ValuE valuE;
 
+	/**
+	 * As any {@link ISyntaxBranch}, BouncingCycle is a derivable element of a context-free grammar, whose 
+	 * derivation rule is expressed by its constructor. 
+	 * 
+	 * The derivation relationship being implemented as a composition relationship, this class represents the 
+	 * left-hand side of the rule, and its constructor's list of arguments are the right-hand side.  
+	 */
 	public BouncingCycle(BouncingCyclE bouncingCyclE, ValuE valuE) {
 		this.bouncingCyclE = bouncingCyclE;
 		this.valuE = valuE;

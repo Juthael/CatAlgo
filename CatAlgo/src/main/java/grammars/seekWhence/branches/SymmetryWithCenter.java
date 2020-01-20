@@ -22,6 +22,13 @@ public final class SymmetryWithCenter extends Symmetry implements ISyntaxBranch,
 	private final SymmetryWithCenteR symmetryWithCenteR;
 	private final Center center;
 	
+	/**
+	 * As any {@link ISyntaxBranch}, SymmetryWithCenter is a derivable element of a context-free grammar, whose 
+	 * derivation rule is expressed by its constructor. 
+	 * 
+	 * The derivation relationship being implemented as a composition relationship, this class represents the 
+	 * left-hand side of the rule, and its constructor's list of arguments are the right-hand side.  
+	 */
 	public SymmetryWithCenter(SymmetrY symmetrY, ReflectedPart reflectedPart, SymmetryWithCenteR symmetryWithCenteR, 
 			Center center) {
 		super(symmetrY, reflectedPart);

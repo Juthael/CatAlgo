@@ -20,10 +20,10 @@ import utils.IPosetMaxChains;
  * tree (or the non-derivation of a terminal symbol). That is why ISyntacticStructure can be extended in order 
  * to be instantiated as : <br> 
  * 1/ a syntax tree terminal node, or syntax 'leaf' : {@link ISyntaxLeaf} <br> 
- * 2/ the derivation from a non-terminal node, or syntax 'branch' : {@link ISyntaxBranch} 
+ * 2/ the derivation from a non-terminal node, or syntax 'branch' : {@link ISyntaxBranch} <br>
  * 3/ a whole syntax tree  : also a {@link ISyntaxBranch}, but whose name is the start element of the context-free 
- * grammar at use
- * 4/ also, a list of syntax trees : {@link ISyntaxGrove}.
+ * grammar at use <br>
+ * 4/ also, a list of syntax trees : {@link ISyntaxGrove}. <br>
  *  
  * @author Gael Tregouet
  *

@@ -23,6 +23,13 @@ public final class Increment extends SyntaxBranch implements ISyntaxBranch {
 	private final IncremenT incremenT;
 	private IValueOrRelation valOrRel;
 
+	/**
+	 * As any {@link ISyntaxBranch}, Increment is a derivable element of a context-free grammar, whose 
+	 * derivation rule is expressed by its constructor. 
+	 * 
+	 * The derivation relationship being implemented as a composition relationship, this class represents the 
+	 * left-hand side of the rule, and its constructor's list of arguments are the right-hand side.  
+	 */
 	public Increment(IncremenT incremenT, IValueOrRelation valOrRel) {
 		this.incremenT = incremenT;
 		this.valOrRel = valOrRel;
