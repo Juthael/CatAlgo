@@ -41,12 +41,13 @@ public interface IPropertyPoset {
 	/**
 	 * A property poset is reduced by removing the contextually superfluous properties. 
 	 * 
-	 * These are properties that are implied, in the context, by one and only one other property : 
-	 * for example, a property B is superfluous if, when an element of the context has the property A, then we know for
-	 * sure that it also has the property B (that property is not even perceived by a human most of the time). Since the 
+	 * These are properties that are directly implied, in the context, by one and only one other property (if this 
+	 * other property is not the root of the lower semi-lattice) : <br> 
+	 * For example, a property B implied by a property A is superfluous if, when an element of the context has B, then 
+	 * one knows for sure that it also has A (in this case, people don't even notice B most of the time). Since the 
 	 * set of elements having the property B is the same than the set of elements having the property A, B provides no 
-	 * additional information and can therefore be removed from the set. The property B will however be kept as an 
-	 * 'encapsulated property' of A in the dedicated field of the class {@link IProperty}. <br>
+	 * additional information and can therefore be removed. It will however be kept as an 'encapsulated property' 
+	 * of A in the dedicated field of the class {@link IProperty}. <br>
 	 * 
 	 * This method operates by removing any property P that does not fulfill one of the following conditions : <br>
 	 * 1/ P is sup-reducible (and is then called a 'dimension'). <br>
