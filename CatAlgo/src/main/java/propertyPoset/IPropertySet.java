@@ -2,6 +2,8 @@ package propertyPoset;
 
 import java.util.Set;
 
+import propertyPoset.exceptions.PropertyPosetException;
+
 /**
  * A IPropertySet is a (unordered) set of properties ({@link IProperty}) endowed with some basic functionalities. 
  * @author Gael Tregouet
@@ -19,15 +21,17 @@ public interface IPropertySet {
 	 * 
 	 * @param propertyName the name of the requested property.
 	 * @return the requested property.
+	 * @throws PropertyPosetException 
 	 */
-	IProperty getProperty(String propertyName);
+	IProperty getProperty(String propertyName) throws PropertyPosetException;
 	
 	/**
 	 * 
 	 * @param propertyName the name of the requested properties.
 	 * @return the requested properties.
+	 * @throws PropertyPosetException 
 	 */
-	Set<IProperty> getSubsetOfProperties(Set<String> propertyNames);
+	Set<IProperty> getSubsetOfProperties(Set<String> propertyNames) throws PropertyPosetException;
 	
 	/**
 	 * This method is called in order to remove from the set a 'superfluous' property. 
@@ -38,8 +42,9 @@ public interface IPropertySet {
 	 * @param propertyName name of the superfluous property.
 	 * @param antecedent name of the antecedent.
 	 * @return true if the property has been correctly removed. 
+	 * @throws PropertyPosetException 
 	 * @see IProperty
 	 */
-	boolean removeProperty(String propertyName, String antecedent);
+	boolean removeProperty(String propertyName, String antecedent) throws PropertyPosetException;
 
 }

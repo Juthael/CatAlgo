@@ -7,11 +7,28 @@ import propertyPoset.IProperty;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
 
+/**
+ * A Property is characterized by its name and by its potential 'encapsulated properties'. <br>
+ * 
+ * Encapsulated properties of a property P are elements removed from the property poset because they 
+ * do not not provide any additional information. 
+ * 
+ * The reason is that, in the context of this poset, they are implied by P and only P (and P is not 
+ * the root of the lower semi-lattice) ; therefore, any distinction they allow among the context elements 
+ * can also be made using P.
+ * 
+ * @author Gael Tregouet
+ *
+ */
 public class Property implements IProperty {
 
 	private String name;
 	private Set<IProperty> encapsulatedProp = new HashSet<IProperty>();
 	
+	/**
+	 * 
+	 * @param name the name of the property.
+	 */
 	public Property(String name) {
 		this.name = name;
 	}

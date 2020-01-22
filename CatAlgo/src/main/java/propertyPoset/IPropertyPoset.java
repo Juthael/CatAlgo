@@ -4,7 +4,7 @@ import fca.LatticeMiner;
 import fca.core.context.binary.BinaryContext;
 
 /**
- * A IPropertyPoset is the implementation of a partially ordered set whose elements are properties. <br>
+ * A IPropertyPoset is a partially ordered set whose elements are properties. <br>
  * 
  * As such, it is composed of a {@link IPropertySet} object (unordered set of properties), and of a 
  * {@link IRelation} object (partial order relation on the set of properties). 
