@@ -44,6 +44,14 @@ public class PropertySet implements IPropertySet {
 	public Set<IProperty> getSetOfProperties() {
 		return setOfIProperties;
 	}
+	
+	@Override
+	public Set<String> getSetOfPropertyNames(){
+		Set<String> setNames = new HashSet<String>();
+		for (IProperty prop : setOfIProperties)
+			setNames.add(prop.getPropertyName());
+		return setNames;
+	}
 
 	@Override
 	public IProperty getProperty(String propertyName) throws PropertyPosetException {

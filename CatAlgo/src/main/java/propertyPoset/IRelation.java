@@ -101,52 +101,50 @@ public interface IRelation {
 	 * poset and this property. 
 	 * @param propName the name of a property
 	 * @return the rank of the property whose name has been given in parameter.
+	 * @throws PropertyPosetException 
 	 */
-	int getRank(String propName);
-	
-	/**
-	 * 
-	 * @param subSet a set of properties.
-	 * @return a relation that contains any implication of the current relation, provided this implication's 
-	 * antecedent and consequent are both included in the subset given in parameter. 
-	 */
-	IRelation getSubrelation(IPropertySet subSet);
+	int getRank(String propName) throws PropertyPosetException;
 	
 	/**
 	 * A 'dimension' is a sup-reducible element of the property poset. 
 	 * @param propName the name of a property
 	 * @return true if the property whose name was given in parameter is a dimension, false otherwise. 
+	 * @throws PropertyPosetException 
 	 */
-	boolean checkIfDimension(String propName);
+	boolean checkIfDimension(String propName) throws PropertyPosetException;
 	
 	/**
 	 * A 'local root' is the infimum of the immediate predecessors of (at least) one dimension.
 	 * @param propName the name of a property
 	 * @return true if the property whose name was given in parameter is a local root, false otherwise. 
+	 * @throws PropertyPosetException 
 	 */
-	boolean checkIfLocalRoot(String propName);
+	boolean checkIfLocalRoot(String propName) throws PropertyPosetException;
 	
 	/**
 	 * A 'local atom' is a successor of a local root.
 	 * @param propName the name of a property
 	 * @return true if the property whose name was given in parameter is a local atom, false otherwise. 
+	 * @throws PropertyPosetException 
 	 */
-	boolean checkIfLocalAtom(String propName);	
+	boolean checkIfLocalAtom(String propName) throws PropertyPosetException;	
 	
 	/**
 	 * To avoid errors, the property whose name is given in parameter must return 'true' if its method 
 	 * checkIfDimension() is called. 
 	 * @param dimension the name of a 'dimension' property
 	 * @return the local root of a the dimension whose name has been given in parameter.
+	 * @throws PropertyPosetException 
 	 */
-	String getLocalRoot(String dimension);
+	String getLocalRoot(String dimension) throws PropertyPosetException;
 	
 	/**
 	 * 
 	 * @return the name of the poset 'root', or unique minimal element. Since it is generated from a syntax
 	 * tree, the poset has to be a lower semi-lattice.
+	 * @throws PropertyPosetException 
 	 */
-	String getPosetRoot();
+	String getPosetRoot() throws PropertyPosetException;
 	
 	/**
 	 * 

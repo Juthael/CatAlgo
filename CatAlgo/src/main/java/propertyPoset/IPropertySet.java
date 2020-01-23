@@ -13,9 +13,15 @@ public interface IPropertySet {
 	
 	/**
 	 * 
-	 * @return the set of properties. 
+	 * @return the set of properties
 	 */
 	Set<IProperty> getSetOfProperties();
+	
+	/**
+	 * 
+	 * @return the names of the properties in the set
+	 */
+	Set<String> getSetOfPropertyNames();
 	
 	/**
 	 * 

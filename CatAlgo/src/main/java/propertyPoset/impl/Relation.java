@@ -39,17 +39,20 @@ public class Relation implements IRelation {
 	}
 	
 	public Relation(IRelation rel, IPropertySet subset) throws PropertyPosetException {
-		Set<String> propConsequents;
+		Set<String> subSetNames = subset.getSetOfPropertyNames();
 		for (IProperty prop : subset.getSetOfProperties()) {
+			Set<String> propConsequents;
 			try {
 				propConsequents = rel.getConsequents(prop.getPropertyName());
 			}
 			catch (Exception e) {
 				throw new PropertyPosetException("Relation constructor : an error has occured.");
 			}
+			propConsequents.retainAll(subSetNames);
 			relation.put(prop.getPropertyName(), propConsequents);
 		}
-	}	
+		updateSpecialElementSets();
+	}
 
 	@Override
 	public void addImplication(IImplication implication) throws PropertyPosetException {
@@ -91,9 +94,10 @@ public class Relation implements IRelation {
 			throw new PropertyPosetException("Relation.getAntecedents() : property " + propName 
 					+ "cannot be retreived in the relation map");
 		else {
-			for (String antecedent : relation.keySet()) {
-				if (relation.get(antecedent).contains(propName))
-					antecedents.add(antecedent);
+			for (String potentialAntcdt : relation.keySet()) {
+				int propNameRank = getRank(propName);
+				if (getRank(potentialAntcdt) <= propNameRank && relation.get(potentialAntcdt).contains(propName))
+					antecedents.add(potentialAntcdt);
 			}
 		}
 		return antecedents;
@@ -130,26 +134,22 @@ public class Relation implements IRelation {
 	@Override
 	public Set<String> getSuccProperties(String propName) throws PropertyPosetException {
 		Set<String> succProp = new HashSet<String>();
-		List<String> greaterProp;
+		int propRank;
 		try {
-			greaterProp = new ArrayList<String>(getGreaterProperties(propName)) ;
+			propRank = getRank(propName);
 		}
 		catch (Exception e) {
-			throw new PropertyPosetException("Relation.getSuccProperties() : an error has occured." 
+			throw new PropertyPosetException("Relation.getSuccProperties : an error has occured." 
 					+ System.lineSeparator() + e.getMessage());
 		}
-		for (int i=0 ; i < greaterProp.size() ; i++) {
-			String checkedProp = greaterProp.get(i);
-			boolean iPropIsMinUpperBound = true;
-			int j = 0;
-			while (iPropIsMinUpperBound && j < greaterProp.size()) {
-				String comparedProp = greaterProp.get(j);
-				if (j != i && relation.get(comparedProp).containsAll(relation.get(checkedProp)))
-					iPropIsMinUpperBound = false;
-				j++;
-			}
-			if (iPropIsMinUpperBound)
-				succProp.add(checkedProp);
+		List<String> nextRankProps = new ArrayList<String>();
+		for (String prop : propertyToRank.keySet()) {
+			if (getRank(prop) == propRank + 1)
+				nextRankProps.add(prop);
+		}
+		for (String nextRankProp : nextRankProps) {
+			if (relation.get(propName).contains(nextRankProp))
+				succProp.add(nextRankProp);
 		}
 		return succProp;
 	}
@@ -157,70 +157,94 @@ public class Relation implements IRelation {
 	@Override
 	public Set<String> getPrecProperties(String propName) throws PropertyPosetException {
 		Set<String> precProp = new HashSet<String>();
-		List<String> lesserProp;
+		int propRank;
 		try {
-			lesserProp = new ArrayList<String>(getLesserProperties(propName)) ;
+			propRank = getRank(propName);
 		}
 		catch (Exception e) {
-			throw new PropertyPosetException("Relation.getSuccProperties() : an error has occured." 
+			throw new PropertyPosetException("Relation.getPrecProperties : an error has occured." 
 					+ System.lineSeparator() + e.getMessage());
 		}
-		for (int i=0 ; i < lesserProp.size() ; i++) {
-			String checkedProp = lesserProp.get(i);
-			boolean iPropIsMaxLowerBound = true;
-			int j=0;
-			while (iPropIsMaxLowerBound = true && j < lesserProp.size()) {
-				String comparedProp = lesserProp.get(j);
-				if (j != i && relation.get(checkedProp).containsAll(relation.get(comparedProp)))
-					iPropIsMaxLowerBound = false;
-				j++;
-			}
-			if (iPropIsMaxLowerBound)
-				precProp.add(checkedProp);
+		List<String> prevRankProps = new ArrayList<String>();
+		for (String prop : propertyToRank.keySet()) {
+			if (getRank(prop) == propRank - 1)
+				prevRankProps.add(prop);
 		}
-		return precProp;
+		for (String prevRankProp : prevRankProps) {
+			if (relation.get(prevRankProp).contains(propName))
+				precProp.add(prevRankProp);
+		}
+		return precProp;		
 	}
 
 	@Override
-	public int getRank(String propName) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getRank(String propName) throws PropertyPosetException {
+		if (!propertyToRank.containsKey(propName)) {
+			throw new PropertyPosetException("Relation.getRank() : the argument " + propName + " is unknown.");
+		}
+		else return propertyToRank.get(propName);
 	}
 
 	@Override
-	public IRelation getSubrelation(IPropertySet subSet) {
-		// TODO Auto-generated method stub
-		return null;
+	public boolean checkIfDimension(String propName) throws PropertyPosetException {
+		if (!relation.containsKey(propName))
+			throw new PropertyPosetException("Relation.checkIfDimension() : property '" + propName 
+					+ "' is unknown.");
+		else return (dimensions.contains(propName));
 	}
 
 	@Override
-	public boolean checkIfDimension(String propName) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean checkIfLocalRoot(String propName) throws PropertyPosetException {
+		if (!relation.containsKey(propName))
+			throw new PropertyPosetException("Relation.checkIfLocalRoot() : property '" + propName 
+					+ "' is unknown.");
+		else return (localRoots.contains(propName));
 	}
 
 	@Override
-	public boolean checkIfLocalRoot(String propName) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean checkIfLocalAtom(String propName) throws PropertyPosetException {
+		boolean localAtom = false;
+		if (!relation.containsKey(propName))
+			throw new PropertyPosetException("Relation.checkIfLocalAtom() : property '" + propName 
+					+ "' is unknown.");
+		else{
+			List<String> listOfRoots = new ArrayList<String>(localRoots);
+			int rootIndex = 0;
+			while (localAtom == false && rootIndex < listOfRoots.size()) {
+				if (getSuccProperties(listOfRoots.get(rootIndex)).contains(propName))
+					localAtom = true;
+				else rootIndex++;
+			}
+		}
+		return localAtom;
 	}
 
 	@Override
-	public boolean checkIfLocalAtom(String propName) {
-		// TODO Auto-generated method stub
-		return false;
+	public String getLocalRoot(String dimension) throws PropertyPosetException {
+		if (!dimensionToRoot.containsKey(dimension)) {
+			throw new PropertyPosetException("Relation.getLocalRoot() : the argument " + dimension 
+					+ " is not a dimension."); 
+		}
+		else return dimensionToRoot.get(dimension);
 	}
 
 	@Override
-	public String getLocalRoot(String dimension) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String getPosetRoot() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getPosetRoot() throws PropertyPosetException {
+		String root = "";
+		List<String> properties = new ArrayList<String>(propertyToRank.keySet());
+		int propIndex = 0;
+		boolean rootFound = false;
+		while (!rootFound && propIndex < properties.size()) {
+			String currentProp = properties.get(propIndex);
+			if (propertyToRank.get(currentProp) == 0) {
+				root = currentProp;
+				rootFound = true;
+			}
+			else propIndex++;
+		}
+		if (rootFound == false || root.isEmpty())
+			throw new PropertyPosetException("Relation.getPosetRoot() : the root can't be found or is empty.");
+		else return root;
 	}
 
 	@Override
@@ -239,6 +263,67 @@ public class Relation implements IRelation {
 	public void updateSpecialElementSets() {
 		// TODO Auto-generated method stub
 
+	}
+	
+	private void setDimensions() throws PropertyPosetException {
+		for (String propName : relation.keySet()) {
+			boolean dimension;
+			try {
+				dimension = (getPrecProperties(propName).size() > 1);
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("Relation.setDimensions() : an error has occured." 
+						+ System.lineSeparator() + e.getMessage());
+			}
+			if (dimension)
+				dimensions.add(propName);
+		}
+	}
+	
+	private void setLocalRoots() throws PropertyPosetException {
+		for (String dimension : dimensions) {
+			String root = "";
+			Set<String> dimensionPredecessors;
+			try {
+				dimensionPredecessors = getPrecProperties(dimension);
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("Relation.setLocalRoots() : an error has occured." 
+						+ System.lineSeparator() + e.getMessage()); 
+			}
+			boolean localRootFound = false;
+			int targetRank = getRank(dimension) - 2;
+			while (localRootFound == false && targetRank >= 0) {
+				List<String> potentialRoots = getPropAtThisRank(targetRank);
+				int potentialRootIndex = 0;
+				while (localRootFound == false && potentialRootIndex < potentialRoots.size()) {
+					String potentialRoot = potentialRoots.get(potentialRootIndex);
+					if (relation.get(potentialRoot).containsAll(dimensionPredecessors)){
+						localRootFound = true;
+						root = potentialRoot;
+						localRoots.add(root);
+						dimensionToRoot.put(dimension, root);
+					}
+					else potentialRootIndex++;
+				}
+				targetRank--;
+			}
+		}
+	}
+	
+	private List<String> getPropAtThisRank(int rank) throws PropertyPosetException{
+		List<String> properties = new ArrayList<String>();
+		try {
+			for (String prop : relation.keySet()) {
+				if (getRank(prop) == rank)
+					properties.add(prop);
+			}
+		} 
+		catch (PropertyPosetException e) {
+			throw new PropertyPosetException("Relation.getPropAtThisRank() : an error has occured." 
+					+ System.lineSeparator() + e.getMessage());
+		}
+		return properties;
 	}
 
 }
