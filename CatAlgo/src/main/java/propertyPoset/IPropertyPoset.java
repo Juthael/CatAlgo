@@ -1,7 +1,10 @@
 package propertyPoset;
 
+import java.util.Set;
+
 import fca.LatticeMiner;
 import fca.core.context.binary.BinaryContext;
+import propertyPoset.exceptions.PropertyPosetException;
 
 /**
  * A IPropertyPoset is a partially ordered set whose elements are properties. <br>
@@ -15,9 +18,9 @@ public interface IPropertyPoset {
 	
 	/**
 	 * 
-	 * @return the (unordered) set of properties.
+	 * @return the set of properties.
 	 */
-	IPropertySet getProperties();
+	Set<IProperty> getProperties();
 	
 	/**
 	 * 
@@ -29,8 +32,9 @@ public interface IPropertyPoset {
 	 * The 'binary context' returned here is actually a binary relation over the set of properties such that 
 	 * (x,y) means 'x implies y'.  
 	 * @return a binary context that can be used as an argument for the construction of a lattice with {@link LatticeMiner}. 
+	 * @throws PropertyPosetException 
 	 */
-	BinaryContext getBinaryContext();
+	BinaryContext getBinaryContext() throws PropertyPosetException;
 	
 	/**
 	 * 

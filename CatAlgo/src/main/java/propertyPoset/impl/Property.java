@@ -73,7 +73,7 @@ public class Property implements IProperty {
 	public Set<String> getSuccProperties(IRelation rel) throws PropertyPosetException {
 		Set<String> succProp;
 		try {
-			succProp = rel.getSuccProperties(name);
+			succProp = rel.getSuccessors(name);
 		}
 		catch (Exception e){
 			throw new PropertyPosetException("Property.getSuccProperties() : an error has occured." 
@@ -86,7 +86,7 @@ public class Property implements IProperty {
 	public Set<String> getPrecProperties(IRelation rel) throws PropertyPosetException {
 		Set<String> precProp;
 		try {
-			precProp = rel.getPrecProperties(name);
+			precProp = rel.getPredecessors(name);
 		}
 		catch (Exception e){
 			throw new PropertyPosetException("Property.getPrecProperties() : an error has occured." 

@@ -34,7 +34,7 @@ public interface ISyntacticStructure extends Cloneable {
 	 * @return the name (or type) of this structure, which is also the name of the generating node in the syntax tree 
 	 * from which its components are derived : it therefore refers to a grammatical element of the context-free grammar 
 	 * at use. 
-	 * Two different syntactic structures can have the same name if this name is a non-terminal element (or 'variable') 
+	 * Two different syntactic structures may have the same name, if this name is a non-terminal element (or 'variable') 
 	 * of the context-free grammar that can lead to different derivations.
 	 */
 	String getName();

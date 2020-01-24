@@ -21,10 +21,7 @@ public interface IRelation {
 	 * This method does NOT guarantees that the transitivity condition for a relation to be a partial order is 
 	 * fulfilled : if the implication states that a property P implies a property Q, then it is not verified 
 	 * that every property implying P is also implying Q. This verification must therefore be taken care of by 
-	 * the calling object.  <br>
-	 * 
-	 * After an implication (or more) has been added, most methods throw an exception if 
-	 * 'updateSpecialElementSets()' hasn't been called afterwards. 
+	 * the calling object.  <br> 
 	 * @param implication is a pair of properties (A,B) ; A being the 'antecedent' and B the 'consequent'. 
 	 * A binary relation is defined by its set of implications.  
 	 * @throws PropertyPosetException 
@@ -36,15 +33,12 @@ public interface IRelation {
 	 * 
 	 * This method guarantees that the transitivity condition for a relation to be a partial order is 
 	 * fulfilled : if the implication states that a property P implies a property Q, then it is verified 
-	 * that every property implying P is also implying Q. <br>
-	 * 
-	 * After an implication (or more) has been added, most methods throw an exception if 
-	 * 'updateSpecialElementSets()' hasn't been called afterwards. 
+	 * that every property implying P is also implying Q.
 	 * @param implication is a pair of properties (A,B) ; A being the 'antecedent' and B the 'consequent'. 
 	 * A binary relation is defined by its set of implications.  
 	 * @throws PropertyPosetException
 	 */
-	public void addImplicationAndGuaranteeTransitivity(IImplication implication) throws PropertyPosetException;	
+	public void addImplicationEnsureTransitivity(IImplication implication) throws PropertyPosetException;	
 	
 	/**
 	 * The set of consequents (or implied properties) of a property P is the set of properties greater 
@@ -86,7 +80,7 @@ public interface IRelation {
 	 * @return the names of all the properties that immediately succeed the one whose name has been given in parameter. 
 	 * @throws PropertyPosetException 
 	 */
-	Set<String> getSuccProperties(String propName) throws PropertyPosetException;
+	Set<String> getSuccessors(String propName) throws PropertyPosetException;
 	
 	/**
 	 * 
@@ -94,7 +88,7 @@ public interface IRelation {
 	 * @return the names of all the properties that immediately precede the one whose name has been given in parameter. 
 	 * @throws PropertyPosetException 
 	 */
-	Set<String> getPrecProperties(String propName) throws PropertyPosetException;
+	Set<String> getPredecessors(String propName) throws PropertyPosetException;
 	
 	/**
 	 * The rank of a property is the maximal length of a spanning chain bounded by the root of the (lower semi-lattice) 
@@ -150,25 +144,26 @@ public interface IRelation {
 	 * 
 	 * @return the names of the poset 'leaves', or maximal elements. Since the poset in not necessarily an 
 	 * upper semi-lattice, there can be many leaves. 
+	 * @throws PropertyPosetException 
 	 */
-	Set<String> getPosetleaves();
+	Set<String> getPosetleaves() throws PropertyPosetException;
 	
 	/**
-	 * After an implication (or more) has been removed, most methods throw an exception if
-	 * 'updateSpecialElementSets()' hasn't been called afterwards. <br> 
 	 * The only reason why a property should be removed is because it has only one predecessor, and this 
 	 * predecessor is not the root of the poset. It is then identified as a 'superfluous' property.   
 	 * @see IProperty
 	 * @see IPropertyPoset
 	 * @param propertyName the name of the property to be removed. 
 	 * @return true if the property has actually been removed. 
+	 * @throws PropertyPosetException 
 	 */
-	boolean removeProperty(String propertyName);
+	boolean removeProperty(String propertyName) throws PropertyPosetException;
 	
 	/**
 	 * Makes sure that all data are up to date by recalculating them. Should be called after one (or more) 
 	 * implication has been added or removed.
+	 * @throws PropertyPosetException 
 	 */
-	void updateSpecialElementSets();
+	void updateRelationData() throws PropertyPosetException;
 	
 }
