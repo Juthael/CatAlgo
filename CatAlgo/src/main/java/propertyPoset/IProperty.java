@@ -42,6 +42,22 @@ public interface IProperty {
 	/**
 	 * 
 	 * @param rel a relation that links this property with other properties of a {@link IPropertyPoset}.  
+	 * @return names of all the properties implying this one according to the relation given in parameter. 
+	 * @throws PropertyPosetException 
+	 */
+	Set<String> getAntecedents(IRelation rel) throws PropertyPosetException;
+	
+	/**
+	 * 
+	 * @param rel a relation that links this property with other properties of a {@link IPropertyPoset}.  
+	 * @return names of all the properties implied by this one according to the relation given in parameter. 
+	 * @throws PropertyPosetException 
+	 */
+	Set<String> getConsequents(IRelation rel) throws PropertyPosetException;
+	
+	/**
+	 * 
+	 * @param rel a relation that links this property with other properties of a {@link IPropertyPoset}.  
 	 * @return names of all the properties greater than this one according to the relation given in parameter. 
 	 * @throws PropertyPosetException 
 	 */

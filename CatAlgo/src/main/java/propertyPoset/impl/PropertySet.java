@@ -117,4 +117,16 @@ public class PropertySet implements IPropertySet {
 		return removed;
 	}
 
+	@Override
+	public boolean removeProperty(String propertyName) throws PropertyPosetException {
+		try {
+			setOfIProperties.remove(getProperty(propertyName));
+		}
+		catch (Exception e) {
+			throw new PropertyPosetException("PropertySet.removeProperty() : the property '" + propertyName 
+					+ "' cannot be removed." + System.lineSeparator() + e.getMessage());
+		}
+		return true;
+	}
+
 }

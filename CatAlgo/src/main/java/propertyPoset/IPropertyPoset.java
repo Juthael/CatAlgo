@@ -64,7 +64,8 @@ public interface IPropertyPoset {
 	 * only element fulfilling the second condition is the minimum element of the poset.   
 	 *  
 	 * @return true if the poset cardinal has changed, false otherwise.
+	 * @throws PropertyPosetException 
 	 */
-	boolean reducePoset();
+	boolean reducePoset() throws PropertyPosetException;
 
 }

@@ -46,26 +46,35 @@ public class Relation implements IRelation {
 	}
 	
 	/**
-	 * 
+	 * Returns the relation given in first parameter, restricted to the subset given in second parameter.
 	 * @param rel a relation on a set that includes the 'subset' in parameter
 	 * @param subset a set of properties
 	 * @throws PropertyPosetException
 	 */
 	public Relation(IRelation rel, IPropertySet subset) throws PropertyPosetException {
-		Set<String> subSetNames = subset.getSetOfPropertyNames();
-		for (String propName : subSetNames) {
+		new Relation(rel, subset.getSetOfPropertyNames());
+	}
+	
+	/**
+	 * Returns the relation given in first parameter, restricted to the subset given in second parameter.
+	 * @param rel a relation on a set that includes the 'subset' in parameter
+	 * @param subsetNames names of elements of a subset of properties
+	 * @throws PropertyPosetException
+	 */
+	public Relation(IRelation rel, Set<String> subsetNames) throws PropertyPosetException {
+		for (String propName : subsetNames) {
 			Set<String> propConsequents;
 			try {
-				propConsequents = rel.getConsequents(propName);
+				propConsequents = new HashSet<String>(rel.getConsequents(propName));
 			}
 			catch (Exception e) {
 				throw new PropertyPosetException("Relation constructor : an error has occured.");
 			}
-			propConsequents.retainAll(subSetNames);
+			propConsequents.retainAll(subsetNames);
 			relation.put(propName, propConsequents);
 		}
 		updateRelationData();
-	}
+	}	
 
 	@Override
 	public void addImplication(IImplication implication) throws PropertyPosetException {

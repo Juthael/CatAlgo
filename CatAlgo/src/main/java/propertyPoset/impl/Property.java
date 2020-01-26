@@ -42,6 +42,32 @@ public class Property implements IProperty {
 	public String getPropertyName() {
 		return name;
 	}
+	
+	@Override
+	public Set<String> getAntecedents(IRelation rel) throws PropertyPosetException {
+		Set<String> antecedents;
+		try {
+			antecedents = rel.getAntecedents(name);
+		}
+		catch (Exception e){
+			throw new PropertyPosetException("Property.getAntecedents() : an error has occured." 
+					+ System.lineSeparator() + e.getMessage());
+		}
+		return antecedents;
+	}
+	
+	@Override
+	public Set<String> getConsequents(IRelation rel) throws PropertyPosetException {
+		Set<String> consequents;
+		try {
+			consequents = rel.getConsequents(name);
+		}
+		catch (Exception e){
+			throw new PropertyPosetException("Property.getConsequents() : an error has occured." 
+					+ System.lineSeparator() + e.getMessage());
+		}
+		return consequents;
+	}	
 
 	@Override
 	public Set<String> getGreaterProperties(IRelation rel) throws PropertyPosetException {
