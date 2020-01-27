@@ -6,8 +6,8 @@ import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.utils.ITreePaths;
-import utils.IImplication;
-import utils.IPosetMaxChains;
+import propertyPoset.utils.IImplication;
+import propertyPoset.utils.IPosetMaxChains;
 
 /**
  * ISyntacticStructure represents a derivation rule of a context-free grammar (the rule remains unspecified, 

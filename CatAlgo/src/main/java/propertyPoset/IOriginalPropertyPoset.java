@@ -2,7 +2,7 @@ package propertyPoset;
 
 import grammarModel.structure.ISyntacticStructure;
 import propertyPoset.exceptions.PropertyPosetException;
-import utils.IPosetMaxChains;
+import propertyPoset.utils.IPosetMaxChains;
 
 /**
  * An IOriginalPropertyPoset results from the conversion of a syntax tree into a partially ordered 

@@ -12,9 +12,9 @@ import org.junit.Test;
 
 import grammarModel.structure.ISyntaxGrove;
 import grammars.seekWhence.utils.impl.SwFileReader;
-import utils.IImplication;
-import utils.IPosetMaxChains;
-import utils.impl.PosetMaxChains;
+import propertyPoset.utils.IImplication;
+import propertyPoset.utils.IPosetMaxChains;
+import propertyPoset.utils.impl.PosetMaxChains;
 
 @SuppressWarnings("unused")
 public class PosetMaxChainsTest {

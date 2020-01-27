@@ -9,7 +9,6 @@ import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.utils.ITreePaths;
-import utils.impl.Chains;
 
 public class TreePaths extends Chains implements ITreePaths {
 

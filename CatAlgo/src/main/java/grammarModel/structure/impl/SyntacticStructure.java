@@ -9,10 +9,10 @@ import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.utils.ITreePaths;
 import grammarModel.utils.impl.TreePaths;
-import utils.IImplication;
-import utils.IPosetMaxChains;
-import utils.impl.Implication;
-import utils.impl.PosetMaxChains;
+import propertyPoset.utils.IImplication;
+import propertyPoset.utils.IPosetMaxChains;
+import propertyPoset.utils.impl.Implication;
+import propertyPoset.utils.impl.PosetMaxChains;
 
 public abstract class SyntacticStructure implements ISyntacticStructure {
 

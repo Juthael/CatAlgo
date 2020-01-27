@@ -1,4 +1,4 @@
-package utils;
+package propertyPoset.utils;
 
 public interface IImplication {
 	

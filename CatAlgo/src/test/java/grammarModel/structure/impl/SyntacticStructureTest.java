@@ -15,11 +15,11 @@ import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.structure.ISyntacticStructure;
+import grammarModel.utils.IChains;
 import grammarModel.utils.ITreePaths;
 import grammars.seekWhence.utils.impl.SwFileReader;
-import utils.IChains;
-import utils.IImplication;
-import utils.IPosetMaxChains;
+import propertyPoset.utils.IImplication;
+import propertyPoset.utils.IPosetMaxChains;
 
 @SuppressWarnings("unused")
 public class SyntacticStructureTest {

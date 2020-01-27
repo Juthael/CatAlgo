@@ -11,7 +11,7 @@ import propertyPoset.IProperty;
 import propertyPoset.IPropertySet;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
-import utils.IImplication;
+import propertyPoset.utils.IImplication;
 
 /**
  * A Relation is an implementation of a binary relation on a set of properties. It is endowed with some additional 

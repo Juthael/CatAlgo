@@ -13,7 +13,7 @@ import propertyPoset.IPropertyPoset;
 import propertyPoset.IRelation;
 import propertyPoset.ISetOfPropertyPosets;
 import propertyPoset.exceptions.PropertyPosetException;
-import utils.IPosetMaxChains;
+import propertyPoset.utils.IPosetMaxChains;
 
 /**
  * An OriginalPropertyPoset results from the conversion of a syntax tree into a partially ordered 

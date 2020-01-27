@@ -3,7 +3,7 @@ package propertyPoset;
 import java.util.Set;
 
 import propertyPoset.exceptions.PropertyPosetException;
-import utils.IImplication;
+import propertyPoset.utils.IImplication;
 
 /**
  * A IRelation is a binary relation on a set of properties. It is endowed with some additional 
