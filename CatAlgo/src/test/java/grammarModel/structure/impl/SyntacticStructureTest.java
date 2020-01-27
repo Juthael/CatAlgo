@@ -2,6 +2,7 @@ package grammarModel.structure.impl;
 
 import static org.junit.Assert.*;
 
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -28,8 +29,7 @@ public class SyntacticStructureTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		Path backburnDozen1 = Paths.get("D:","GoogleDrive","0_Doctorat","Modèle","grammars",
-				"tests","seekWhence","BlackburnDozen","BlackburnDozen1","BD1_1_12_123.txt");
+		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
 		SwFileReader fileReader = new SwFileReader();
 		try {
 			grove = fileReader.getSyntacticGrove(backburnDozen1);

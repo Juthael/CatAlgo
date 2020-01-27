@@ -21,8 +21,7 @@ public class SwFileReaderTest {
 	@Test
 	public void whenAPathToACorrectTextFileIsGivenAsParameterThenASyntacticGroveIsReturned() {
 		boolean aGroveHasBeenReturned = false;
-		Path backburnDozen1 = Paths.get("D:","GoogleDrive","0_Doctorat","Modèle","grammars",
-				"tests","seekWhence","BlackburnDozen","BlackburnDozen1","BD1_1_12_123.txt");
+		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
 		SwFileReader fileReader = new SwFileReader();
 		ISyntaxGrove grove;
 		try {
