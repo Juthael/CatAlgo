@@ -1,6 +1,5 @@
 package propertyPoset.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +16,7 @@ import propertyPoset.exceptions.PropertyPosetException;
 import utils.IPosetMaxChains;
 
 /**
- * An OriginalPropertyPoset is the result of the conversion of a syntax tree into a partially ordered 
+ * An OriginalPropertyPoset results from the conversion of a syntax tree into a partially ordered 
  * set. <br>
  * 
  * More specifically, it is a property poset ({@link IPropertyPoset}) built from the list of spanning chains in 
@@ -40,44 +39,48 @@ public class OriginalPropertyPoset extends PropertyPoset implements IOriginalPro
 	public OriginalPropertyPoset(Set<String> setOfPropNames, IRelation relation) throws PropertyPosetException {
 		super(setOfPropNames, relation);
 		try {
-			orderedRootNames = getRootNamesOrderedByDecreasingRank();
+			setOrderedRootNames();
 		}
 		catch (Exception e) {
 			throw new PropertyPosetException("OriginalPropertyPoset() : "
-					+ "poset roots retreiving failed." + System.lineSeparator() + e.getMessage()); 
+					+ "poset roots ordering failed." + System.lineSeparator() + e.getMessage()); 
 		}
-		try {
-			propToRoots = setPropToRootsMap(new HashSet<String>(orderedRootNames));
+		if (orderedRootNames.size()>1) {
+			try {
+				setPropToRootsMap(new HashSet<String>(orderedRootNames));
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("OriginalPropertyPoset() : "
+						+ "propToRoots map cannot be initialized. " + System.lineSeparator() + e.getMessage());
+			}	
 		}
-		catch (Exception e) {
-			throw new PropertyPosetException("OriginalPropertyPoset() : "
-					+ "propToRoots map cannot be initialized. " + System.lineSeparator() + e.getMessage());
-		}		
 	}
 
 	@Override
 	public ISetOfPropertyPosets getExtractedContextPosets() throws PropertyPosetException {
 		ISetOfPropertyPosets setOfPosets;
 		Set<IPropertyPoset> posets = new HashSet<IPropertyPoset>();
-		for (String rootName : orderedRootNames) {
-			IPropertyPoset currentRootPoset;
-			Set<String> rootBoundPropertyNames = new HashSet<String>();
-			for (String prop : propToRoots.keySet()) {
-				if (propToRoots.get(prop).contains(rootName)) {
-					rootBoundPropertyNames.add(prop);
+		if (orderedRootNames.size() > 1) {
+			for (String rootName : orderedRootNames) {
+				IPropertyPoset currentRootPoset;
+				Set<String> rootBoundPropertyNames = new HashSet<String>();
+				for (String prop : propToRoots.keySet()) {
+					if (propToRoots.get(prop).contains(rootName)) {
+						rootBoundPropertyNames.add(prop);
+					}
 				}
+				IRelation rootBoundRelation = new Relation(relation, rootBoundPropertyNames);
+				currentRootPoset = new PropertyPoset(rootBoundPropertyNames, rootBoundRelation);
+				posets.add(currentRootPoset);
+				updateOriginalPosetData(rootName, rootBoundPropertyNames);
 			}
-			IRelation rootBoundRelation = new Relation(relation, rootBoundPropertyNames);
-			currentRootPoset = new PropertyPoset(rootBoundPropertyNames, rootBoundRelation);
-			posets.add(currentRootPoset);
-			updateOriginalPosetData(rootName, rootBoundPropertyNames);
 		}
+		else posets.add(this);
 		setOfPosets = new SetOfPropertyPosets(posets);
 		return setOfPosets;
 	}
 	
-	private List<String> getRootNamesOrderedByDecreasingRank() throws PropertyPosetException {
-		List<String> orderedRootNames = new ArrayList<String>();
+	private void setOrderedRootNames() throws PropertyPosetException {
 		Set<IProperty> roots = new HashSet<IProperty>();
 		try {
 			for (IProperty property : set.getSetOfProperties()) {
@@ -103,7 +106,6 @@ public class OriginalPropertyPoset extends PropertyPoset implements IOriginalPro
 			roots.removeAll(rootsAtCurrentRank);
 			currentRank--;
 		}
-		return orderedRootNames;
 	}
 	
 	private int getMaxRank(Set<IProperty> properties) throws PropertyPosetException {
@@ -122,25 +124,24 @@ public class OriginalPropertyPoset extends PropertyPoset implements IOriginalPro
 		return maxRank;
 	}
 	
-	private Map<String, Set<String>> setPropToRootsMap(Set<String> roots) throws PropertyPosetException{
+	private void setPropToRootsMap(Set<String> roots) throws PropertyPosetException{
 		for (IProperty prop : set.getSetOfProperties()) {
-			Set<String> associatedRootNames;
+			Set<String> associatedRootsNames;
 			try {
-				Set<String> lesserRootNames = prop.getLesserProperties(relation);
-				lesserRootNames.retainAll(roots);
-				IRelation assocRootsRel = new Relation(relation, lesserRootNames);	
-				associatedRootNames = assocRootsRel.getPosetleaves();
+				Set<String> lesserRootsNames = prop.getLesserProperties(relation);
+				lesserRootsNames.retainAll(roots);
+				IRelation assocRootsRel = new Relation(relation, lesserRootsNames);	
+				associatedRootsNames = assocRootsRel.getPosetleaves();
 				if (roots.contains(prop.getPropertyName()))
-					associatedRootNames.add(prop.getPropertyName());
+					associatedRootsNames.add(prop.getPropertyName());
 			}
 			catch (Exception e) {
 				throw new PropertyPosetException("OriginalPropertySet.setPropToRootsMap() : an error has occured "
 						+ "while processing property '" + prop.getPropertyName() + "'" + System.lineSeparator() 
 						+ e.getMessage());
 			}
-			propToRoots.put(prop.getPropertyName(), associatedRootNames);
+			propToRoots.put(prop.getPropertyName(), associatedRootsNames);
 		}
-		return propToRoots;
 	}
 	
 	private void updateOriginalPosetData(String root, Set<String> rootBoundPropertyNames) throws PropertyPosetException {

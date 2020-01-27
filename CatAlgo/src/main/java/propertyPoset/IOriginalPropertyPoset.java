@@ -5,7 +5,7 @@ import propertyPoset.exceptions.PropertyPosetException;
 import utils.IPosetMaxChains;
 
 /**
- * An IOriginalPropertyPoset is the result of the conversion of a syntax tree into a partially ordered 
+ * An IOriginalPropertyPoset results from the conversion of a syntax tree into a partially ordered 
  * set. <br>
  * 
  * More specifically, it is a property poset ({@link IPropertyPoset}) built from the list of spanning chains in 
