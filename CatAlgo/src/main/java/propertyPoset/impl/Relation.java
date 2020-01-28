@@ -110,7 +110,7 @@ public class Relation implements IRelation {
 	
 	@Override
 	public Set<String> getAntecedents(String propName) throws PropertyPosetException {
-		checkIfDataIsUpToDate();
+		setRanks();
 		Set<String> antecedents = new HashSet<String>();
 		if (!relation.containsKey(propName))
 			throw new PropertyPosetException("Relation.getAntecedents() : property " + propName 
@@ -142,7 +142,6 @@ public class Relation implements IRelation {
 
 	@Override
 	public Set<String> getLesserProperties(String propName) throws PropertyPosetException {
-		checkIfDataIsUpToDate();
 		Set<String> lesserProp = new HashSet<String>();
 		try {
 			lesserProp.addAll(getAntecedents(propName));
@@ -158,7 +157,7 @@ public class Relation implements IRelation {
 
 	@Override
 	public Set<String> getSuccessors(String propName) throws PropertyPosetException {
-		checkIfDataIsUpToDate();
+		setRanks();
 		List<String> succProp = new ArrayList<String>();
 		if (!relation.keySet().contains(propName))
 			throw new PropertyPosetException("Relation.getSuccProperties : property " + propName 
@@ -187,7 +186,7 @@ public class Relation implements IRelation {
 
 	@Override
 	public Set<String> getPredecessors(String propName) throws PropertyPosetException {
-		checkIfDataIsUpToDate();
+		setRanks();
 		List<String> precProp = new ArrayList<String>();
 		if (!relation.keySet().contains(propName))
 			throw new PropertyPosetException("Relation.getSuccProperties : property " + propName 
@@ -216,7 +215,7 @@ public class Relation implements IRelation {
 
 	@Override
 	public int getRank(String propName) throws PropertyPosetException {
-		checkIfDataIsUpToDate();
+		setRanks();
 		if (!propertyToRank.containsKey(propName)) {
 			throw new PropertyPosetException("Relation.getRank() : the argument " + propName + " is unknown.");
 		}
@@ -262,7 +261,7 @@ public class Relation implements IRelation {
 
 	@Override
 	public String getPosetRoot() throws PropertyPosetException {
-		checkIfDataIsUpToDate();
+		setRanks();
 		if (root.isEmpty())
 			throw new PropertyPosetException("Relation.getPosetRoot() : the root can't be found or is empty.");
 		else return root;
@@ -270,7 +269,6 @@ public class Relation implements IRelation {
 
 	@Override
 	public Set<String> getPosetleaves() throws PropertyPosetException {
-		checkIfDataIsUpToDate();
 		Set<String> posetLeaves = new HashSet<String>();
 		for (String property : relation.keySet()) {
 			if (relation.get(property).size() == 1)
@@ -296,10 +294,12 @@ public class Relation implements IRelation {
 
 	@Override
 	public void updateRelationData() throws PropertyPosetException {
-		setRanks();
-		setDimensions();
-		setLocalRootsAndAtoms();
-		allDataIsUpToDate = true;
+		if (!allDataIsUpToDate) {
+			setRanks();
+			setDimensions();
+			setLocalRootsAndAtoms();
+			allDataIsUpToDate = true;	
+		}
 	}
 	
 	/**
@@ -308,10 +308,12 @@ public class Relation implements IRelation {
 	 * @throws PropertyPosetException
 	 */
 	private void setRanks() throws PropertyPosetException {
-		setPosetRoot();
-		initializeRankMap();
-		setSuccRankRecursively(root);
-		rankMappingIsUpToDate = true;
+		if (!rankMappingIsUpToDate) {
+			setPosetRoot();
+			initializeRankMap();
+			setSuccRankRecursively(root);
+			rankMappingIsUpToDate = true;
+		}
 	}
 	
 	/**

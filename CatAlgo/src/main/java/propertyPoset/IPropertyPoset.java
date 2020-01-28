@@ -1,7 +1,5 @@
 package propertyPoset;
 
-import java.util.Set;
-
 import fca.LatticeMiner;
 import fca.core.context.binary.BinaryContext;
 import propertyPoset.exceptions.PropertyPosetException;
@@ -20,7 +18,7 @@ public interface IPropertyPoset {
 	 * 
 	 * @return the set of properties.
 	 */
-	Set<IProperty> getProperties();
+	IPropertySet getProperties();
 	
 	/**
 	 * 

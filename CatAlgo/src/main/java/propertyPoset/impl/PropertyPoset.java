@@ -12,6 +12,8 @@ import propertyPoset.IPropertyPoset;
 import propertyPoset.IPropertySet;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
+import propertyPoset.utils.IImplication;
+import propertyPoset.utils.IPosetMaxChains;
 
 /**
  * A IPropertyPoset is an implementation of a partially ordered set whose elements are properties. <br>
@@ -36,10 +38,27 @@ public class PropertyPoset implements IPropertyPoset {
 		set = new PropertySet(setOfPropNames, true);
 		this.relation = relation;
 	}
+	
+	/**
+	 * Protected constructor, only to be called by OriginalPropertyPoset
+	 * @param maxChains spanning chains of the poset to be built
+	 * @throws PropertyPosetException
+	 */
+	protected PropertyPoset(IPosetMaxChains maxChains) throws PropertyPosetException {
+		set = new PropertySet(maxChains.getProperties(), true);
+		relation = new Relation(set);
+		try {
+			for (IImplication implication : maxChains.getImplications())
+				relation.addImplication(implication);
+		}
+		catch (Exception e) {
+			throw new PropertyPosetException("PropertyPoset() : error while adding an implication");
+		}
+	}
 
 	@Override
-	public Set<IProperty> getProperties() {
-		return set.getSetOfProperties();
+	public IPropertySet getProperties() {
+		return set;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package propertyPoset.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,8 +37,8 @@ public class OriginalPropertyPoset extends PropertyPoset implements IOriginalPro
 	 * @param relation partial order relation on the set of properties
 	 * @throws PropertyPosetException 
 	 */
-	public OriginalPropertyPoset(Set<String> setOfPropNames, IRelation relation) throws PropertyPosetException {
-		super(setOfPropNames, relation);
+	public OriginalPropertyPoset(IPosetMaxChains posetMaxChains) throws PropertyPosetException {
+		super(posetMaxChains);
 		try {
 			setOrderedRootNames();
 		}
@@ -81,6 +82,7 @@ public class OriginalPropertyPoset extends PropertyPoset implements IOriginalPro
 	}
 	
 	private void setOrderedRootNames() throws PropertyPosetException {
+		orderedRootNames = new ArrayList<String>();
 		Set<IProperty> roots = new HashSet<IProperty>();
 		try {
 			for (IProperty property : set.getSetOfProperties()) {

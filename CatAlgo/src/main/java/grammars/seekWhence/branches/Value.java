@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import grammarModel.structure.ISyntaxBranch;
+import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.impl.SyntaxBranch;
 import grammars.seekWhence.disjunctions.IValueOrValuE;
@@ -40,6 +41,16 @@ public final class Value extends SyntaxBranch implements ISyntaxBranch, IValueOr
 	public String getName() {
 		return value;
 	}
+	
+	/**
+	 * Overloads the method of SyntaxBranch in order to avoid digit concatenation when the value and index are both digits.
+	 * Returns, for instance, 3_2 instead of 32 when the value 'name' is 3 and its index is '2'. 
+	 */
+	@Override
+	public String getPosetElementName() throws GrammarModelException {
+		String namePlusSeparator = getName().concat("_");
+		return namePlusSeparator.concat(valueOrValuE.getPosetElementName());
+	}	
 
 	@Override
 	public List<ISyntacticStructure> getListOfComponents() {
