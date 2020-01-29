@@ -49,6 +49,7 @@ public class PropertySetTest {
 		catch (Exception e) {
 			System.out.println("PropertySetTest : error during OriginalPropertyPoset instantiation." + System.lineSeparator() 
 				+ e.getMessage());
+			e.printStackTrace();
 		}
 		set = propPoset.getProperties();
 	}

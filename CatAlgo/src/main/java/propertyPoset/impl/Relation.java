@@ -37,12 +37,16 @@ public class Relation implements IRelation {
 	 * With this constructor, the relation on the set of properties must be set subsequently using 
 	 * the method addImplication();
 	 * @param set a set or properties
+	 * @throws PropertyPosetException 
 	 */
-	public Relation(IPropertySet set) {
-		for (IProperty prop : set.getSetOfProperties()) {
-			Set<String> propConsequents = new HashSet<String>();
-			relation.put(prop.getPropertyName(), propConsequents);
+	public Relation(IPropertySet set) throws PropertyPosetException {
+		if (!set.getSetOfProperties().isEmpty()) {
+			for (IProperty prop : set.getSetOfProperties()) {
+				Set<String> propConsequents = new HashSet<String>();
+				relation.put(prop.getPropertyName(), propConsequents);
+			}
 		}
+		else throw new PropertyPosetException("Relation() : param 'IPropertyPoset set' returns an empty set.");
 	}
 	
 	/**
@@ -62,18 +66,21 @@ public class Relation implements IRelation {
 	 * @throws PropertyPosetException
 	 */
 	public Relation(IRelation rel, Set<String> subsetNames) throws PropertyPosetException {
-		for (String propName : subsetNames) {
-			Set<String> propConsequents;
-			try {
-				propConsequents = new HashSet<String>(rel.getConsequents(propName));
+		if (!subsetNames.isEmpty()) {
+			for (String propName : subsetNames) {
+				Set<String> propConsequents;
+				try {
+					propConsequents = new HashSet<String>(rel.getConsequents(propName));
+				}
+				catch (Exception e) {
+					throw new PropertyPosetException("Relation constructor : an error has occured.");
+				}
+				propConsequents.retainAll(subsetNames);
+				relation.put(propName, propConsequents);
 			}
-			catch (Exception e) {
-				throw new PropertyPosetException("Relation constructor : an error has occured.");
-			}
-			propConsequents.retainAll(subsetNames);
-			relation.put(propName, propConsequents);
+			updateRelationData();
 		}
-		updateRelationData();
+		else throw new PropertyPosetException("Relation() : param 'Set<String> subsetNames' is empty");
 	}	
 
 	@Override
@@ -172,7 +179,7 @@ public class Relation implements IRelation {
 					boolean propIsASuccessor = true;
 					int succIndex = 0;
 					while (propIsASuccessor && succIndex < succProp.size()) {
-						if (succProp.get(succIndex).contains(prop))
+						if (relation.get(succProp.get(succIndex)).contains(prop))
 							propIsASuccessor = false;
 						else succIndex++;
 					}
@@ -201,7 +208,7 @@ public class Relation implements IRelation {
 					boolean propIsAPredecessor = true;
 					int precIndex = 0;
 					while (propIsAPredecessor && precIndex < precProp.size()) {
-						if (prop.contains(precProp.get(precIndex)))
+						if ((relation.get(prop)).contains(precProp.get(precIndex)))
 							propIsAPredecessor = false;
 						else precIndex++;
 					}

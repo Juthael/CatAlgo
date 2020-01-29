@@ -10,15 +10,13 @@ import propertyPoset.utils.IImplication;
 import propertyPoset.utils.IPosetMaxChains;
 
 /**
- * ISyntacticStructure represents a derivation rule of a context-free grammar (the rule remains unspecified, 
- * since this class is abstract ; so one can rather say that ISyntacticStructure represents the 'principle' 
- * of a rule). <br>
+ * The ISyntacticStructure abstract type defines an element (derivation rule or terminal symbol) of a context-free grammar. 
  * The composition relationship that defines a type in object-oriented programming ("any instance of class A has 
- * an instance of class B and an instance of class C for components") is used as an equivalent to the derivation 
+ * an instance of class B and an instance of class C for components") is used here as an equivalent to the derivation 
  * relationship of a context-free grammar ("the symbol A can be substituted by the string of symbols "BC").  
- * Thus, any instance of ISyntacticStructure constitutes an actual derivation of a given symbol in a syntax 
- * tree (or the non-derivation of a terminal symbol). That is why ISyntacticStructure can be extended in order 
- * to be instantiated as : <br> 
+ * Thus, any instance of ISyntacticStructure is truly a derivation of a given symbol in a syntax 
+ * tree, from a node to its generated terminals (if the symbol is not a terminal itself). So ISyntacticStructure can then 
+ * be extended in order to be instantiated as : <br> 
  * 1/ a syntax tree terminal node, or syntax 'leaf' : {@link ISyntaxLeaf} <br> 
  * 2/ the derivation from a non-terminal node, or syntax 'branch' : {@link ISyntaxBranch} <br>
  * 3/ a whole syntax tree  : also a {@link ISyntaxBranch}, but whose name is the start element of the context-free 

@@ -131,11 +131,15 @@ public class OriginalPropertyPoset extends PropertyPoset implements IOriginalPro
 			Set<String> associatedRootsNames;
 			try {
 				Set<String> lesserRootsNames = prop.getLesserProperties(relation);
-				lesserRootsNames.retainAll(roots);
-				IRelation assocRootsRel = new Relation(relation, lesserRootsNames);	
-				associatedRootsNames = assocRootsRel.getPosetleaves();
+				if (!lesserRootsNames.isEmpty()) {
+					lesserRootsNames.retainAll(roots);
+					IRelation assocRootsRel = new Relation(relation, lesserRootsNames);	
+					associatedRootsNames = assocRootsRel.getPosetleaves();
+				}
+				else associatedRootsNames = new HashSet<String>();
 				if (roots.contains(prop.getPropertyName()))
 					associatedRootsNames.add(prop.getPropertyName());
+
 			}
 			catch (Exception e) {
 				throw new PropertyPosetException("OriginalPropertySet.setPropToRootsMap() : an error has occured "
