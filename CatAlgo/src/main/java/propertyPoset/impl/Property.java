@@ -24,6 +24,7 @@ public class Property implements IProperty {
 
 	private String name;
 	private Set<IProperty> encapsulatedProp = new HashSet<IProperty>();
+	private boolean removable;
 	
 	/**
 	 * 
@@ -31,11 +32,17 @@ public class Property implements IProperty {
 	 */
 	public Property(String name) {
 		this.name = name;
+		removable = true;
 	}
 
 	@Override
 	public void addEncapsulatedProp(IProperty prop) {
 		encapsulatedProp.add(prop);
+	}
+	
+	@Override
+	public void setAsNotRemovable() {
+		removable = false;
 	}
 
 	@Override
@@ -120,6 +127,19 @@ public class Property implements IProperty {
 		}
 		return precProp;
 	}
+	
+	@Override
+	public Set<String> getMaximalRoots(IRelation rel) throws PropertyPosetException{
+		Set<String> maximalRoots;
+		try {
+			maximalRoots = rel.getMaximalRoots(name);
+		}
+		catch (Exception e){
+			throw new PropertyPosetException("Property.getPrecMaximalRoots() : an error has occured." 
+					+ System.lineSeparator() + e.getMessage());
+		}
+		return maximalRoots;
+	}
 
 	@Override
 	public Set<IProperty> getEncapsulatedProperties() {
@@ -176,6 +196,11 @@ public class Property implements IProperty {
 					+ System.lineSeparator() + e.getMessage());
 		}
 		return localAtom;
+	}
+	
+	@Override
+	public boolean isRemovable() {
+		return removable;
 	}
 
 }

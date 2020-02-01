@@ -6,14 +6,11 @@ import java.util.Set;
 
 import propertyPoset.IProperty;
 import propertyPoset.IPropertySet;
-import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
 
 /**
- * A PropertyPoset is an implementation of a partially ordered set whose elements are properties. <br>
- * 
- * As such, it is composed of a {@link IPropertySet} object (unordered set of properties), and of a 
- * {@link IRelation} object (partial order relation on the set of properties). 
+ * A PropertySet is an implementation of a (unordered) set of properties ({@link IProperty}) endowed with some basic 
+ * functionalities. 
  * @author Gael Tregouet
  *
  */
@@ -92,41 +89,47 @@ public class PropertySet implements IPropertySet {
 
 	@Override
 	public boolean removeProperty(String propertyName, String antecedent) throws PropertyPosetException {
-		IProperty removedProperty;
-		IProperty antecedentProperty;
 		boolean removed = false;
-		try {
-			removedProperty = getProperty(propertyName);
-			removed = setOfIProperties.remove(getProperty(propertyName));
-			if (!removed)
-				throw new PropertyPosetException("the property " + propertyName + " hasn't been removed.");
-			else {
-				try {
-					antecedentProperty = getProperty(antecedent);
+		if (getProperty(propertyName).isRemovable()) {
+			IProperty removedProperty;
+			IProperty antecedentProperty;
+			try {
+				removedProperty = getProperty(propertyName);
+				removed = setOfIProperties.remove(getProperty(propertyName));
+				if (!removed)
+					throw new PropertyPosetException("the property " + propertyName + " hasn't been removed.");
+				else {
+					try {
+						antecedentProperty = getProperty(antecedent);
+					}
+					catch (Exception e) {
+						throw new PropertyPosetException("the antecedent property " + antecedent + " cannot be retreived." );
+					}
+					antecedentProperty.addEncapsulatedProp(removedProperty);
 				}
-				catch (Exception e) {
-					throw new PropertyPosetException("the antecedent property " + antecedent + " cannot be retreived." );
-				}
-				antecedentProperty.addEncapsulatedProp(removedProperty);
 			}
-		}
-		catch (Exception e) {
-			throw new PropertyPosetException("PropertySet.removeProperty : an error has occured. " 
-					+ System.lineSeparator() + e.getMessage());
+			catch (Exception e) {
+				throw new PropertyPosetException("PropertySet.removeProperty : an error has occured. " 
+						+ System.lineSeparator() + e.getMessage());
+			}
 		}
 		return removed;
 	}
 
 	@Override
 	public boolean removeProperty(String propertyName) throws PropertyPosetException {
-		try {
-			setOfIProperties.remove(getProperty(propertyName));
+		boolean propertyRemoved = false;
+		if (getProperty(propertyName).isRemovable()) {
+			try {
+				setOfIProperties.remove(getProperty(propertyName));
+				propertyRemoved = true;
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("PropertySet.removeProperty() : the property '" + propertyName 
+						+ "' cannot be removed." + System.lineSeparator() + e.getMessage());
+			}
 		}
-		catch (Exception e) {
-			throw new PropertyPosetException("PropertySet.removeProperty() : the property '" + propertyName 
-					+ "' cannot be removed." + System.lineSeparator() + e.getMessage());
-		}
-		return true;
+		return propertyRemoved;
 	}
 
 }

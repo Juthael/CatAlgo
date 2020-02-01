@@ -1,5 +1,7 @@
 package propertyPoset;
 
+import java.util.Set;
+
 import fca.LatticeMiner;
 import fca.core.context.binary.BinaryContext;
 import propertyPoset.exceptions.PropertyPosetException;
@@ -27,8 +29,8 @@ public interface IPropertyPoset {
 	IRelation getRelation();
 	
 	/**
-	 * The 'binary context' returned here is actually a binary relation over the set of properties such that 
-	 * (x,y) means 'x implies y'.  
+	 * 
+	 * The 'binary context' is actually a binary relation over the set of properties such that (x,y) means 'x implies y'.  
 	 * @return a binary context that can be used as an argument for the construction of a lattice with {@link LatticeMiner}. 
 	 * @throws PropertyPosetException 
 	 */
@@ -36,9 +38,28 @@ public interface IPropertyPoset {
 	
 	/**
 	 * 
-	 * @return true if the set reduction has occurred, i.e. if see reducePoset() has been called.
+	 * @return a set of posets, each one being a 'sub-context' of this poset, returned by the method extractSubContexts().
+	 * @throws PropertyPosetException 
 	 */
-	boolean hasBeenreduced();
+	Set<IPropertyPoset> getSubContexts() throws PropertyPosetException;
+	
+	
+	/**
+	 * Extracts potential 'sub-contexts' in this poset, i.e. some sub-poset forming a context of its own.
+	 * 
+	 * These sub-posets are then extracted from the original poset and stored as new IPropertyPoset in a dedicated set. 
+	 * The operation is then repeated recursively on these new posets, until no more 'sub-context' is found.<br>   
+	 * 
+	 * That is the case only when all dimensions in any poset have the same 'contextual basis', and this 
+	 * contextual basis is the root of the (lower semi-lattice) poset. <br>
+	 * 
+	 * A 'dimension' of a property poset is a sup-reducible element. The 'contextual basis' (or 'local root') of 
+	 * a dimension is the infimum of its immediate predecessors.  
+	 * 
+	 * @return a set of {@link IPropertyPoset}, with a few additional functionalities. 
+	 * @throws PropertyPosetException 
+	 */
+	void extractSubContexts() throws PropertyPosetException;
 	
 	/**
 	 * A property poset is reduced by removing the contextually superfluous properties. 
@@ -65,5 +86,17 @@ public interface IPropertyPoset {
 	 * @throws PropertyPosetException 
 	 */
 	boolean reducePoset() throws PropertyPosetException;
+	
+	/**
+	 * 
+	 * @return if extractSubContexts() has been called.
+	 */
+	boolean subContextsHaveBeenExtracted();	
+	
+	/**
+	 * 
+	 * @return true if the set reduction has occurred, i.e. if see reducePoset() has been called.
+	 */
+	boolean hasBeenreduced();
 
 }

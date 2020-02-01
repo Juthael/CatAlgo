@@ -34,6 +34,13 @@ public interface IProperty {
 	void addEncapsulatedProp(IProperty prop);
 	
 	/**
+	 * Some properties must be protected from removal because they could be spotted by a {@link IPropertyPoset} as 
+	 * 'superfluous' during the set reduction procedure (IPropertySet.reduce()), although being the root of an 
+	 * extracted subset. 
+	 */
+	void setAsNotRemovable();
+	
+	/**
 	 * 
 	 * @return the property name.
 	 */
@@ -87,6 +94,15 @@ public interface IProperty {
 	 */
 	Set<String> getPrecProperties(IRelation rel) throws PropertyPosetException;
 	
+	/**
+	 * The maximal roots of a property are the maximal elements among the set of local roots lower than 
+	 * or equal to this property (every root is its own maximal root). 
+	 * @param rel a relation that links this property with other properties of a {@link IPropertyPoset}.
+	 * @return the maximal roots of the property
+	 * @throws PropertyPosetException 
+	 */
+	Set<String> getMaximalRoots(IRelation rel) throws PropertyPosetException;
+	
 	
 	/**
 	 * Encapsulated properties of a property P are elements removed from the property poset because they 
@@ -132,5 +148,14 @@ public interface IProperty {
 	 * @throws PropertyPosetException 
 	 */
 	boolean isALocalAtom(IRelation rel) throws PropertyPosetException;
+	
+	/**
+	 * Returns a marker value that is used by the {@link IPropertySet} to know if some property can be removed. 
+	 * Some properties must be protected from removal because they could be spotted by a {@link IPropertyPoset} as 
+	 * 'superfluous' during the set reduction procedure (IPropertySet.reduce()), although being the root of an 
+	 * extracted subset. 
+	 * @return 'true' if removable, false otherwise
+	 */
+	boolean isRemovable();
 	
 }

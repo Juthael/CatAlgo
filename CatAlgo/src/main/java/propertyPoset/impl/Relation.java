@@ -265,6 +265,25 @@ public class Relation implements IRelation {
 		}
 		else return dimensionToRoot.get(dimension);
 	}
+	
+	@Override
+	public Set<String> getMaximalRoots(String propName) throws PropertyPosetException{
+		Set<String> maximalRoots;
+		Set<String> lesserRoots;
+		try {
+			lesserRoots = getAntecedents(propName);
+			lesserRoots.retainAll(localRoots);
+			IRelation lesserRootsRel = new Relation(this, lesserRoots);
+			maximalRoots = lesserRootsRel.getPosetleaves();
+			if (maximalRoots.isEmpty())
+				throw new PropertyPosetException("The set returned should never be empty.");
+		}
+		catch (Exception e) {
+			throw new PropertyPosetException("Relation.getMaximalRoots : cannot find a maximal root "
+					+ "for property '" + propName + "'." + System.lineSeparator() + e.getMessage() );
+		}
+		return maximalRoots;
+	}
 
 	@Override
 	public String getPosetRoot() throws PropertyPosetException {
@@ -298,6 +317,13 @@ public class Relation implements IRelation {
 		}
 		return true;
 	}
+	
+	@Override
+	public void setPropAsALeaf(String propertyName) {
+		Set<String> consequents = new HashSet<String>();
+		consequents.add(propertyName);
+		relation.put(propertyName, consequents);
+	}
 
 	@Override
 	public void updateRelationData() throws PropertyPosetException {
@@ -307,6 +333,18 @@ public class Relation implements IRelation {
 			setLocalRootsAndAtoms();
 			allDataIsUpToDate = true;	
 		}
+	}
+	
+	@Override
+	public int getMaximalRank() throws PropertyPosetException {
+		if (!rankMappingIsUpToDate)
+			setRanks();
+		int maximalRank = 0;
+		for (Integer rank : propertyToRank.values()) {
+			if (rank > maximalRank)
+				maximalRank = rank;
+		}
+		return maximalRank;
 	}
 	
 	/**
@@ -380,14 +418,14 @@ public class Relation implements IRelation {
 			boolean greaterPropIsASuccessor = true;
 			int succIndex = 0;
 			while (greaterPropIsASuccessor == true && succIndex < successors.size()) {
-				if (successors.get(succIndex).contains(greaterProp))
+				if ((relation.get(successors.get(succIndex))).contains(greaterProp))
 					greaterPropIsASuccessor = false;
 				else succIndex++;
 			}
 			if (greaterPropIsASuccessor) {
 				Set<String> falseSuccessors = new HashSet<String>();
 				for (String successor : successors) {
-					if (greaterProp.contains(successor))
+					if ((relation.get(greaterProp)).contains(successor))
 						falseSuccessors.add(successor);
 				}
 				successors.removeAll(falseSuccessors);

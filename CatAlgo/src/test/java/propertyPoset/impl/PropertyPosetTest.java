@@ -4,283 +4,102 @@ import static org.junit.Assert.*;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import grammarModel.exceptions.GrammarModelException;
-import grammarModel.structure.ISyntacticStructure;
+import fca.core.context.binary.BinaryContext;
 import grammarModel.structure.ISyntaxGrove;
-import grammarModel.structure.impl.SyntaxGrove;
-import grammars.seekWhence.branches.Value;
-import grammars.seekWhence.leaves.ValuE;
 import grammars.seekWhence.utils.impl.SwFileReader;
 import propertyPoset.IOriginalPropertyPoset;
+import propertyPoset.IProperty;
+import propertyPoset.IPropertySet;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
-import propertyPoset.utils.IImplication;
-import propertyPoset.utils.impl.Implication;
 
-public class RelationTest {
-	
-	private static ISyntaxGrove trueGrove;
-	private static ISyntaxGrove mockGrove;
-	private IOriginalPropertyPoset truePropPoset;
-	private IOriginalPropertyPoset mockPropPoset;
-	private static IRelation trueRelation;
-	private static IRelation mockRelation;
-	
-	/*
-	 * mockGrove chains :
-	 * grove/2/2
-	 * grove/2/7/7
-	 * grove/2/7/8
-	 * grove/3/3
-	 * grove/3/4/4
-	 * grove/3/4/3
-	 * grove/7/7
-	 * grove/7/8
-	 */
+public class PropertyPosetTest {
+
+	private static ISyntaxGrove grove;
+	private IOriginalPropertyPoset propPoset;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		setTrueGrove();
-		setMockGrove();
+		setGrove();
 	}
 
 	@Before
 	public void setUp() throws Exception {
 		try {
 			//System.out.println(trueGrove.getPosetMaxChains().getChainsInASingleString());
-			truePropPoset = new OriginalPropertyPoset(trueGrove.getPosetMaxChains());
+			propPoset = new OriginalPropertyPoset(grove.getPosetMaxChains());
 		}
 		catch (Exception e) {
-			System.out.println("PropertySetTest : error during OriginalPropertyPoset instantiation, with param 'trueGrove' " 
+			System.out.println("PropertyPoSetTest : error during OriginalPropertyPoset instantiation " 
 					+ System.lineSeparator() + e.getMessage());
-		}
-		trueRelation = truePropPoset.getRelation();
-		try {
-			//System.out.println(grove.getPosetMaxChains().getChainsInASingleString());
-			mockPropPoset = new OriginalPropertyPoset(mockGrove.getPosetMaxChains());
-		}
-		catch (Exception e) {
-			System.out.println("PropertySetTest : error during OriginalPropertyPoset instantiation, with param 'mockGrove' " 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		mockRelation = mockPropPoset.getRelation();
+		}	
 	}
 
 	@Test
-	public void whenImplicationIsAddedThenConsequentCanBeRetreivedAsGreaterProperty() throws PropertyPosetException {
-		Set<String> greaterBefore = mockRelation.getGreaterProperties("2");
-		IImplication impl = new Implication("2", "3");
-		mockRelation.addImplication(impl);;
-		Set<String> greaterNow = mockRelation.getGreaterProperties("2");
-		boolean threeWasntGreaterThen = !greaterBefore.contains("3");
-		boolean threeIsGreaterNow = greaterNow.contains("3");
-		assertTrue(threeWasntGreaterThen && threeIsGreaterNow);
+	public void whenPropertiesRequestedThenNonEmptyPropertySetReturned() {
+		boolean nonEmptyPropSetReturned;
+		IPropertySet propSet = propPoset.getProperties();
+		nonEmptyPropSetReturned = !propSet.getSetOfProperties().isEmpty();
+		assertTrue(nonEmptyPropSetReturned);
 	}
 	
 	@Test
-	public void whenImplicationIsAddedWithTransitivityGuaranteeThenTransitivityVerified() throws PropertyPosetException {
-		boolean ifSmallerThan8ThenDontKnowFor3Before = false;
-		for (String property : mockPropPoset.getProperties().getSetOfPropertyNames()) {
-			if (mockRelation.getGreaterProperties(property).contains("8") 
-					&& !mockRelation.getGreaterProperties(property).contains("3"))
-				ifSmallerThan8ThenDontKnowFor3Before = true;
-		}
-		
-		IImplication impl = new Implication("8", "3");
-		mockRelation.addImplicationEnsureTransitivity(impl);
-		boolean ifSmallerThan8ThenSmallerThan3Now = true;
-		for (String property : mockPropPoset.getProperties().getSetOfPropertyNames()) {
-			if (mockRelation.getGreaterProperties(property).contains("8") 
-					&& !mockRelation.getGreaterProperties(property).contains("3"))
-				ifSmallerThan8ThenSmallerThan3Now = false;
-		}
-		assertTrue(ifSmallerThan8ThenDontKnowFor3Before && ifSmallerThan8ThenSmallerThan3Now);
+	public void whenRelationRequestedThenRelationReturned() {
+		IRelation relation = propPoset.getRelation();
+		assertTrue(relation != null);
 	}
 	
 	@Test
-	public void whenSuccessorRequestedThenReturnedGivenPropertyName() throws PropertyPosetException {
-		Set<String> arithSeq1Succ = trueRelation.getSuccessors("ArithSeq1");
-		boolean expectedSetSize = (arithSeq1Succ.size() == 3);
-		boolean expectedSetElem1 = arithSeq1Succ.contains("ArithSeQ");
-		boolean expectedSetElem2 = arithSeq1Succ.contains("FirstValue1");
-		boolean expectedSetElem3 = arithSeq1Succ.contains("Increment2");
-		assertTrue(expectedSetSize && expectedSetElem1 && expectedSetElem2 && expectedSetElem3);
+	public void whenBinaryContextRequestedThenBinaryContextReturned() throws PropertyPosetException {
+		BinaryContext context = propPoset.getBinaryContext();
+		assertTrue(context != null);
 	}
 	
 	@Test
-	public void whenPredecessorRequestedThenReturnedGivenPropertyName() throws PropertyPosetException {
-		Set<String> arithSeq1Prec = trueRelation.getPredecessors("ArithSeq1");
-		boolean expectedSetSize = (arithSeq1Prec.size() == 1);
-		boolean expectedSetElem = arithSeq1Prec.contains("Relation1");
-		assertTrue(expectedSetSize && expectedSetElem);
-	}
-	
-	@Test
-	public void whenRankRequestedThenReturnedGivenPropertyName() throws PropertyPosetException {
-		boolean incremenTRankIs8 = (trueRelation.getRank("IncremenT") == 8);
-		boolean digitORankIs1 = (trueRelation.getRank("Digit0") == 1);
-		boolean arithSeq2RankIs3 = (trueRelation.getRank("ArithSeq2") == 3);
-		assertTrue(incremenTRankIs8 && digitORankIs1 && arithSeq2RankIs3);		
-	}
-	
-	@Test
-	public void whenDimensionStatusCheckedThenBooleanReturnedGivenPropertyName() 
-			throws PropertyPosetException, GrammarModelException {
-		/*
-		for (String prop : trueGrove.getPosetMaxChains().getProperties()) {
-			if (trueRelation.checkIfDimension(prop))
-				System.out.println(prop);
-		}
-		 */		
-		boolean propRelation2 = trueRelation.checkIfDimension("Relation2");
-		boolean propRelation0 = trueRelation.checkIfDimension("Relation0");
-		boolean propFirstValue1 = trueRelation.checkIfDimension("FirstValue1");
-		boolean propSize1 = trueRelation.checkIfDimension("Size1");
-		boolean propRelatioN = trueRelation.checkIfDimension("RelatioN");
-		boolean propArithSeQ = trueRelation.checkIfDimension("ArithSeQ");
-		boolean prop1 = trueRelation.checkIfDimension("1");
-		boolean propIncremenT = trueRelation.checkIfDimension("IncremenT");
-		boolean prop3 = trueRelation.checkIfDimension("3");
-		boolean propPositioN = trueRelation.checkIfDimension("PositioN");
-		boolean propNoAlterN = trueRelation.checkIfDimension("NoAlterN");
-		boolean prop2 = trueRelation.checkIfDimension("2");
-		boolean propDigiT = trueRelation.checkIfDimension("DigiT");
-		boolean notPropSize0 = !trueRelation.checkIfDimension("Size0");
-		assertTrue(propRelation2 && propRelation0 && propFirstValue1 && propSize1 && propRelatioN && propArithSeQ
-				&& prop1 && propIncremenT && prop3 && propPositioN && propNoAlterN && prop2 && propDigiT && notPropSize0);
-	}
-	
-	@Test
-	public void whenLocalRootStatusCheckedThenBooleanReturnedGivenPropertyName() throws GrammarModelException, PropertyPosetException {
-		/*
-		for (String prop : trueGrove.getPosetMaxChains().getProperties()) {
-			if (trueRelation.checkIfLocalRoot(prop))
-				System.out.println(prop);
-		}
-		*/
-		boolean propSeekWhenceCtxt0 = trueRelation.checkIfLocalRoot("SeekWhenceCtxt0");
-		boolean propRelation2 = trueRelation.checkIfLocalRoot("Relation2");
-		boolean propArithSeq2 = trueRelation.checkIfLocalRoot("ArithSeq2");
-		boolean notSize0 = !trueRelation.checkIfLocalRoot("Size0");
-		assertTrue(propSeekWhenceCtxt0 && propRelation2 && propArithSeq2 && notSize0);
-	}
-	
-	@Test
-	public void whenLocalAtomStatusCheckedThenBooleanReturnedGivenPropertyName() throws GrammarModelException, PropertyPosetException {
-		/*
-		for (String prop : trueGrove.getPosetMaxChains().getProperties()) {
-			if (trueRelation.checkIfLocalAtom(prop))
-				System.out.println(prop);
-		}
-		*/
-		boolean propDigit4 = trueRelation.checkIfLocalAtom("Digit4");
-		boolean propSize0 = trueRelation.checkIfLocalAtom("Size0");
-		boolean notArithSeq1 = !trueRelation.checkIfLocalAtom("ArithSeq1");
-		assertTrue(propDigit4 && propSize0 && notArithSeq1);
-	}
-	
-	@Test
-	public void whenLocalRootRequestedThenReturnedGivenDimensionName() throws PropertyPosetException {
-		boolean arithSeqRootIsRelation2 = (trueRelation.getLocalRoot("ArithSeQ").equals("Relation2"));
-		assertTrue(arithSeqRootIsRelation2);
-	}
-	
-	@Test
-	public void whenLocalRootRequestedThenExceptionThrownGivenNonDimensionPropertyName() {
-		boolean exceptionIsThrown = false;
+	public void whenPosetReductionCalledThenSuperfluousPropertiesRemovedAndEncapsulated() throws PropertyPosetException {
+		boolean requestForSizEAfterReducThrowsException = false;
+		boolean sizeCanBeRetreivedAsEncapsPropertyOfSize1 = false;
+		@SuppressWarnings("unused")
+		IProperty propSizE = propPoset.getProperties().getProperty("SizE");
+		propPoset.reducePoset();
 		try {
-			trueRelation.getLocalRoot("SizE");
+			@SuppressWarnings("unused")
+			IProperty propSizENow = propPoset.getProperties().getProperty("SizE");	
 		}
-		catch (Exception e) {
-			exceptionIsThrown = true;
+		catch (PropertyPosetException e) {
+			requestForSizEAfterReducThrowsException = true;
 		}
-		assertTrue(exceptionIsThrown);
-	}	
-	
-	@Test
-	public void whenPosetLeavesRequestedThenExpectedPropertyNamesReturned() throws PropertyPosetException {
-		Set<String> expectedLeaves = new HashSet<String>();
-		expectedLeaves.add("RelatioN");
-		expectedLeaves.add("SizE");
-		expectedLeaves.add("ArithSeQ");
-		expectedLeaves.add("FirstValuE");
-		expectedLeaves.add("1");
-		expectedLeaves.add("IncremenT");
-		expectedLeaves.add("0");
-		expectedLeaves.add("3");
-		expectedLeaves.add("PositioN");
-		expectedLeaves.add("NoAlterN");
-		expectedLeaves.add("2");
-		expectedLeaves.add("DigiT");
-		Set<String> returnedLeaves = trueRelation.getPosetleaves();
-		assertTrue(expectedLeaves.equals(returnedLeaves));
+		IProperty propSize1 = propPoset.getProperties().getProperty("Size1");
+		Set<IProperty> size1EncapsulatedProp = propSize1.getEncapsulatedProperties();
+		for (IProperty encapsProp : size1EncapsulatedProp) {
+			if (encapsProp.getPropertyName().equals("SizE"))
+				sizeCanBeRetreivedAsEncapsPropertyOfSize1 = true;
+		}
+		assertTrue(requestForSizEAfterReducThrowsException && sizeCanBeRetreivedAsEncapsPropertyOfSize1);
 	}
 	
-	@Test
-	public void whenPropertyRemovalRequestedThenPropertyRemovedGivenPropertyName() throws PropertyPosetException {
-		String root = trueRelation.getPosetRoot();
-		Set<String> predecessorBeforeRemoval = trueRelation.getPredecessors("Relation1");
-		String propToRemove = predecessorBeforeRemoval.iterator().next();
-		trueRelation.removeProperty(propToRemove);
-		Set<String> predecessorAfterRemoval = trueRelation.getPredecessors("Relation1");
-		assertTrue(!predecessorAfterRemoval.equals(predecessorBeforeRemoval) 
-				&& !trueRelation.getGreaterProperties(root).contains(propToRemove));
-	}	
-	
-	private static void setTrueGrove() {
+	private static void setGrove() {
 		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
 		SwFileReader fileReader = new SwFileReader();
 		try {
-			trueGrove = fileReader.getSyntacticGrove(backburnDozen1);
-			trueGrove.markRedundancies();
-			trueGrove.setPosetElementID();
+			grove = fileReader.getSyntacticGrove(backburnDozen1);
+			grove.markRedundancies();
+			grove.setPosetElementID();
 		}
 		catch (Exception e) {
 			System.out.print("PropertySetTest : error during SyntacticGrove instantiation. " + System.lineSeparator() 
 				+ e.getMessage());
 		}
 		// printChains(trueGrove.getListOfSyntacticStringChains());	
-	}
-	
-	private static void setMockGrove() throws GrammarModelException {
-		/*
-		 * mockGrove chains :
-		 * grove/2/2
-		 * grove/2/7/7
-		 * grove/2/7/8
-		 * grove/3/3
-		 * grove/3/4/4
-		 * grove/3/4/3
-		 * grove/7/7
-		 * grove/7/8
-		 */
-		ValuE valuE2 = new ValuE("2");
-		ValuE valuE7 = new ValuE("7");
-		ValuE valuE8 = new ValuE("8");
-		ValuE valuE3 = new ValuE("3");
-		ValuE valuE4 = new ValuE("4");
-		Value value7i8 = new Value(valuE7, valuE8);
-		Value value4i3 = new Value(valuE4, valuE3);
-		Value value2ii7i8 = new Value(valuE2, value7i8);
-		Value value3ii4i3 = new Value(valuE3, value4i3);
-		List<ISyntacticStructure> components = new ArrayList<ISyntacticStructure>();
-		components.add(value2ii7i8);
-		components.add(value3ii4i3);
-		components.add(value7i8);
-		mockGrove = new SyntaxGrove("grove", components);
-		mockGrove.setPosetElementID();
-	}
-	
-	/* truePoset max chains : 
+	}	
+
+	/* poset max chains : 
 SeekWhenceCtxt0/Digit4/DigiT
 SeekWhenceCtxt0/Digit4/Relation2/Size0/Relation1/RelatioN
 SeekWhenceCtxt0/Digit4/Relation2/Size0/Relation1/Size1/SizE
@@ -452,6 +271,6 @@ SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/Increm
 SeekWhenceCtxt0/Digit5/Position5/PositioN
 SeekWhenceCtxt0/Digit5/Position5/NoAlterN
 SeekWhenceCtxt0/Digit5/Position5/3_3/3
-	 */
-
+	 */	
+	
 }

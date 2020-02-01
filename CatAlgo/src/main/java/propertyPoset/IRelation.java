@@ -108,7 +108,8 @@ public interface IRelation {
 	boolean checkIfDimension(String propName) throws PropertyPosetException;
 	
 	/**
-	 * A 'local root' is the infimum of the immediate predecessors of (at least) one dimension.
+	 * A 'local root' is the infimum of the immediate predecessors of (at least) one dimension (so it 
+	 * includes the poset root).
 	 * @param propName the name of a property
 	 * @return true if the property whose name was given in parameter is a local root, false otherwise. 
 	 * @throws PropertyPosetException 
@@ -124,13 +125,21 @@ public interface IRelation {
 	boolean checkIfLocalAtom(String propName) throws PropertyPosetException;	
 	
 	/**
-	 * To avoid errors, the property whose name is given in parameter must return 'true' if its method 
-	 * checkIfDimension() is called. 
+	 * 
 	 * @param dimension the name of a 'dimension' property
 	 * @return the local root of a the dimension whose name has been given in parameter.
 	 * @throws PropertyPosetException 
 	 */
 	String getLocalRoot(String dimension) throws PropertyPosetException;
+	
+	/**
+	 * The maximal roots of a property are the maximal elements among the set of local roots lower than 
+	 * or equal to this property (every root is its own maximal root). 
+	 * @param propName the name of a property
+	 * @return the maximal roots of the property given in parameter
+	 * @throws PropertyPosetException 
+	 */
+	Set<String> getMaximalRoots(String propName) throws PropertyPosetException;
 	
 	/**
 	 * 
@@ -149,6 +158,13 @@ public interface IRelation {
 	Set<String> getPosetleaves() throws PropertyPosetException;
 	
 	/**
+	 * 
+	 * @return the maximal rank value among all the poset elements. 
+	 * @throws PropertyPosetException 
+	 */
+	int getMaximalRank() throws PropertyPosetException;
+	
+	/**
 	 * The only reason why a property should be removed is because it has only one predecessor, and this 
 	 * predecessor is not the root of the poset. It is then identified as a 'superfluous' property.   
 	 * @see IProperty
@@ -164,6 +180,14 @@ public interface IRelation {
 	 * implication has been added or removed.
 	 * @throws PropertyPosetException 
 	 */
+	
+	/**
+	 * This method is especially useful during the 'context extraction procedure' in {@link IPropertyPoset}, 
+	 * since the root of the extracted sub-poset must be turned into a leaf in the original poset. 
+	 * @param propertyName
+	 */
+	void setPropAsALeaf(String propertyName);
+	
 	void updateRelationData() throws PropertyPosetException;
 	
 }
