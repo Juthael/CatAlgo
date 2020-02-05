@@ -20,7 +20,7 @@ import grammarModel.structure.impl.SyntaxGrove;
 import grammars.seekWhence.branches.Value;
 import grammars.seekWhence.leaves.ValuE;
 import grammars.seekWhence.utils.impl.SwFileReader;
-import propertyPoset.IOriginalPropertyPoset;
+import propertyPoset.IPropertyPoset;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
 import propertyPoset.utils.IImplication;
@@ -30,8 +30,8 @@ public class RelationTest {
 	
 	private static ISyntaxGrove trueGrove;
 	private static ISyntaxGrove mockGrove;
-	private IOriginalPropertyPoset truePropPoset;
-	private IOriginalPropertyPoset mockPropPoset;
+	private IPropertyPoset truePropPoset;
+	private IPropertyPoset mockPropPoset;
 	private static IRelation trueRelation;
 	private static IRelation mockRelation;
 	
@@ -57,7 +57,7 @@ public class RelationTest {
 	public void setUp() throws Exception {
 		try {
 			//System.out.println(trueGrove.getPosetMaxChains().getChainsInASingleString());
-			truePropPoset = new OriginalPropertyPoset(trueGrove.getPosetMaxChains());
+			truePropPoset = new PropertyPoset(trueGrove.getPosetMaxChains());
 		}
 		catch (Exception e) {
 			System.out.println("PropertySetTest : error during OriginalPropertyPoset instantiation, with param 'trueGrove' " 
@@ -66,7 +66,7 @@ public class RelationTest {
 		trueRelation = truePropPoset.getRelation();
 		try {
 			//System.out.println(grove.getPosetMaxChains().getChainsInASingleString());
-			mockPropPoset = new OriginalPropertyPoset(mockGrove.getPosetMaxChains());
+			mockPropPoset = new PropertyPoset(mockGrove.getPosetMaxChains());
 		}
 		catch (Exception e) {
 			System.out.println("PropertySetTest : error during OriginalPropertyPoset instantiation, with param 'mockGrove' " 
@@ -167,10 +167,10 @@ public class RelationTest {
 				System.out.println(prop);
 		}
 		*/
-		boolean propSeekWhenceCtxt0 = trueRelation.checkIfLocalRoot("SeekWhenceCtxt0");
-		boolean propRelation2 = trueRelation.checkIfLocalRoot("Relation2");
-		boolean propArithSeq2 = trueRelation.checkIfLocalRoot("ArithSeq2");
-		boolean notSize0 = !trueRelation.checkIfLocalRoot("Size0");
+		boolean propSeekWhenceCtxt0 = trueRelation.checkIfDimensionRoot("SeekWhenceCtxt0");
+		boolean propRelation2 = trueRelation.checkIfDimensionRoot("Relation2");
+		boolean propArithSeq2 = trueRelation.checkIfDimensionRoot("ArithSeq2");
+		boolean notSize0 = !trueRelation.checkIfDimensionRoot("Size0");
 		assertTrue(propSeekWhenceCtxt0 && propRelation2 && propArithSeq2 && notSize0);
 	}
 	
@@ -182,15 +182,15 @@ public class RelationTest {
 				System.out.println(prop);
 		}
 		*/
-		boolean propDigit4 = trueRelation.checkIfLocalAtom("Digit4");
-		boolean propSize0 = trueRelation.checkIfLocalAtom("Size0");
-		boolean notArithSeq1 = !trueRelation.checkIfLocalAtom("ArithSeq1");
+		boolean propDigit4 = trueRelation.checkIfDimensionAtom("Digit4");
+		boolean propSize0 = trueRelation.checkIfDimensionAtom("Size0");
+		boolean notArithSeq1 = !trueRelation.checkIfDimensionAtom("ArithSeq1");
 		assertTrue(propDigit4 && propSize0 && notArithSeq1);
 	}
 	
 	@Test
 	public void whenLocalRootRequestedThenReturnedGivenDimensionName() throws PropertyPosetException {
-		boolean arithSeqRootIsRelation2 = (trueRelation.getLocalRoot("ArithSeQ").equals("Relation2"));
+		boolean arithSeqRootIsRelation2 = (trueRelation.getDimensionRoot("ArithSeQ").equals("Relation2"));
 		assertTrue(arithSeqRootIsRelation2);
 	}
 	
@@ -198,7 +198,7 @@ public class RelationTest {
 	public void whenLocalRootRequestedThenExceptionThrownGivenNonDimensionPropertyName() {
 		boolean exceptionIsThrown = false;
 		try {
-			trueRelation.getLocalRoot("SizE");
+			trueRelation.getDimensionRoot("SizE");
 		}
 		catch (Exception e) {
 			exceptionIsThrown = true;
@@ -230,7 +230,7 @@ public class RelationTest {
 		String root = trueRelation.getPosetRoot();
 		Set<String> predecessorBeforeRemoval = trueRelation.getPredecessors("Relation1");
 		String propToRemove = predecessorBeforeRemoval.iterator().next();
-		trueRelation.removeProperty(propToRemove);
+		trueRelation.removeProperty(truePropPoset.getProperties().getProperty(propToRemove));
 		Set<String> predecessorAfterRemoval = trueRelation.getPredecessors("Relation1");
 		assertTrue(!predecessorAfterRemoval.equals(predecessorBeforeRemoval) 
 				&& !trueRelation.getGreaterProperties(root).contains(propToRemove));

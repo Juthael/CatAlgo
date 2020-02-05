@@ -13,8 +13,8 @@ import org.junit.Test;
 
 import grammarModel.structure.ISyntaxGrove;
 import grammars.seekWhence.utils.impl.SwFileReader;
-import propertyPoset.IOriginalPropertyPoset;
 import propertyPoset.IProperty;
+import propertyPoset.IPropertyPoset;
 import propertyPoset.IPropertySet;
 import propertyPoset.exceptions.PropertyPosetException;
 
@@ -41,10 +41,10 @@ public class PropertySetTest {
 	
 	@Before
 	public void setUp() {
-		IOriginalPropertyPoset propPoset = null;
+		IPropertyPoset propPoset = null;
 		try {
 			//System.out.println(grove.getPosetMaxChains().getChainsInASingleString());
-			propPoset = new OriginalPropertyPoset(grove.getPosetMaxChains());
+			propPoset = new PropertyPoset(grove.getPosetMaxChains());
 		}
 		catch (Exception e) {
 			System.out.println("PropertySetTest : error during OriginalPropertyPoset instantiation." + System.lineSeparator() 

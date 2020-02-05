@@ -10,7 +10,28 @@ import propertyPoset.exceptions.PropertyPosetException;
  * A IPropertyPoset is a partially ordered set whose elements are properties. <br>
  * 
  * As such, it is composed of a {@link IPropertySet} object (unordered set of properties), and of a 
- * {@link IRelation} object (partial order relation on the set of properties). 
+ * {@link IRelation} object (partial order relation on the set of properties). <br>
+ * 
+ * It is also endowed with a (possibly empty) set of IPropertyPoset objects called 'sub-contexts'. 
+ * A 'sub-context' is a IPropertyPoset object built with the set of properties implied by a 'sub-context root'. <br> 
+ * A 'sub-context root' is a minimal element in the set of all 'dimension roots' minus the poset root. <br> 
+ * A 'dimension root' is the infimum of the set of properties that precede a dimension. <br>
+ * A 'dimension' is a sup-reducible element of the poset. <br>  
+ * 
+ * Any constructor of a IPropertyPoset object must ensure that all sub-contexts have been extracted and that there 
+ * exists no more sub-context root in the original poset. This can be achieved by turning all sub-context roots into leaves 
+ * after sub-contexts have been extracted ; all elements that are connected no more to the (ex-) poset root can 
+ * subsequently be removed. <br> 
+ * 
+ * Any constructor of a IPropertyPoset object must also ensure that the poset is displayed in a reduced form, 
+ * i.e. rid of its 'non-informative' elements. <br>
+ * 
+ * A 'non-informative element' is a property B that has a property A as its unique predecessor (and A is not the poset root). 
+ * In this case, when any other element than B implies B, then one knows for sure that it also implies A (in this case, 
+ * people don't even notice B most of the time). Since the set of non-B elements implying the property B is the same than 
+ * the set of elements implying the property A, B provides no additional information and can therefore be removed. It must 
+ * however be kept as an 'encapsulated property' of A in the dedicated field of the class {@link IProperty}. <br>
+ * 
  * @author Gael Tregouet
  *
  */
@@ -24,79 +45,29 @@ public interface IPropertyPoset {
 	
 	/**
 	 * 
-	 * @return the relation on the set of properties.
+	 * @return the relation on the set of properties, implemented as an object mapping every property with the set of its 
+	 * consequents and offering a few more functionalities to identify special elements. 
 	 */
 	IRelation getRelation();
 	
 	/**
 	 * 
-	 * The 'binary context' is actually a binary relation over the set of properties such that (x,y) means 'x implies y'.  
+	 * The 'binary context' is a binary relation over the set of properties such that (x,y) means 'x implies y'.  
 	 * @return a binary context that can be used as an argument for the construction of a lattice with {@link LatticeMiner}. 
 	 * @throws PropertyPosetException 
 	 */
 	BinaryContext getBinaryContext() throws PropertyPosetException;
 	
 	/**
-	 * 
-	 * @return a set of posets, each one being a 'sub-context' of this poset, returned by the method extractSubContexts().
+	 * A 'sub-context' is the set of consequents of a sub-context root. <br>
+	 * A 'sub-context root' is a minimal element in the set of 'all dimension roots minus the poset root'. If this 
+	 * set is empty, then there is no sub-context root and no sub-context. <br>
+	 * A 'dimension root' is the infimum of the set of elements that precede a dimension. <br> 
+	 * A 'dimension' is a sup-reducible element of the poset. <br>
+	 * @return a set of posets, each one being a 'sub-context' of this poset.
 	 * @throws PropertyPosetException 
 	 */
 	Set<IPropertyPoset> getSubContexts() throws PropertyPosetException;
-	
-	
-	/**
-	 * Extracts potential 'sub-contexts' in this poset, i.e. some sub-poset forming a context of its own.
-	 * 
-	 * These sub-posets are then extracted from the original poset and stored as new IPropertyPoset in a dedicated set. 
-	 * The operation is then repeated recursively on these new posets, until no more 'sub-context' is found.<br>   
-	 * 
-	 * That is the case only when all dimensions in any poset have the same 'contextual basis', and this 
-	 * contextual basis is the root of the (lower semi-lattice) poset. <br>
-	 * 
-	 * A 'dimension' of a property poset is a sup-reducible element. The 'contextual basis' (or 'local root') of 
-	 * a dimension is the infimum of its immediate predecessors.  
-	 * 
-	 * @return a set of {@link IPropertyPoset}, with a few additional functionalities. 
-	 * @throws PropertyPosetException 
-	 */
-	void extractSubContexts() throws PropertyPosetException;
-	
-	/**
-	 * A property poset is reduced by removing the contextually superfluous properties. 
-	 * 
-	 * These are properties that are directly implied, in the context, by one and only one other property (if this 
-	 * other property is not the root of the lower semi-lattice) : <br> 
-	 * For example, a property B implied by a property A is superfluous if, when an element of the context has B, then 
-	 * one knows for sure that it also has A (in this case, people don't even notice B most of the time). Since the 
-	 * set of elements having the property B is the same than the set of elements having the property A, B provides no 
-	 * additional information and can therefore be removed. It will however be kept as an 'encapsulated property' 
-	 * of A in the dedicated field of the class {@link IProperty}. <br>
-	 * 
-	 * This method operates by removing any property P that does not fulfill one of the following conditions : <br>
-	 * 1/ P is sup-reducible (and is then called a 'dimension'). <br>
-	 * 2/ P is the infimum of the immediate predecessors of (at least) one dimension (P is then called the 
-	 * 'contextual basis' of this dimension). <br>
-	 * 3/ P is an immediate successor of a contextual basis. <br>
-	 * 
-	 * This method should only be called on a component of the {@link ISetOfPropertyPosets} instance 
-	 * returned by the 'getExtractedContextPosets()' method of {@link IOriginalPropertyPoset}. In this case, the
-	 * only element fulfilling the second condition is the minimum element of the poset.   
-	 *  
-	 * @return true if the poset cardinal has changed, false otherwise.
-	 * @throws PropertyPosetException 
-	 */
-	boolean reducePoset() throws PropertyPosetException;
-	
-	/**
-	 * 
-	 * @return if extractSubContexts() has been called.
-	 */
-	boolean subContextsHaveBeenExtracted();	
-	
-	/**
-	 * 
-	 * @return true if the set reduction has occurred, i.e. if see reducePoset() has been called.
-	 */
-	boolean hasBeenreduced();
+
 
 }

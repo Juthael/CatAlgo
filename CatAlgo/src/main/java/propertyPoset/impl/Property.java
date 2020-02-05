@@ -13,10 +13,6 @@ import propertyPoset.exceptions.PropertyPosetException;
  * Encapsulated properties of a property P are elements removed from the property poset because they 
  * do not not provide any additional information. 
  * 
- * The reason is that, in the context of this poset, they are implied by P and only P (and P is not 
- * the root of the lower semi-lattice) ; therefore, any distinction they allow among the context elements 
- * can also be made using P.
- * 
  * @author Gael Tregouet
  *
  */
@@ -127,19 +123,6 @@ public class Property implements IProperty {
 		}
 		return precProp;
 	}
-	
-	@Override
-	public Set<String> getMaximalRoots(IRelation rel) throws PropertyPosetException{
-		Set<String> maximalRoots;
-		try {
-			maximalRoots = rel.getMaximalRoots(name);
-		}
-		catch (Exception e){
-			throw new PropertyPosetException("Property.getPrecMaximalRoots() : an error has occured." 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		return maximalRoots;
-	}
 
 	@Override
 	public Set<IProperty> getEncapsulatedProperties() {
@@ -173,29 +156,29 @@ public class Property implements IProperty {
 	}
 
 	@Override
-	public boolean isALocalRoot(IRelation rel) throws PropertyPosetException {
-		boolean localRoot;
+	public boolean isADimensionRoot(IRelation rel) throws PropertyPosetException {
+		boolean dimensionRoot;
 		try {
-			localRoot = rel.checkIfLocalRoot(name);
+			dimensionRoot = rel.checkIfDimensionRoot(name);
 		}
 		catch (Exception e) {
-			throw new PropertyPosetException("Property.isALocalRoot() : an error has occured." 
+			throw new PropertyPosetException("Property.isADimensionRoot() : an error has occured." 
 					+ System.lineSeparator() + e.getMessage());
 		}
-		return localRoot;
+		return dimensionRoot;
 	}
 
 	@Override
-	public boolean isALocalAtom(IRelation rel) throws PropertyPosetException {
-		boolean localAtom;
+	public boolean isADimensionAtom(IRelation rel) throws PropertyPosetException {
+		boolean dimensionAtom;
 		try {
-			localAtom = rel.checkIfLocalAtom(name);
+			dimensionAtom = rel.checkIfDimensionAtom(name);
 		}
 		catch (Exception e) {
-			throw new PropertyPosetException("Property.isALocalAtom() : an error has occured." 
+			throw new PropertyPosetException("Property.isADimensionAtom() : an error has occured." 
 					+ System.lineSeparator() + e.getMessage());
 		}
-		return localAtom;
+		return dimensionAtom;
 	}
 	
 	@Override

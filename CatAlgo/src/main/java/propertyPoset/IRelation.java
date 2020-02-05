@@ -2,13 +2,15 @@ package propertyPoset;
 
 import java.util.Set;
 
+import grammarModel.structure.ISyntaxGrove;
 import propertyPoset.exceptions.PropertyPosetException;
 import propertyPoset.utils.IImplication;
+import propertyPoset.utils.IPosetMaxChains;
 
 /**
  * A IRelation is a binary relation on a set of properties. It is endowed with some additional 
  * functionalities, especially methods that can return some special elements of the 
- * set (such as 'dimensions', 'local roots', 'local atoms'). 
+ * set (such as 'dimensions', 'dimension roots', 'dimension atoms'). 
  * 
  * @author Gael Tregouet
  *
@@ -16,33 +18,38 @@ import propertyPoset.utils.IImplication;
 public interface IRelation {
 
 	/**
-	 * Modifies the relation map to take into account the new implication. 
+	 * Modifies the 'relation' map to take into account the new implication. 
 	 * 
 	 * This method does NOT guarantees that the transitivity condition for a relation to be a partial order is 
-	 * fulfilled : if the implication states that a property P implies a property Q, then it is not verified 
+	 * fulfilled : if the implication states that a property P implies a property Q, then it is not ensured 
 	 * that every property implying P is also implying Q. This verification must therefore be taken care of by 
 	 * the calling object.  <br> 
-	 * @param implication is a pair of properties (A,B) ; A being the 'antecedent' and B the 'consequent'. 
-	 * A binary relation is defined by its set of implications.  
+	 * @param implication is a pair of properties (A,B) ; A being the 'antecedent' and B the 'consequent'.   
 	 * @throws PropertyPosetException 
 	 */
 	void addImplication(IImplication implication) throws PropertyPosetException;
 	
 	/**
-	 * Modifies the relation map to take into account the new implication. 
+	 * Modifies the 'relation' map to take into account the new implication. 
 	 * 
 	 * This method guarantees that the transitivity condition for a relation to be a partial order is 
-	 * fulfilled : if the implication states that a property P implies a property Q, then it is verified 
+	 * fulfilled : if the implication states that a property P implies a property Q, then it is ensured 
 	 * that every property implying P is also implying Q.
 	 * @param implication is a pair of properties (A,B) ; A being the 'antecedent' and B the 'consequent'. 
-	 * A binary relation is defined by its set of implications.  
 	 * @throws PropertyPosetException
 	 */
 	public void addImplicationEnsureTransitivity(IImplication implication) throws PropertyPosetException;	
 	
 	/**
-	 * The set of consequents (or implied properties) of a property P is the set of properties greater 
-	 * than P, plus the property P itself (reflexive implication).  
+	 * Turns the property whose name has been given in parameter into a leaf, i.e. a property with no 
+	 * consequent apart from itself.   
+	 * @param subContextRoot the name of a property
+	 */
+	public void setPropAsALeaf(String subContextRoot);	
+	
+	/**
+	 * The set of consequents (or implied properties) of a property P is the set of properties equal to 
+	 * or greater than P.  
 	 * @param propName the name of a property
 	 * @return the properties implied by the one whose name has been given in parameter
 	 * @throws PropertyPosetException 
@@ -50,8 +57,8 @@ public interface IRelation {
 	Set<String> getConsequents(String propName) throws PropertyPosetException;
 	
 	/**
-	 * The set of antecedents (or implying properties) of a property P is the set of properties greater 
-	 * than P, plus the property P itself (reflexive implication).  
+	 * The set of antecedents (or implying properties) of a property P is the set of properties equal to 
+	 * or lesser than P.  
 	 * @param propName the name of a property
 	 * @return the properties implying the one whose name has been given in parameter
 	 * @throws PropertyPosetException 
@@ -77,7 +84,8 @@ public interface IRelation {
 	/**
 	 * 
 	 * @param propName the name of a property.
-	 * @return the names of all the properties that immediately succeed the one whose name has been given in parameter. 
+	 * @return the names of all the properties that immediately succeed the one whose name has been given 
+	 * in parameter. 
 	 * @throws PropertyPosetException 
 	 */
 	Set<String> getSuccessors(String propName) throws PropertyPosetException;
@@ -85,14 +93,15 @@ public interface IRelation {
 	/**
 	 * 
 	 * @param propName the name of a property.
-	 * @return the names of all the properties that immediately precede the one whose name has been given in parameter. 
+	 * @return the names of all the properties that immediately precede the one whose name has been given 
+	 * in parameter. 
 	 * @throws PropertyPosetException 
 	 */
 	Set<String> getPredecessors(String propName) throws PropertyPosetException;
 	
 	/**
-	 * The rank of a property is the maximal length of a spanning chain bounded by the root of the (lower semi-lattice) 
-	 * poset and this property. 
+	 * The rank of a property is the maximal length of a spanning chain bounded by the root of the (lower 
+	 * semi-lattice) poset and this property. 
 	 * @param propName the name of a property
 	 * @return the rank of the property whose name has been given in parameter.
 	 * @throws PropertyPosetException 
@@ -108,46 +117,49 @@ public interface IRelation {
 	boolean checkIfDimension(String propName) throws PropertyPosetException;
 	
 	/**
-	 * A 'local root' is the infimum of the immediate predecessors of (at least) one dimension (so it 
-	 * includes the poset root).
+	 * A 'dimension root' is the infimum of the immediate predecessors of at least one dimension.
+	 * A 'dimension' is a sup-reducible element of the property poset.
 	 * @param propName the name of a property
-	 * @return true if the property whose name was given in parameter is a local root, false otherwise. 
+	 * @return true if the property whose name was given in parameter is a dimension root, false otherwise. 
 	 * @throws PropertyPosetException 
 	 */
-	boolean checkIfLocalRoot(String propName) throws PropertyPosetException;
+	boolean checkIfDimensionRoot(String propName) throws PropertyPosetException;
 	
 	/**
-	 * A 'local atom' is a successor of a local root.
+	 * A 'dimension atom' is a successor of a dimension root.
 	 * @param propName the name of a property
-	 * @return true if the property whose name was given in parameter is a local atom, false otherwise. 
+	 * @return true if the property whose name was given in parameter is a dimension atom, false otherwise. 
 	 * @throws PropertyPosetException 
 	 */
-	boolean checkIfLocalAtom(String propName) throws PropertyPosetException;	
+	boolean checkIfDimensionAtom(String propName) throws PropertyPosetException;	
 	
 	/**
 	 * 
+	 * @return the name of the poset 'root', or unique minimal element. Since it is supposed to be built
+	 * from the {@link IPosetMaxChains} generated by a {@link ISyntaxGrove}, the poset has to be a lower 
+	 * semi-lattice, and therefore have a minimum.
+	 * @throws PropertyPosetException 
+	 */
+	String getPosetRoot() throws PropertyPosetException;	
+	
+	/**
+	 * A 'dimension root' is the infimum of the immediate predecessors of at least one dimension.
+	 * A 'dimension' is a sup-reducible element of the property poset.
 	 * @param dimension the name of a 'dimension' property
-	 * @return the local root of a the dimension whose name has been given in parameter.
+	 * @return the dimension root of a the dimension whose name has been given in parameter.
 	 * @throws PropertyPosetException 
 	 */
-	String getLocalRoot(String dimension) throws PropertyPosetException;
+	String getDimensionRoot(String dimension) throws PropertyPosetException;	
 	
 	/**
-	 * The maximal roots of a property are the maximal elements among the set of local roots lower than 
-	 * or equal to this property (every root is its own maximal root). 
-	 * @param propName the name of a property
-	 * @return the maximal roots of the property given in parameter
-	 * @throws PropertyPosetException 
+	 * In the set of 'dimension roots minus the poset root', a sub-context root is an minimal element. 
+	 * Every dimension (i.e., sup-reducible element) has a dimension root, defined as the infimum of its 
+	 * predecessors. A dimension root can be associated with many dimensions. The poset root may or 
+	 * may not be a dimension root. 
+	 * @return the (possibly empty) set of sub-context roots. 
+	 * @throws PropertyPosetException
 	 */
-	Set<String> getMaximalRoots(String propName) throws PropertyPosetException;
-	
-	/**
-	 * 
-	 * @return the name of the poset 'root', or unique minimal element. Since it is generated from a syntax
-	 * tree, the poset has to be a lower semi-lattice.
-	 * @throws PropertyPosetException 
-	 */
-	String getPosetRoot() throws PropertyPosetException;
+	Set<String> getSubContextRoots() throws PropertyPosetException;	
 	
 	/**
 	 * 
@@ -165,29 +177,23 @@ public interface IRelation {
 	int getMaximalRank() throws PropertyPosetException;
 	
 	/**
-	 * The only reason why a property should be removed is because it has only one predecessor, and this 
-	 * predecessor is not the root of the poset. It is then identified as a 'superfluous' property.   
+	 * After this method has proceeded, the name of the property given in parameter can neither be found in the 
+	 * relation as an antecedent, nor as a consequent of any other property. 
+	 * However, a {@link IProperty} object can be protected from removal (because it is the root of a 
+	 * {@link IPropertyPoset} instance's subcontext). In this case, nothing happens.    
 	 * @see IProperty
 	 * @see IPropertyPoset
-	 * @param propertyName the name of the property to be removed. 
+	 * @param property the element to remove 
 	 * @return true if the property has actually been removed. 
 	 * @throws PropertyPosetException 
 	 */
-	boolean removeProperty(String propertyName) throws PropertyPosetException;
+	boolean removeProperty(IProperty property) throws PropertyPosetException;
 	
 	/**
-	 * Makes sure that all data are up to date by recalculating them. Should be called after one (or more) 
+	 * Makes sure that all data are up to date by recalculating them. Must be called after one (or more) 
 	 * implication has been added or removed.
 	 * @throws PropertyPosetException 
-	 */
-	
-	/**
-	 * This method is especially useful during the 'context extraction procedure' in {@link IPropertyPoset}, 
-	 * since the root of the extracted sub-poset must be turned into a leaf in the original poset. 
-	 * @param propertyName
-	 */
-	void setPropAsALeaf(String propertyName);
-	
+	 */	
 	void updateRelationData() throws PropertyPosetException;
 	
 }

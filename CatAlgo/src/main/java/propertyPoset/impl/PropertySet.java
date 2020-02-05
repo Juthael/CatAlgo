@@ -29,7 +29,7 @@ public class PropertySet implements IPropertySet {
 	/**
 	 * 
 	 * @param setOfPropNames a set of property names
-	 * @param thisIsASetOfString boolean only used to have a distinct signature for this constructor
+	 * @param thisIsASetOfString boolean only used to have a distinct signature for this constructor.
 	 */
 	public PropertySet(Set<String> setOfPropNames, boolean thisIsASetOfStrings) {
 		setOfIProperties = new HashSet<IProperty>();
@@ -88,24 +88,29 @@ public class PropertySet implements IPropertySet {
 	}
 
 	@Override
-	public boolean removeProperty(String propertyName, String antecedent) throws PropertyPosetException {
+	public IProperty removeProperty(String propertyName, String antecedent) throws PropertyPosetException {
+		IProperty propToRemove; 
+		try {
+			propToRemove = getProperty(propertyName);
+		}
+		catch (Exception e){
+			throw new PropertyPosetException("the property to remove '" + propertyName + "' cannot be found." );
+		}
 		boolean removed = false;
-		if (getProperty(propertyName).isRemovable()) {
-			IProperty removedProperty;
-			IProperty antecedentProperty;
+		if (propToRemove.isRemovable()) {
 			try {
-				removedProperty = getProperty(propertyName);
-				removed = setOfIProperties.remove(getProperty(propertyName));
+				removed = setOfIProperties.remove(propToRemove);
 				if (!removed)
 					throw new PropertyPosetException("the property " + propertyName + " hasn't been removed.");
 				else {
+					IProperty antecedentProperty;
 					try {
 						antecedentProperty = getProperty(antecedent);
 					}
 					catch (Exception e) {
-						throw new PropertyPosetException("the antecedent property " + antecedent + " cannot be retreived." );
+						throw new PropertyPosetException("the antecedent property " + antecedent + " cannot be found." );
 					}
-					antecedentProperty.addEncapsulatedProp(removedProperty);
+					antecedentProperty.addEncapsulatedProp(propToRemove);
 				}
 			}
 			catch (Exception e) {
@@ -113,23 +118,22 @@ public class PropertySet implements IPropertySet {
 						+ System.lineSeparator() + e.getMessage());
 			}
 		}
-		return removed;
+		return propToRemove;
 	}
 
 	@Override
-	public boolean removeProperty(String propertyName) throws PropertyPosetException {
-		boolean propertyRemoved = false;
-		if (getProperty(propertyName).isRemovable()) {
+	public IProperty removeProperty(String propertyName) throws PropertyPosetException {
+		IProperty propToRemove = getProperty(propertyName);
+		if (propToRemove.isRemovable()) {
 			try {
-				setOfIProperties.remove(getProperty(propertyName));
-				propertyRemoved = true;
+				setOfIProperties.remove(propToRemove);
 			}
 			catch (Exception e) {
 				throw new PropertyPosetException("PropertySet.removeProperty() : the property '" + propertyName 
 						+ "' cannot be removed." + System.lineSeparator() + e.getMessage());
 			}
 		}
-		return propertyRemoved;
+		return propToRemove;
 	}
 
 }

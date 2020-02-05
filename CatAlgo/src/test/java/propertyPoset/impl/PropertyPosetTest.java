@@ -13,8 +13,8 @@ import org.junit.Test;
 import fca.core.context.binary.BinaryContext;
 import grammarModel.structure.ISyntaxGrove;
 import grammars.seekWhence.utils.impl.SwFileReader;
-import propertyPoset.IOriginalPropertyPoset;
 import propertyPoset.IProperty;
+import propertyPoset.IPropertyPoset;
 import propertyPoset.IPropertySet;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
@@ -22,7 +22,7 @@ import propertyPoset.exceptions.PropertyPosetException;
 public class PropertyPosetTest {
 
 	private static ISyntaxGrove grove;
-	private IOriginalPropertyPoset propPoset;
+	private IPropertyPoset propPoset;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -33,7 +33,7 @@ public class PropertyPosetTest {
 	public void setUp() throws Exception {
 		try {
 			//System.out.println(trueGrove.getPosetMaxChains().getChainsInASingleString());
-			propPoset = new OriginalPropertyPoset(grove.getPosetMaxChains());
+			propPoset = new PropertyPoset(grove.getPosetMaxChains());
 		}
 		catch (Exception e) {
 			System.out.println("PropertyPoSetTest : error during OriginalPropertyPoset instantiation " 
@@ -67,7 +67,6 @@ public class PropertyPosetTest {
 		boolean sizeCanBeRetreivedAsEncapsPropertyOfSize1 = false;
 		@SuppressWarnings("unused")
 		IProperty propSizE = propPoset.getProperties().getProperty("SizE");
-		propPoset.reducePoset();
 		try {
 			@SuppressWarnings("unused")
 			IProperty propSizENow = propPoset.getProperties().getProperty("SizE");	
