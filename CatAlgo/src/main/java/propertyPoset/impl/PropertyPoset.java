@@ -52,14 +52,14 @@ public class PropertyPoset implements IPropertyPoset {
 		set = new PropertySet(setOfPropNames, true);
 		this.relation = relation;
 		try {
-			extractSubContexts();
+			//extractSubContexts();
 		}
 		catch (Exception e) {
 			throw new PropertyPosetException("PropertyPoset(2args) : sub-context extraction failed. " 
 					+ System.lineSeparator() + e.getMessage());
 		}
 		try {
-			reducePoset();
+			//reducePoset();
 		}
 		catch (Exception e) {
 			throw new PropertyPosetException("PropertyPoset(2args) : poset reduction failed. " 
@@ -88,14 +88,14 @@ public class PropertyPoset implements IPropertyPoset {
 			throw new PropertyPosetException("PropertyPoset() : error while adding an implication");
 		}
 		try {
-			extractSubContexts();
+			//extractSubContexts();
 		}
 		catch (Exception e) {
 			throw new PropertyPosetException("PropertyPoset() : sub-context extraction failed. " 
 					+ System.lineSeparator() + e.getMessage());
 		}
 		try {
-			reducePoset();
+			//reducePoset();
 		}
 		catch (Exception e) {
 			throw new PropertyPosetException("PropertyPoset() : poset reduction failed. " 
@@ -116,6 +116,26 @@ public class PropertyPoset implements IPropertyPoset {
 	@Override
 	public BinaryContext getBinaryContext() throws PropertyPosetException {
 		BinaryContext context;
+		if (!subContextsExtracted) {
+			try {
+				extractSubContexts();
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("PropertyPoset.getBinaryContext() : error during sub-contexts extraction."
+						+ System.lineSeparator() + "Cannot proceed if sub-contexts haven't been extracted." 
+						+ System.lineSeparator() + e.getMessage());
+			}
+		}
+		if (!posetReduced) {
+			try {
+				reducePoset();
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("PropertyPoset.getBinaryContext() : error during poset reduction."
+						+ System.lineSeparator() + "Cannot proceed if poset hasn't been reduced." 
+						+ System.lineSeparator() + e.getMessage());
+			}
+		}
 		String posetName = relation.getPosetRoot();
 		Vector<String> properties = new Vector<String>(set.getSetOfPropertyNames());
 		Vector<Vector<String>> values = new Vector<Vector<String>>();
@@ -141,20 +161,58 @@ public class PropertyPoset implements IPropertyPoset {
 		return subContexts;
 	}	
 	
-	/**
-	 * Extracts potential 'sub-contexts' in this poset. 
-	 * 
-	 * These sub-posets are extracted from the original poset and stored as new IPropertyPoset in a dedicated set. 
-	 * The operation is then repeated recursively on these new posets, until no more 'sub-context' is found.<br>   
-	 * 
-	 * That is the case only when all dimensions in any poset have the same 'root'. <br>
-	 * 
-	 * A 'dimension' of a property poset is a sup-reducible element. The 'root' of a dimension is the infimum 
-	 * of its immediate predecessors.  
-	 * 
-	 * @throws PropertyPosetException 
-	 */
-	private void extractSubContexts() throws PropertyPosetException {
+	@Override
+	public void reducePoset() throws PropertyPosetException {
+		try {
+			if (!subContextsExtracted)
+				extractSubContexts();
+		}
+		catch (Exception e) {
+			throw new PropertyPosetException("PropertyPoset.reducePoset() : error during sub-contexts extraction." 
+					+ System.lineSeparator() + "Cannot proceed if sub-contexts haven't been extracted." 
+					+ System.lineSeparator() + e.getMessage());
+		}
+		Set<String> propsToRemove = new HashSet<String>();
+		List<String> listOfPropsToRemove;
+		for (IProperty property : set.getSetOfProperties()) {
+			try {
+				if (!property.isADimension(relation) && !property.isADimensionRoot(relation) && !property.isADimensionAtom(relation))
+					propsToRemove.add(property.getPropertyName());
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("PropertyPoset.reducePoset() : property " + property.getPropertyName() 
+					+ "cannot be tested." + System.lineSeparator() + e.getMessage());
+			}
+		}
+		try {
+			listOfPropsToRemove = orderPropsByDecreasingRank(propsToRemove);
+		}
+		catch (Exception e) {
+			throw new PropertyPosetException("PropertyPoset.reducePoset() : properties to be removed "
+					+ "cannot be ordered." + System.lineSeparator() + e.getMessage());
+		}
+		for (String property : listOfPropsToRemove) {
+			List<String> predecessors = new ArrayList<String>(relation.getPredecessors(property));
+			String predecessor;
+			if (predecessors.size() != 1) {
+				throw new PropertyPosetException("PropertyPoset.reducePoset() error : if property '" + property
+						+ "' is removable, then it cannot have " + Integer.toString(predecessors.size()) + " predecessors.");
+			}
+			else predecessor = predecessors.get(0);
+			try {
+				relation.removeProperty(set.removeProperty(property, predecessor));
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("PropertyPoset.reducePoset() : removal of property '" + property 
+						+ "' failed.");
+			}
+		}
+		relation.updateRelationData();
+		posetReduced = true;
+	}	
+	
+	@Override
+	public void extractSubContexts() throws PropertyPosetException {
 		Set<IProperty> subContextRoots;
 		try {
 			subContextRoots = getSubContextRoots();
@@ -260,68 +318,6 @@ public class PropertyPoset implements IPropertyPoset {
 			}
 		}
 		return orderedProps;
-	}
-	
-
-	
-	/**
-	 * A property poset is reduced by removing the contextually non-informative properties. 
-	 * 
-	 * A 'non-informative element' is a property B that has a property A as its unique predecessor (and A is not the poset root). 
-	 * In this case, when any other element than B implies B, then one knows for sure that it also implies A (in this case, 
-	 * people don't even notice B most of the time). Since the set of non-B elements implying the property B is the same than 
-	 * the set of elements implying the property A, B provides no additional information and can therefore be removed. It must 
-	 * however be kept as an 'encapsulated property' of A in the dedicated field of the class {@link IProperty}. <br>
-	 * 
-	 * This method operates by removing any property P that does not fulfill one of the following conditions : <br>
-	 * 1/ P is sup-reducible (and is then called a 'dimension'). <br>
-	 * 2/ P is the infimum of the immediate predecessors of (at least) one dimension (P is then called the 
-	 * 'contextual basis' of this dimension, or its 'root'). <br>
-	 * 3/ P is an immediate successor of a contextual basis. <br>
-	 *  
-	 * @return true if the poset cardinal has changed, false otherwise.
-	 * @throws PropertyPosetException 
-	 */
-	private boolean reducePoset() throws PropertyPosetException {
-		if (!subContextsExtracted)
-			extractSubContexts();
-		Set<String> propsToRemove = new HashSet<String>();
-		List<String> listOfPropsToRemove;
-		for (IProperty property : set.getSetOfProperties()) {
-			try {
-				if (!property.isADimension(relation) && !property.isADimensionRoot(relation) && !property.isADimensionAtom(relation))
-					propsToRemove.add(property.getPropertyName());
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("PropertyPoset.reducePoset() : property " + property.getPropertyName() 
-					+ "cannot be tested." + System.lineSeparator() + e.getMessage());
-			}
-		}
-		try {
-			listOfPropsToRemove = orderPropsByDecreasingRank(propsToRemove);
-		}
-		catch (Exception e) {
-			throw new PropertyPosetException("PropertyPoset.reducePoset() : properties to be removed "
-					+ "cannot be ordered." + System.lineSeparator() + e.getMessage());
-		}
-		for (String property : listOfPropsToRemove) {
-			List<String> predecessors = new ArrayList<String>(relation.getPredecessors(property));
-			String predecessor;
-			if (predecessors.size() != 1) {
-				throw new PropertyPosetException("PropertyPoset.reducePoset() error : if property '" + property
-						+ "' is removable, then it cannot have " + Integer.toString(predecessors.size()) + " predecessors.");
-			}
-			else predecessor = predecessors.get(0);
-			try {
-				relation.removeProperty(set.removeProperty(property, predecessor));
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("PropertyPoset.reducePoset() : removal of property '" + property 
-						+ "' failed.");
-			}
-		}
-		relation.updateRelationData();
-		return true;
 	}	
 	
 	/**

@@ -67,6 +67,7 @@ public class PropertyPosetTest {
 		boolean sizeCanBeRetreivedAsEncapsPropertyOfSize1 = false;
 		@SuppressWarnings("unused")
 		IProperty propSizE = propPoset.getProperties().getProperty("SizE");
+		propPoset.reducePoset();
 		try {
 			@SuppressWarnings("unused")
 			IProperty propSizENow = propPoset.getProperties().getProperty("SizE");	
