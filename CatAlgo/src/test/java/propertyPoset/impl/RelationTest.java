@@ -160,10 +160,10 @@ public class RelationTest {
 	}
 	
 	@Test
-	public void whenLocalRootStatusCheckedThenBooleanReturnedGivenPropertyName() throws GrammarModelException, PropertyPosetException {
+	public void whenDimensionRootStatusCheckedThenBooleanReturnedGivenPropertyName() throws GrammarModelException, PropertyPosetException {
 		/*
 		for (String prop : trueGrove.getPosetMaxChains().getProperties()) {
-			if (trueRelation.checkIfLocalRoot(prop))
+			if (trueRelation.checkIfDimensionRoot(prop))
 				System.out.println(prop);
 		}
 		*/
@@ -175,10 +175,10 @@ public class RelationTest {
 	}
 	
 	@Test
-	public void whenLocalAtomStatusCheckedThenBooleanReturnedGivenPropertyName() throws GrammarModelException, PropertyPosetException {
+	public void whenDimensionAtomStatusCheckedThenBooleanReturnedGivenPropertyName() throws GrammarModelException, PropertyPosetException {
 		/*
 		for (String prop : trueGrove.getPosetMaxChains().getProperties()) {
-			if (trueRelation.checkIfLocalAtom(prop))
+			if (trueRelation.checkIfDimensionAtom(prop))
 				System.out.println(prop);
 		}
 		*/
@@ -189,13 +189,13 @@ public class RelationTest {
 	}
 	
 	@Test
-	public void whenLocalRootRequestedThenReturnedGivenDimensionName() throws PropertyPosetException {
+	public void whenDimensionRootRequestedThenReturnedGivenDimensionName() throws PropertyPosetException {
 		boolean arithSeqRootIsRelation2 = (trueRelation.getDimensionRoot("ArithSeQ").equals("Relation2"));
 		assertTrue(arithSeqRootIsRelation2);
 	}
 	
 	@Test
-	public void whenLocalRootRequestedThenExceptionThrownGivenNonDimensionPropertyName() {
+	public void whenDimensionRootRequestedThenExceptionThrownGivenNonDimensionPropertyName() {
 		boolean exceptionIsThrown = false;
 		try {
 			trueRelation.getDimensionRoot("SizE");
@@ -205,6 +205,14 @@ public class RelationTest {
 		}
 		assertTrue(exceptionIsThrown);
 	}	
+	
+	@Test
+	public void whenSubContextRootsRequestedThenExpectedPropReturned() throws PropertyPosetException {
+		Set<String> expectedSubContextRoots = new HashSet<String>();
+		expectedSubContextRoots.add("Relation2");
+		Set<String> subContextRoots = trueRelation.getSubContextRoots();
+		assertTrue(expectedSubContextRoots.equals(subContextRoots));
+	}
 	
 	@Test
 	public void whenPosetLeavesRequestedThenExpectedPropertyNamesReturned() throws PropertyPosetException {
@@ -226,6 +234,11 @@ public class RelationTest {
 	}
 	
 	@Test
+	public void whenMaximalRankRequestedThenExpectedRankReturned() throws PropertyPosetException {
+		assertTrue(mockRelation.getMaximalRank() == 3);
+	}
+	
+	@Test
 	public void whenPropertyRemovalRequestedThenPropertyRemovedGivenPropertyName() throws PropertyPosetException {
 		String root = trueRelation.getPosetRoot();
 		Set<String> predecessorBeforeRemoval = trueRelation.getPredecessors("Relation1");
@@ -235,6 +248,39 @@ public class RelationTest {
 		assertTrue(!predecessorAfterRemoval.equals(predecessorBeforeRemoval) 
 				&& !trueRelation.getGreaterProperties(root).contains(propToRemove));
 	}	
+	
+	@Test
+	public void whenUpdateIsCalledThenUpdateOnRanksAndDimensionsAndRootsAndAtoms() throws PropertyPosetException {
+		String dimension = "RelatioN";
+		String propToRemove = "Relation2";
+		int dimensionRankBeforeModif = trueRelation.getRank(dimension);
+		String dimensionRootBeforeModif = trueRelation.getDimensionRoot(dimension);
+		Set<String> setOfAtomsBeforeModif = new HashSet<String>();
+		for (String prop : truePropPoset.getProperties().getSetOfPropertyNames()) {
+			if (trueRelation.checkIfDimensionAtom(prop))
+				setOfAtomsBeforeModif.add(prop);
+		}
+		trueRelation.removeProperty(truePropPoset.getProperties().removeProperty(propToRemove));
+		trueRelation.updateRelationData();
+		int dimensionRankAfterModif = trueRelation.getRank(dimension);
+		/*
+		 * Note : the 'dimensionRootAfterModif' value is inconsistent in regards to the relation. 
+		 * There shouldn't actually be any dimension root value since after the removal of 
+		 * "Relation2", the set of predecessors of the dimension "RelatioN" is inf-irreducible. 
+		 * This is because "Relation2" is a non-maximal element of the poset, so if it is removed 
+		 * then every element of its upper set should be removed too. Here it is not, so 
+		 * the poset isn't a lower semi-lattice anymore, hence this inconsistent behavior. 
+		 */
+		String dimensionRootAfterModif = trueRelation.getDimensionRoot(dimension);
+		Set<String> setOfAtomsAfterModif = new HashSet<String>();
+		for (String prop : truePropPoset.getProperties().getSetOfPropertyNames()) {
+			if (trueRelation.checkIfDimensionAtom(prop))
+				setOfAtomsAfterModif.add(prop);
+		}
+		assertTrue(dimensionRankBeforeModif != dimensionRankAfterModif 
+				&& !dimensionRootBeforeModif.equals(dimensionRootAfterModif)
+				&& !setOfAtomsBeforeModif.equals(setOfAtomsAfterModif));
+	}
 	
 	private static void setTrueGrove() {
 		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");

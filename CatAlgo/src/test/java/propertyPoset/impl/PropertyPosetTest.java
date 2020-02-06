@@ -62,7 +62,7 @@ public class PropertyPosetTest {
 	}
 	
 	@Test
-	public void whenPosetReductionCalledThenSuperfluousPropertiesRemovedAndEncapsulated() throws PropertyPosetException {
+	public void whenPosetReductionCalledThenNonInformativePropertiesRemovedAndEncapsulated() throws PropertyPosetException {
 		boolean requestForSizEAfterReducThrowsException = false;
 		boolean sizeCanBeRetreivedAsEncapsPropertyOfSize1 = false;
 		@SuppressWarnings("unused")
@@ -82,6 +82,49 @@ public class PropertyPosetTest {
 				sizeCanBeRetreivedAsEncapsPropertyOfSize1 = true;
 		}
 		assertTrue(requestForSizEAfterReducThrowsException && sizeCanBeRetreivedAsEncapsPropertyOfSize1);
+	}
+	
+	@Test
+	public void whenSubContextExtractionCalledThenExpectedSubContextsExtracted() throws PropertyPosetException {
+		boolean expectedSubCon;
+		boolean expectedSubSubCon;
+		boolean noSubSubSubCon;
+		propPoset.extractSubContexts();
+		Set<IPropertyPoset> subContexts = propPoset.getSubContexts();
+		if (subContexts.size() != 1) {
+			expectedSubCon = false;
+			expectedSubSubCon = false;
+			noSubSubSubCon = false;
+		}
+		else {
+			IPropertyPoset subContext = subContexts.iterator().next();
+			if (!subContext.getRelation().getPosetRoot().equals("Relation2")) {
+				expectedSubCon = false;
+				expectedSubSubCon = false;
+				noSubSubSubCon = false;
+			}
+			else {
+				expectedSubCon = true;
+				Set<IPropertyPoset> subSubContexts = subContext.getSubContexts();
+				if (subContexts.size() != 1) {
+					expectedSubSubCon = false;
+					noSubSubSubCon = false;
+				}
+				else {
+					IPropertyPoset subSubContext = subSubContexts.iterator().next();
+					if (!subSubContext.getRelation().getPosetRoot().equals("ArithSeq2")) {
+						expectedSubSubCon = false;
+						noSubSubSubCon = false;
+					}
+					else {
+						expectedSubSubCon = true;
+						noSubSubSubCon = (subSubContext.getSubContexts().size() == 0);
+					}
+					
+				}
+			}
+		}
+		assertTrue(expectedSubCon && expectedSubSubCon && noSubSubSubCon);
 	}
 	
 	private static void setGrove() {

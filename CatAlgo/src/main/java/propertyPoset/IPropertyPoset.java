@@ -13,7 +13,7 @@ import propertyPoset.exceptions.PropertyPosetException;
  * {@link IRelation} object (partial order relation on the set of properties). <br>
  * 
  * It may also contain 'sub-contexts', i.e. IPropertyPoset components instantiated by the 'extractSubContexts()' 
- * methods (only if the method is called, and if the poset allows it). 
+ * methods (only if the method is called, and if 'sub-contexts' can be found in the poset). 
  * 
  * @author Gael Tregouet
  *

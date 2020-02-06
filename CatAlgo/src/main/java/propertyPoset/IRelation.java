@@ -30,7 +30,7 @@ public interface IRelation {
 	void addImplication(IImplication implication) throws PropertyPosetException;
 	
 	/**
-	 * Modifies the 'relation' map to take into account the new implication. 
+	 * Modifies the 'relation' map to take into account the new implication while ensuring transitivity. 
 	 * 
 	 * This method guarantees that the transitivity condition for a relation to be a partial order is 
 	 * fulfilled : if the implication states that a property P implies a property Q, then it is ensured 
@@ -152,7 +152,9 @@ public interface IRelation {
 	String getDimensionRoot(String dimension) throws PropertyPosetException;	
 	
 	/**
-	 * In the set of 'dimension roots minus the poset root', a sub-context root is an minimal element. 
+	 * A sub-context root is a minimal element in the (possibly empty) set of 'dimension roots minus the 
+	 * poset root'.
+	 *  
 	 * Every dimension (i.e., sup-reducible element) has a dimension root, defined as the infimum of its 
 	 * predecessors. A dimension root can be associated with many dimensions. The poset root may or 
 	 * may not be a dimension root. 
@@ -177,10 +179,14 @@ public interface IRelation {
 	int getMaximalRank() throws PropertyPosetException;
 	
 	/**
-	 * After this method has proceeded, the name of the property given in parameter can neither be found in the 
+	 * After this method has been called, the name of the property given in parameter can neither be found in the 
 	 * relation as an antecedent, nor as a consequent of any other property. 
 	 * However, a {@link IProperty} object can be protected from removal (because it is the root of a 
-	 * {@link IPropertyPoset} instance's subcontext). In this case, nothing happens.    
+	 * {@link IPropertyPoset} instance's subcontext). In this case, nothing happens. 
+	 * 
+	 * Warning : if an non-maximal element of the poset is removed and any element of its upper set is not, then 
+	 * the poset may not be a lower semi-lattice anymore, which can lead to inconsistent behavior. 
+	 * 
 	 * @see IProperty
 	 * @see IPropertyPoset
 	 * @param property the element to remove 

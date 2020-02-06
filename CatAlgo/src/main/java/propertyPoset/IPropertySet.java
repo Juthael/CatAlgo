@@ -41,8 +41,8 @@ public interface IPropertySet {
 	Set<IProperty> getSubsetOfProperties(Set<String> propertyNames) throws PropertyPosetException;
 	
 	/**
-	 * This method is called in order to remove from the set a 'non-informative' property, while keeping 
-	 * track of it nonetheless. <br> 
+	 * This method is called in order to remove from the set a 'non-informative' property, and nonetheless 
+	 * keeping track of it. <br> 
 	 * A property is non-informative if it is not an atom of the (lower semi-lattice) property poset, and 
 	 * if it is implied by a single predecessor, called its 'antecedent'.
 	 * After its removal, the non-informative property is stored as an 'encapsulated property' in the dedicated 

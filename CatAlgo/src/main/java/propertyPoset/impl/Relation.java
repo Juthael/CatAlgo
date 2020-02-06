@@ -16,7 +16,7 @@ import propertyPoset.utils.IImplication;
 /**
  * A Relation is an implementation of a binary relation on a set of properties. It is endowed with some additional 
  * functionalities, especially methods that can return some special elements of the set (such as 'dimensions', 
- * 'local roots', 'local atoms'). 
+ * 'dimension roots', 'dimension atoms'). 
  * 
  * @author Gael Tregouet
  *
@@ -343,6 +343,11 @@ public class Relation implements IRelation {
 			relation.remove(propertyName);
 			for (Set<String> consequents : relation.values())
 				consequents.remove(propertyName);
+			dimensions.remove(propertyName);
+			dimensionRoots.remove(propertyName);
+			dimensionAtoms.remove(propertyName);
+			dimensionToRoot.remove(propertyName);
+			propertyToRank.remove(propertyName);
 			propertyRemoved = true;
 			allDataIsUpToDate = false;
 			rankMappingIsUpToDate = false;

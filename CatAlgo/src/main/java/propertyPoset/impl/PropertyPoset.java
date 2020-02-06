@@ -35,7 +35,7 @@ public class PropertyPoset implements IPropertyPoset {
 
 	private IPropertySet set;
 	private IRelation relation;
-	private Set<IPropertyPoset> subContexts;
+	private Set<IPropertyPoset> subContexts = new HashSet<IPropertyPoset>();
 	private boolean subContextsExtracted = false;
 	private boolean posetReduced = false;
 	
@@ -51,20 +51,6 @@ public class PropertyPoset implements IPropertyPoset {
 	public PropertyPoset(Set<String> setOfPropNames, IRelation relation) throws PropertyPosetException {
 		set = new PropertySet(setOfPropNames, true);
 		this.relation = relation;
-		try {
-			//extractSubContexts();
-		}
-		catch (Exception e) {
-			throw new PropertyPosetException("PropertyPoset(2args) : sub-context extraction failed. " 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		try {
-			//reducePoset();
-		}
-		catch (Exception e) {
-			throw new PropertyPosetException("PropertyPoset(2args) : poset reduction failed. " 
-					+ System.lineSeparator() + e.getMessage());
-		}
 	}
 	
 	/**
@@ -87,20 +73,6 @@ public class PropertyPoset implements IPropertyPoset {
 		catch (Exception e) {
 			throw new PropertyPosetException("PropertyPoset() : error while adding an implication");
 		}
-		try {
-			//extractSubContexts();
-		}
-		catch (Exception e) {
-			throw new PropertyPosetException("PropertyPoset() : sub-context extraction failed. " 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		try {
-			//reducePoset();
-		}
-		catch (Exception e) {
-			throw new PropertyPosetException("PropertyPoset() : poset reduction failed. " 
-					+ System.lineSeparator() + e.getMessage());
-		}	
 	}
 
 	@Override
@@ -154,9 +126,9 @@ public class PropertyPoset implements IPropertyPoset {
 	
 	@Override
 	public Set<IPropertyPoset> getSubContexts() throws PropertyPosetException {
-		if (!subContextsExtracted || !posetReduced) {
-			throw new PropertyPosetException("PropertyPoset.getSubContexts() : sub-context extaction and/or "
-					+ "poset reduction has not been completed");	
+		if (!subContextsExtracted) {
+			throw new PropertyPosetException("PropertyPoset.getSubContexts() : sub-context extaction "
+					+ "has not been completed");	
 		}	
 		return subContexts;
 	}	
@@ -215,7 +187,8 @@ public class PropertyPoset implements IPropertyPoset {
 	public void extractSubContexts() throws PropertyPosetException {
 		Set<IProperty> subContextRoots;
 		try {
-			subContextRoots = getSubContextRoots();
+			Set<String> subContextRootNames = relation.getSubContextRoots();
+			subContextRoots = set.getSubsetOfProperties(subContextRootNames);
 		}
 		catch (Exception e) {
 			throw new PropertyPosetException("PropertyPoset.extractSubContexts() : "
@@ -226,7 +199,8 @@ public class PropertyPoset implements IPropertyPoset {
 				for (IProperty subCtxtRoot : subContextRoots) {
 					IPropertyPoset currentSubContextPoset;
 					Set<String> currentRootConsequents = subCtxtRoot.getConsequents(relation);
-					currentSubContextPoset = new PropertyPoset(currentRootConsequents, relation);
+					IRelation restrictedRelation = new Relation(relation, currentRootConsequents);
+					currentSubContextPoset = new PropertyPoset(currentRootConsequents, restrictedRelation);
 					subContexts.add(currentSubContextPoset);
 					subCtxtRoot.setAsNotRemovable();
 					relation.setPropAsALeaf(subCtxtRoot.getPropertyName());
@@ -243,8 +217,17 @@ public class PropertyPoset implements IPropertyPoset {
 				throw new PropertyPosetException("PropertyPoset.extractSubContexts() : "
 						+ "failed to update poset." + System.lineSeparator() + e.getMessage());
 			}
-			subContextsExtracted = true;
+			try {
+				for (IPropertyPoset subContext : subContexts) {
+					subContext.extractSubContexts();
+				}
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("PropertyPoset.extractSubContexts() : recursive "
+						+ "call on poset sub-contexts failed.");
+			}
 		}
+		subContextsExtracted = true;
 	}	
 	
 	/**
@@ -262,41 +245,6 @@ public class PropertyPoset implements IPropertyPoset {
 		return maxRank;
 	}
 	
-	/**
-	 * A 'sub-context root' is a minimal element in the set of dimension roots minus the poset 
-	 * root. 
-	 * @return the (possibly empty) set of sub-context roots. 
-	 * @throws PropertyPosetException
-	 */
-	private Set<IProperty> getSubContextRoots() throws PropertyPosetException{
-		Set<IProperty> subContextRoots = new HashSet<IProperty>();
-		Set<IProperty> dimensionRootsMinusPosetRoot = new HashSet<IProperty>();
-		for (IProperty property : set.getSetOfProperties()) {
-			if (property.isADimensionRoot(relation) && property.getRank(relation) != 0) {
-				dimensionRootsMinusPosetRoot.add(property);
-			}
-		}
-		if (!dimensionRootsMinusPosetRoot.isEmpty()) {
-			int minimalRootRank = 1;
-			boolean minimalRootsFound = false;
-			while (!minimalRootsFound && minimalRootRank < relation.getMaximalRank()) {
-				for (IProperty dimensionRoot : dimensionRootsMinusPosetRoot) {
-					if (dimensionRoot.getRank(relation) == minimalRootRank) {
-						if (!minimalRootsFound)
-							minimalRootsFound = true;
-						subContextRoots.add(dimensionRoot);
-					}
-				}
-				if (!minimalRootsFound)
-					minimalRootRank++;
-			}
-			if (!minimalRootsFound)
-				throw new PropertyPosetException("IPropertyPoset.getSubContextRoots() : cannot "
-						+ "find a minimal sub-context root. ");
-		}
-		return dimensionRootsMinusPosetRoot;
-	}	
-		
 	/**
 	 * @param props set of properties to be ordered
 	 * @return list of properties ordered by decreasing rank
