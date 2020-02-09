@@ -148,7 +148,8 @@ public class PropertyPoset implements IPropertyPoset {
 		List<String> listOfPropsToRemove;
 		for (IProperty property : set.getSetOfProperties()) {
 			try {
-				if (!property.isADimension(relation) && !property.isADimensionRoot(relation) && !property.isADimensionAtom(relation))
+				if (!property.isADimension(relation) && !property.isADimensionRoot(relation) 
+						&& !property.isADimensionAtom(relation))
 					propsToRemove.add(property.getPropertyName());
 			}
 			catch (Exception e) {
@@ -168,7 +169,8 @@ public class PropertyPoset implements IPropertyPoset {
 			String predecessor;
 			if (predecessors.size() != 1) {
 				throw new PropertyPosetException("PropertyPoset.reducePoset() error : if property '" + property
-						+ "' is removable, then it cannot have " + Integer.toString(predecessors.size()) + " predecessors.");
+						+ "' is removable, then it cannot have " + Integer.toString(predecessors.size()) 
+						+ " predecessors.");
 			}
 			else predecessor = predecessors.get(0);
 			try {
@@ -180,54 +182,66 @@ public class PropertyPoset implements IPropertyPoset {
 			}
 		}
 		relation.updateRelationData();
+		try {
+			for (IPropertyPoset subContext : subContexts) {
+				subContext.reducePoset();
+			}
+		}
+		catch (Exception e) {
+			throw new PropertyPosetException("PropertyPoset.reducePoset() : failed to recursively call this method "
+					+ "on sub-context components of '" + relation.getPosetRoot() + "' property poset");
+		}
 		posetReduced = true;
 	}	
 	
 	@Override
 	public void extractSubContexts() throws PropertyPosetException {
 		Set<IProperty> subContextRoots;
-		try {
-			Set<String> subContextRootNames = relation.getSubContextRoots();
-			subContextRoots = set.getSubsetOfProperties(subContextRootNames);
-		}
-		catch (Exception e) {
-			throw new PropertyPosetException("PropertyPoset.extractSubContexts() : "
-					+ "cannot retreive sub-context roots." + System.lineSeparator() + e.getMessage());
-		}
-		if (!subContextRoots.isEmpty()) {		
+		do {
 			try {
-				for (IProperty subCtxtRoot : subContextRoots) {
-					IPropertyPoset currentSubContextPoset;
-					Set<String> currentRootConsequents = subCtxtRoot.getConsequents(relation);
-					IRelation restrictedRelation = new Relation(relation, currentRootConsequents);
-					currentSubContextPoset = new PropertyPoset(currentRootConsequents, restrictedRelation);
-					subContexts.add(currentSubContextPoset);
-					subCtxtRoot.setAsNotRemovable();
-					relation.setPropAsALeaf(subCtxtRoot.getPropertyName());
-				}
+				Set<String> subContextRootNames = relation.getSubContextRoots();
+				subContextRoots = set.getSubsetOfProperties(subContextRootNames);
 			}
 			catch (Exception e) {
 				throw new PropertyPosetException("PropertyPoset.extractSubContexts() : "
-						+ "failed to build subContext." + System.lineSeparator() + e.getMessage());
+						+ "cannot retreive sub-context roots." + System.lineSeparator() + e.getMessage());
 			}
-			try {
-				updatePoset();
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("PropertyPoset.extractSubContexts() : "
-						+ "failed to update poset." + System.lineSeparator() + e.getMessage());
-			}
-			try {
-				for (IPropertyPoset subContext : subContexts) {
-					subContext.extractSubContexts();
+			if (!subContextRoots.isEmpty()) {	
+				try {
+					for (IProperty subCtxtRoot : subContextRoots) {
+						IPropertyPoset currentSubContextPoset;
+						Set<String> currentRootConsequents = subCtxtRoot.getConsequents(relation);
+						IRelation restrictedRelation = new Relation(relation, currentRootConsequents);
+						currentSubContextPoset = new PropertyPoset(currentRootConsequents, restrictedRelation);
+						subContexts.add(currentSubContextPoset);
+						for (String subCtxtRootAntecedent : relation.getAntecedents(subCtxtRoot.getPropertyName()))
+							set.getProperty(subCtxtRootAntecedent).setAsNotRemovable();
+					}
+				}
+				catch (Exception e) {
+					throw new PropertyPosetException("PropertyPoset.extractSubContexts() : "
+							+ "failed to build subContext." + System.lineSeparator() + e.getMessage());
+				}
+				try {
+					updatePosetAfterExtraction();
+				}
+				catch (Exception e) {
+					throw new PropertyPosetException("PropertyPoset.extractSubContexts() : "
+							+ "failed to update poset." + System.lineSeparator() + e.getMessage());
+				}
+				try {
+					for (IPropertyPoset subContext : subContexts) {
+						subContext.extractSubContexts();
+					}
+				}
+				catch (Exception e) {
+					throw new PropertyPosetException("PropertyPoset.extractSubContexts() : recursive "
+							+ "call on poset sub-contexts failed.");
 				}
 			}
-			catch (Exception e) {
-				throw new PropertyPosetException("PropertyPoset.extractSubContexts() : recursive "
-						+ "call on poset sub-contexts failed.");
-			}
+			subContextsExtracted = true;
 		}
-		subContextsExtracted = true;
+		while(!subContextRoots.isEmpty());
 	}	
 	
 	/**
@@ -279,7 +293,7 @@ public class PropertyPoset implements IPropertyPoset {
 	private boolean removeProperty(String propName) throws PropertyPosetException {
 		boolean propertyRemoved;
 		try {
-			propertyRemoved = relation.removeProperty(set.removeProperty(propName));
+			propertyRemoved = relation.removeProperty(set.removeProperty(propName));			
 		} catch (PropertyPosetException e) {
 			throw new PropertyPosetException("PropertyPoset.removeProperty() : failed to remove the property "
 					+ "'" + propName + "'." + System.lineSeparator() + e.getMessage());
@@ -289,20 +303,47 @@ public class PropertyPoset implements IPropertyPoset {
 	
 	
 	/**
-	 * After sub-contexts have been extracted, the sub-context roots have been turned into leaves, so they have 
-	 * no more consequents apart from themselves. Thus, the poset isn't connected anymore.
-	 * It is back to connectivity with this update, in which all properties that are no longer a consequent of 
-	 * the (ex-) poset root are removed.  
-	 * This method has no effect if no sub-context has been extracted.
+	 * After sub-contexts have been extracted, any property greater than the sub-context root is 
+	 * removed, except if there exists a chain bounded by the poset root and the property that does 
+	 * not contain the sub-context root. 
+	 * Also, every sub-context root must be turned into a leaf in the original poset, i.e. a property 
+	 * with no consequent apart from itself. 
+	 * 
+	 * This method has no effect if no sub-context root has been found.
 	 * @throws PropertyPosetException
 	 */
-	private void updatePoset() throws PropertyPosetException {
-			Set<String> posetRootConsequents = relation.getConsequents(relation.getPosetRoot());
-			Set<String> propToRemove = set.getSetOfPropertyNames();
-			propToRemove.removeAll(posetRootConsequents);
-			for (String prop : propToRemove) {
-				removeProperty(prop);
+	private void updatePosetAfterExtraction() throws PropertyPosetException {
+		Set<String> propToRemove = new HashSet<String>();
+		Set<String> subContextRootNames = new HashSet<String>();
+		Set<String> dimensionsBoundToPosetRoot = new HashSet<String>();
+		for (IPropertyPoset subContext : subContexts) {
+			subContextRootNames.add(subContext.getRelation().getPosetRoot());
+		}
+		for (String subContextRootName : subContextRootNames) {
+			propToRemove.addAll(relation.getGreaterProperties(subContextRootName));
+		}
+		for (String prop : propToRemove) {
+			if (relation.checkIfDimension(prop)) {
+				if (relation.getDimensionRoot(prop).equals(relation.getPosetRoot()))
+					dimensionsBoundToPosetRoot.add(prop);
 			}
+		}
+		for (String dimension : dimensionsBoundToPosetRoot) {
+			propToRemove.removeAll(relation.getConsequents(dimension));
+		}
+		for (String prop : propToRemove)
+			removeProperty(prop);
+		for (String subCtxtRoot : subContextRootNames) {
+			try {
+				relation.setPropAsALeaf(subCtxtRoot);
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("PropertyPoset.updatePosetAfterExtraction() : error while "
+						+ "attempting to turn '" + subCtxtRoot + " 'into a leaf." + System.lineSeparator() 
+						+ e.getMessage());
+			}
+		}
+		relation.updateRelationData();
 	}
 
 }

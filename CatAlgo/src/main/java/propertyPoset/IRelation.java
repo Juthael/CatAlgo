@@ -42,10 +42,12 @@ public interface IRelation {
 	
 	/**
 	 * Turns the property whose name has been given in parameter into a leaf, i.e. a property with no 
-	 * consequent apart from itself.   
+	 * consequent apart from itself. Supports the required modifications in order to maintain consistency 
+	 * within the poset.    
 	 * @param subContextRoot the name of a property
+	 * @throws PropertyPosetException 
 	 */
-	public void setPropAsALeaf(String subContextRoot);	
+	public void setPropAsALeaf(String subContextRoot) throws PropertyPosetException;
 	
 	/**
 	 * The set of consequents (or implied properties) of a property P is the set of properties equal to 

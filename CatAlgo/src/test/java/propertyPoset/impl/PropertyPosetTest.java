@@ -1,9 +1,12 @@
 package propertyPoset.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
+import java.awt.Frame;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
@@ -11,6 +14,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fca.core.context.binary.BinaryContext;
+import fca.core.lattice.ConceptLattice;
+import fca.exception.AlreadyExistsException;
+import fca.exception.InvalidTypeException;
+import fca.exception.LMLogger;
+import fca.gui.lattice.LatticeViewer;
+import fca.gui.lattice.element.GraphicalLattice;
+import fca.gui.lattice.element.LatticeStructure;
+import fca.gui.util.constant.LMIcons;
+import fca.gui.util.constant.LMImages;
 import grammarModel.structure.ISyntaxGrove;
 import grammars.seekWhence.utils.impl.SwFileReader;
 import propertyPoset.IProperty;
@@ -56,9 +68,32 @@ public class PropertyPosetTest {
 	}
 	
 	@Test
-	public void whenBinaryContextRequestedThenBinaryContextReturned() throws PropertyPosetException {
+	public void whenBinaryContextRequestedThenBinaryContextReturned() throws PropertyPosetException, AlreadyExistsException, 
+	InvalidTypeException {
+
+		propPoset.extractSubContexts();
+		propPoset.reducePoset();
 		BinaryContext context = propPoset.getBinaryContext();
+		
+		List<BinaryContext> contexts = new ArrayList<BinaryContext>();
+		contexts.add(context);
+		for (IPropertyPoset subContext : propPoset.getSubContexts())
+			contexts.add(subContext.getBinaryContext());
+		LMLogger.getLMLogger();
+		LMImages.getLMImages();
+		LMIcons.getLMIcons();
+		for (BinaryContext con : contexts) {
+			ConceptLattice conLattice = new ConceptLattice(con);
+			LatticeStructure lattStruc = new LatticeStructure(conLattice, context, LatticeStructure.BEST);
+			GraphicalLattice graphLatt = new GraphicalLattice(conLattice, lattStruc);
+			LatticeViewer lattViewer = new LatticeViewer(graphLatt);
+			lattViewer.setExtendedState(Frame.MAXIMIZED_BOTH);
+			lattViewer.setVisible(true); 
+		}
+		System.out.print("test");
+		
 		assertTrue(context != null);
+
 	}
 	
 	@Test
@@ -66,19 +101,19 @@ public class PropertyPosetTest {
 		boolean requestForSizEAfterReducThrowsException = false;
 		boolean sizeCanBeRetreivedAsEncapsPropertyOfSize1 = false;
 		@SuppressWarnings("unused")
-		IProperty propSizE = propPoset.getProperties().getProperty("SizE");
+		IProperty propPosition4 = propPoset.getProperties().getProperty("Position4");
 		propPoset.reducePoset();
 		try {
 			@SuppressWarnings("unused")
-			IProperty propSizENow = propPoset.getProperties().getProperty("SizE");	
+			IProperty propPosition4Now = propPoset.getProperties().getProperty("Position4");	
 		}
 		catch (PropertyPosetException e) {
 			requestForSizEAfterReducThrowsException = true;
 		}
-		IProperty propSize1 = propPoset.getProperties().getProperty("Size1");
-		Set<IProperty> size1EncapsulatedProp = propSize1.getEncapsulatedProperties();
-		for (IProperty encapsProp : size1EncapsulatedProp) {
-			if (encapsProp.getPropertyName().equals("SizE"))
+		IProperty digit4 = propPoset.getProperties().getProperty("Digit4");
+		Set<IProperty> digit4EncapsulatedProp = digit4.getEncapsulatedProperties();
+		for (IProperty encapsProp : digit4EncapsulatedProp) {
+			if (encapsProp.getPropertyName().equals("Position4"))
 				sizeCanBeRetreivedAsEncapsPropertyOfSize1 = true;
 		}
 		assertTrue(requestForSizEAfterReducThrowsException && sizeCanBeRetreivedAsEncapsPropertyOfSize1);
@@ -106,19 +141,19 @@ public class PropertyPosetTest {
 			else {
 				expectedSubCon = true;
 				Set<IPropertyPoset> subSubContexts = subContext.getSubContexts();
-				if (subContexts.size() != 1) {
+				if (subSubContexts.size() != 2) {
 					expectedSubSubCon = false;
 					noSubSubSubCon = false;
 				}
 				else {
-					IPropertyPoset subSubContext = subSubContexts.iterator().next();
-					if (!subSubContext.getRelation().getPosetRoot().equals("ArithSeq2")) {
+					IPropertyPoset subSubContext1 = subSubContexts.iterator().next();
+					if (!subSubContext1.getRelation().getPosetRoot().equals("ArithSeq1")) {
 						expectedSubSubCon = false;
 						noSubSubSubCon = false;
 					}
 					else {
 						expectedSubSubCon = true;
-						noSubSubSubCon = (subSubContext.getSubContexts().size() == 0);
+						noSubSubSubCon = (subSubContext1.getSubContexts().size() == 0);
 					}
 					
 				}
@@ -140,8 +175,11 @@ public class PropertyPosetTest {
 				+ e.getMessage());
 		}
 		// printChains(trueGrove.getListOfSyntacticStringChains());	
+		
 	}	
 
+	/*
+	
 	/* poset max chains : 
 SeekWhenceCtxt0/Digit4/DigiT
 SeekWhenceCtxt0/Digit4/Relation2/Size0/Relation1/RelatioN

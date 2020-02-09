@@ -250,16 +250,11 @@ public class RelationTest {
 	}	
 	
 	@Test
-	public void whenUpdateIsCalledThenUpdateOnRanksAndDimensionsAndRootsAndAtoms() throws PropertyPosetException {
+	public void whenUpdateIsCalledThenUpdateOnRanksAndDimensionsAndRoots() throws PropertyPosetException {
 		String dimension = "RelatioN";
 		String propToRemove = "Relation2";
 		int dimensionRankBeforeModif = trueRelation.getRank(dimension);
 		String dimensionRootBeforeModif = trueRelation.getDimensionRoot(dimension);
-		Set<String> setOfAtomsBeforeModif = new HashSet<String>();
-		for (String prop : truePropPoset.getProperties().getSetOfPropertyNames()) {
-			if (trueRelation.checkIfDimensionAtom(prop))
-				setOfAtomsBeforeModif.add(prop);
-		}
 		trueRelation.removeProperty(truePropPoset.getProperties().removeProperty(propToRemove));
 		trueRelation.updateRelationData();
 		int dimensionRankAfterModif = trueRelation.getRank(dimension);
@@ -272,14 +267,8 @@ public class RelationTest {
 		 * the poset isn't a lower semi-lattice anymore, hence this inconsistent behavior. 
 		 */
 		String dimensionRootAfterModif = trueRelation.getDimensionRoot(dimension);
-		Set<String> setOfAtomsAfterModif = new HashSet<String>();
-		for (String prop : truePropPoset.getProperties().getSetOfPropertyNames()) {
-			if (trueRelation.checkIfDimensionAtom(prop))
-				setOfAtomsAfterModif.add(prop);
-		}
 		assertTrue(dimensionRankBeforeModif != dimensionRankAfterModif 
-				&& !dimensionRootBeforeModif.equals(dimensionRootAfterModif)
-				&& !setOfAtomsBeforeModif.equals(setOfAtomsAfterModif));
+				&& !dimensionRootBeforeModif.equals(dimensionRootAfterModif));
 	}
 	
 	private static void setTrueGrove() {

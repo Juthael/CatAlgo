@@ -88,6 +88,8 @@ public interface IPropertyPoset {
 	 * a leaf, so that it doesn't have any consequent anymore apart from itself. Now the poset is no longer connected ; 
 	 * remove every element that isn't a consequent of O.   
 	 * 4/ Repeat the operation on every sub-context built, until no more-sub context root is found. 
+	 * 
+	 * This method is called recursively on sub-context posets. 
 	 */
 	void extractSubContexts() throws PropertyPosetException ;
 

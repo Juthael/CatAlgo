@@ -101,16 +101,34 @@ public class Relation implements IRelation {
 			if (setOfConsequents.contains(implication.getAntecedent()))
 				setOfConsequents.add(implication.getConsequent());
 		}
-	}	
+	}
 	
 	@Override
-	public void setPropAsALeaf(String subContextRoot) {
-		if (relation.get(subContextRoot).size() > 1) {
-			Set<String> consequents = new HashSet<String>();
-			consequents.add(subContextRoot);
-			relation.put(subContextRoot, consequents);	
+	public void setPropAsALeaf(String subContextRoot) throws PropertyPosetException {
+		int subContextRootRank = getRank(subContextRoot);
+		Set<String> subContextRootAntcdts = getAntecedents(subContextRoot);
+		for (int i = (subContextRootRank - 1) ; i >= 0 ; i--) {
+			Set<String> antcdtsAtThisRank = new HashSet<String>();
+			for (String ancdt : subContextRootAntcdts) {
+				if (getRank(ancdt) == i)
+					antcdtsAtThisRank.add(ancdt);
+			}
+			for (String antcdtAtThisRank : antcdtsAtThisRank) {
+				Set<String> antcdtConsequents = new HashSet<String>();
+				antcdtConsequents.add(antcdtAtThisRank);
+				for (String antcdtSucc : getSuccessors(antcdtAtThisRank)){
+					if (!antcdtSucc.equals(subContextRoot)) {
+						antcdtConsequents.addAll(getConsequents(antcdtSucc));
+					}
+					else antcdtConsequents.add(subContextRoot);
+				}
+				relation.put(antcdtAtThisRank, antcdtConsequents);
+			}
 		}
-	}	
+		Set<String> newLeafConsequents = new HashSet<String>();
+		newLeafConsequents.add(subContextRoot);
+		relation.put(subContextRoot, newLeafConsequents);	
+	}		
 
 	@Override
 	public Set<String> getConsequents(String propName) throws PropertyPosetException {
@@ -122,7 +140,6 @@ public class Relation implements IRelation {
 	
 	@Override
 	public Set<String> getAntecedents(String propName) throws PropertyPosetException {
-		setRanks();
 		Set<String> antecedents = new HashSet<String>();
 		if (!relation.containsKey(propName))
 			throw new PropertyPosetException("Relation.getAntecedents() : property " + propName 
@@ -169,7 +186,6 @@ public class Relation implements IRelation {
 
 	@Override
 	public Set<String> getSuccessors(String propName) throws PropertyPosetException {
-		setRanks();
 		List<String> succProp = new ArrayList<String>();
 		if (!relation.keySet().contains(propName))
 			throw new PropertyPosetException("Relation.getSuccessors : property " + propName 
@@ -204,7 +220,6 @@ public class Relation implements IRelation {
 
 	@Override
 	public Set<String> getPredecessors(String propName) throws PropertyPosetException {
-		setRanks();
 		List<String> precProp = new ArrayList<String>();
 		if (!relation.keySet().contains(propName))
 			throw new PropertyPosetException("Relation.getPredecessors : property " + propName 
@@ -277,7 +292,8 @@ public class Relation implements IRelation {
 	public String getPosetRoot() throws PropertyPosetException {
 		setRanks();
 		if (posetRoot.isEmpty())
-			throw new PropertyPosetException("Relation.getPosetRoot() : the posetRoot can't be found or is empty.");
+			throw new PropertyPosetException("Relation.getPosetRoot() : the posetRoot can't be found or "
+					+ "is empty.");
 		else return posetRoot;
 	}	
 
@@ -343,11 +359,6 @@ public class Relation implements IRelation {
 			relation.remove(propertyName);
 			for (Set<String> consequents : relation.values())
 				consequents.remove(propertyName);
-			dimensions.remove(propertyName);
-			dimensionRoots.remove(propertyName);
-			dimensionAtoms.remove(propertyName);
-			dimensionToRoot.remove(propertyName);
-			propertyToRank.remove(propertyName);
 			propertyRemoved = true;
 			allDataIsUpToDate = false;
 			rankMappingIsUpToDate = false;
@@ -358,6 +369,14 @@ public class Relation implements IRelation {
 	@Override
 	public void updateRelationData() throws PropertyPosetException {
 		if (!allDataIsUpToDate) {
+			if (!dimensions.isEmpty())
+				dimensions = new HashSet<String>();
+			if(!dimensionRoots.isEmpty())
+				dimensionRoots = new HashSet<String>();
+			if (!dimensionAtoms.isEmpty())
+				dimensionAtoms = new HashSet<String>();
+			if (!dimensionToRoot.isEmpty())
+				dimensionToRoot = new HashMap<String, String>();
 			try {
 				setRanks();
 				setDimensions();
@@ -365,7 +384,7 @@ public class Relation implements IRelation {
 				allDataIsUpToDate = true;	
 			}
 			catch (Exception e) {
-				throw new PropertyPosetException("Relation.updateData() : an error has occured." 
+				throw new PropertyPosetException("Relation.updateRelationData() : an error has occured." 
 						+ System.lineSeparator() + e.getMessage());
 			}
 
@@ -460,38 +479,38 @@ public class Relation implements IRelation {
 	 * @throws PropertyPosetException
 	 */
 	private void setDimensionRootsAndAtoms() throws PropertyPosetException {
-		if (!rankMappingIsUpToDate)
-			setRanks();
 		for (String dimension : dimensions) {
-			String localRoot = "";
+			String dimensionRoot = "";
 			Set<String> dimensionPredecessors;
 			try {
 				dimensionPredecessors = getPredecessors(dimension);
 			}
 			catch (Exception e) {
-				throw new PropertyPosetException("Relation.setLocalRoots() : an error has occured." 
+				throw new PropertyPosetException("Relation.setDimensionRoots() : an error has occured." 
 						+ System.lineSeparator() + e.getMessage()); 
 			}
-			boolean localRootFound = false;
+			boolean dimensionRootFound = false;
 			int testedRank = getRank(dimension) - 2;
-			while (!localRootFound && testedRank >= 0) {
+			while (!dimensionRootFound && testedRank >= 0) {
 				List<String> potentialRoots = getPropAtThisRank(testedRank);
 				int potentialRootIndex = 0;
-				while (localRootFound == false && potentialRootIndex < potentialRoots.size()) {
+				while (dimensionRootFound == false && potentialRootIndex < potentialRoots.size()) {
 					String potentialRoot = potentialRoots.get(potentialRootIndex);
 					if (relation.get(potentialRoot).containsAll(dimensionPredecessors)){
-						localRootFound = true;
-						localRoot = potentialRoot;
-						dimensionRoots.add(localRoot);
-						dimensionToRoot.put(dimension, localRoot);
-						dimensionAtoms.addAll(getSuccessors(localRoot));
+						dimensionRootFound = true;
+						dimensionRoot = potentialRoot;
+						dimensionRoots.add(dimensionRoot);
+						dimensionToRoot.put(dimension, dimensionRoot);
+						Set<String> thisDimensionAtoms = getSuccessors(dimensionRoot);
+						thisDimensionAtoms.retainAll(getAntecedents(dimension));
+						dimensionAtoms.addAll(thisDimensionAtoms);
 					}
 					else potentialRootIndex++;
 				}
 				testedRank--;
 			}
-			if (!localRootFound) {
-				throw new PropertyPosetException("Relation.setLocalRootsAndAtoms() : no posetRoot found for "
+			if (!dimensionRootFound) {
+				throw new PropertyPosetException("Relation.setDimensionRootsAndAtoms() : no posetRoot found for "
 						+ "dimension '" + dimension + "'.");
 			}
 		}
