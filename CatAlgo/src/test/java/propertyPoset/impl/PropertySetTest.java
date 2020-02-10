@@ -57,7 +57,11 @@ public class PropertySetTest {
 	@Test
 	public void whenPropertyRemovedWith1ArgMethodThenCannotBeRetreived() throws PropertyPosetException {
 		Set<String> propNames = set.getSetOfPropertyNames();
-		String propToRemove = propNames.iterator().next();
+		Iterator<String> propNamesIterator = propNames.iterator();
+		String propToRemove = propNamesIterator.next();
+		while (!set.getProperty(propToRemove).isRemovable()) {
+			propToRemove = propNamesIterator.next();
+		}
 		@SuppressWarnings("unused")
 		IProperty propertyTR = set.getProperty(propToRemove);
 		set.removeProperty(propToRemove);
@@ -76,6 +80,9 @@ public class PropertySetTest {
 		Set<String> propNames = set.getSetOfPropertyNames();
 		Iterator<String> propNamesIterator = propNames.iterator();
 		String propToBeEncapsulatedName = propNamesIterator.next();
+		while (!set.getProperty(propToBeEncapsulatedName).isRemovable()) {
+			propToBeEncapsulatedName = propNamesIterator.next();
+		}
 		String encapsulatingPropName = propNamesIterator.next();
 		IProperty propToBeEncapsulated = set.getProperty(propToBeEncapsulatedName);
 		set.removeProperty(propToBeEncapsulatedName, encapsulatingPropName);

@@ -90,8 +90,6 @@ public class PropertyPosetTest {
 			lattViewer.setExtendedState(Frame.MAXIMIZED_BOTH);
 			lattViewer.setVisible(true); 
 		}
-		System.out.print("test");
-		
 		assertTrue(context != null);
 
 	}
@@ -147,7 +145,8 @@ public class PropertyPosetTest {
 				}
 				else {
 					IPropertyPoset subSubContext1 = subSubContexts.iterator().next();
-					if (!subSubContext1.getRelation().getPosetRoot().equals("ArithSeq1")) {
+					if (!subSubContext1.getRelation().getPosetRoot().equals("ArithSeq1")
+							&& !subSubContext1.getRelation().getPosetRoot().equals("ArithSeq2")) {
 						expectedSubSubCon = false;
 						noSubSubSubCon = false;
 					}

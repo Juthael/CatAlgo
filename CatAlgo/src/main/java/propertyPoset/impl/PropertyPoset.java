@@ -40,10 +40,6 @@ public class PropertyPoset implements IPropertyPoset {
 	private boolean posetReduced = false;
 	
 	/**
-	 * As specified by {@link IPropertyPoset}, this constructor ensures that all sub-contexts have been 
-	 * extracted and that there exists no more sub-context root in the original poset. It also guarantees 
-	 * that the poset is displayed in a reduced form, i.e. rid of its 'non-informative' elements.
-	 * 
 	 * @param setOfPropNames names of a set of properties
 	 * @param relation partial order relation on the set of properties
 	 * @throws PropertyPosetException 
@@ -51,14 +47,10 @@ public class PropertyPoset implements IPropertyPoset {
 	public PropertyPoset(Set<String> setOfPropNames, IRelation relation) throws PropertyPosetException {
 		set = new PropertySet(setOfPropNames, true);
 		this.relation = relation;
+		set.getProperty(relation.getPosetRoot()).setAsNotRemovable();
 	}
 	
 	/**
-	 * As specified by {@link IPropertyPoset}, this constructor ensures that all sub-contexts have been 
-	 * extracted and that there exists no more sub-context root in the original poset. It also guarantees 
-	 * that the poset is displayed in a reduced form, i.e. rid of its 'non-informative' elements.
-	 * 
-	 * 
 	 * @param maxChains spanning chains of the poset to be built ; in principle, provided by a 
 	 * {@link ISyntaxGrove} object. 
 	 * @throws PropertyPosetException
@@ -73,6 +65,7 @@ public class PropertyPoset implements IPropertyPoset {
 		catch (Exception e) {
 			throw new PropertyPosetException("PropertyPoset() : error while adding an implication");
 		}
+		set.getProperty(relation.getPosetRoot()).setAsNotRemovable();
 	}
 
 	@Override
@@ -149,6 +142,7 @@ public class PropertyPoset implements IPropertyPoset {
 		for (IProperty property : set.getSetOfProperties()) {
 			try {
 				if (!property.isADimension(relation) && !property.isADimensionRoot(relation) 
+						&& !property.getPropertyName().equals(relation.getPosetRoot()) 
 						&& !property.isADimensionAtom(relation))
 					propsToRemove.add(property.getPropertyName());
 			}
@@ -189,7 +183,8 @@ public class PropertyPoset implements IPropertyPoset {
 		}
 		catch (Exception e) {
 			throw new PropertyPosetException("PropertyPoset.reducePoset() : failed to recursively call this method "
-					+ "on sub-context components of '" + relation.getPosetRoot() + "' property poset");
+					+ "on sub-context components of '" + relation.getPosetRoot() + "' property poset"
+					+ System.lineSeparator() + e.getMessage());
 		}
 		posetReduced = true;
 	}	
