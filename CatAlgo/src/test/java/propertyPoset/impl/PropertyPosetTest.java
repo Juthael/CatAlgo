@@ -31,6 +31,7 @@ import propertyPoset.IPropertySet;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
 
+@SuppressWarnings("unused")
 public class PropertyPosetTest {
 
 	private static ISyntaxGrove grove;
@@ -77,8 +78,13 @@ public class PropertyPosetTest {
 		
 		List<BinaryContext> contexts = new ArrayList<BinaryContext>();
 		contexts.add(context);
-		for (IPropertyPoset subContext : propPoset.getSubContexts())
+		for (IPropertyPoset subContext : propPoset.getSubContexts()) {
 			contexts.add(subContext.getBinaryContext());
+			for (IPropertyPoset subSubContext : subContext.getSubContexts()) {
+				contexts.add(subSubContext.getBinaryContext());
+			}
+		}
+		/*			
 		LMLogger.getLMLogger();
 		LMImages.getLMImages();
 		LMIcons.getLMIcons();
@@ -90,8 +96,8 @@ public class PropertyPosetTest {
 			lattViewer.setExtendedState(Frame.MAXIMIZED_BOTH);
 			lattViewer.setVisible(true); 
 		}
+		*/
 		assertTrue(context != null);
-
 	}
 	
 	@Test
