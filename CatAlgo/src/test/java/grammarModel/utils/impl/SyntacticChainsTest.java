@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.ITreePaths;
-import grammars.seekWhence.utils.impl.SwFileReader;
+import grammars.seekWhence.utils.SwFileReader;
 
 public class SyntacticChainsTest {
 

@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import grammarModel.structure.ISyntaxGrove;
+import grammars.seekWhence.utils.SwFileReader;
 
 @SuppressWarnings("unused")
 public class SwFileReaderTest {

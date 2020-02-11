@@ -15,7 +15,7 @@ import org.junit.Test;
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IChains;
 import grammarModel.utils.ITreePaths;
-import grammars.seekWhence.utils.impl.SwFileReader;
+import grammars.seekWhence.utils.SwFileReader;
 
 public class ChainsTest {
 

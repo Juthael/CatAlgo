@@ -19,7 +19,7 @@ import grammarModel.structure.ISyntaxGrove;
 import grammarModel.structure.impl.SyntaxGrove;
 import grammars.seekWhence.branches.Value;
 import grammars.seekWhence.leaves.ValuE;
-import grammars.seekWhence.utils.impl.SwFileReader;
+import grammars.seekWhence.utils.SwFileReader;
 import propertyPoset.IPropertyPoset;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;

@@ -12,8 +12,8 @@ import org.junit.Test;
 
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IChains;
+import grammars.seekWhence.utils.SwFileReader;
 import grammarModel.structure.ISyntacticStructure;
-import grammars.seekWhence.utils.impl.SwFileReader;
 
 public class SyntaxGroveTest {
 

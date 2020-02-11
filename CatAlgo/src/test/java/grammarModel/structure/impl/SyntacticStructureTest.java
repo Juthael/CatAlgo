@@ -18,7 +18,7 @@ import grammarModel.structure.ISyntaxGrove;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.utils.IChains;
 import grammarModel.utils.ITreePaths;
-import grammars.seekWhence.utils.impl.SwFileReader;
+import grammars.seekWhence.utils.SwFileReader;
 import propertyPoset.utils.IImplication;
 import propertyPoset.utils.IPosetMaxChains;
 

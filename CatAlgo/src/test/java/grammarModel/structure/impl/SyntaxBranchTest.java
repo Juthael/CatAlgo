@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import grammarModel.GrammarModelConstants;
 import grammarModel.structure.ISyntaxGrove;
-import grammars.seekWhence.utils.impl.SwFileReader;
+import grammars.seekWhence.utils.SwFileReader;
 
 public class SyntaxBranchTest {
 

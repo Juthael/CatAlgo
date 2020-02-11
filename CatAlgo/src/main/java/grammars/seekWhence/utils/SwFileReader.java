@@ -1,4 +1,4 @@
-package grammars.seekWhence.utils.impl;
+package grammars.seekWhence.utils;
 
 import java.util.List;
 

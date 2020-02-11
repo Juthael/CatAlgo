@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import grammarModel.structure.ISyntaxGrove;
-import grammars.seekWhence.utils.impl.SwFileReader;
+import grammars.seekWhence.utils.SwFileReader;
 import propertyPoset.IProperty;
 import propertyPoset.IPropertyPoset;
 import propertyPoset.IPropertySet;
