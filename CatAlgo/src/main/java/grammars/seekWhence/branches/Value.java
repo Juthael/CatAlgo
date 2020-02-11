@@ -20,9 +20,9 @@ import grammars.seekWhence.leaves.ValuE;
  */
 public final class Value extends SyntaxBranch implements ISyntaxBranch, IValueOrValuE {
 
-	public final String value;
-	public final ValuE valuE;
-	public IValueOrValuE valueOrValuE;
+	private final String value;
+	private final ValuE valuE;
+	private IValueOrValuE valueOrValuE;
 	
 	/**
 	 * As any {@link ISyntaxBranch}, Value is a derivable element of a context-free grammar, whose 

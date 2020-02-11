@@ -12,7 +12,7 @@ import grammarModel.structure.impl.SyntaxLeaf;
  */
 public final class AlternationRulE extends SyntaxLeaf implements ISyntaxLeaf {
 
-	public static final String NAME="AlternationRulE";
+	public static final String NAME = "AlternationRulE";
 	
 	/**
 	 * All {@link ISyntaxLeaf} types have a no-argument constructor.
