@@ -80,16 +80,19 @@ public interface IPropertyPoset {
 	 * in the original poset. 
 	 * 
 	 * This can be achieved as follows : <br>
-	 * 1/ Identify potential sub-context roots. A 'sub-context root' is a minimal element in the set of all 'dimension 
+	 * 1. Identify potential sub-context roots. A 'sub-context root' is a minimal element in the set of all 'dimension 
 	 * roots' minus the poset root. A 'dimension root' is the infimum of the set of properties that precede a dimension 
 	 * (i.e. a sup-reducible element). <br>
-	 * 2/ For every sub-context root, build a set made up of all its consequents. That is a 'sub-context'. <br>
-	 * 3/ Let 'O' be the root of the original (lower semi-lattice) poset. In this poset, turn every sub-context root into 
-	 * a leaf, so that it doesn't have any consequent anymore apart from itself. Now the poset is no longer connected ; 
-	 * remove every element that isn't a consequent of O.   
-	 * 4/ Repeat the operation on every sub-context built, until no more-sub context root is found. 
+	 * 2. For every sub-context root, <br> 
+	 * 2.1. Build a set made up of all its consequents. That is a 'sub-context'. <br>
+	 * 2.2. Remove from the original poset any property greater than the sub-context root, except : <br> 
+	 * 2.2.1. if this property is a dimension whose dimension root is the poset root, or <br> 
+	 * 2.2.2. if it is a consequent of such a dimension. <br> 
+	 * 2.3. In the original poset, turn the sub-context root into a leaf and make all the modifications required to 
+	 * maintain the relation consistency. <br> 
+	 * 3. Repeat the operation on every sub-context built, until no more-sub context root is found. <br> 
 	 * 
-	 * This method is called recursively on sub-context posets. 
+	 * This method is called recursively on sub-context posets.
 	 */
 	void extractSubContexts() throws PropertyPosetException ;
 

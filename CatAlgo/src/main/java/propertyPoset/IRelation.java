@@ -198,8 +198,7 @@ public interface IRelation {
 	boolean removeProperty(IProperty property) throws PropertyPosetException;
 	
 	/**
-	 * Makes sure that all data are up to date by recalculating them. Must be called after one (or more) 
-	 * implication has been added or removed.
+	 * Ensures that all data is up to date. Must be called after any modification.
 	 * @throws PropertyPosetException 
 	 */	
 	void updateRelationData() throws PropertyPosetException;

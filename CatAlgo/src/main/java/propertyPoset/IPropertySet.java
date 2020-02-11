@@ -6,7 +6,7 @@ import propertyPoset.exceptions.PropertyPosetException;
 import propertyPoset.impl.PropertyPoset;
 
 /**
- * A IPropertySet is a (unordered) set of properties ({@link IProperty}) endowed with some basic functionalities. 
+ * A IPropertySet is a (unordered) set of properties endowed with some basic functionalities. 
  * @author Gael Tregouet
  *
  */
@@ -43,8 +43,8 @@ public interface IPropertySet {
 	/**
 	 * This method is called in order to remove from the set a 'non-informative' property, and nonetheless 
 	 * keeping track of it. <br> 
-	 * A property is non-informative if it is not an atom of the (lower semi-lattice) property poset, and 
-	 * if it is implied by a single predecessor, called its 'antecedent'.
+	 * A property is non-informative if it is implied by a single predecessor, called its 'antecedent' (and 
+	 * if it's not an atom of the (lower semi-lattice) property poset).
 	 * After its removal, the non-informative property is stored as an 'encapsulated property' in the dedicated 
 	 * field of its antecedent.  
 	 * A target {@link IProperty} instance can be protected from removal, which prevents this method to 

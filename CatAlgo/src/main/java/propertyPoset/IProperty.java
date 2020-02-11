@@ -15,7 +15,7 @@ public interface IProperty {
 	/**
 	 * Encapsulated properties of a property P are elements removed from the {@link IPropertyPoset} during 
 	 * the 'poset reduction procedure', because they do not not provide any additional information : any other 
-	 * property that implied an encapsulated property of P also implies P. 
+	 * property that implies an encapsulated property of P also implies P. 
 	 * 
 	 * @param prop : a 'non-informative' property, removed from the {@link IPropertyPoset} because it is only implied by 
 	 * the property on which this method is called .
@@ -87,7 +87,7 @@ public interface IProperty {
 	/**
 	 * Encapsulated properties of a property P are elements removed from the {@link IPropertyPoset}  during 
 	 * the 'poset reduction procedure', because they do not not provide any additional information : any other 
-	 * property that implies an encapsulated property of P also implied P. 
+	 * property that implies an encapsulated property of P also implies P. 
 	 * 
 	 * @return encapsulated properties.
 	 */
@@ -129,8 +129,8 @@ public interface IProperty {
 	
 	/** 
 	 * Some properties must be protected from removal because they could be identified by a {@link IPropertyPoset} as 
-	 * 'non-informative' during the set reduction procedure (IPropertySet.reduce()), although being the root of an 
-	 * extracted subset. 
+	 * 'non-informative' during the set reduction procedure (IPropertySet.reduce()), although being the root (or 
+	 * on the path) of an extracted subset. 
 	 * @return 'true' if removable, false otherwise
 	 */
 	boolean isRemovable();
