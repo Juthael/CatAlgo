@@ -502,6 +502,30 @@ public class Relation implements IRelation {
 	}
 	
 	/**
+	 * Populates the 'successorRelation' map and allows the boolean variable 'successorRelationIsUpToDate' 
+	 * to have 'true' as a value.
+	 * @throws PropertyPosetException
+	 */
+	private void setSuccessorRelationMap() throws PropertyPosetException {
+		if (!successorRelationIsUpToDate) {
+			successorRelation = new HashMap<String, Set<String>>();
+			try {
+				setSuccRelationRecursively(posetRoot);
+				if (successorRelation.size() != relation.size()) {
+					throw new PropertyPosetException("Relation and "
+							+ "successorRelation maps should be the same size.");
+				}
+				else successorRelationIsUpToDate = true;
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("Relation.setSuccessorRelationMap() : "
+						+ "cannot set successor relation." 
+						+ System.lineSeparator() + e.getMessage());
+			}
+		}
+	}
+	
+	/**
 	 * Associates any property to a rank value, which is the length of the longest path from the posetRoot to 
 	 * the property in the poset diagram.
 	 * @throws PropertyPosetException
@@ -529,54 +553,8 @@ public class Relation implements IRelation {
 		}
 	}
 	
-	private void setSuccessorRelationMap() throws PropertyPosetException {
-		if (!successorRelationIsUpToDate) {
-			successorRelation = new HashMap<String, Set<String>>();
-			try {
-				setSuccRelationRecursively(posetRoot);
-				if (successorRelation.size() != relation.size()) {
-					throw new PropertyPosetException("Relation and "
-							+ "successorRelation maps should be the same size.");
-				}
-				else successorRelationIsUpToDate = true;
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("Relation.setSuccessorRelationMap() : "
-						+ "cannot set successor relation." 
-						+ System.lineSeparator() + e.getMessage());
-			}
-		}
-	}
-	
-	private void setSuccRelationRecursively(String propName) throws PropertyPosetException {
-		if (!successorRelation.containsKey(propName)) {
-			Set<String> successors;
-			try {
-				successors = findSuccessorsWithoutUsingSuccessorRelationOrRank(propName);
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("Relation.setSuccRelationRecursively() : an error occured "
-						+ "while retrieving the successors of the property '" + propName + "'." 
-						+ System.lineSeparator() + e.getMessage());
-			}
-			successorRelation.put(propName, successors);
-			try {
-				for (String successor : successors) {
-					setSuccRelationRecursively(successor);
-				}
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("Relation.setSuccRelationRecursively() : an error occured "
-						+ "during the recursive call of this method on the successors of '" + propName + "'." 
-						+ System.lineSeparator() + e.getMessage());
-			}
-		}
-		
-		
-	}
-	
 	/**
-	 * Ensure that every successor to the property given in parameter has a rank value greater 
+	 * Ensures that every successor to the property given in parameter has a rank value greater 
 	 * than this property's value. If a successor rank value has been updated, then the method 
 	 * calls itself with the successor in parameter.
 	 * @param propName the name of the property whose successor's ranks are checked 
@@ -603,5 +581,38 @@ public class Relation implements IRelation {
 			}
 		}
 	}	
+	
+	/**
+	 * Maps the property whose name is given in parameter with its successors, then calls 
+	 * itself on each of these successors. 
+	 * @param propName the name of the property whose successors are requested. 
+	 * @throws PropertyPosetException
+	 */
+	private void setSuccRelationRecursively(String propName) throws PropertyPosetException {
+		if (!successorRelation.containsKey(propName)) {
+			Set<String> successors;
+			try {
+				successors = findSuccessorsWithoutUsingSuccessorRelationOrRank(propName);
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("Relation.setSuccRelationRecursively() : an error occured "
+						+ "while retrieving the successors of the property '" + propName + "'." 
+						+ System.lineSeparator() + e.getMessage());
+			}
+			successorRelation.put(propName, successors);
+			try {
+				for (String successor : successors) {
+					setSuccRelationRecursively(successor);
+				}
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("Relation.setSuccRelationRecursively() : an error occured "
+						+ "during the recursive call of this method on the successors of '" + propName + "'." 
+						+ System.lineSeparator() + e.getMessage());
+			}
+		}
+		
+		
+	}
 
 }
