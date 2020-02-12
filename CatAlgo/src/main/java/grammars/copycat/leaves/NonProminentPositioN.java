@@ -23,8 +23,7 @@ public class NonProminentPositioN extends SyntaxLeaf implements ISyntaxLeaf, IPo
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		return new NonProminentPositioN(super.getLeafID());
 	}
 
 }

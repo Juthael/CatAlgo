@@ -23,8 +23,7 @@ public class CentralPositioN extends SyntaxLeaf implements ISyntaxLeaf, ISpecifi
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		return new CentralPositioN(super.getLeafID());
 	}
 
 }

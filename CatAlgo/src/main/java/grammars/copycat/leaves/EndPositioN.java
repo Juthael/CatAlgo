@@ -22,8 +22,7 @@ public class EndPositioN extends SyntaxLeaf implements ISyntaxLeaf {
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		return new EndPositioN(super.getLeafID());
 	}
 
 }

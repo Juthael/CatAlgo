@@ -40,7 +40,8 @@ public abstract class GenericFileReader implements IGenericFileReader {
 	}
 	
 	/**
-	 * Called in the constructor to instantiate 'treeDescriptions', which contains the paths of all the trees in the grove.
+	 * Called in the constructor to instantiate 'treeDescriptions', which contains the paths of all the trees 
+	 * in the grove.
 	 * @param path points to a text file (UTF-8) containing a list of paths (one list per tree)
 	 * @return String[][][] an array of paths formed as follows : [treeIndex][pathIndex][nodeIndex]
 	 * @throws FileReaderException
@@ -54,7 +55,8 @@ public abstract class GenericFileReader implements IGenericFileReader {
 			reader = Files.newBufferedReader(path);
 		}
 		catch (Exception e) {
-			throw new FileReaderException("GenericFileReader.setDescriptions() : BufferedReader couldn't be instantiated."
+			throw new FileReaderException("GenericFileReader.setDescriptions() : "
+					+ "BufferedReader couldn't be instantiated."
 					+ System.lineSeparator() + e.getMessage());
 		}
 		String line;
@@ -121,8 +123,10 @@ public abstract class GenericFileReader implements IGenericFileReader {
 	}	
 	
 	/**
-	 * @param treeDescriptions String[][][] containing every path in every syntax tree describing a minimal object in the context 
-	 * @return ISyntacticStructure[][][], a syntactic structure array with the same dimensions as the treeDescriptions array
+	 * @param treeDescriptions String[][][] containing every path in every syntax tree describing a minimal object 
+	 * in the context 
+	 * @return ISyntacticStructure[][][], a syntactic structure array with the same dimensions as the 
+	 * treeDescriptions array
 	 */
 	private ISyntacticStructure[][][] setStructures(String[][][] treeDescriptions) {
 		ISyntacticStructure[][][] structures = new ISyntacticStructure[treeDescriptions.length][][];
@@ -210,9 +214,12 @@ public abstract class GenericFileReader implements IGenericFileReader {
 	 * coordinates specified in parameters. 
 	 * @param nodeName name of the 'generating node'
 	 * @param components list of components of the syntactic structure to be instantiated
-	 * @param treeIndex first coordinate to be used for the storage of the generated structure in the 3-dimensional 'structures' array 
-	 * @param pathIndex second coordinate to be used for the storage of the generated structure in the 3-dimensional 'structures' array
-	 * @param nodeIndex third coordinate to be used for the storage of the generated structure in the 3-dimensional 'structures' array
+	 * @param treeIndex first coordinate to be used for the storage of the generated structure in the 3-dimensional 
+	 * 'structures' array 
+	 * @param pathIndex second coordinate to be used for the storage of the generated structure in the 3-dimensional 
+	 * 'structures' array
+	 * @param nodeIndex third coordinate to be used for the storage of the generated structure in the 3-dimensional 
+	 * 'structures' array
 	 * @throws FileReaderException
 	 */
 	protected abstract void castComponentsAndInstantiateStructure(String nodeName, List<ISyntacticStructure> components, 

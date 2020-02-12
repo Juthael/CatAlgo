@@ -23,8 +23,7 @@ public class SecondStrinG extends SyntaxLeaf implements ISyntaxLeaf, IStringName
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		return new SecondStrinG(super.getLeafID());
 	}
 
 }

@@ -23,8 +23,7 @@ public class FromRightToLefT extends SyntaxLeaf implements ISyntaxLeaf, IDirecti
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FromRightToLefT(super.getLeafID());
 	}
 
 }

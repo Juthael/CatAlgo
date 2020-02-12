@@ -22,8 +22,7 @@ public class RelatioN extends SyntaxLeaf implements ISyntaxLeaf {
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		return new RelatioN(super.getLeafID());
 	}
 
 }

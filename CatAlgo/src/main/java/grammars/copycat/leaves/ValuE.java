@@ -26,8 +26,7 @@ public class ValuE extends SyntaxLeaf implements ISyntaxLeaf, IValueOrRelation, 
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ValuE(value, super.getLeafID());
 	}
 
 }

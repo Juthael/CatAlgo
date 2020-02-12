@@ -23,8 +23,7 @@ public class FirstPositioN extends SyntaxLeaf implements ISyntaxLeaf, IEndPositi
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		return new FirstPositioN(super.getLeafID());
 	}
 
 }

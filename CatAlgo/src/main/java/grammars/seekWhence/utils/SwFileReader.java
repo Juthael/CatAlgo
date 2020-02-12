@@ -49,7 +49,7 @@ import grammars.seekWhence.leaves.SymmetryWithCenteR;
 import grammars.seekWhence.leaves.ValuE;
 
 /**
- * ISwFileReader is a IGenericFileReader using the 'SeekWhence' context-free grammar.
+ * ISwFileReader is a {@link IGenericFileReader} using the 'SeekWhence' grammar.
  * @author Gael Tregouet
  *
  */

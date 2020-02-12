@@ -22,8 +22,7 @@ public class DirectioN extends SyntaxLeaf implements ISyntaxLeaf {
 
 	@Override
 	public ISyntacticStructure clone() {
-		// TODO Auto-generated method stub
-		return null;
+		return new DirectioN(super.getLeafID());
 	}
 
 }
