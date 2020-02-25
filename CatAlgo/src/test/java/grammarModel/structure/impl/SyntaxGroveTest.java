@@ -12,7 +12,10 @@ import org.junit.Test;
 
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IChains;
+import grammars.copycat.utils.CcFileReader;
 import grammars.seekWhence.utils.SwFileReader;
+import grammarModel.exceptions.FileReaderException;
+import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 
 public class SyntaxGroveTest {
@@ -21,7 +24,7 @@ public class SyntaxGroveTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
+		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");		
 		SwFileReader fileReader = new SwFileReader();
 		try {
 			grove = fileReader.getSyntacticGrove(backburnDozen1);
@@ -31,6 +34,18 @@ public class SyntaxGroveTest {
 			System.out.println("SyntaxGroveTest.setUpBeforClass() : " + System.lineSeparator() + e.getMessage());
 		}
 	}
+	
+	/*
+	@Test
+	public void temporary() throws FileReaderException, GrammarModelException {
+		Path M1variations = Paths.get(".", "src", "test", "java", "filesUsedForTests", "M1_abc_xkj.txt");
+		CcFileReader fileReader2 = new CcFileReader();
+		ISyntaxGrove grove2 = fileReader2.getSyntacticGrove(M1variations);
+		grove2.markRedundancies();
+		grove2.setPosetElementID();
+		System.out.println(grove2.getPosetMaxChains().getChainsInASingleString());
+	}
+	*/
 	
 	@Test
 	public void whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() {

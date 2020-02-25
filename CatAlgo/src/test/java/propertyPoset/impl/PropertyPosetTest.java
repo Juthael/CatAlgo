@@ -24,6 +24,8 @@ import fca.gui.lattice.element.LatticeStructure;
 import fca.gui.util.constant.LMIcons;
 import fca.gui.util.constant.LMImages;
 import grammarModel.structure.ISyntaxGrove;
+import grammarModel.utils.IGenericFileReader;
+import grammars.copycat.utils.CcFileReader;
 import grammars.seekWhence.utils.SwFileReader;
 import propertyPoset.IProperty;
 import propertyPoset.IPropertyPoset;
@@ -35,21 +37,23 @@ import propertyPoset.exceptions.PropertyPosetException;
 public class PropertyPosetTest {
 
 	private static ISyntaxGrove grove;
-	private IPropertyPoset propPoset;
+	private static Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
+	private static Path m1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "M1_abc_ijk.txt");
+	private IPropertyPoset propPosetBD1;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		setGrove();
+		grove = setGrove(backburnDozen1, new SwFileReader());
 	}
 
 	@Before
 	public void setUp() throws Exception {
 		try {
 			//System.out.println(trueGrove.getPosetMaxChains().getChainsInASingleString());
-			propPoset = new PropertyPoset(grove.getPosetMaxChains());
+			propPosetBD1 = new PropertyPoset(grove.getPosetMaxChains());
 		}
 		catch (Exception e) {
-			System.out.println("PropertyPoSetTest : error during OriginalPropertyPoset instantiation " 
+			System.out.println("PropertyPoSetTest : error during PropertyPoset instantiation " 
 					+ System.lineSeparator() + e.getMessage());
 		}	
 	}
@@ -57,28 +61,28 @@ public class PropertyPosetTest {
 	@Test
 	public void whenPropertiesRequestedThenNonEmptyPropertySetReturned() {
 		boolean nonEmptyPropSetReturned;
-		IPropertySet propSet = propPoset.getProperties();
+		IPropertySet propSet = propPosetBD1.getProperties();
 		nonEmptyPropSetReturned = !propSet.getSetOfProperties().isEmpty();
 		assertTrue(nonEmptyPropSetReturned);
 	}
 	
 	@Test
 	public void whenRelationRequestedThenRelationReturned() {
-		IRelation relation = propPoset.getRelation();
+		IRelation relation = propPosetBD1.getRelation();
 		assertTrue(relation != null);
 	}
 	
 	@Test
-	public void whenBinaryContextRequestedThenBinaryContextReturned() throws PropertyPosetException, AlreadyExistsException, 
-	InvalidTypeException {
+	public void whenBinaryContextRequestedThenBinaryContextReturned() 
+			throws PropertyPosetException, AlreadyExistsException,	InvalidTypeException {
 
-		propPoset.extractSubContexts();
-		propPoset.reducePoset();
-		BinaryContext context = propPoset.getBinaryContext();
+		propPosetBD1.extractSubContexts();
+		propPosetBD1.reducePoset();
+		BinaryContext context = propPosetBD1.getBinaryContext();
 		
 		List<BinaryContext> contexts = new ArrayList<BinaryContext>();
 		contexts.add(context);
-		for (IPropertyPoset subContext : propPoset.getSubContexts()) {
+		for (IPropertyPoset subContext : propPosetBD1.getSubContexts()) {
 			contexts.add(subContext.getBinaryContext());
 			for (IPropertyPoset subSubContext : subContext.getSubContexts()) {
 				contexts.add(subSubContext.getBinaryContext());
@@ -101,20 +105,63 @@ public class PropertyPosetTest {
 	}
 	
 	@Test
+	public void thisTestCanBeUsedToAnalyzeSyntaxTreesStoredInATextFile() 
+			throws PropertyPosetException, AlreadyExistsException, InvalidTypeException {
+		ISyntaxGrove testGrove = setGrove(m1, new CcFileReader());
+		IPropertyPoset testPoset = null;
+		try {
+			System.out.println(testGrove.getPosetMaxChains().getChainsInASingleString());
+			testPoset = new PropertyPoset(testGrove.getPosetMaxChains());
+		}
+		catch (Exception e) {
+			System.out.println("PropertyPosetTest : error during PropertyPoset instantiation " 
+					+ System.lineSeparator() + e.getMessage());
+		}
+		testPoset.extractSubContexts();
+		testPoset.reducePoset();
+		BinaryContext context = testPoset.getBinaryContext();
+		
+		List<BinaryContext> contexts = new ArrayList<BinaryContext>();
+		contexts.add(context);
+		for (IPropertyPoset subContext : testPoset.getSubContexts()) {
+			contexts.add(subContext.getBinaryContext());
+			for (IPropertyPoset subSubContext : subContext.getSubContexts()) {
+				contexts.add(subSubContext.getBinaryContext());
+				for (IPropertyPoset subSubSubContext : subSubContext.getSubContexts())
+					contexts.add(subSubSubContext.getBinaryContext());
+			}
+		}
+	
+		LMLogger.getLMLogger();
+		LMImages.getLMImages();
+		LMIcons.getLMIcons();
+		for (BinaryContext con : contexts) {
+			ConceptLattice conLattice = new ConceptLattice(con);
+			LatticeStructure lattStruc = new LatticeStructure(conLattice, context, LatticeStructure.BEST);
+			GraphicalLattice graphLatt = new GraphicalLattice(conLattice, lattStruc);
+			LatticeViewer lattViewer = new LatticeViewer(graphLatt);
+			lattViewer.setExtendedState(Frame.MAXIMIZED_BOTH);
+			lattViewer.setVisible(true); 
+		}	
+		System.out.println("STOP");
+
+	}
+	
+	@Test
 	public void whenPosetReductionCalledThenNonInformativePropertiesRemovedAndEncapsulated() throws PropertyPosetException {
 		boolean requestForSizEAfterReducThrowsException = false;
 		boolean sizeCanBeRetreivedAsEncapsPropertyOfSize1 = false;
 		@SuppressWarnings("unused")
-		IProperty propPosition4 = propPoset.getProperties().getProperty("Position4");
-		propPoset.reducePoset();
+		IProperty propPosition4 = propPosetBD1.getProperties().getProperty("Position4");
+		propPosetBD1.reducePoset();
 		try {
 			@SuppressWarnings("unused")
-			IProperty propPosition4Now = propPoset.getProperties().getProperty("Position4");	
+			IProperty propPosition4Now = propPosetBD1.getProperties().getProperty("Position4");	
 		}
 		catch (PropertyPosetException e) {
 			requestForSizEAfterReducThrowsException = true;
 		}
-		IProperty digit4 = propPoset.getProperties().getProperty("Digit4");
+		IProperty digit4 = propPosetBD1.getProperties().getProperty("Digit4");
 		Set<IProperty> digit4EncapsulatedProp = digit4.getEncapsulatedProperties();
 		for (IProperty encapsProp : digit4EncapsulatedProp) {
 			if (encapsProp.getPropertyName().equals("Position4"))
@@ -128,8 +175,8 @@ public class PropertyPosetTest {
 		boolean expectedSubCon;
 		boolean expectedSubSubCon;
 		boolean noSubSubSubCon;
-		propPoset.extractSubContexts();
-		Set<IPropertyPoset> subContexts = propPoset.getSubContexts();
+		propPosetBD1.extractSubContexts();
+		Set<IPropertyPoset> subContexts = propPosetBD1.getSubContexts();
 		if (subContexts.size() != 1) {
 			expectedSubCon = false;
 			expectedSubSubCon = false;
@@ -167,11 +214,10 @@ public class PropertyPosetTest {
 		assertTrue(expectedSubCon && expectedSubSubCon && noSubSubSubCon);
 	}
 	
-	private static void setGrove() {
-		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
-		SwFileReader fileReader = new SwFileReader();
+	private static ISyntaxGrove setGrove(Path path, IGenericFileReader fileReader) {
+		ISyntaxGrove grove = null;
 		try {
-			grove = fileReader.getSyntacticGrove(backburnDozen1);
+			grove = fileReader.getSyntacticGrove(path);
 			grove.markRedundancies();
 			grove.setPosetElementID();
 		}
@@ -180,7 +226,7 @@ public class PropertyPosetTest {
 				+ e.getMessage());
 		}
 		// printChains(trueGrove.getListOfSyntacticStringChains());	
-		
+		return grove;
 	}	
 
 	/*

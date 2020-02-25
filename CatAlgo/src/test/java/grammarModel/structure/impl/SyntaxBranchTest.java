@@ -124,7 +124,10 @@ public class SyntaxBranchTest {
 			terminals = grove.getStringOfTerminals();
 			if (terminals == null || terminals.isEmpty())
 				throw new Exception("'terminals' String is either null or empty.");
-			else arrayOfTerminals = terminals.split(GrammarModelConstants.SEPARATOR);
+			else {
+				terminals.replaceFirst(GrammarModelConstants.SEPARATOR, "");
+				arrayOfTerminals = terminals.split(GrammarModelConstants.SEPARATOR);
+			}
 		}
 		catch (Exception e) {
 			sameNbOfLeafIDsAndTerminals = false;

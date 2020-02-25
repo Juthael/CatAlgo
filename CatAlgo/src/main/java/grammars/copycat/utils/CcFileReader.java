@@ -773,10 +773,10 @@ public class CcFileReader extends GenericFileReader implements IGenericFileReade
 				}
 				else {
 					throw new FileReaderException("CcFileReader.buildSyntacticStructure() :  unrecognized "
-							+ "non-terminal node name '" + nodeName + "'." 
+							+ "non-terminal node named '" + nodeName + "'." 
 							+ System.lineSeparator()
 							+ "Tree : " + Integer.toString(treeIndex) + " ; Path : " + Integer.toString(pathIndex) 
-							+ " ; Node : " + Integer.toString(nodeIndex));					
+							+ " ; Node : " + Integer.toString(nodeIndex) + System.lineSeparator());					
 				}
 			}
 			else {

@@ -10,7 +10,7 @@ import grammars.copycat.leaves.LetteR;
 
 public class Letter extends SyntaxBranch implements ISyntaxBranch {
 
-	private static final String NAME = "LetteR";
+	private static final String NAME = "Letter";
 	private final LetteR letteR;
 	private final CcString ccString;
 	private final Direction direction;

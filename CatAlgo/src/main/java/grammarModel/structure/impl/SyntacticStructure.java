@@ -95,10 +95,12 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 	public void markRedundancies() {
 		List<ISyntacticStructure> components = getListOfComponents();
 		for (int i=0 ; i < components.size() ; i++) {
-			String currTerminals = components.get(i).getStringOfTerminals();
+			String currTerminals = 
+					GrammarModelConstants.SEPARATOR.concat(components.get(i).getStringOfTerminals());
 			for (int j=i+1 ; j < components.size() ; j++) {
 				if (!components.get(i).isRedundant()) {
-					String comparedTerminals = components.get(j).getStringOfTerminals();
+					String comparedTerminals = 
+							GrammarModelConstants.SEPARATOR.concat(components.get(j).getStringOfTerminals());
 					if (comparedTerminals.contains(currTerminals)) {
 						components.get(i).setAsRedundant();
 					}					
