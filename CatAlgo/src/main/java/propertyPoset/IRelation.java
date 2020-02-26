@@ -8,9 +8,8 @@ import propertyPoset.utils.IImplication;
 import propertyPoset.utils.IPosetMaxChains;
 
 /**
- * A IRelation is a binary relation on a set of properties. It is endowed with some additional 
- * functionalities, especially methods that can return some special elements of the 
- * set (such as 'dimensions', 'dimension roots', 'dimension atoms'). 
+ * A IRelation is a binary relation on a set of properties, endowed with some additional 
+ * features to facilitate navigation within the set.  
  * 
  * @author Gael Tregouet
  *
@@ -96,10 +95,18 @@ public interface IRelation {
 	 * 
 	 * @param propName the name of a property.
 	 * @return the names of all the properties that immediately precede the one whose name has been given 
-	 * in parameter. 
+	 * in parameter
 	 * @throws PropertyPosetException 
 	 */
 	Set<String> getPredecessors(String propName) throws PropertyPosetException;
+	
+	/**
+	 * Since the poset of properties is a lower semi-lattice, any subset of properties has an infimum. 
+	 * @param setOfProperties a set of property names 
+	 * @return the (name of the) infimum of the set of properties given in parameter
+	 * @throws PropertyPosetException
+	 */
+	String getInfimum(Set<String> properties) throws PropertyPosetException;
 	
 	/**
 	 * The rank of a property is the maximal length of a spanning chain bounded by the root of the (lower 
@@ -111,7 +118,14 @@ public interface IRelation {
 	int getRank(String propName) throws PropertyPosetException;
 	
 	/**
-	 * A 'dimension' is a sup-reducible element of the property poset. 
+	 * A dimension is a property that some elements of a context have in common, and which is also 
+	 * used to express their differences, since there are many ways to have this property. 
+	 * 
+	 * A property d is a 'dimension' if : <br> 
+	 * 1/ it has more than one predecessor (i.e., is sup-reducible). <br>
+	 * 2/ if 'P' is the set of predecessors, 'r' its infimum ; for any property 'v' less than 'd' and 
+	 * greater than 'r', there is no property 'p' that verifies (('p' < 'v') && ('p' not comparable 
+	 * to 'r')). <br>
 	 * @param propName the name of a property
 	 * @return true if the property whose name was given in parameter is a dimension, false otherwise. 
 	 * @throws PropertyPosetException 
@@ -119,21 +133,20 @@ public interface IRelation {
 	boolean checkIfDimension(String propName) throws PropertyPosetException;
 	
 	/**
-	 * A 'dimension root' is the infimum of the immediate predecessors of at least one dimension.
-	 * A 'dimension' is a sup-reducible element of the property poset.
-	 * @param propName the name of a property
-	 * @return true if the property whose name was given in parameter is a dimension root, false otherwise. 
-	 * @throws PropertyPosetException 
+	 * Informative properties are dimensions, dimension roots, and dimension values. <br>
+	 * 
+	 * A property d is a 'dimension' if :  <br>
+	 * 1/ it has more than one predecessor (i.e., is sup-reducible).  <br>
+	 * 2/ if 'P' is the set of predecessors, 'r' its infimum ; for any property 'q' less than 'd' and 
+	 * greater than 'r', there is no property 'p' that verifies (('p' < 'q') && ('p' not comparable 
+	 * to 'r')).  <br>
+	 * 
+	 * If 'd' is a dimension, then 'r' is its root. Let 'A' be the set of properties succeeding 'r' 
+	 * and less than 'd' ; then a property 'v' is a value of 'd' iff there exists a subset 'X' of 'A' 
+	 * such that 'v' is the supremum of 'A'. <br>
+	 * @throws PropertyPosetException
 	 */
-	boolean checkIfDimensionRoot(String propName) throws PropertyPosetException;
-	
-	/**
-	 * A 'dimension atom' is a successor of a dimension root.
-	 * @param propName the name of a property
-	 * @return true if the property whose name was given in parameter is a dimension atom, false otherwise. 
-	 * @throws PropertyPosetException 
-	 */
-	boolean checkIfDimensionAtom(String propName) throws PropertyPosetException;	
+	boolean checkIfInformativeProperty(String propName) throws PropertyPosetException;
 	
 	/**
 	 * 
@@ -154,18 +167,6 @@ public interface IRelation {
 	String getDimensionRoot(String dimension) throws PropertyPosetException;	
 	
 	/**
-	 * A sub-context root is a minimal element in the (possibly empty) set of 'dimension roots minus the 
-	 * poset root'.
-	 *  
-	 * Every dimension (i.e., sup-reducible element) has a dimension root, defined as the infimum of its 
-	 * predecessors. A dimension root can be associated with many dimensions. The poset root may or 
-	 * may not be a dimension root. 
-	 * @return the (possibly empty) set of sub-context roots. 
-	 * @throws PropertyPosetException
-	 */
-	Set<String> getSubContextRoots() throws PropertyPosetException;	
-	
-	/**
 	 * 
 	 * @return the names of the poset 'leaves', or maximal elements. Since the poset in not necessarily an 
 	 * upper semi-lattice, there can be many leaves. 
@@ -183,8 +184,6 @@ public interface IRelation {
 	/**
 	 * After this method has been called, the name of the property given in parameter can neither be found in the 
 	 * relation as an antecedent, nor as a consequent of any other property. 
-	 * However, a {@link IProperty} object can be protected from removal (because it is the root of a 
-	 * {@link IPropertyPoset} instance's subcontext). In this case, nothing happens. 
 	 * 
 	 * Warning : if an non-maximal element of the poset is removed and any element of its upper set is not, then 
 	 * the poset may not be a lower semi-lattice anymore, which can lead to inconsistent behavior. 
@@ -193,7 +192,7 @@ public interface IRelation {
 	 * @see IPropertyPoset
 	 * @param property the element to remove 
 	 * @return true if the property has actually been removed. 
-	 * @throws PropertyPosetException 
+	 * @throws PropertyPosetException if the parameter is unknown or if it is an informative property. 
 	 */
 	boolean removeProperty(IProperty property) throws PropertyPosetException;
 	

@@ -160,35 +160,6 @@ public class RelationTest {
 	}
 	
 	@Test
-	public void whenDimensionRootStatusCheckedThenBooleanReturnedGivenPropertyName() throws GrammarModelException, PropertyPosetException {
-		/*
-		for (String prop : trueGrove.getPosetMaxChains().getProperties()) {
-			if (trueRelation.checkIfDimensionRoot(prop))
-				System.out.println(prop);
-		}
-		*/
-		boolean propSeekWhenceCtxt0 = trueRelation.checkIfDimensionRoot("SeekWhenceCtxt0");
-		boolean propRelation2 = trueRelation.checkIfDimensionRoot("Relation2");
-		boolean propArithSeq2 = trueRelation.checkIfDimensionRoot("ArithSeq2");
-		boolean notSize0 = !trueRelation.checkIfDimensionRoot("Size0");
-		assertTrue(propSeekWhenceCtxt0 && propRelation2 && propArithSeq2 && notSize0);
-	}
-	
-	@Test
-	public void whenDimensionAtomStatusCheckedThenBooleanReturnedGivenPropertyName() throws GrammarModelException, PropertyPosetException {
-		/*
-		for (String prop : trueGrove.getPosetMaxChains().getProperties()) {
-			if (trueRelation.checkIfDimensionAtom(prop))
-				System.out.println(prop);
-		}
-		*/
-		boolean propDigit4 = trueRelation.checkIfDimensionAtom("Digit4");
-		boolean propSize0 = trueRelation.checkIfDimensionAtom("Size0");
-		boolean notArithSeq1 = !trueRelation.checkIfDimensionAtom("ArithSeq1");
-		assertTrue(propDigit4 && propSize0 && notArithSeq1);
-	}
-	
-	@Test
 	public void whenDimensionRootRequestedThenReturnedGivenDimensionName() throws PropertyPosetException {
 		boolean arithSeqRootIsRelation2 = (trueRelation.getDimensionRoot("ArithSeQ").equals("Relation2"));
 		assertTrue(arithSeqRootIsRelation2);
@@ -204,14 +175,6 @@ public class RelationTest {
 			exceptionIsThrown = true;
 		}
 		assertTrue(exceptionIsThrown);
-	}	
-	
-	@Test
-	public void whenSubContextRootsRequestedThenExpectedPropReturned() throws PropertyPosetException {
-		Set<String> expectedSubContextRoots = new HashSet<String>();
-		expectedSubContextRoots.add("Relation2");
-		Set<String> subContextRoots = trueRelation.getSubContextRoots();
-		assertTrue(expectedSubContextRoots.equals(subContextRoots));
 	}
 	
 	@Test
@@ -240,35 +203,34 @@ public class RelationTest {
 	
 	@Test
 	public void whenPropertyRemovalRequestedThenPropertyRemovedGivenPropertyName() throws PropertyPosetException {
-		String root = trueRelation.getPosetRoot();
-		Set<String> predecessorBeforeRemoval = trueRelation.getPredecessors("Relation1");
-		String propToRemove = predecessorBeforeRemoval.iterator().next();
+		boolean propRemoved = false;
+		String propToRemove = "ArithSeq0";
 		trueRelation.removeProperty(truePropPoset.getProperties().getProperty(propToRemove));
-		Set<String> predecessorAfterRemoval = trueRelation.getPredecessors("Relation1");
-		assertTrue(!predecessorAfterRemoval.equals(predecessorBeforeRemoval) 
-				&& !trueRelation.getGreaterProperties(root).contains(propToRemove));
+		try {
+			trueRelation.getConsequents(propToRemove);
+		}
+		catch (PropertyPosetException p) {
+			propRemoved = true;
+		}
+		if (propRemoved == true) {
+			propRemoved = (!trueRelation.getConsequents(trueRelation.getPosetRoot()).contains(propToRemove)
+						&& !trueRelation.getSuccessors("Relation0").contains(propToRemove));
+		}
+		assertTrue(propRemoved);
 	}	
 	
 	@Test
-	public void whenUpdateIsCalledThenUpdateOnRanksAndDimensionsAndRoots() throws PropertyPosetException {
-		String dimension = "RelatioN";
-		String propToRemove = "Relation2";
-		int dimensionRankBeforeModif = trueRelation.getRank(dimension);
-		String dimensionRootBeforeModif = trueRelation.getDimensionRoot(dimension);
-		trueRelation.removeProperty(truePropPoset.getProperties().removeProperty(propToRemove));
+	public void whenUpdateIsCalledThenUpdateProcessed() throws PropertyPosetException {
+		String propToRemove = "ArithSeq0";
+		String successor = "FirstValue1";
+		String encapsulatingProp = "Relation0";
+		Set<String> encapsulators = new HashSet<String>();
+		encapsulators.add(encapsulatingProp);
+		int successorRankBeforeModif = trueRelation.getRank(successor);
+		trueRelation.removeProperty(truePropPoset.getProperties().removeProperty(propToRemove, encapsulators));
 		trueRelation.updateRelationData();
-		int dimensionRankAfterModif = trueRelation.getRank(dimension);
-		/*
-		 * Note : the 'dimensionRootAfterModif' value is inconsistent in regards to the relation. 
-		 * There shouldn't actually be any dimension root value since after the removal of 
-		 * "Relation2", the set of predecessors of the dimension "RelatioN" is inf-irreducible. 
-		 * This is because "Relation2" is a non-maximal element of the poset, so if it is removed 
-		 * then every element of its upper set should be removed too. Here it is not, so 
-		 * the poset isn't a lower semi-lattice anymore, hence this inconsistent behavior. 
-		 */
-		String dimensionRootAfterModif = trueRelation.getDimensionRoot(dimension);
-		assertTrue(dimensionRankBeforeModif != dimensionRankAfterModif 
-				&& !dimensionRootBeforeModif.equals(dimensionRootAfterModif));
+		int successorRankAfterModif = trueRelation.getRank(successor);
+		assertTrue(successorRankBeforeModif != successorRankAfterModif);
 	}
 	
 	private static void setTrueGrove() {

@@ -75,35 +75,23 @@ public class PropertyPosetTest {
 	@Test
 	public void whenBinaryContextRequestedThenBinaryContextReturned() 
 			throws PropertyPosetException, AlreadyExistsException,	InvalidTypeException {
-
-		propPosetBD1.extractSubContexts();
 		propPosetBD1.reducePoset();
 		BinaryContext context = propPosetBD1.getBinaryContext();
-		
-		List<BinaryContext> contexts = new ArrayList<BinaryContext>();
-		contexts.add(context);
-		for (IPropertyPoset subContext : propPosetBD1.getSubContexts()) {
-			contexts.add(subContext.getBinaryContext());
-			for (IPropertyPoset subSubContext : subContext.getSubContexts()) {
-				contexts.add(subSubContext.getBinaryContext());
-			}
-		}
-		/*			
+		/*		
 		LMLogger.getLMLogger();
 		LMImages.getLMImages();
 		LMIcons.getLMIcons();
-		for (BinaryContext con : contexts) {
-			ConceptLattice conLattice = new ConceptLattice(con);
+			ConceptLattice conLattice = new ConceptLattice(context);
 			LatticeStructure lattStruc = new LatticeStructure(conLattice, context, LatticeStructure.BEST);
 			GraphicalLattice graphLatt = new GraphicalLattice(conLattice, lattStruc);
 			LatticeViewer lattViewer = new LatticeViewer(graphLatt);
 			lattViewer.setExtendedState(Frame.MAXIMIZED_BOTH);
 			lattViewer.setVisible(true); 
-		}
 		*/
 		assertTrue(context != null);
 	}
 	
+	/*
 	@Test
 	public void thisTestCanBeUsedToAnalyzeSyntaxTreesStoredInATextFile() 
 			throws PropertyPosetException, AlreadyExistsException, InvalidTypeException {
@@ -117,35 +105,23 @@ public class PropertyPosetTest {
 			System.out.println("PropertyPosetTest : error during PropertyPoset instantiation " 
 					+ System.lineSeparator() + e.getMessage());
 		}
-		testPoset.extractSubContexts();
 		testPoset.reducePoset();
 		BinaryContext context = testPoset.getBinaryContext();
-		
-		List<BinaryContext> contexts = new ArrayList<BinaryContext>();
-		contexts.add(context);
-		for (IPropertyPoset subContext : testPoset.getSubContexts()) {
-			contexts.add(subContext.getBinaryContext());
-			for (IPropertyPoset subSubContext : subContext.getSubContexts()) {
-				contexts.add(subSubContext.getBinaryContext());
-				for (IPropertyPoset subSubSubContext : subSubContext.getSubContexts())
-					contexts.add(subSubSubContext.getBinaryContext());
-			}
-		}
 	
 		LMLogger.getLMLogger();
 		LMImages.getLMImages();
 		LMIcons.getLMIcons();
-		for (BinaryContext con : contexts) {
-			ConceptLattice conLattice = new ConceptLattice(con);
-			LatticeStructure lattStruc = new LatticeStructure(conLattice, context, LatticeStructure.BEST);
-			GraphicalLattice graphLatt = new GraphicalLattice(conLattice, lattStruc);
-			LatticeViewer lattViewer = new LatticeViewer(graphLatt);
-			lattViewer.setExtendedState(Frame.MAXIMIZED_BOTH);
-			lattViewer.setVisible(true); 
-		}	
-		System.out.println("STOP");
 
+		ConceptLattice conLattice = new ConceptLattice(context);
+		LatticeStructure lattStruc = new LatticeStructure(conLattice, context, LatticeStructure.BEST);
+		GraphicalLattice graphLatt = new GraphicalLattice(conLattice, lattStruc);
+		LatticeViewer lattViewer = new LatticeViewer(graphLatt);
+		lattViewer.setExtendedState(Frame.MAXIMIZED_BOTH);
+		lattViewer.setVisible(true); 
+			
+		System.out.println("STOP");
 	}
+	*/
 	
 	@Test
 	public void whenPosetReductionCalledThenNonInformativePropertiesRemovedAndEncapsulated() throws PropertyPosetException {
@@ -168,50 +144,6 @@ public class PropertyPosetTest {
 				sizeCanBeRetreivedAsEncapsPropertyOfSize1 = true;
 		}
 		assertTrue(requestForSizEAfterReducThrowsException && sizeCanBeRetreivedAsEncapsPropertyOfSize1);
-	}
-	
-	@Test
-	public void whenSubContextExtractionCalledThenExpectedSubContextsExtracted() throws PropertyPosetException {
-		boolean expectedSubCon;
-		boolean expectedSubSubCon;
-		boolean noSubSubSubCon;
-		propPosetBD1.extractSubContexts();
-		Set<IPropertyPoset> subContexts = propPosetBD1.getSubContexts();
-		if (subContexts.size() != 1) {
-			expectedSubCon = false;
-			expectedSubSubCon = false;
-			noSubSubSubCon = false;
-		}
-		else {
-			IPropertyPoset subContext = subContexts.iterator().next();
-			if (!subContext.getRelation().getPosetRoot().equals("Relation2")) {
-				expectedSubCon = false;
-				expectedSubSubCon = false;
-				noSubSubSubCon = false;
-			}
-			else {
-				expectedSubCon = true;
-				Set<IPropertyPoset> subSubContexts = subContext.getSubContexts();
-				if (subSubContexts.size() != 2) {
-					expectedSubSubCon = false;
-					noSubSubSubCon = false;
-				}
-				else {
-					IPropertyPoset subSubContext1 = subSubContexts.iterator().next();
-					if (!subSubContext1.getRelation().getPosetRoot().equals("ArithSeq1")
-							&& !subSubContext1.getRelation().getPosetRoot().equals("ArithSeq2")) {
-						expectedSubSubCon = false;
-						noSubSubSubCon = false;
-					}
-					else {
-						expectedSubSubCon = true;
-						noSubSubSubCon = (subSubContext1.getSubContexts().size() == 0);
-					}
-					
-				}
-			}
-		}
-		assertTrue(expectedSubCon && expectedSubSubCon && noSubSubSubCon);
 	}
 	
 	private static ISyntaxGrove setGrove(Path path, IGenericFileReader fileReader) {

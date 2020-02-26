@@ -88,7 +88,7 @@ public class PropertySet implements IPropertySet {
 	}
 
 	@Override
-	public IProperty removeProperty(String propertyName, String antecedent) throws PropertyPosetException {
+	public IProperty removeProperty(String propertyName, Set<String> antecedents) throws PropertyPosetException {
 		IProperty propToRemove; 
 		try {
 			propToRemove = getProperty(propertyName);
@@ -97,41 +97,27 @@ public class PropertySet implements IPropertySet {
 			throw new PropertyPosetException("the property to remove '" + propertyName + "' cannot be found." );
 		}
 		boolean removed = false;
-		if (propToRemove.isRemovable()) {
-			try {
-				removed = setOfIProperties.remove(propToRemove);
-				if (!removed)
-					throw new PropertyPosetException("the property " + propertyName + " hasn't been removed.");
-				else {
+		try {
+			removed = setOfIProperties.remove(propToRemove);
+			if (!removed)
+				throw new PropertyPosetException("the property " + propertyName + " hasn't been removed.");
+			else {
+				for (String antecedentName : antecedents) {
 					IProperty antecedentProperty;
 					try {
-						antecedentProperty = getProperty(antecedent);
+						antecedentProperty = getProperty(antecedentName);
 					}
 					catch (Exception e) {
-						throw new PropertyPosetException("the antecedent property " + antecedent + " cannot be found." );
+						throw new PropertyPosetException("the antecedent property " + antecedentName 
+								+ " cannot be found." );
 					}
 					antecedentProperty.addEncapsulatedProp(propToRemove);
 				}
 			}
-			catch (Exception e) {
-				throw new PropertyPosetException("PropertySet.removeProperty : an error has occured. " 
-						+ System.lineSeparator() + e.getMessage());
-			}
 		}
-		return propToRemove;
-	}
-
-	@Override
-	public IProperty removeProperty(String propertyName) throws PropertyPosetException {
-		IProperty propToRemove = getProperty(propertyName);
-		if (propToRemove.isRemovable()) {
-			try {
-				setOfIProperties.remove(propToRemove);
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("PropertySet.removeProperty() : the property '" + propertyName 
-						+ "' cannot be removed." + System.lineSeparator() + e.getMessage());
-			}
+		catch (Exception e) {
+			throw new PropertyPosetException("PropertySet.removeProperty : an error has occured. " 
+					+ System.lineSeparator() + e.getMessage());
 		}
 		return propToRemove;
 	}

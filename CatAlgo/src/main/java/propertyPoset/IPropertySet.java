@@ -3,7 +3,6 @@ package propertyPoset;
 import java.util.Set;
 
 import propertyPoset.exceptions.PropertyPosetException;
-import propertyPoset.impl.PropertyPoset;
 
 /**
  * A IPropertySet is a (unordered) set of properties endowed with some basic functionalities. 
@@ -43,13 +42,9 @@ public interface IPropertySet {
 	/**
 	 * This method is called in order to remove from the set a 'non-informative' property, and nonetheless 
 	 * keeping track of it. <br> 
-	 * A property is non-informative if it is implied by a single predecessor, called its 'antecedent' (and 
-	 * if it's not an atom of the (lower semi-lattice) property poset).
+	 * A property is non-informative if it is neither a dimension nor a dimension root or value. 
 	 * After its removal, the non-informative property is stored as an 'encapsulated property' in the dedicated 
-	 * field of its antecedent.  
-	 * A target {@link IProperty} instance can be protected from removal, which prevents this method to 
-	 * operate any modification on the set and relation. This is not considered as an error, and no exception 
-	 * is thrown.  
+	 * field of its antecedents.  
 	 * @param propertyName name of the superfluous property.
 	 * @param antecedent name of the antecedent.
 	 * @return the property whose name has been given in the parameter 'propertyName' (has it been actually 
@@ -57,18 +52,5 @@ public interface IPropertySet {
 	 * @throws PropertyPosetException 
 	 * @see IProperty
 	 */
-	IProperty removeProperty(String propertyName, String antecedent) throws PropertyPosetException;
-	
-	/**
-	 * This method is used to remove from the set the property given in parameter, without 
-	 * keeping any track of it. It is intended to be called by a {@link PropertyPoset} object, 
-	 * only during the 'sub-context extraction' procedure. 
-	 * A target {@link IProperty} instance can be protected from removal, which prevents this method to 
-	 * operate any modification on the set and relation. This is not considered as an error, and no 
-	 * exception is thrown.  
-	 * @param propertyName
-	 * @return the property whose name has been given in parameter (has it been actually removed or not)
-	 * @throws PropertyPosetException
-	 */
-	IProperty removeProperty(String propertyName) throws PropertyPosetException;
+	IProperty removeProperty(String propertyName, Set<String> antecedent) throws PropertyPosetException;
 }

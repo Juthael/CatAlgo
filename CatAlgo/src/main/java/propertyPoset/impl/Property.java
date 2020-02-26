@@ -20,7 +20,6 @@ public class Property implements IProperty {
 
 	private String name;
 	private Set<IProperty> encapsulatedProp = new HashSet<IProperty>();
-	private boolean removable;
 	
 	/**
 	 * 
@@ -28,17 +27,11 @@ public class Property implements IProperty {
 	 */
 	public Property(String name) {
 		this.name = name;
-		removable = true;
 	}
 
 	@Override
 	public void addEncapsulatedProp(IProperty prop) {
 		encapsulatedProp.add(prop);
-	}
-	
-	@Override
-	public void setAsNotRemovable() {
-		removable = false;
 	}
 
 	@Override
@@ -154,36 +147,10 @@ public class Property implements IProperty {
 		}
 		return dimension;
 	}
-
-	@Override
-	public boolean isADimensionRoot(IRelation rel) throws PropertyPosetException {
-		boolean dimensionRoot;
-		try {
-			dimensionRoot = rel.checkIfDimensionRoot(name);
-		}
-		catch (Exception e) {
-			throw new PropertyPosetException("Property.isADimensionRoot() : an error has occured." 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		return dimensionRoot;
-	}
-
-	@Override
-	public boolean isADimensionAtom(IRelation rel) throws PropertyPosetException {
-		boolean dimensionAtom;
-		try {
-			dimensionAtom = rel.checkIfDimensionAtom(name);
-		}
-		catch (Exception e) {
-			throw new PropertyPosetException("Property.isADimensionAtom() : an error has occured." 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		return dimensionAtom;
-	}
 	
 	@Override
-	public boolean isRemovable() {
-		return removable;
+	public boolean isInformative(IRelation rel) throws PropertyPosetException {
+		return rel.checkIfInformativeProperty(name);
 	}
 
 }

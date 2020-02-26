@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -53,39 +54,17 @@ public class PropertySetTest {
 		}
 		set = propPoset.getProperties();
 	}
-
-	@Test
-	public void whenPropertyRemovedWith1ArgMethodThenCannotBeRetreived() throws PropertyPosetException {
-		Set<String> propNames = set.getSetOfPropertyNames();
-		Iterator<String> propNamesIterator = propNames.iterator();
-		String propToRemove = propNamesIterator.next();
-		while (!set.getProperty(propToRemove).isRemovable()) {
-			propToRemove = propNamesIterator.next();
-		}
-		@SuppressWarnings("unused")
-		IProperty propertyTR = set.getProperty(propToRemove);
-		set.removeProperty(propToRemove);
-		boolean exceptionThrownWhenRemovedPropRequested = false;
-		try {
-			set.getProperty(propToRemove);
-		}
-		catch(PropertyPosetException p) {
-			exceptionThrownWhenRemovedPropRequested = true;
-		}
-		assertTrue(exceptionThrownWhenRemovedPropRequested);
-	}
 	
 	@Test
 	public void whenPropertyRemovedWith2ArgsMethodThenCanBeRetreivedAsEncapsulated() throws PropertyPosetException {
 		Set<String> propNames = set.getSetOfPropertyNames();
 		Iterator<String> propNamesIterator = propNames.iterator();
 		String propToBeEncapsulatedName = propNamesIterator.next();
-		while (!set.getProperty(propToBeEncapsulatedName).isRemovable()) {
-			propToBeEncapsulatedName = propNamesIterator.next();
-		}
 		String encapsulatingPropName = propNamesIterator.next();
+		Set<String> encapsulators = new HashSet<String>();
+		encapsulators.add(encapsulatingPropName);
 		IProperty propToBeEncapsulated = set.getProperty(propToBeEncapsulatedName);
-		set.removeProperty(propToBeEncapsulatedName, encapsulatingPropName);
+		set.removeProperty(propToBeEncapsulatedName, encapsulators);
 		IProperty retreivedProperty = set.getProperty(encapsulatingPropName).getEncapsulatedProperties().iterator().next();
 		assertTrue(propToBeEncapsulated == retreivedProperty);
 	}

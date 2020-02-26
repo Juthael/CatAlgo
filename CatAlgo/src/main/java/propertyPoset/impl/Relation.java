@@ -3,6 +3,7 @@ package propertyPoset.impl;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,9 +15,8 @@ import propertyPoset.exceptions.PropertyPosetException;
 import propertyPoset.utils.IImplication;
 
 /**
- * A Relation is an implementation of a binary relation on a set of properties. It is endowed with some additional 
- * functionalities, especially methods that can return some special elements of the set (such as 'dimensions', 
- * 'dimension roots', 'dimension atoms'). 
+ * A Relation is an implementation - endowed with some useful functionalities - of a binary relation on a set of 
+ * properties.
  * 
  * @author Gael Tregouet
  *
@@ -27,8 +27,7 @@ public class Relation implements IRelation {
 	private Map<String, Set<String>> successorRelation = new HashMap<String, Set<String>>();
 	private String posetRoot = "";
 	private Set<String> dimensions = new HashSet<String>();
-	private Set<String> dimensionRoots = new HashSet<String>();
-	private Set<String> dimensionAtoms = new HashSet<String>();
+	private Set<String> allInformativeProperties = new HashSet<String>();
 	private Map<String, String> dimensionToRoot = new HashMap<String, String>();
 	private Map<String, Integer> propertyToRank = new HashMap<String, Integer>();
 	private boolean allDataIsUpToDate = false;
@@ -50,36 +49,6 @@ public class Relation implements IRelation {
 		}
 		else throw new PropertyPosetException("Relation() : param 'IPropertyPoset set' returns an empty set.");
 	}
-	
-	/**
-	 * Restricts the relation given in first parameter to the subset given in second parameter.
-	 * @param rel a relation on a set that includes the 'subset' in parameter
-	 * @param subsetNames names of elements of a subset of properties
-	 * @throws PropertyPosetException
-	 */
-	public Relation(IRelation rel, Set<String> subsetNames) throws PropertyPosetException {
-		if (!subsetNames.isEmpty()) {
-			for (String propName : subsetNames) {
-				Set<String> propConsequents;
-				try {
-					propConsequents = new HashSet<String>(rel.getConsequents(propName));
-				}
-				catch (Exception e) {
-					throw new PropertyPosetException("Relation() : an error has occured.");
-				}
-				propConsequents.retainAll(subsetNames);
-				relation.put(propName, propConsequents);
-			}
-			try {
-				updateRelationData();
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("Relation() : failed to update relation data." 
-						+ System.lineSeparator() + e.getMessage());
-			}
-		}
-		else throw new PropertyPosetException("Relation() : param 'Set<String> subsetNames' is empty");
-	}	
 
 	@Override
 	public void addImplication(IImplication implication) throws PropertyPosetException {
@@ -222,6 +191,46 @@ public class Relation implements IRelation {
 		}
 		return predecessorNames;
 	}
+	
+	@Override
+	public String getInfimum(Set<String> properties) throws PropertyPosetException {
+		String infimum = "";
+		try {
+			if (properties.isEmpty()) {
+				throw new PropertyPosetException("Relation.getInfimum() : the set of properties shouldn't be empty.");
+			}
+			else {
+				Iterator<String> propIterator = properties.iterator(); 
+				int setMinRank = getRank(propIterator.next());
+				while (propIterator.hasNext()) {
+					String nextProp = propIterator.next();
+					if (getRank(nextProp) < setMinRank)
+						setMinRank = getRank(nextProp);
+				}
+				int testedRank = setMinRank;
+				while (infimum.isEmpty() && testedRank >=0) {
+					List<String> propAtTestedRank = getPropAtThisRank(testedRank);
+					for (String prop : propAtTestedRank) {
+						if (infimum.isEmpty() && getConsequents(prop).containsAll(properties))
+							infimum = prop;
+					}
+					testedRank--;
+				}
+				if (infimum.isEmpty()) {
+					StringBuilder sB = new StringBuilder();
+					for (String prop : properties) {
+						sB.append(prop + System.lineSeparator());
+					}
+					throw new PropertyPosetException("An infimum should have been found for properties "
+							+ sB.toString());
+				}
+			}
+		}
+		catch (Exception e) {
+			throw new PropertyPosetException("Relation.getInfimum() : an error has occured." + System.lineSeparator());
+		}
+		return infimum;
+	}
 
 	@Override
 	public int getRank(String propName) throws PropertyPosetException {
@@ -242,31 +251,19 @@ public class Relation implements IRelation {
 	}
 
 	@Override
-	public boolean checkIfDimensionRoot(String propName) throws PropertyPosetException {
-		updateRelationData();
-		if (!relation.containsKey(propName))
-			throw new PropertyPosetException("Relation.checkIfLocalRoot() : property '" + propName 
-					+ "' is unknown.");
-		else return (dimensionRoots.contains(propName));
-	}
-
-	@Override
-	public boolean checkIfDimensionAtom(String propName) throws PropertyPosetException {
-		updateRelationData();
-		if (!relation.containsKey(propName))
-			throw new PropertyPosetException("Relation.checkIfLocalRoot() : property '" + propName 
-					+ "' is unknown.");
-		else return (dimensionAtoms.contains(propName));
-	}
-	
-	@Override
 	public String getPosetRoot() throws PropertyPosetException {
-		setSuccessorRelationMapAndRanks();
+		setPosetRoot();
 		if (posetRoot.isEmpty())
 			throw new PropertyPosetException("Relation.getPosetRoot() : the posetRoot can't be found or "
 					+ "is empty.");
 		else return posetRoot;
 	}	
+	
+	@Override
+	public boolean checkIfInformativeProperty(String propName) throws PropertyPosetException {
+		updateRelationData();
+		return allInformativeProperties.contains(propName);
+	}
 
 	@Override
 	public String getDimensionRoot(String dimension) throws PropertyPosetException {
@@ -276,25 +273,6 @@ public class Relation implements IRelation {
 					+ " is not a dimension."); 
 		}
 		else return dimensionToRoot.get(dimension);
-	}
-	
-	public Set<String> getSubContextRoots() throws PropertyPosetException{
-		updateRelationData();
-		Set<String> subContextRoots = new HashSet<String>();
-		boolean subCtxtRootsFound = false;
-		int testedRank = 1;
-		int maxRank = getMaximalRank();
-		while(subCtxtRootsFound == false && testedRank < maxRank) {
-			for (String localRoot : dimensionRoots) {
-				if (getRank(localRoot) == testedRank) {
-					subContextRoots.add(localRoot);
-					if (!subCtxtRootsFound)
-						subCtxtRootsFound = true;
-				}
-			}
-			testedRank++;
-		}
-		return subContextRoots;
 	}
 
 	@Override
@@ -325,7 +303,11 @@ public class Relation implements IRelation {
 		if (!relation.containsKey(propertyName))
 			throw new PropertyPosetException("Relation.removeProperty() : the property " 
 					+ propertyName + " is unknown");
-		else if (property.isRemovable()){
+		else if (checkIfInformativeProperty(propertyName) == true){
+			throw new PropertyPosetException("Relation.removeProperty() : the property " 
+					+ propertyName + " is informative and therefore should not be removed.");
+		}
+		else {
 			relation.remove(propertyName);
 			for (Set<String> consequents : relation.values())
 				consequents.remove(propertyName);
@@ -342,16 +324,13 @@ public class Relation implements IRelation {
 		if (!allDataIsUpToDate) {
 			if (!dimensions.isEmpty())
 				dimensions = new HashSet<String>();
-			if(!dimensionRoots.isEmpty())
-				dimensionRoots = new HashSet<String>();
-			if (!dimensionAtoms.isEmpty())
-				dimensionAtoms = new HashSet<String>();
+			if (!allInformativeProperties.isEmpty())
+				allInformativeProperties = new HashSet<String>();
 			if (!dimensionToRoot.isEmpty())
 				dimensionToRoot = new HashMap<String, String>();
 			try {
 				setSuccessorRelationMapAndRanks();
-				setDimensions();
-				setDimensionRootsAndAtoms();
+				setInformativeProperties();
 				allDataIsUpToDate = true;	
 			}
 			catch (Exception e) {
@@ -360,6 +339,46 @@ public class Relation implements IRelation {
 			}
 		}
 	}
+	
+	/**
+	 * A property d is a 'dimension' if : 
+	 * 1/ it has more than one predecessor (i.e., is sup-reducible).
+	 * 2/ if 'P' is the set of predecessors, 'r' its infimum ; for any property 'q' less than 'd' and 
+	 * greater than 'r', there is no property 'p' that verifies (('p' < 'q') && ('p' not comparable 
+	 * to 'r')). 
+	 * 
+	 * @param potentialDimension sup-reducible property and potential dimension
+	 * @param potentialRoot infimum of the potential dimension predecessors
+	 * @return 'true' if 'potentialDimension' is really a dimension, 'false' otherwise
+	 * @throws PropertyPosetException
+	 */
+	private boolean checkIfThisIsATrueDimension(String potentialDimension, String potentialRoot) 
+			throws PropertyPosetException {
+		boolean thisIsATrueDimension = true;
+		setPosetRoot();
+		try {
+			if (!potentialRoot.equals(posetRoot)) {
+				Set<String> greaterThanRLessThanD = new HashSet<String>(getGreaterProperties(potentialRoot));
+				greaterThanRLessThanD.retainAll(getLesserProperties(potentialDimension));
+				Set<String> relatedToR = new HashSet<String>(getConsequents(potentialRoot));
+				relatedToR.addAll(getAntecedents(potentialRoot));
+				Iterator<String> gRlDIter = greaterThanRLessThanD.iterator();
+				while (gRlDIter.hasNext() && thisIsATrueDimension == true) {
+					String currentProp = gRlDIter.next();
+					Set<String> currentPropAntecedents = getAntecedents(currentProp);
+					if (!relatedToR.containsAll(currentPropAntecedents)) {
+						thisIsATrueDimension = false;
+					}
+				}
+			}
+		}
+		catch (Exception e) {
+			throw new PropertyPosetException("Relation.checkIfThisIsATrueDimension() : an error has occured "
+					+ "while processing on property " + potentialDimension + "." + System.lineSeparator() 
+					+ e.getMessage());
+		}
+		return thisIsATrueDimension;
+	}	
 
 	/**
 	 * This method can be called even when 'allDataIsUpToDate == false' and 'rankMappingIsUpToDate == false'
@@ -420,64 +439,53 @@ public class Relation implements IRelation {
 	}
 	
 	/**
-	 * The root of a dimension is the infimum of its predecessors, i.e. the greatest property that 
-	 * implies them all. The atoms of a dimension are the successors of its root. 
+	 * Informative properties are the poset root, dimensions, dimension roots, and dimension values. 
+	 * 
+	 * A property d is a 'dimension' if : 
+	 * 1/ it has more than one predecessor (i.e., is sup-reducible).
+	 * 2/ if 'P' is the set of predecessors, 'r' its infimum ; for any property 'q' less than 'd' and 
+	 * greater than 'r', there is no property 'p' that verifies (('p' < 'q') && ('p' not comparable 
+	 * to 'r')). 
+	 * 
+	 * Let 'A' be the set of properties succeeding 'r' and less than 'd' ; then a property 'v' 
+	 * is a value of 'd' iff there exists a subset 'X' of 'A' such that 'v' is the supremum of 'A'.  
+	 * So 'v' is either an element of A, or the supremum of two or more elements of A ; in this last 
+	 * case 'v' is a dimension itself, so it will be found as such and does not need to be explicitly 
+	 * looked for as a value.  
 	 * @throws PropertyPosetException
 	 */
-	private void setDimensionRootsAndAtoms() throws PropertyPosetException {
-		for (String dimension : dimensions) {
-			String dimensionRoot = "";
-			Set<String> dimensionPredecessors;
-			try {
-				dimensionPredecessors = getPredecessors(dimension);
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("Relation.setDimensionRoots() : an error has occured." 
-						+ System.lineSeparator() + e.getMessage()); 
-			}
-			boolean dimensionRootFound = false;
-			int testedRank = getRank(dimension) - 2;
-			while (!dimensionRootFound && testedRank >= 0) {
-				List<String> potentialRoots = getPropAtThisRank(testedRank);
-				int potentialRootIndex = 0;
-				while (dimensionRootFound == false && potentialRootIndex < potentialRoots.size()) {
-					String potentialRoot = potentialRoots.get(potentialRootIndex);
-					if (relation.get(potentialRoot).containsAll(dimensionPredecessors)){
-						dimensionRootFound = true;
-						dimensionRoot = potentialRoot;
-						dimensionRoots.add(dimensionRoot);
-						dimensionToRoot.put(dimension, dimensionRoot);
-						Set<String> thisDimensionAtoms = getSuccessors(dimensionRoot);
-						thisDimensionAtoms.retainAll(getAntecedents(dimension));
-						dimensionAtoms.addAll(thisDimensionAtoms);
+	private void setInformativeProperties() throws PropertyPosetException {
+		try {
+			for (String potentialDimension : relation.keySet()) {
+				boolean isSupReducible = (getPredecessors(potentialDimension).size() > 1);
+				if (isSupReducible){
+					Set<String> predecessors = getPredecessors(potentialDimension);
+					String potentialRoot = getInfimum(predecessors);
+					boolean thisIsATrueDimension = checkIfThisIsATrueDimension(potentialDimension, potentialRoot);
+					if (thisIsATrueDimension) {
+						Set<String> dimensionAtoms = new HashSet<String>(getSuccessors(potentialRoot));
+						dimensionAtoms.retainAll(getAntecedents(potentialDimension));
+						if (dimensionAtoms.size() < 2)
+							throw new PropertyPosetException("The dimension root " + potentialRoot + " of the dimension "
+									+ potentialDimension + " having " + dimensionAtoms.size() + " atoms is "
+											+ "inconsistent.");
+						else {
+							dimensions.add(potentialDimension);
+							dimensionToRoot.put(potentialDimension, potentialRoot);
+							allInformativeProperties.add(potentialDimension);
+							allInformativeProperties.add(potentialRoot);
+							allInformativeProperties.addAll(dimensionAtoms);
+						}
 					}
-					else potentialRootIndex++;
 				}
-				testedRank--;
-			}
-			if (!dimensionRootFound) {
-				throw new PropertyPosetException("Relation.setDimensionRootsAndAtoms() : no posetRoot found for "
-						+ "dimension '" + dimension + "'.");
+				else if (potentialDimension.equals(posetRoot)) {
+					allInformativeProperties.add(potentialDimension);
+				}
 			}
 		}
-	}	
-	
-	/**
-	 * A property is a 'dimension' if it has more than one predecessor (i.e., is sup-reducible). 
-	 * @throws PropertyPosetException
-	 */
-	private void setDimensions() throws PropertyPosetException {
-		for (String propName : relation.keySet()) {
-			boolean dimension;
-			try {
-				dimension = (getPredecessors(propName).size() > 1);
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("Relation.setDimensions() : an error has occured." 
-						+ System.lineSeparator() + e.getMessage());
-			}
-			if (dimension)
-				dimensions.add(propName);
+		catch (Exception e) {
+			throw new PropertyPosetException("Relation.setDimensionsAndRootsAndValues : an error has occured. "
+					+ System.lineSeparator() + e.getMessage());
 		}
 	}
 	
@@ -510,6 +518,7 @@ public class Relation implements IRelation {
 		if (!successorRelationIsUpToDate) {
 			successorRelation = new HashMap<String, Set<String>>();
 			try {
+				setPosetRoot();
 				setSuccRelationRecursively(posetRoot);
 				if (successorRelation.size() != relation.size()) {
 					throw new PropertyPosetException("Relation and "
@@ -533,11 +542,11 @@ public class Relation implements IRelation {
 	private void setSuccessorRelationMapAndRanks() throws PropertyPosetException {
 		if (!rankMappingIsUpToDate) {
 			try {
-				setPosetRoot();
 				for (String prop : relation.keySet())
 					propertyToRank.put(prop, 0);
 				setSuccessorRelationMap();
 				try {
+					setPosetRoot();
 					setSuccRankRecursively(posetRoot);
 				}
 				catch (Exception e) {

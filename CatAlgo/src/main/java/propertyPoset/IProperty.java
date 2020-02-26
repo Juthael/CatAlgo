@@ -23,13 +23,6 @@ public interface IProperty {
 	void addEncapsulatedProp(IProperty prop);
 	
 	/**
-	 * Some properties must be protected from removal because they could be spotted by a {@link IPropertyPoset} as 
-	 * 'non-informative' during the set reduction procedure (IPropertySet.reduce()), although being the root of an 
-	 * extracted subset. 
-	 */
-	void setAsNotRemovable();
-	
-	/**
 	 * 
 	 * @return the property name.
 	 */
@@ -103,7 +96,14 @@ public interface IProperty {
 	int getRank(IRelation rel) throws PropertyPosetException;
 	
 	/**
-	 * The term 'dimension' refer to a sup-reducible element of a property (lower semi-lattice) poset. 
+	 * A dimension is a property that some elements of a context have in common, and which is also 
+	 * used to express their differences, since there are many ways to have this property. 
+	 * 
+	 * A property d is a 'dimension' if : <br> 
+	 * 1/ it has more than one predecessor (i.e., is sup-reducible). <br>
+	 * 2/ if 'P' is the set of predecessors, 'r' its infimum ; for any property 'v' less than 'd' and 
+	 * greater than 'r', there is no property 'p' that verifies (('p' < 'v') && ('p' not comparable 
+	 * to 'r')). <br> 
 	 * @param rel a relation that links this property with other properties of a {@link IPropertyPoset}.
 	 * @return true if this property is a dimension according to the relation given in parameter.  
 	 * @throws PropertyPosetException 
@@ -111,28 +111,21 @@ public interface IProperty {
 	boolean isADimension(IRelation rel) throws PropertyPosetException;
 	
 	/**
-	 * The term 'dimension root' refer to the infimum of the immediate predecessors of (at least) one 
-	 * dimension (the 'dimension root' is also called the 'contextual basis' of this dimension). 
-	 * @param rel a relation that links this property with other properties of a {@link IPropertyPoset}.
-	 * @return true if this property is a dimension root according to the relation given in parameter.  
-	 * @throws PropertyPosetException 
+	 * Informative properties are dimensions, dimension roots, and dimension values. <br>
+	 * 
+	 * A property d is a 'dimension' if :  <br>
+	 * 1/ it has more than one predecessor (i.e., is sup-reducible).  <br>
+	 * 2/ if 'P' is the set of predecessors, 'r' its infimum ; for any property 'q' less than 'd' and 
+	 * greater than 'r', there is no property 'p' that verifies (('p' < 'q') && ('p' not comparable 
+	 * to 'r')).  <br>
+	 * 
+	 * If 'd' is a dimension, then 'r' is its root. Let 'A' be the set of properties succeeding 'r' 
+	 * and less than 'd' ; then a property 'v' is a value of 'd' iff there exists a subset 'X' of 'A' 
+	 * such that 'v' is the supremum of 'A'. <br> 
+	 * @param rel a relation that links this property with other properties of a {@link IPropertyPoset}. 
+	 * @return 'true' if this property is informative, 'false' otherwise
+	 * @throws PropertyPosetException
 	 */
-	boolean isADimensionRoot(IRelation rel) throws PropertyPosetException;
-	
-	/**
-	 * The term 'dimension atom' refer to the immediate successors of a dimension root.
-	 * @param rel a relation that links this property with other properties of a {@link IPropertyPoset}.
-	 * @return true if this property is a dimension atom according to the relation given in parameter.  
-	 * @throws PropertyPosetException 
-	 */
-	boolean isADimensionAtom(IRelation rel) throws PropertyPosetException;
-	
-	/** 
-	 * Some properties must be protected from removal because they could be identified by a {@link IPropertyPoset} as 
-	 * 'non-informative' during the set reduction procedure (IPropertySet.reduce()), although being the root (or 
-	 * on the path) of an extracted subset. 
-	 * @return 'true' if removable, false otherwise
-	 */
-	boolean isRemovable();
+	boolean isInformative(IRelation rel) throws PropertyPosetException;
 	
 }

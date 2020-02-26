@@ -10,13 +10,10 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IChains;
-import grammars.copycat.utils.CcFileReader;
 import grammars.seekWhence.utils.SwFileReader;
-import grammarModel.exceptions.FileReaderException;
-import grammarModel.exceptions.GrammarModelException;
-import grammarModel.structure.ISyntacticStructure;
 
 public class SyntaxGroveTest {
 
