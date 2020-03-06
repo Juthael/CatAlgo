@@ -206,10 +206,8 @@ public class RelationTest {
 		String propToRemove = "ArithSeq0";
 		String successor = "FirstValue1";
 		String encapsulatingProp = "Relation0";
-		Set<String> encapsulators = new HashSet<String>();
-		encapsulators.add(encapsulatingProp);
 		int successorRankBeforeModif = trueRelation.getRank(successor);
-		trueRelation.removeProperty(truePropPoset.getProperties().removeProperty(propToRemove, encapsulators));
+		trueRelation.removeProperty(truePropPoset.getProperties().removeProperty(propToRemove, encapsulatingProp));
 		trueRelation.updateRelationData();
 		int successorRankAfterModif = trueRelation.getRank(successor);
 		assertTrue(successorRankBeforeModif != successorRankAfterModif);

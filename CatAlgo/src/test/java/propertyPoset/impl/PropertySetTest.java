@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -61,10 +60,8 @@ public class PropertySetTest {
 		Iterator<String> propNamesIterator = propNames.iterator();
 		String propToBeEncapsulatedName = propNamesIterator.next();
 		String encapsulatingPropName = propNamesIterator.next();
-		Set<String> encapsulators = new HashSet<String>();
-		encapsulators.add(encapsulatingPropName);
 		IProperty propToBeEncapsulated = set.getProperty(propToBeEncapsulatedName);
-		set.removeProperty(propToBeEncapsulatedName, encapsulators);
+		set.removeProperty(propToBeEncapsulatedName, encapsulatingPropName);
 		IProperty retreivedProperty = set.getProperty(encapsulatingPropName).getEncapsulatedProperties().iterator().next();
 		assertTrue(propToBeEncapsulated == retreivedProperty);
 	}
