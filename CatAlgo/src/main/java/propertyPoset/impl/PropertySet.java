@@ -88,7 +88,7 @@ public class PropertySet implements IPropertySet {
 	}
 
 	@Override
-	public IProperty removeProperty(String propertyName, Set<String> antecedents) throws PropertyPosetException {
+	public IProperty removeProperty(String propertyName, String antecedentName) throws PropertyPosetException {
 		IProperty propToRemove; 
 		try {
 			propToRemove = getProperty(propertyName);
@@ -102,17 +102,15 @@ public class PropertySet implements IPropertySet {
 			if (!removed)
 				throw new PropertyPosetException("the property " + propertyName + " hasn't been removed.");
 			else {
-				for (String antecedentName : antecedents) {
-					IProperty antecedentProperty;
-					try {
-						antecedentProperty = getProperty(antecedentName);
-					}
-					catch (Exception e) {
-						throw new PropertyPosetException("the antecedent property " + antecedentName 
-								+ " cannot be found." );
-					}
-					antecedentProperty.addEncapsulatedProp(propToRemove);
+				IProperty antecedentProperty;
+				try {
+					antecedentProperty = getProperty(antecedentName);
 				}
+				catch (Exception e) {
+					throw new PropertyPosetException("the antecedent property " + antecedentName 
+							+ " cannot be found." );
+				}
+				antecedentProperty.addEncapsulatedProp(propToRemove);
 			}
 		}
 		catch (Exception e) {

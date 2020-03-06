@@ -3,6 +3,7 @@ package grammars.copycat.branches;
 import java.util.ArrayList;
 import java.util.List;
 
+import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.impl.SyntaxBranch;
@@ -25,6 +26,12 @@ public class Value extends SyntaxBranch implements ISyntaxBranch, IValueOrValuE 
 	public String getName() {
 		return value;
 	}
+	
+	@Override
+	public String getPosetElementName() throws GrammarModelException {
+		String namePlusSeparator = getName().concat("_");
+		return namePlusSeparator.concat(valueOrValuE.getPosetElementName());
+	}	
 
 	@Override
 	public List<ISyntacticStructure> getListOfComponents() {

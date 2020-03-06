@@ -160,24 +160,6 @@ public class RelationTest {
 	}
 	
 	@Test
-	public void whenDimensionRootRequestedThenReturnedGivenDimensionName() throws PropertyPosetException {
-		boolean arithSeqRootIsRelation2 = (trueRelation.getDimensionRoot("ArithSeQ").equals("Relation2"));
-		assertTrue(arithSeqRootIsRelation2);
-	}
-	
-	@Test
-	public void whenDimensionRootRequestedThenExceptionThrownGivenNonDimensionPropertyName() {
-		boolean exceptionIsThrown = false;
-		try {
-			trueRelation.getDimensionRoot("SizE");
-		}
-		catch (Exception e) {
-			exceptionIsThrown = true;
-		}
-		assertTrue(exceptionIsThrown);
-	}
-	
-	@Test
 	public void whenPosetLeavesRequestedThenExpectedPropertyNamesReturned() throws PropertyPosetException {
 		Set<String> expectedLeaves = new HashSet<String>();
 		expectedLeaves.add("RelatioN");

@@ -41,14 +41,12 @@ public interface IPropertyPoset {
 	/**
 	 * This method guarantees that the poset is displayed in a reduced form, i.e. rid of its 'non-informative' elements. <br>
 	 * 
-	 * A property is non-informative if it is neither a dimension nor a dimension root or value. <br>
+	 * An element is informative only if it is a dimension, a dimension value, an atom of the (lower semi-lattice) poset 
+	 * or the poset root.  <br>
 	 * 
-	 * A good example of a 'non-informative property' would be a property B that has a property A as its unique predecessor 
-	 * (and A is not the poset root). 
-	 * In this case, when any other element than B implies B, then one knows for sure that it also implies A. Since the set of 
-	 * non-B elements implying the property B is the same than the set of elements implying the property A, B provides no 
-	 * additional information and can therefore be removed. It must however be kept as an 'encapsulated property' of A in the 
-	 * dedicated field of the class {@link IProperty}. <br>
+	 * Any non-informative element is removed from the poset and kept as an 'encapsulated property' of its antecedent, in  
+	 * the dedicated field of the {@link IProperty}. This procedure can be recursive if the antecedent is itself a 
+	 * non-informative property. <br>
 	 * 
 	 * @throws PropertyPosetException 
 	 */

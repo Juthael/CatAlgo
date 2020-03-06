@@ -28,7 +28,6 @@ public class Relation implements IRelation {
 	private String posetRoot = "";
 	private Set<String> dimensions = new HashSet<String>();
 	private Set<String> allInformativeProperties = new HashSet<String>();
-	private Map<String, String> dimensionToRoot = new HashMap<String, String>();
 	private Map<String, Integer> propertyToRank = new HashMap<String, Integer>();
 	private boolean allDataIsUpToDate = false;
 	private boolean rankMappingIsUpToDate = false;
@@ -266,16 +265,6 @@ public class Relation implements IRelation {
 	}
 
 	@Override
-	public String getDimensionRoot(String dimension) throws PropertyPosetException {
-		updateRelationData();
-		if (!dimensionToRoot.containsKey(dimension)) {
-			throw new PropertyPosetException("Relation.getLocalRoot() : the argument " + dimension 
-					+ " is not a dimension."); 
-		}
-		else return dimensionToRoot.get(dimension);
-	}
-
-	@Override
 	public Set<String> getPosetleaves() throws PropertyPosetException {
 		Set<String> posetLeaves = new HashSet<String>();
 		for (String property : relation.keySet()) {
@@ -326,8 +315,6 @@ public class Relation implements IRelation {
 				dimensions = new HashSet<String>();
 			if (!allInformativeProperties.isEmpty())
 				allInformativeProperties = new HashSet<String>();
-			if (!dimensionToRoot.isEmpty())
-				dimensionToRoot = new HashMap<String, String>();
 			try {
 				setSuccessorRelationMapAndRanks();
 				setInformativeProperties();
@@ -339,46 +326,6 @@ public class Relation implements IRelation {
 			}
 		}
 	}
-	
-	/**
-	 * A property d is a 'dimension' if : 
-	 * 1/ it has more than one predecessor (i.e., is sup-reducible).
-	 * 2/ if 'P' is the set of predecessors, 'r' its infimum ; for any property 'q' less than 'd' and 
-	 * greater than 'r', there is no property 'p' that verifies (('p' < 'q') && ('p' not comparable 
-	 * to 'r')). 
-	 * 
-	 * @param potentialDimension sup-reducible property and potential dimension
-	 * @param potentialRoot infimum of the potential dimension predecessors
-	 * @return 'true' if 'potentialDimension' is really a dimension, 'false' otherwise
-	 * @throws PropertyPosetException
-	 */
-	private boolean checkIfThisIsATrueDimension(String potentialDimension, String potentialRoot) 
-			throws PropertyPosetException {
-		boolean thisIsATrueDimension = true;
-		setPosetRoot();
-		try {
-			if (!potentialRoot.equals(posetRoot)) {
-				Set<String> greaterThanRLessThanD = new HashSet<String>(getGreaterProperties(potentialRoot));
-				greaterThanRLessThanD.retainAll(getLesserProperties(potentialDimension));
-				Set<String> relatedToR = new HashSet<String>(getConsequents(potentialRoot));
-				relatedToR.addAll(getAntecedents(potentialRoot));
-				Iterator<String> gRlDIter = greaterThanRLessThanD.iterator();
-				while (gRlDIter.hasNext() && thisIsATrueDimension == true) {
-					String currentProp = gRlDIter.next();
-					Set<String> currentPropAntecedents = getAntecedents(currentProp);
-					if (!relatedToR.containsAll(currentPropAntecedents)) {
-						thisIsATrueDimension = false;
-					}
-				}
-			}
-		}
-		catch (Exception e) {
-			throw new PropertyPosetException("Relation.checkIfThisIsATrueDimension() : an error has occured "
-					+ "while processing on property " + potentialDimension + "." + System.lineSeparator() 
-					+ e.getMessage());
-		}
-		return thisIsATrueDimension;
-	}	
 
 	/**
 	 * This method can be called even when 'allDataIsUpToDate == false' and 'rankMappingIsUpToDate == false'
@@ -459,10 +406,9 @@ public class Relation implements IRelation {
 			for (String potentialDimension : relation.keySet()) {
 				boolean isSupReducible = (getPredecessors(potentialDimension).size() > 1);
 				if (isSupReducible){
-					Set<String> predecessors = getPredecessors(potentialDimension);
-					String potentialRoot = getInfimum(predecessors);
-					boolean thisIsATrueDimension = checkIfThisIsATrueDimension(potentialDimension, potentialRoot);
-					if (thisIsATrueDimension) {
+					Set<String> dimensionCoAtoms = getPredecessors(potentialDimension);
+					String potentialRoot = getInfimum(dimensionCoAtoms);
+					if (potentialRoot.equals(posetRoot)) {
 						Set<String> dimensionAtoms = new HashSet<String>(getSuccessors(potentialRoot));
 						dimensionAtoms.retainAll(getAntecedents(potentialDimension));
 						if (dimensionAtoms.size() < 2)
@@ -471,10 +417,10 @@ public class Relation implements IRelation {
 											+ "inconsistent.");
 						else {
 							dimensions.add(potentialDimension);
-							dimensionToRoot.put(potentialDimension, potentialRoot);
 							allInformativeProperties.add(potentialDimension);
 							allInformativeProperties.add(potentialRoot);
 							allInformativeProperties.addAll(dimensionAtoms);
+							allInformativeProperties.addAll(dimensionCoAtoms);
 						}
 					}
 				}

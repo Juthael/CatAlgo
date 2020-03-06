@@ -97,8 +97,8 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 		for (int i=0 ; i < components.size() ; i++) {
 			String currTerminals = 
 					GrammarModelConstants.SEPARATOR.concat(components.get(i).getStringOfTerminals());
-			for (int j=i+1 ; j < components.size() ; j++) {
-				if (!components.get(i).isRedundant()) {
+			for (int j=0 ; j < components.size() ; j++) {
+				if (i != j && !components.get(i).isRedundant() && !components.get(j).isRedundant()) {
 					String comparedTerminals = 
 							GrammarModelConstants.SEPARATOR.concat(components.get(j).getStringOfTerminals());
 					if (comparedTerminals.contains(currTerminals)) {

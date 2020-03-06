@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -25,12 +26,18 @@ import propertyPoset.utils.IPosetMaxChains;
 @SuppressWarnings("unused")
 public class SyntacticStructureTest {
 
-	public static ISyntaxGrove grove;
+	public ISyntaxGrove grove;
+	public static Path backburnDozen1;
+	public static SwFileReader fileReader;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
-		SwFileReader fileReader = new SwFileReader();
+		backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
+		fileReader = new SwFileReader();
+	}
+	
+	@Before
+	public void setUpBeforEach() throws Exception {
 		try {
 			grove = fileReader.getSyntacticGrove(backburnDozen1);
 			// printChains(grove.getListOfSyntacticStringChains());
@@ -94,7 +101,7 @@ public class SyntacticStructureTest {
 		try {
 			posetChains = grove1.getPosetMaxChains();
 			posetChainsReturned = (!posetChains.getChains().isEmpty());
-			// printChains(posetChains);
+			printChains(posetChains.getChains());
 		}
 		catch (Exception e) {
 			posetChainsReturned = false;

@@ -42,9 +42,8 @@ public interface IPropertySet {
 	/**
 	 * This method is called in order to remove from the set a 'non-informative' property, and nonetheless 
 	 * keeping track of it. <br> 
-	 * A property is non-informative if it is neither a dimension nor a dimension root or value. 
-	 * After its removal, the non-informative property is stored as an 'encapsulated property' in the dedicated 
-	 * field of its antecedents.  
+	 * A property is informative only if it is a dimension, a dimension value, an atom of the (lower semi-lattice) 
+	 * poset or the poset root. Otherwise it can be removed. <br>
 	 * @param propertyName name of the superfluous property.
 	 * @param antecedent name of the antecedent.
 	 * @return the property whose name has been given in the parameter 'propertyName' (has it been actually 
@@ -52,5 +51,5 @@ public interface IPropertySet {
 	 * @throws PropertyPosetException 
 	 * @see IProperty
 	 */
-	IProperty removeProperty(String propertyName, Set<String> antecedent) throws PropertyPosetException;
+	IProperty removeProperty(String propertyName, String antecedent) throws PropertyPosetException;
 }

@@ -158,15 +158,6 @@ public interface IRelation {
 	String getPosetRoot() throws PropertyPosetException;	
 	
 	/**
-	 * A 'dimension root' is the infimum of the immediate predecessors of at least one dimension.
-	 * A 'dimension' is a sup-reducible element of the property poset.
-	 * @param dimension the name of a 'dimension' property
-	 * @return the dimension root of a the dimension whose name has been given in parameter.
-	 * @throws PropertyPosetException 
-	 */
-	String getDimensionRoot(String dimension) throws PropertyPosetException;	
-	
-	/**
 	 * 
 	 * @return the names of the poset 'leaves', or maximal elements. Since the poset in not necessarily an 
 	 * upper semi-lattice, there can be many leaves. 
