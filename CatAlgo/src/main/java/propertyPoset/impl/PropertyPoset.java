@@ -119,13 +119,20 @@ public class PropertyPoset implements IPropertyPoset {
 					+ "cannot be ordered." + System.lineSeparator() + e.getMessage());
 		}
 		for (String property : listOfPropsToRemove) {
-			Set<String> predecessors = relation.getPredecessors(property);
-			try {
-				relation.removeProperty(set.removeProperty(property, predecessors));
+			List<String> predecessors = new ArrayList<String>(relation.getPredecessors(property));
+			if (predecessors.size() != 1) {
+				throw new PropertyPosetException("PropertyPoset.reducePoset() : property '" + property + "' can "
+						+ "not be removed since it has more than 1 antecedent.");
 			}
-			catch (Exception e) {
-				throw new PropertyPosetException("PropertyPoset.reducePoset() : removal of property '" + property 
-						+ "' failed.");
+			else {
+				String antecedent = predecessors.get(0);
+				try {
+					relation.removeProperty(set.removeProperty(property, antecedent));
+				}
+				catch (Exception e) {
+					throw new PropertyPosetException("PropertyPoset.reducePoset() : removal of property '" + property 
+							+ "' failed.");
+				}
 			}
 		}
 		relation.updateRelationData();
