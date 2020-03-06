@@ -39,10 +39,28 @@ public interface IPropertyPoset {
 	BinaryContext getBinaryContext() throws PropertyPosetException;
 	
 	/**
+	 * This method guarantees values of a dimension are independent, i.e. their intersection is empty. <br>
+	 * A dimension is a sup-reducible element of a poset. A value 'v' of a dimension is defined as follows : <br> 
+	 * Let 'V' be the dimension set of predecessors. A value 'v' can be : <br>
+	 * 1/ a subset of 'V', such that it is the intersection of V with the set of consequents of (at least) one atom 'a'. 
+	 * 2/ the infimum of such a subset.
+	 * @throws PropertyPosetException
+	 */
+	void ensureThatDimensionsHaveIndependantValues() throws PropertyPosetException;
+	
+	/**
 	 * This method guarantees that the poset is displayed in a reduced form, i.e. rid of its 'non-informative' elements. <br>
+	 * 
+	 * WARNING : to avoid inconsistent results, this method should only be called after the method 
+	 * ensureThatDimensionsHaveIndependantValues() has proceeded. <br>
 	 * 
 	 * An element is informative only if it is a dimension, a dimension value, an atom of the (lower semi-lattice) poset 
 	 * or the poset root.  <br>
+	 * 
+	 * A dimension is a sup-reducible element of a poset. A value 'v' of a dimension is defined as follows : <br> 
+	 * Let 'V' be the dimension set of predecessors. A value 'v' can be : <br>
+	 * 1/ a subset of 'V', such that it is the intersection of V with the set of consequents of (at least) one atom 'a'. 
+	 * 2/ the infimum of such a subset. <br> 
 	 * 
 	 * Any non-informative element is removed from the poset and kept as an 'encapsulated property' of its antecedent, in  
 	 * the dedicated field of the {@link IProperty}. This procedure can be recursive if the antecedent is itself a 

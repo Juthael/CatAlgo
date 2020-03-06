@@ -1,5 +1,6 @@
 package propertyPoset;
 
+import java.util.HashMap;
 import java.util.Set;
 
 import grammarModel.structure.ISyntaxGrove;
@@ -186,6 +187,21 @@ public interface IRelation {
 	 * @throws PropertyPosetException if the parameter is unknown or if it is an informative property. 
 	 */
 	boolean removeProperty(IProperty property) throws PropertyPosetException;
+	
+	 /**
+	 * This method guarantees values of a dimension are independent, i.e. their intersection is empty. It also identifies 
+	 * informative elements of the poset and populates the dedicated field.<br>
+	 * 
+	 * A dimension is a sup-reducible element of a poset. A value 'v' of a dimension is defined as follows : <br> 
+	 * Let 'V' be the dimension set of predecessors. A value 'v' can be : <br>
+	 * 1/ a subset of 'V', such that it is the intersection of V with the set of consequents of (at least) one atom 'a'. 
+	 * 2/ the infimum of such a subset.
+	 * 
+	 * @return a map of properties with the property they must encapsulate. Must be proceeded by {@link IPropertySet}
+	 * @throws PropertyPosetException
+	 */
+	HashMap<String, String> ensureThatDimensionsHaveIndependantValuesAndSetInformativeProps() 
+			throws PropertyPosetException;
 	
 	/**
 	 * Ensures that all data is up to date. Must be called after any modification.

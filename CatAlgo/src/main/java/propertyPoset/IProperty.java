@@ -96,14 +96,9 @@ public interface IProperty {
 	int getRank(IRelation rel) throws PropertyPosetException;
 	
 	/**
-	 * A dimension is a property that some elements of a context have in common, and which is also 
-	 * used to express their differences, since there are many ways to have this property. 
+	 * A dimension is a sup-reducible element of a poset (provided that it has independent values, which is 
+	 * ensured by a dedicated method of {@link IPropertyPoset}.
 	 * 
-	 * A property d is a 'dimension' if : <br> 
-	 * 1/ it has more than one predecessor (i.e., is sup-reducible). <br>
-	 * 2/ if 'P' is the set of predecessors, 'r' its infimum ; for any property 'v' less than 'd' and 
-	 * greater than 'r', there is no property 'p' that verifies (('p' < 'v') && ('p' not comparable 
-	 * to 'r')). <br> 
 	 * @param rel a relation that links this property with other properties of a {@link IPropertyPoset}.
 	 * @return true if this property is a dimension according to the relation given in parameter.  
 	 * @throws PropertyPosetException 
@@ -111,17 +106,14 @@ public interface IProperty {
 	boolean isADimension(IRelation rel) throws PropertyPosetException;
 	
 	/**
-	 * Informative properties are dimensions, dimension roots, and dimension values. <br>
+	 * An element is informative only if it is a dimension, a dimension value, an atom of the (lower semi-lattice) poset 
+	 * or the poset root.  <br>
 	 * 
-	 * A property d is a 'dimension' if :  <br>
-	 * 1/ it has more than one predecessor (i.e., is sup-reducible).  <br>
-	 * 2/ if 'P' is the set of predecessors, 'r' its infimum ; for any property 'q' less than 'd' and 
-	 * greater than 'r', there is no property 'p' that verifies (('p' < 'q') && ('p' not comparable 
-	 * to 'r')).  <br>
+	 * A dimension is a sup-reducible element of a poset. A value 'v' of a dimension is defined as follows : <br> 
+	 * Let 'V' be the dimension set of predecessors. A value 'v' can be : <br>
+	 * 1/ a subset of 'V', such that it is the intersection of V with the set of consequents of (at least) one atom 'a'. 
+	 * 2/ the infimum of such a subset. <br> 
 	 * 
-	 * If 'd' is a dimension, then 'r' is its root. Let 'A' be the set of properties succeeding 'r' 
-	 * and less than 'd' ; then a property 'v' is a value of 'd' iff there exists a subset 'X' of 'A' 
-	 * such that 'v' is the supremum of 'A'. <br> 
 	 * @param rel a relation that links this property with other properties of a {@link IPropertyPoset}. 
 	 * @return 'true' if this property is informative, 'false' otherwise
 	 * @throws PropertyPosetException
