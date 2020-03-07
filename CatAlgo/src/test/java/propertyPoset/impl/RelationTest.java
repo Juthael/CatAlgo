@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -184,33 +185,71 @@ public class RelationTest {
 	}
 	
 	@Test
-	public void whenPropertyRemovalRequestedThenPropertyRemovedGivenPropertyName() throws PropertyPosetException {
+	public void whenPropertyRemovalRequestedThenPropertyRemovedGivenPropertyName() throws Exception {
 		boolean propRemoved = false;
-		String propToRemove = "ArithSeq0";
-		trueRelation.removeProperty(truePropPoset.getProperties().getProperty(propToRemove));
+		String removableProp = "";
+		String testPredecessor;
+		Set<String> properties = truePropPoset.getProperties().getSetOfPropertyNames();
+		Iterator<String> propIterator = properties.iterator();
+		IRelation relation = truePropPoset.getRelation();
+		while (removableProp.isEmpty() && propIterator.hasNext()) {
+			String testedProp = propIterator.next();
+			if(!relation.checkIfInformativeProperty(testedProp))
+				removableProp = testedProp;
+		}
+		if (removableProp.isEmpty()) {
+			throw new Exception ("No removable property has been found.");
+		}
+		else {
+			Set<String> predecessors = relation.getPredecessors(removableProp);
+			testPredecessor = predecessors.iterator().next();
+			trueRelation.removeProperty(truePropPoset.getProperties().getProperty(removableProp));
+		}
 		try {
-			trueRelation.getConsequents(propToRemove);
+			trueRelation.getConsequents(removableProp);
 		}
 		catch (PropertyPosetException p) {
 			propRemoved = true;
 		}
 		if (propRemoved == true) {
-			propRemoved = (!trueRelation.getConsequents(trueRelation.getPosetRoot()).contains(propToRemove)
-						&& !trueRelation.getSuccessors("Relation0").contains(propToRemove));
+			propRemoved = (!trueRelation.getConsequents(trueRelation.getPosetRoot()).contains(removableProp)
+						&& !trueRelation.getSuccessors(testPredecessor).contains(removableProp));
 		}
 		assertTrue(propRemoved);
 	}	
 	
 	@Test
-	public void whenUpdateIsCalledThenUpdateProcessed() throws PropertyPosetException {
-		String propToRemove = "ArithSeq0";
-		String successor = "FirstValue1";
-		String encapsulatingProp = "Relation0";
-		int successorRankBeforeModif = trueRelation.getRank(successor);
-		trueRelation.removeProperty(truePropPoset.getProperties().removeProperty(propToRemove, encapsulatingProp));
-		trueRelation.updateRelationData();
-		int successorRankAfterModif = trueRelation.getRank(successor);
-		assertTrue(successorRankBeforeModif != successorRankAfterModif);
+	public void whenUpdateIsCalledThenUpdateProcessed() throws Exception {
+		String removableProp = "";
+		String encapsulatingPredecessor = "";
+		Set<String> properties = truePropPoset.getProperties().getSetOfPropertyNames();
+		Iterator<String> propIterator = properties.iterator();
+		IRelation relation = truePropPoset.getRelation();
+		while (removableProp.isEmpty() && propIterator.hasNext()) {
+			String testedProp = propIterator.next();
+			if(!relation.checkIfInformativeProperty(testedProp)) {
+				removableProp = testedProp;
+				Set<String> propPreds = relation.getPredecessors(removableProp);
+				Iterator<String> propPredIte = propPreds.iterator();
+				while (encapsulatingPredecessor.isEmpty() && propPredIte.hasNext()) {
+					String propPred = propPredIte.next();
+					if (relation.checkIfInformativeProperty(propPred))
+						encapsulatingPredecessor = propPred;
+				}
+				if (encapsulatingPredecessor.isEmpty()) {
+					throw new Exception("No informative predecessor has been found.");
+				}
+			}
+		}
+		if (removableProp.isEmpty()) {
+			throw new Exception ("No removable property has been found.");
+		}
+		else {
+			trueRelation.removeProperty(
+					truePropPoset.getProperties().removeProperty(removableProp, encapsulatingPredecessor));
+			trueRelation.updateRelationData();
+		}
+		assertTrue(!trueRelation.getSuccessors(encapsulatingPredecessor).contains(removableProp));
 	}
 	
 	private static void setTrueGrove() {

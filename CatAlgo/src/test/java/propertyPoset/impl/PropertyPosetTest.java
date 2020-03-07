@@ -6,6 +6,7 @@ import java.awt.Frame;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -93,6 +94,7 @@ public class PropertyPosetTest {
 		assertTrue(context != null);
 	}
 	
+	/*
 	@Test
 	public void thisTestCanBeUsedToAnalyzeSyntaxTreesStoredInATextFile() 
 			throws PropertyPosetException, AlreadyExistsException, InvalidTypeException {
@@ -122,28 +124,53 @@ public class PropertyPosetTest {
 			
 		System.out.println("STOP");
 	}	
+	*/
 	
 	@Test
-	public void whenPosetReductionCalledThenNonInformativePropertiesRemovedAndEncapsulated() throws PropertyPosetException {
-		boolean requestForSizEAfterReducThrowsException = false;
-		boolean sizeCanBeRetreivedAsEncapsPropertyOfSize1 = false;
-		@SuppressWarnings("unused")
-		IProperty propPosition4 = propPosetBD1.getProperties().getProperty("Position4");
-		propPosetBD1.reducePoset();
+	public void whenPosetReductionCalledThenNonInformativePropertiesRemovedAndEncapsulated() throws Exception {
+		String removableProp = "";
+		String encapsulatingPredecessor = "";
+		Set<String> properties = propPosetBD1.getProperties().getSetOfPropertyNames();
+		Iterator<String> propIterator = properties.iterator();
+		IRelation relation = propPosetBD1.getRelation();
+		while (removableProp.isEmpty() && propIterator.hasNext()) {
+			String testedProp = propIterator.next();
+			if(!relation.checkIfInformativeProperty(testedProp)) {
+				removableProp = testedProp;
+				Set<String> propPreds = relation.getPredecessors(removableProp);
+				Iterator<String> propPredIte = propPreds.iterator();
+				while (encapsulatingPredecessor.isEmpty() && propPredIte.hasNext()) {
+					String propPred = propPredIte.next();
+					if (relation.checkIfInformativeProperty(propPred))
+						encapsulatingPredecessor = propPred;
+				}
+				if (encapsulatingPredecessor.isEmpty()) {
+					throw new Exception("No informative predecessor has been found.");
+				}
+			}
+		}
+		if (removableProp.isEmpty()) {
+			throw new Exception ("No removable property has been found.");
+		}
+		else {
+			propPosetBD1.reducePoset();
+		}
+		boolean nonInformativePropHasBeenRemoved = false;
+		boolean nonInformativePropHasBeenEncapsulated = false;;
 		try {
-			@SuppressWarnings("unused")
-			IProperty propPosition4Now = propPosetBD1.getProperties().getProperty("Position4");	
+			propPosetBD1.getProperties().getProperty(removableProp);
 		}
 		catch (PropertyPosetException e) {
-			requestForSizEAfterReducThrowsException = true;
+			nonInformativePropHasBeenRemoved = true;
 		}
-		IProperty digit4 = propPosetBD1.getProperties().getProperty("Digit4");
-		Set<IProperty> digit4EncapsulatedProp = digit4.getEncapsulatedProperties();
-		for (IProperty encapsProp : digit4EncapsulatedProp) {
-			if (encapsProp.getPropertyName().equals("Position4"))
-				sizeCanBeRetreivedAsEncapsPropertyOfSize1 = true;
+		if (nonInformativePropHasBeenRemoved) {
+			IProperty encapsulator = propPosetBD1.getProperties().getProperty(encapsulatingPredecessor);
+			for (IProperty encapsulatedProp : encapsulator.getEncapsulatedProperties()) {
+				if (encapsulatedProp.getPropertyName().equals(removableProp))
+					nonInformativePropHasBeenEncapsulated = true;
+			}
 		}
-		assertTrue(requestForSizEAfterReducThrowsException && sizeCanBeRetreivedAsEncapsPropertyOfSize1);
+		assertTrue(nonInformativePropHasBeenRemoved && nonInformativePropHasBeenEncapsulated);
 	}
 	
 	private static ISyntaxGrove setGrove(Path path, IGenericFileReader fileReader) {

@@ -389,6 +389,7 @@ public class Relation implements IRelation {
 				allInformativeProperties = new HashSet<String>();
 			try {
 				setSuccessorRelationMapAndRanks();
+				setDimensions();
 				setInformativeProperties();
 				allDataIsUpToDate = true;	
 			}
@@ -469,6 +470,24 @@ public class Relation implements IRelation {
 		Set<String> intersection = new HashSet<String>(getConsequents(upperSetMinimum));
 		intersection.retainAll(new HashSet<String>(subset));
 		return intersection;
+	}
+	
+	/**
+	 * Populates the 'dimensions' field with all sup-reducible elements. 
+	 * @throws PropertyPosetException
+	 */
+	private void setDimensions() throws PropertyPosetException {
+		dimensions.clear();
+		for (String property : relation.keySet()) {
+			try {
+				if (getPredecessors(property).size() > 1)
+					dimensions.add(property);
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("Relation.setDimensions() : error while proceeding on property '" 
+						+ property + "'" + System.lineSeparator() + e.getMessage());
+			}
+		}
 	}
 	
 	/**
