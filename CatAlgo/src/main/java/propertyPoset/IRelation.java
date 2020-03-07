@@ -200,8 +200,7 @@ public interface IRelation {
 	 * @return a map of properties with the property they must encapsulate. Must be proceeded by {@link IPropertySet}
 	 * @throws PropertyPosetException
 	 */
-	HashMap<String, String> ensureThatDimensionsHaveIndependantValuesAndSetInformativeProps() 
-			throws PropertyPosetException;
+	HashMap<String, String> makeDimensionValuesIndependent() throws PropertyPosetException;
 	
 	/**
 	 * Ensures that all data is up to date. Must be called after any modification.

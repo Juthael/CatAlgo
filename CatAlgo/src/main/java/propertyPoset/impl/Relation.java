@@ -307,6 +307,74 @@ public class Relation implements IRelation {
 		}
 		return propertyRemoved;
 	}
+	
+	@Override
+	public HashMap<String, String> makeDimensionValuesIndependent() throws PropertyPosetException {
+		HashMap<String, String> encapsulations = new HashMap<String, String>();
+		HashSet<String> dimensionsAtStart = new HashSet<String>(dimensions);
+		for (String dimension : dimensionsAtStart) {
+			updateRelationData();
+			boolean relationMustBeModified = false;
+			Set<String> dimPredecessors = getPredecessors(dimension);
+			Set<String> minimalAntcdts = getSuccessors(posetRoot);
+			Set<String> falseAntcdts = new HashSet<String>();
+			List<Set<String>> values = new ArrayList<Set<String>>();
+			for (String antcdt : minimalAntcdts) {
+				Set<String> value = intersection(antcdt, dimPredecessors);
+				if (!value.isEmpty()) {
+					if (!values.contains(value))
+						values.add(value);
+				}
+				else falseAntcdts.add(antcdt);
+			}
+			minimalAntcdts.removeAll(falseAntcdts);
+			int val1Idx = 0;
+			int valMax = values.size() - 1;
+			while (val1Idx < valMax) {
+				int val2Idx = val1Idx + 1;
+				boolean valuesModified = false;
+				while (val2Idx <= valMax && valuesModified == false) {
+					Set<String> val1 = new HashSet<String>(values.get(val1Idx));
+					Set<String> val2 = new HashSet<String>(values.get(val2Idx));
+					val1.retainAll(val2);
+					if (!val1.isEmpty()) {
+						for (String valElement : val1) {
+							encapsulations.put(valElement, dimension);
+							dimPredecessors.remove(valElement);
+						}
+						values.clear();
+						falseAntcdts.clear();
+						for (String antcdt : minimalAntcdts) {
+							Set<String> value = intersection(antcdt, dimPredecessors);
+							if (!value.isEmpty()) {
+								if (!values.contains(value))
+									values.add(value);
+							}
+							else falseAntcdts.add(antcdt);
+						}
+						minimalAntcdts.removeAll(falseAntcdts);
+						valMax = values.size() - 1;
+						valuesModified = true;
+						relationMustBeModified = true;
+						val1Idx--;
+					}
+					else val2Idx++;
+				}
+				val1Idx++;
+			}
+			if (relationMustBeModified) {
+				for (String property : relation.keySet()) {
+					if (!property.equals(dimension)	&& !values.contains(intersection(property, dimPredecessors))) {
+						relation.get(property).remove(dimension);
+					}
+				}
+				rankMappingIsUpToDate = false;
+				successorRelationIsUpToDate = false;
+				allDataIsUpToDate = false;
+			}
+		}
+		return encapsulations;
+	}
 
 	@Override
 	public void updateRelationData() throws PropertyPosetException {
@@ -383,6 +451,20 @@ public class Relation implements IRelation {
 					+ System.lineSeparator() + e.getMessage());
 		}
 		return properties;
+	}
+	
+	/**
+	 * Calculates the intersection of an upper set whose minimum has been given in parameter with a subset given in 
+	 * parameter.
+	 * @param upperSetMinimum minimum of the upper set.
+	 * @param subset any set of properties
+	 * @return the intersection set
+	 * @throws PropertyPosetException
+	 */
+	private Set<String> intersection(String upperSetMinimum, Set<String> subset) throws PropertyPosetException{
+		Set<String> intersection = new HashSet<String>(getConsequents(upperSetMinimum));
+		intersection.retainAll(new HashSet<String>(subset));
+		return intersection;
 	}
 	
 	/**
