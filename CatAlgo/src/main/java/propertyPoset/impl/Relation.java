@@ -32,6 +32,7 @@ public class Relation implements IRelation {
 	private boolean allDataIsUpToDate = false;
 	private boolean rankMappingIsUpToDate = false;
 	private boolean successorRelationIsUpToDate = false;
+	private boolean dimensionValuesAreIndependent = false;
 
 	/**
 	 * With this constructor, the relation on the set of properties must be set subsequently using 
@@ -198,6 +199,9 @@ public class Relation implements IRelation {
 			if (properties.isEmpty()) {
 				throw new PropertyPosetException("Relation.getInfimum() : the set of properties shouldn't be empty.");
 			}
+			else if (properties.size() == 1) {
+				infimum = properties.iterator().next();
+			}
 			else {
 				Iterator<String> propIterator = properties.iterator(); 
 				int setMinRank = getRank(propIterator.next());
@@ -313,7 +317,6 @@ public class Relation implements IRelation {
 		HashMap<String, String> encapsulations = new HashMap<String, String>();
 		HashSet<String> dimensionsAtStart = new HashSet<String>(dimensions);
 		for (String dimension : dimensionsAtStart) {
-			updateRelationData();
 			boolean relationMustBeModified = false;
 			Set<String> dimPredecessors = getPredecessors(dimension);
 			Set<String> minimalAntcdts = getSuccessors(posetRoot);
@@ -373,6 +376,7 @@ public class Relation implements IRelation {
 				allDataIsUpToDate = false;
 			}
 		}
+		dimensionValuesAreIndependent = true;
 		return encapsulations;
 	}
 
@@ -470,46 +474,50 @@ public class Relation implements IRelation {
 	/**
 	 * Informative properties are the poset root, dimensions, dimension roots, and dimension values. 
 	 * 
-	 * A property d is a 'dimension' if : 
-	 * 1/ it has more than one predecessor (i.e., is sup-reducible).
-	 * 2/ if 'P' is the set of predecessors, 'r' its infimum ; for any property 'q' less than 'd' and 
-	 * greater than 'r', there is no property 'p' that verifies (('p' < 'q') && ('p' not comparable 
-	 * to 'r')). 
+	 * An element is informative only if it is a dimension, a dimension value element, an atom of the (lower semi-lattice)
+	 * poset or the poset root.  <br>
 	 * 
-	 * Let 'A' be the set of properties succeeding 'r' and less than 'd' ; then a property 'v' 
-	 * is a value of 'd' iff there exists a subset 'X' of 'A' such that 'v' is the supremum of 'A'.  
-	 * So 'v' is either an element of A, or the supremum of two or more elements of A ; in this last 
-	 * case 'v' is a dimension itself, so it will be found as such and does not need to be explicitly 
-	 * looked for as a value.  
+	 * A dimension is a sup-reducible element of a poset. A value 'v' of a dimension is defined as follows : <br> 
+	 * Let 'V' be the set of the dimension predecessors. A value 'v' can be : <br>
+	 * 1/ a subset of 'V', such that it is the intersection of V with the set of consequents of (at least) one atom 'a'. 
+	 * 2/ the infimum of such a subset. <br>
+	 * 
 	 * @throws PropertyPosetException
 	 */
 	private void setInformativeProperties() throws PropertyPosetException {
+		allInformativeProperties.clear();
+		if (!dimensionValuesAreIndependent)
+			makeDimensionValuesIndependent();
 		try {
-			for (String potentialDimension : relation.keySet()) {
-				boolean isSupReducible = (getPredecessors(potentialDimension).size() > 1);
+			for (String property : relation.keySet()) {
+				boolean isSupReducible = (getPredecessors(property).size() > 1);
 				if (isSupReducible){
-					Set<String> dimensionCoAtoms = getPredecessors(potentialDimension);
-					String potentialRoot = getInfimum(dimensionCoAtoms);
-					if (potentialRoot.equals(posetRoot)) {
-						Set<String> dimensionAtoms = new HashSet<String>(getSuccessors(potentialRoot));
-						dimensionAtoms.retainAll(getAntecedents(potentialDimension));
-						if (dimensionAtoms.size() < 2)
-							throw new PropertyPosetException("The dimension root " + potentialRoot + " of the dimension "
-									+ potentialDimension + " having " + dimensionAtoms.size() + " atoms is "
-											+ "inconsistent.");
-						else {
-							dimensions.add(potentialDimension);
-							allInformativeProperties.add(potentialDimension);
-							allInformativeProperties.add(potentialRoot);
-							allInformativeProperties.addAll(dimensionAtoms);
-							allInformativeProperties.addAll(dimensionCoAtoms);
+					try {
+						String dimension = property;
+						Set<String> dimensionPredecessors = getPredecessors(dimension);
+						Set<String> valuesInfimums = new HashSet<String>();
+						Set<Set<String>> values = new HashSet<Set<String>>();
+						for (String posetAtom : getSuccessors(posetRoot)) {
+							Set<String> value = intersection(posetAtom, dimensionPredecessors);
+							if (!value.isEmpty()) {
+								values.add(value);
+							}
 						}
+						for (Set<String> value : values) {
+							valuesInfimums.add(getInfimum(value));
+						}
+						allInformativeProperties.add(dimension);
+						allInformativeProperties.addAll(dimensionPredecessors);
+						allInformativeProperties.addAll(valuesInfimums);
+					}
+					catch (Exception e) {
+						throw new PropertyPosetException("Failed to proceed on dimension '" + property + "'." 
+								+ System.lineSeparator() + e.getMessage());
 					}
 				}
-				else if (potentialDimension.equals(posetRoot)) {
-					allInformativeProperties.add(potentialDimension);
-				}
 			}
+			allInformativeProperties.add(posetRoot);
+			allInformativeProperties.addAll(getSuccessors(posetRoot));
 		}
 		catch (Exception e) {
 			throw new PropertyPosetException("Relation.setDimensionsAndRootsAndValues : an error has occured. "

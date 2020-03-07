@@ -193,7 +193,7 @@ public interface IRelation {
 	 * informative elements of the poset and populates the dedicated field.<br>
 	 * 
 	 * A dimension is a sup-reducible element of a poset. A value 'v' of a dimension is defined as follows : <br> 
-	 * Let 'V' be the dimension set of predecessors. A value 'v' can be : <br>
+	 * Let 'V' be the set of the dimension predecessors. A value 'v' can be : <br>
 	 * 1/ a subset of 'V', such that it is the intersection of V with the set of consequents of (at least) one atom 'a'. 
 	 * 2/ the infimum of such a subset.
 	 * 
