@@ -1,6 +1,7 @@
 package propertyPoset.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +30,7 @@ public class PropertyPoset implements IPropertyPoset {
 
 	private IPropertySet set;
 	private IRelation relation;
+	private boolean dimensionValuesAreIndependent = false;
 	private boolean posetReduced = false;
 	
 	/**
@@ -98,7 +100,26 @@ public class PropertyPoset implements IPropertyPoset {
 	}
 	
 	@Override
+	public void makeDimensionValuesIndependent() throws PropertyPosetException {
+		HashMap<String, String> encapsulatorToEncapsulated;
+		try {
+			encapsulatorToEncapsulated = relation.makeDimensionValuesIndependent();
+		}
+		catch (Exception e) {
+			throw new PropertyPosetException("PropertyPoset.makeDimensionValuesIndependent() : relation modification "
+					+ "has failed." + System.lineSeparator() + e.getMessage());
+		}
+		for (String encapsulator : encapsulatorToEncapsulated.keySet()) {
+			IProperty encapsulated = set.getProperty(encapsulatorToEncapsulated.get(encapsulator));
+			set.getProperty(encapsulator).addEncapsulatedProp(encapsulated);
+		}
+		dimensionValuesAreIndependent = true;
+	}
+	
+	@Override
 	public void reducePoset() throws PropertyPosetException {
+		if (!dimensionValuesAreIndependent)
+			makeDimensionValuesIndependent();
 		Set<String> propsToRemove = new HashSet<String>();
 		List<String> listOfPropsToRemove;
 		for (IProperty property : set.getSetOfProperties()) {

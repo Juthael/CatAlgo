@@ -46,13 +46,13 @@ public interface IPropertyPoset {
 	 * 2/ the infimum of such a subset.
 	 * @throws PropertyPosetException
 	 */
-	void ensureThatDimensionsHaveIndependantValues() throws PropertyPosetException;
+	void makeDimensionValuesIndependent() throws PropertyPosetException;
 	
 	/**
 	 * This method guarantees that the poset is displayed in a reduced form, i.e. rid of its 'non-informative' elements. <br>
 	 * 
 	 * WARNING : to avoid inconsistent results, this method should only be called after the method 
-	 * ensureThatDimensionsHaveIndependantValues() has proceeded. <br>
+	 * makeDimensionValuesIndependent() has proceeded. <br>
 	 * 
 	 * An element is informative only if it is a dimension, a dimension value, an atom of the (lower semi-lattice) poset 
 	 * or the poset root.  <br>
