@@ -103,7 +103,7 @@ public class PropertyPoset implements IPropertyPoset {
 	public void makeDimensionValuesIndependent() throws PropertyPosetException {
 		HashMap<String, String> encapsulatorToEncapsulated;
 		try {
-			encapsulatorToEncapsulated = relation.makeDimensionValuesIndependent();
+			encapsulatorToEncapsulated = relation.setDimensionsAndMakeValuesIndependent();
 		}
 		catch (Exception e) {
 			throw new PropertyPosetException("PropertyPoset.makeDimensionValuesIndependent() : relation modification "
@@ -121,42 +121,49 @@ public class PropertyPoset implements IPropertyPoset {
 		if (!dimensionValuesAreIndependent)
 			makeDimensionValuesIndependent();
 		Set<String> propsToRemove = new HashSet<String>();
-		List<String> listOfPropsToRemove;
-		for (IProperty property : set.getSetOfProperties()) {
-			try {
-				if (!property.isInformative(relation))
-					propsToRemove.add(property.getPropertyName());
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("PropertyPoset.reducePoset() : property '" + property.getPropertyName() 
-					+ "' informativity cannot be tested." + System.lineSeparator() + e.getMessage());
-			}
-		}
-		try {
-			listOfPropsToRemove = orderPropsByDecreasingRank(propsToRemove);
-		}
-		catch (Exception e) {
-			throw new PropertyPosetException("PropertyPoset.reducePoset() : properties to remove "
-					+ "cannot be ordered." + System.lineSeparator() + e.getMessage());
-		}
-		for (String property : listOfPropsToRemove) {
-			List<String> predecessors = new ArrayList<String>(relation.getPredecessors(property));
-			if (predecessors.size() != 1) {
-				throw new PropertyPosetException("PropertyPoset.reducePoset() : property '" + property + "' can "
-						+ "not be removed since it has more than 1 antecedent.");
-			}
-			else {
-				String antecedent = predecessors.get(0);
+		boolean posetHasBeenModified;
+		do {
+			posetHasBeenModified = false;
+			List<String> listOfPropsToRemove;
+			for (IProperty property : set.getSetOfProperties()) {
 				try {
-					relation.removeProperty(set.removeProperty(property, antecedent));
+					if (!property.isInformative(relation) && property.getSuccProperties(relation).isEmpty())
+						propsToRemove.add(property.getPropertyName());
 				}
 				catch (Exception e) {
-					throw new PropertyPosetException("PropertyPoset.reducePoset() : removal of property '" + property 
-							+ "' failed.");
+					throw new PropertyPosetException("PropertyPoset.reducePoset() : property '" + property.getPropertyName() 
+						+ "' cannot be tested." + System.lineSeparator() + e.getMessage());
 				}
 			}
-		}
-		relation.updateRelationData();
+			try {
+				listOfPropsToRemove = orderPropsByDecreasingRank(propsToRemove);
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("PropertyPoset.reducePoset() : properties to remove "
+						+ "cannot be ordered." + System.lineSeparator() + e.getMessage());
+			}
+			if (!listOfPropsToRemove.isEmpty()) {
+				posetHasBeenModified = true;
+				for (String property : listOfPropsToRemove) {
+					List<String> predecessors = new ArrayList<String>(relation.getPredecessors(property));
+					if (predecessors.size() != 1) {
+						throw new PropertyPosetException("PropertyPoset.reducePoset() : property '" + property + "' can "
+								+ "not be removed since it has more than 1 antecedent.");
+					}
+					else {
+						String antecedent = predecessors.get(0);
+						try {
+							relation.removeProperty(set.removeProperty(property, antecedent));
+						}
+						catch (Exception e) {
+							throw new PropertyPosetException("PropertyPoset.reducePoset() : removal of property '" + property 
+									+ "' failed.");
+						}
+					}
+				}
+				relation.updateRelationData();
+			}
+		} while (posetHasBeenModified);
 		posetReduced = true;
 	}	
 	
@@ -182,17 +189,19 @@ public class PropertyPoset implements IPropertyPoset {
 	 */
 	private List<String> orderPropsByDecreasingRank(Set<String> props) throws PropertyPosetException{
 		List<String> orderedProps = new ArrayList<String>();
-		int maxRank = getMaxRank(props);
-		for (int i=maxRank ; i >= 0 ; i--) {
-			if (!props.isEmpty()) {
-				Set<String> propsAtRankI = new HashSet<String>();
-				for (String prop : props) {
-					if (relation.getRank(prop) == i) {
-						propsAtRankI.add(prop);
+		if (!props.isEmpty()) {
+			int maxRank = getMaxRank(props);
+			for (int i=maxRank ; i >= 0 ; i--) {
+				if (!props.isEmpty()) {
+					Set<String> propsAtRankI = new HashSet<String>();
+					for (String prop : props) {
+						if (relation.getRank(prop) == i) {
+							propsAtRankI.add(prop);
+						}
 					}
+					orderedProps.addAll(propsAtRankI);
+					props.removeAll(propsAtRankI);	
 				}
-				orderedProps.addAll(propsAtRankI);
-				props.removeAll(propsAtRankI);	
 			}
 		}
 		return orderedProps;

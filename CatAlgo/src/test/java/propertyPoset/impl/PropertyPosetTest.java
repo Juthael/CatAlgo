@@ -94,11 +94,11 @@ public class PropertyPosetTest {
 		assertTrue(context != null);
 	}
 	
-	/*
+	
 	@Test
 	public void thisTestCanBeUsedToAnalyzeSyntaxTreesStoredInATextFile() 
 			throws PropertyPosetException, AlreadyExistsException, InvalidTypeException {
-		ISyntaxGrove testGrove = setGrove(e2b, new CcFileReader());
+		ISyntaxGrove testGrove = setGrove(e2, new CcFileReader());
 		IPropertyPoset testPoset = null;
 		try {
 			System.out.println(testGrove.getPosetMaxChains().getChainsInASingleString());
@@ -124,7 +124,7 @@ public class PropertyPosetTest {
 			
 		System.out.println("STOP");
 	}	
-	*/
+	
 	
 	@Test
 	public void whenPosetReductionCalledThenNonInformativePropertiesRemovedAndEncapsulated() throws Exception {

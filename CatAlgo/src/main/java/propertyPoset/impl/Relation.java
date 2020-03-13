@@ -313,13 +313,14 @@ public class Relation implements IRelation {
 	}
 	
 	@Override
-	public HashMap<String, String> makeDimensionValuesIndependent() throws PropertyPosetException {
+	public HashMap<String, String> setDimensionsAndMakeValuesIndependent() throws PropertyPosetException {
 		HashMap<String, String> encapsulations = new HashMap<String, String>();
+		setDimensions();
 		HashSet<String> dimensionsAtStart = new HashSet<String>(dimensions);
 		for (String dimension : dimensionsAtStart) {
 			boolean relationMustBeModified = false;
-			Set<String> dimPredecessors = getPredecessors(dimension);
-			Set<String> minimalAntcdts = getSuccessors(posetRoot);
+			Set<String> dimPredecessors = new HashSet<String>(getPredecessors(dimension));
+			Set<String> minimalAntcdts = new HashSet<String>(getSuccessors(posetRoot));
 			Set<String> falseAntcdts = new HashSet<String>();
 			List<Set<String>> values = new ArrayList<Set<String>>();
 			for (String antcdt : minimalAntcdts) {
@@ -367,8 +368,10 @@ public class Relation implements IRelation {
 			}
 			if (relationMustBeModified) {
 				for (String property : relation.keySet()) {
-					if (!property.equals(dimension)	&& !values.contains(intersection(property, dimPredecessors))) {
-						relation.get(property).remove(dimension);
+					if (!property.equals(dimension) && relation.get(property).contains(dimension)) {
+						Set<String> intersWithPredecessors = intersection(property, dimPredecessors);
+						if (intersWithPredecessors.isEmpty())
+							relation.get(property).remove(dimension);
 					}
 				}
 				rankMappingIsUpToDate = false;
@@ -389,7 +392,6 @@ public class Relation implements IRelation {
 				allInformativeProperties = new HashSet<String>();
 			try {
 				setSuccessorRelationMapAndRanks();
-				setDimensions();
 				setInformativeProperties();
 				allDataIsUpToDate = true;	
 			}
@@ -505,8 +507,10 @@ public class Relation implements IRelation {
 	 */
 	private void setInformativeProperties() throws PropertyPosetException {
 		allInformativeProperties.clear();
-		if (!dimensionValuesAreIndependent)
-			makeDimensionValuesIndependent();
+		if (!dimensionValuesAreIndependent) {
+			setDimensionsAndMakeValuesIndependent();
+			setSuccessorRelationMapAndRanks();
+		}
 		try {
 			for (String property : relation.keySet()) {
 				boolean isSupReducible = (getPredecessors(property).size() > 1);
