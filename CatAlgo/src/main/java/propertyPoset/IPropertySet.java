@@ -42,12 +42,16 @@ public interface IPropertySet {
 	/**
 	 * This method is called in order to remove from the set a 'non-informative' property, and nonetheless 
 	 * keeping track of it. <br> 
-	 * A property is informative only if it is a dimension, a dimension value, an atom of the (lower semi-lattice) 
-	 * poset or the poset root. Otherwise it can be removed. <br>
-	 * @param propertyName name of the superfluous property.
+	 * 
+	 * Non-informative properties are sup-irreducible leaves of the poset (i.e. leaves with only one predecessor, 
+	 * since the poset is a lower semi-lattice). Those properties usually remain unnoticed or indistinguishable from 
+	 * their antecedent for human subjects, since they do not allow any additional distinction amongst the elements 
+	 * of a context. (In a collection of cars, for the 'redness' of a particular car to be salient, it takes the 
+	 * 'un-redness' (e.g., blueness) of other elements). <br>
+	 * 
+	 * @param propertyName name of the non-informative property.
 	 * @param antecedent name of the antecedent.
-	 * @return the property whose name has been given in the parameter 'propertyName' (has it been actually 
-	 * removed or not)
+	 * @return the property whose name has been given in the parameter 'propertyName'
 	 * @throws PropertyPosetException 
 	 * @see IProperty
 	 */

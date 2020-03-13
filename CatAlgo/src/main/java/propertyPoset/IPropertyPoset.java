@@ -40,10 +40,12 @@ public interface IPropertyPoset {
 	
 	/**
 	 * This method guarantees values of a dimension are independent, i.e. their intersection is empty. <br>
-	 * A dimension is a sup-reducible element of a poset. A value 'v' of a dimension is defined as follows : <br> 
-	 * Let 'V' be the dimension set of predecessors. A value 'v' can be : <br>
-	 * 1/ a subset of 'V', such that it is the intersection of V with the set of consequents of (at least) one atom 'a'. 
-	 * 2/ the infimum of such a subset.
+	 * A dimension is a sup-reducible element of a poset for wich a set of independent values can be found. A value 
+	 * 'v' of a dimension is defined as follows : <br> 
+	 * Let 'V' be the set of predecessors of a dimension. A value 'v' can be : <br>
+	 * 1/ a subset of 'V', such that it is the intersection of V with the set of consequents of (at least) one atom 'a'. <br> 
+	 * 2/ the infimum of such a subset. <br>
+	 * (and both 1/ and 2/, if the subset has a only one element : then this element is its own infimum) <br>
 	 * @throws PropertyPosetException
 	 */
 	void makeDimensionValuesIndependent() throws PropertyPosetException;
@@ -54,17 +56,13 @@ public interface IPropertyPoset {
 	 * WARNING : to avoid inconsistent results, this method should only be called after the method 
 	 * makeDimensionValuesIndependent() has proceeded. <br>
 	 * 
-	 * An element is informative only if it is a dimension, a dimension value, an atom of the (lower semi-lattice) poset 
-	 * or the poset root.  <br>
+	 * Non-informative properties are sup-irreducible leaves of the poset (i.e. leaves with only one predecessor, 
+	 * since the poset is a lower semi-lattice). Those properties usually remain unnoticed or indistinguishable from 
+	 * their antecedent for human subjects, since they do not allow any additional distinction amongst the elements 
+	 * of a context. (In a collection of cars, for the 'redness' of a particular car to be salient, it takes the 
+	 * 'un-redness' (e.g., blueness) of other elements). <br>
 	 * 
-	 * A dimension is a sup-reducible element of a poset. A value 'v' of a dimension is defined as follows : <br> 
-	 * Let 'V' be the dimension set of predecessors. A value 'v' can be : <br>
-	 * 1/ a subset of 'V', such that it is the intersection of V with the set of consequents of (at least) one atom 'a'. 
-	 * 2/ the infimum of such a subset. <br> 
-	 * 
-	 * Any non-informative element is removed from the poset and kept as an 'encapsulated property' of its antecedent, in  
-	 * the dedicated field of the {@link IProperty}. This procedure can be recursive if the antecedent is itself a 
-	 * non-informative property. <br>
+	 * This procedure operates recursively on the poset, as long as new sup-irreducible leaves are found.
 	 * 
 	 * @throws PropertyPosetException 
 	 */

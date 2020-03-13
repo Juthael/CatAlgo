@@ -41,15 +41,6 @@ public interface IRelation {
 	public void addImplicationEnsureTransitivity(IImplication implication) throws PropertyPosetException;	
 	
 	/**
-	 * Turns the property whose name has been given in parameter into a leaf, i.e. a property with no 
-	 * consequent apart from itself. Supports the required modifications in order to maintain consistency 
-	 * within the poset.    
-	 * @param subContextRoot the name of a property
-	 * @throws PropertyPosetException 
-	 */
-	public void setPropAsALeaf(String subContextRoot) throws PropertyPosetException;
-	
-	/**
 	 * The set of consequents (or implied properties) of a property P is the set of properties equal to 
 	 * or greater than P.  
 	 * @param propName the name of a property
@@ -132,22 +123,6 @@ public interface IRelation {
 	 * @throws PropertyPosetException 
 	 */
 	boolean checkIfDimension(String propName) throws PropertyPosetException;
-	
-	/**
-	 * Informative properties are dimensions, dimension roots, and dimension values. <br>
-	 * 
-	 * A property d is a 'dimension' if :  <br>
-	 * 1/ it has more than one predecessor (i.e., is sup-reducible).  <br>
-	 * 2/ if 'P' is the set of predecessors, 'r' its infimum ; for any property 'q' less than 'd' and 
-	 * greater than 'r', there is no property 'p' that verifies (('p' < 'q') && ('p' not comparable 
-	 * to 'r')).  <br>
-	 * 
-	 * If 'd' is a dimension, then 'r' is its root. Let 'A' be the set of properties succeeding 'r' 
-	 * and less than 'd' ; then a property 'v' is a value of 'd' iff there exists a subset 'X' of 'A' 
-	 * such that 'v' is the supremum of 'A'. <br>
-	 * @throws PropertyPosetException
-	 */
-	boolean checkIfInformativeProperty(String propName) throws PropertyPosetException;
 	
 	/**
 	 * 

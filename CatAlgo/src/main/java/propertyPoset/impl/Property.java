@@ -147,10 +147,5 @@ public class Property implements IProperty {
 		}
 		return dimension;
 	}
-	
-	@Override
-	public boolean isInformative(IRelation rel) throws PropertyPosetException {
-		return rel.checkIfInformativeProperty(name);
-	}
 
 }

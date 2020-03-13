@@ -27,12 +27,10 @@ public class Relation implements IRelation {
 	private Map<String, Set<String>> successorRelation = new HashMap<String, Set<String>>();
 	private String posetRoot = "";
 	private Set<String> dimensions = new HashSet<String>();
-	private Set<String> allInformativeProperties = new HashSet<String>();
 	private Map<String, Integer> propertyToRank = new HashMap<String, Integer>();
 	private boolean allDataIsUpToDate = false;
 	private boolean rankMappingIsUpToDate = false;
 	private boolean successorRelationIsUpToDate = false;
-	private boolean dimensionValuesAreIndependent = false;
 
 	/**
 	 * With this constructor, the relation on the set of properties must be set subsequently using 
@@ -75,35 +73,7 @@ public class Relation implements IRelation {
 		}
 	}
 	
-	@Override
-	public void setPropAsALeaf(String subContextRoot) throws PropertyPosetException {
-		int subContextRootRank = getRank(subContextRoot);
-		Set<String> subContextRootAntcdts = getAntecedents(subContextRoot);
-		for (int i = (subContextRootRank - 1) ; i >= 0 ; i--) {
-			Set<String> antcdtsAtThisRank = new HashSet<String>();
-			for (String ancdt : subContextRootAntcdts) {
-				if (getRank(ancdt) == i)
-					antcdtsAtThisRank.add(ancdt);
-			}
-			for (String antcdtAtThisRank : antcdtsAtThisRank) {
-				Set<String> antcdtConsequents = new HashSet<String>();
-				antcdtConsequents.add(antcdtAtThisRank);
-				for (String antcdtSucc : getSuccessors(antcdtAtThisRank)){
-					if (!antcdtSucc.equals(subContextRoot)) {
-						antcdtConsequents.addAll(getConsequents(antcdtSucc));
-					}
-					else antcdtConsequents.add(subContextRoot);
-				}
-				relation.put(antcdtAtThisRank, antcdtConsequents);
-			}
-		}
-		Set<String> newLeafConsequents = new HashSet<String>();
-		newLeafConsequents.add(subContextRoot);
-		relation.put(subContextRoot, newLeafConsequents);
-		allDataIsUpToDate = false;
-		rankMappingIsUpToDate = false;
-		successorRelationIsUpToDate = false;
-	}		
+	
 
 	@Override
 	public Set<String> getConsequents(String propName) throws PropertyPosetException {
@@ -260,12 +230,6 @@ public class Relation implements IRelation {
 			throw new PropertyPosetException("Relation.getPosetRoot() : the posetRoot can't be found or "
 					+ "is empty.");
 		else return posetRoot;
-	}	
-	
-	@Override
-	public boolean checkIfInformativeProperty(String propName) throws PropertyPosetException {
-		updateRelationData();
-		return allInformativeProperties.contains(propName);
 	}
 
 	@Override
@@ -296,10 +260,6 @@ public class Relation implements IRelation {
 		if (!relation.containsKey(propertyName))
 			throw new PropertyPosetException("Relation.removeProperty() : the property " 
 					+ propertyName + " is unknown");
-		else if (checkIfInformativeProperty(propertyName) == true){
-			throw new PropertyPosetException("Relation.removeProperty() : the property " 
-					+ propertyName + " is informative and therefore should not be removed.");
-		}
 		else {
 			relation.remove(propertyName);
 			for (Set<String> consequents : relation.values())
@@ -379,7 +339,6 @@ public class Relation implements IRelation {
 				allDataIsUpToDate = false;
 			}
 		}
-		dimensionValuesAreIndependent = true;
 		return encapsulations;
 	}
 
@@ -388,11 +347,9 @@ public class Relation implements IRelation {
 		if (!allDataIsUpToDate) {
 			if (!dimensions.isEmpty())
 				dimensions = new HashSet<String>();
-			if (!allInformativeProperties.isEmpty())
-				allInformativeProperties = new HashSet<String>();
 			try {
 				setSuccessorRelationMapAndRanks();
-				setInformativeProperties();
+				setDimensionsAndMakeValuesIndependent();
 				allDataIsUpToDate = true;	
 			}
 			catch (Exception e) {
@@ -489,62 +446,6 @@ public class Relation implements IRelation {
 				throw new PropertyPosetException("Relation.setDimensions() : error while proceeding on property '" 
 						+ property + "'" + System.lineSeparator() + e.getMessage());
 			}
-		}
-	}
-	
-	/**
-	 * Informative properties are the poset root, dimensions, dimension roots, and dimension values. 
-	 * 
-	 * An element is informative only if it is a dimension, a dimension value element, an atom of the (lower semi-lattice)
-	 * poset or the poset root.  <br>
-	 * 
-	 * A dimension is a sup-reducible element of a poset. A value 'v' of a dimension is defined as follows : <br> 
-	 * Let 'V' be the set of the dimension predecessors. A value 'v' can be : <br>
-	 * 1/ a subset of 'V', such that it is the intersection of V with the set of consequents of (at least) one atom 'a'. 
-	 * 2/ the infimum of such a subset. <br>
-	 * 
-	 * @throws PropertyPosetException
-	 */
-	private void setInformativeProperties() throws PropertyPosetException {
-		allInformativeProperties.clear();
-		if (!dimensionValuesAreIndependent) {
-			setDimensionsAndMakeValuesIndependent();
-			setSuccessorRelationMapAndRanks();
-		}
-		try {
-			for (String property : relation.keySet()) {
-				boolean isSupReducible = (getPredecessors(property).size() > 1);
-				if (isSupReducible){
-					try {
-						String dimension = property;
-						Set<String> dimensionPredecessors = getPredecessors(dimension);
-						Set<String> valuesInfimums = new HashSet<String>();
-						Set<Set<String>> values = new HashSet<Set<String>>();
-						for (String posetAtom : getSuccessors(posetRoot)) {
-							Set<String> value = intersection(posetAtom, dimensionPredecessors);
-							if (!value.isEmpty()) {
-								values.add(value);
-							}
-						}
-						for (Set<String> value : values) {
-							valuesInfimums.add(getInfimum(value));
-						}
-						allInformativeProperties.add(dimension);
-						allInformativeProperties.addAll(dimensionPredecessors);
-						allInformativeProperties.addAll(valuesInfimums);
-					}
-					catch (Exception e) {
-						throw new PropertyPosetException("Failed to proceed on dimension '" + property + "'." 
-								+ System.lineSeparator() + e.getMessage());
-					}
-				}
-			}
-			allInformativeProperties.add(posetRoot);
-			allInformativeProperties.addAll(getSuccessors(posetRoot));
-		}
-		catch (Exception e) {
-			throw new PropertyPosetException("Relation.setDimensionsAndRootsAndValues : an error has occured. "
-					+ System.lineSeparator() + e.getMessage());
 		}
 	}
 	

@@ -6,6 +6,7 @@ import java.awt.Frame;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -127,50 +128,38 @@ public class PropertyPosetTest {
 	
 	
 	@Test
-	public void whenPosetReductionCalledThenNonInformativePropertiesRemovedAndEncapsulated() throws Exception {
-		String removableProp = "";
-		String encapsulatingPredecessor = "";
-		Set<String> properties = propPosetBD1.getProperties().getSetOfPropertyNames();
-		Iterator<String> propIterator = properties.iterator();
-		IRelation relation = propPosetBD1.getRelation();
-		while (removableProp.isEmpty() && propIterator.hasNext()) {
-			String testedProp = propIterator.next();
-			if(!relation.checkIfInformativeProperty(testedProp)) {
-				removableProp = testedProp;
-				Set<String> propPreds = relation.getPredecessors(removableProp);
-				Iterator<String> propPredIte = propPreds.iterator();
-				while (encapsulatingPredecessor.isEmpty() && propPredIte.hasNext()) {
-					String propPred = propPredIte.next();
-					if (relation.checkIfInformativeProperty(propPred))
-						encapsulatingPredecessor = propPred;
-				}
-				if (encapsulatingPredecessor.isEmpty()) {
-					throw new Exception("No informative predecessor has been found.");
-				}
+	public void whenPosetReductionCalledThenSupIrreducibleLeavesAreRemovedAndEncapsulated() throws Exception {
+		boolean supIrreducibleLeavesAreRemoved;
+		boolean removedPropAreEncapsulated = false;
+		Set<String> leaves = propPosetBD1.getRelation().getPosetleaves();
+		Set<String> supIrreducibleLeaves = new HashSet<String>();
+		for (String leaf : leaves) {
+			if (propPosetBD1.getRelation().getPredecessors(leaf).size() == 1)
+				supIrreducibleLeaves.add(leaf);
+		}
+		propPosetBD1.reducePoset();
+		Set<String> reducedPosetProperties = propPosetBD1.getProperties().getSetOfPropertyNames();
+		supIrreducibleLeavesAreRemoved = !reducedPosetProperties.removeAll(supIrreducibleLeaves);
+		if (supIrreducibleLeavesAreRemoved) {
+			Set<IProperty> encapsulatedProperties = new HashSet<IProperty>();
+			for (IProperty property : propPosetBD1.getProperties().getSetOfProperties()) {
+				encapsulatedProperties.addAll(property.getEncapsulatedProperties());				
 			}
-		}
-		if (removableProp.isEmpty()) {
-			throw new Exception ("No removable property has been found.");
-		}
-		else {
-			propPosetBD1.reducePoset();
-		}
-		boolean nonInformativePropHasBeenRemoved = false;
-		boolean nonInformativePropHasBeenEncapsulated = false;;
-		try {
-			propPosetBD1.getProperties().getProperty(removableProp);
-		}
-		catch (PropertyPosetException e) {
-			nonInformativePropHasBeenRemoved = true;
-		}
-		if (nonInformativePropHasBeenRemoved) {
-			IProperty encapsulator = propPosetBD1.getProperties().getProperty(encapsulatingPredecessor);
-			for (IProperty encapsulatedProp : encapsulator.getEncapsulatedProperties()) {
-				if (encapsulatedProp.getPropertyName().equals(removableProp))
-					nonInformativePropHasBeenEncapsulated = true;
+			Set<IProperty> newEncaps = new HashSet<IProperty>(encapsulatedProperties);
+			while (!newEncaps.isEmpty()) {
+				Set<IProperty> subEncaps = new HashSet<IProperty>();
+				for (IProperty encaps : newEncaps) {
+					subEncaps.addAll(encaps.getEncapsulatedProperties());
+				}
+				newEncaps = subEncaps;
+				encapsulatedProperties.addAll(subEncaps);
 			}
+			for (IProperty encapsProp : encapsulatedProperties) {
+				supIrreducibleLeaves.remove(encapsProp.getPropertyName());
+			}
+			removedPropAreEncapsulated = supIrreducibleLeaves.isEmpty();
 		}
-		assertTrue(nonInformativePropHasBeenRemoved && nonInformativePropHasBeenEncapsulated);
+		assertTrue(supIrreducibleLeavesAreRemoved && removedPropAreEncapsulated);
 	}
 	
 	private static ISyntaxGrove setGrove(Path path, IGenericFileReader fileReader) {

@@ -1,9 +1,7 @@
 package propertyPoset.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -120,91 +118,25 @@ public class PropertyPoset implements IPropertyPoset {
 	public void reducePoset() throws PropertyPosetException {
 		if (!dimensionValuesAreIndependent)
 			makeDimensionValuesIndependent();
-		Set<String> propsToRemove = new HashSet<String>();
-		boolean posetHasBeenModified;
+		boolean aRemovalHasOccured;
 		do {
-			posetHasBeenModified = false;
-			List<String> listOfPropsToRemove;
-			for (IProperty property : set.getSetOfProperties()) {
-				try {
-					if (!property.isInformative(relation) && property.getSuccProperties(relation).isEmpty())
-						propsToRemove.add(property.getPropertyName());
+			aRemovalHasOccured = false;
+			Set<String> leaves = relation.getPosetleaves();
+			Map<String, String> removableToAntecedent = new HashMap<String, String>();
+			for (String leaf : leaves) {
+				Set<String> leafAntcdts = relation.getPredecessors(leaf);
+				if (leafAntcdts.size() == 1)
+					removableToAntecedent.put(leaf, leafAntcdts.iterator().next());
+			}
+			if (!removableToAntecedent.isEmpty()) {
+				for (String removableLeaf : removableToAntecedent.keySet()) {
+					relation.removeProperty(set.removeProperty(removableLeaf, removableToAntecedent.get(removableLeaf)));
 				}
-				catch (Exception e) {
-					throw new PropertyPosetException("PropertyPoset.reducePoset() : property '" + property.getPropertyName() 
-						+ "' cannot be tested." + System.lineSeparator() + e.getMessage());
-				}
+				aRemovalHasOccured = true;
 			}
-			try {
-				listOfPropsToRemove = orderPropsByDecreasingRank(propsToRemove);
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("PropertyPoset.reducePoset() : properties to remove "
-						+ "cannot be ordered." + System.lineSeparator() + e.getMessage());
-			}
-			if (!listOfPropsToRemove.isEmpty()) {
-				posetHasBeenModified = true;
-				for (String property : listOfPropsToRemove) {
-					List<String> predecessors = new ArrayList<String>(relation.getPredecessors(property));
-					if (predecessors.size() != 1) {
-						throw new PropertyPosetException("PropertyPoset.reducePoset() : property '" + property + "' can "
-								+ "not be removed since it has more than 1 antecedent.");
-					}
-					else {
-						String antecedent = predecessors.get(0);
-						try {
-							relation.removeProperty(set.removeProperty(property, antecedent));
-						}
-						catch (Exception e) {
-							throw new PropertyPosetException("PropertyPoset.reducePoset() : removal of property '" + property 
-									+ "' failed.");
-						}
-					}
-				}
-				relation.updateRelationData();
-			}
-		} while (posetHasBeenModified);
+		}
+		while (aRemovalHasOccured == true);
 		posetReduced = true;
-	}	
-	
-	/**
-	 * @return the maximal length of a chain bounded by the poset root and one of the properties 
-	 * given in parameter. 
-	 * @throws PropertyPosetException 
-	 */
-	private int getMaxRank(Set<String> propNames) throws PropertyPosetException {
-		int maxRank = 0;
-		for (String prop : propNames) {
-			int thisPropRank = relation.getRank(prop); 
-			if (thisPropRank > maxRank)
-				maxRank = thisPropRank;
-		}
-		return maxRank;
 	}
-	
-	/**
-	 * @param props set of properties to be ordered
-	 * @return list of properties ordered by decreasing rank
-	 * @throws PropertyPosetException 
-	 */
-	private List<String> orderPropsByDecreasingRank(Set<String> props) throws PropertyPosetException{
-		List<String> orderedProps = new ArrayList<String>();
-		if (!props.isEmpty()) {
-			int maxRank = getMaxRank(props);
-			for (int i=maxRank ; i >= 0 ; i--) {
-				if (!props.isEmpty()) {
-					Set<String> propsAtRankI = new HashSet<String>();
-					for (String prop : props) {
-						if (relation.getRank(prop) == i) {
-							propsAtRankI.add(prop);
-						}
-					}
-					orderedProps.addAll(propsAtRankI);
-					props.removeAll(propsAtRankI);	
-				}
-			}
-		}
-		return orderedProps;
-	}	
 
 }

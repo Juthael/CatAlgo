@@ -78,9 +78,9 @@ public interface IProperty {
 	
 	
 	/**
-	 * Encapsulated properties of a property P are elements removed from the {@link IPropertyPoset}  during 
-	 * the 'poset reduction procedure', because they do not not provide any additional information : any other 
-	 * property that implies an encapsulated property of P also implies P. 
+	 * Encapsulated properties of a property P are elements removed from the {@link IPropertyPoset} because 
+	 * they do not not provide any additional information : any other property that implies an encapsulated 
+	 * property of P also implies P. 
 	 * 
 	 * @return encapsulated properties.
 	 */
@@ -104,20 +104,5 @@ public interface IProperty {
 	 * @throws PropertyPosetException 
 	 */
 	boolean isADimension(IRelation rel) throws PropertyPosetException;
-	
-	/**
-	 * An element is informative only if it is a dimension, a dimension value, an atom of the (lower semi-lattice) poset 
-	 * or the poset root.  <br>
-	 * 
-	 * A dimension is a sup-reducible element of a poset. A value 'v' of a dimension is defined as follows : <br> 
-	 * Let 'V' be the dimension set of predecessors. A value 'v' can be : <br>
-	 * 1/ a subset of 'V', such that it is the intersection of V with the set of consequents of (at least) one atom 'a'. 
-	 * 2/ the infimum of such a subset. <br> 
-	 * 
-	 * @param rel a relation that links this property with other properties of a {@link IPropertyPoset}. 
-	 * @return 'true' if this property is informative, 'false' otherwise
-	 * @throws PropertyPosetException
-	 */
-	boolean isInformative(IRelation rel) throws PropertyPosetException;
 	
 }
