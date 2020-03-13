@@ -28,6 +28,7 @@ import fca.gui.util.constant.LMImages;
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IGenericFileReader;
 import grammars.copycat.utils.CcFileReader;
+import grammars.copycatB.utils.CcFileReaderB;
 import grammars.seekWhence.utils.SwFileReader;
 import propertyPoset.IProperty;
 import propertyPoset.IPropertyPoset;
@@ -43,6 +44,7 @@ public class PropertyPosetTest {
 	private static Path m1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "M1_abc_ijk.txt");
 	private static Path e2 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_ab-bc_ijk.txt");
 	private static Path e2b = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_a-bb-c_ijk.txt");
+	private static Path e2b_valAcc = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_a-bb-c_ijk_valuesAccessible.txt");
 	private IPropertyPoset propPosetBD1;
 	
 	@BeforeClass
@@ -99,7 +101,7 @@ public class PropertyPosetTest {
 	@Test
 	public void thisTestCanBeUsedToAnalyzeSyntaxTreesStoredInATextFile() 
 			throws PropertyPosetException, AlreadyExistsException, InvalidTypeException {
-		ISyntaxGrove testGrove = setGrove(e2, new CcFileReader());
+		ISyntaxGrove testGrove = setGrove(e2b_valAcc, new CcFileReaderB());
 		IPropertyPoset testPoset = null;
 		try {
 			System.out.println(testGrove.getPosetMaxChains().getChainsInASingleString());

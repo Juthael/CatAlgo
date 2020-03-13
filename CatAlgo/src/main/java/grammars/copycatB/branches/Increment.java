@@ -1,0 +1,43 @@
+package grammars.copycatB.branches;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import grammarModel.structure.ISyntacticStructure;
+import grammarModel.structure.ISyntaxBranch;
+import grammarModel.structure.impl.SyntaxBranch;
+import grammars.copycatB.disjunctions.IValueOrClusteredValue;
+import grammars.copycatB.leaves.IncremenT;
+
+public class Increment extends SyntaxBranch implements ISyntaxBranch {
+
+	private static final String NAME = "Increment";
+	private final IncremenT incremenT;
+	private final IValueOrClusteredValue value;
+	
+	public Increment(IncremenT incremenT, IValueOrClusteredValue value) {
+		this.incremenT = incremenT;
+		this.value = value;
+	}
+
+	@Override
+	public String getName() {
+		return NAME;
+	}
+
+	@Override
+	public List<ISyntacticStructure> getListOfComponents() {
+		List<ISyntacticStructure> components = new ArrayList<ISyntacticStructure>();
+		components.add(incremenT);
+		components.add(value);
+		return components;
+	}
+
+	@Override
+	public ISyntacticStructure clone() {
+		IncremenT incremenTClone = (IncremenT) incremenT.clone();
+		IValueOrClusteredValue valOrRelClone = (IValueOrClusteredValue) value.clone();
+		return new Increment(incremenTClone, valOrRelClone);
+	}
+
+}
