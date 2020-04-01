@@ -114,7 +114,7 @@ Letter/LetterValue/3-clustered/Cluster/Size/SizE
 Letter/LetterValue/3-clustered/Cluster/Size/1-clustered/1
 Letter/LetterValue/3-clustered/Cluster/Size/1-clustered/Cluster/ClusteR
 Letter/LetterValue/3-clustered/Cluster/Size/1-clustered/Cluster/Size/SizE
-Letter/LetterValue/3-clustered/Cluster/Size/1-clustered/Cluster/Size/6
+Letter/LetterValue/3-clustered/Cluster/Size/1-clustered/Cluster/Size/3
 Letter/LetterValue/3-clustered/Cluster/Size/1-clustered/Cluster/Pattern/PatterN
 Letter/LetterValue/3-clustered/Cluster/Size/1-clustered/Cluster/Pattern/1,2,1
 Letter/LetterValue/3-clustered/Cluster/Sequence/SequencE
@@ -196,5 +196,5 @@ Letter/LetterValue/11-clustered/Cluster/Sequence/Increment/1
 Letter/Position/PositioN
 Letter/Position/ProminentPosition/ProminentPositioN
 Letter/Position/ProminentPosition/EndPosition/EndPositioN
-Letter/Position/ProminentPosition/EndPosition/FirstPositioN
+Letter/Position/ProminentPosition/EndPosition/LastPositioN
 Letter/Position/3
