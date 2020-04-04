@@ -52,7 +52,7 @@ public class Tester {
 			System.out.println("PropertyPosetTest : error during PropertyPoset instantiation " 
 					+ System.lineSeparator() + e.getMessage());
 		}
-		testPoset.reducePoset();
+		//testPoset.reducePoset();
 		BinaryContext context = testPoset.getBinaryContext();
 	
 		LMLogger.getLMLogger();

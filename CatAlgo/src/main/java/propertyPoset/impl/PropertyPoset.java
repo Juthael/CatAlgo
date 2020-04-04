@@ -113,11 +113,13 @@ public class PropertyPoset implements IPropertyPoset {
 		}
 		dimensionValuesAreIndependent = true;
 	}
-	
+
 	@Override
 	public void reducePoset() throws PropertyPosetException {
 		if (!dimensionValuesAreIndependent)
 			makeDimensionValuesIndependent();
+		//HERE
+		/*
 		boolean aRemovalHasOccured;
 		do {
 			aRemovalHasOccured = false;
@@ -137,6 +139,7 @@ public class PropertyPoset implements IPropertyPoset {
 		}
 		while (aRemovalHasOccured == true);
 		posetReduced = true;
+		*/
 	}
 
 }
