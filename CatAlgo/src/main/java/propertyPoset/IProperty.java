@@ -5,22 +5,12 @@ import java.util.Set;
 import propertyPoset.exceptions.PropertyPosetException;
 
 /**
- * A IProperty is characterized by its name and by its potential 'encapsulated properties'. <br>
+ * A IProperty has a name, can be part of a set on which an order relation can be defined.
  * 
  * @author Gael Tregouet
  *
  */
 public interface IProperty {
-	
-	/**
-	 * Encapsulated properties of a property P are elements removed from the {@link IPropertyPoset} during 
-	 * the 'poset reduction procedure', because they do not not provide any additional information : any other 
-	 * property that implies an encapsulated property of P also implies P. 
-	 * 
-	 * @param prop : a 'non-informative' property, removed from the {@link IPropertyPoset} because it is only implied by 
-	 * the property on which this method is called .
-	 */
-	void addEncapsulatedProp(IProperty prop);
 	
 	/**
 	 * 
@@ -75,16 +65,6 @@ public interface IProperty {
 	 * @throws PropertyPosetException 
 	 */
 	Set<String> getPrecProperties(IRelation rel) throws PropertyPosetException;
-	
-	
-	/**
-	 * Encapsulated properties of a property P are elements removed from the {@link IPropertyPoset} because 
-	 * they do not not provide any additional information : any other property that implies an encapsulated 
-	 * property of P also implies P. 
-	 * 
-	 * @return encapsulated properties.
-	 */
-	Set<IProperty> getEncapsulatedProperties();
 	
 	/**
 	 * The rank of a property is the maximal length of a spanning chain bounded by the root of the (lower 

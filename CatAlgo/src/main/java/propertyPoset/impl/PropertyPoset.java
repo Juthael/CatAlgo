@@ -1,13 +1,10 @@
 package propertyPoset.impl;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
 import fca.core.context.binary.BinaryContext;
 import grammarModel.structure.ISyntaxGrove;
-import propertyPoset.IProperty;
 import propertyPoset.IPropertyPoset;
 import propertyPoset.IPropertySet;
 import propertyPoset.IRelation;
@@ -29,7 +26,6 @@ public class PropertyPoset implements IPropertyPoset {
 	private IPropertySet set;
 	private IRelation relation;
 	private boolean dimensionValuesAreIndependent = false;
-	private boolean posetReduced = false;
 	
 	/**
 	 * @param setOfPropNames names of a set of properties
@@ -71,13 +67,13 @@ public class PropertyPoset implements IPropertyPoset {
 	@Override
 	public BinaryContext getBinaryContext() throws PropertyPosetException {
 		BinaryContext context;
-		if (!posetReduced) {
+		if (!dimensionValuesAreIndependent) {
 			try {
-				reducePoset();
+				makeDimensionValuesIndependent();
 			}
 			catch (Exception e) {
-				throw new PropertyPosetException("PropertyPoset.getBinaryContext() : error during poset reduction."
-						+ System.lineSeparator() + "Cannot proceed if poset hasn't been reduced." 
+				throw new PropertyPosetException("PropertyPoset.getBinaryContext() : error while trying to make values "
+						+ "independent." 
 						+ System.lineSeparator() + e.getMessage());
 			}
 		}
@@ -99,6 +95,7 @@ public class PropertyPoset implements IPropertyPoset {
 	
 	@Override
 	public void makeDimensionValuesIndependent() throws PropertyPosetException {
+		/*
 		HashMap<String, String> encapsulatorToEncapsulated;
 		try {
 			encapsulatorToEncapsulated = relation.setDimensionsAndMakeValuesIndependent();
@@ -112,33 +109,6 @@ public class PropertyPoset implements IPropertyPoset {
 			set.getProperty(encapsulator).addEncapsulatedProp(encapsulated);
 		}
 		dimensionValuesAreIndependent = true;
-	}
-
-	@Override
-	public void reducePoset() throws PropertyPosetException {
-		if (!dimensionValuesAreIndependent)
-			makeDimensionValuesIndependent();
-		//HERE
-		/*
-		boolean aRemovalHasOccured;
-		do {
-			aRemovalHasOccured = false;
-			Set<String> leaves = relation.getPosetleaves();
-			Map<String, String> removableToAntecedent = new HashMap<String, String>();
-			for (String leaf : leaves) {
-				Set<String> leafAntcdts = relation.getPredecessors(leaf);
-				if (leafAntcdts.size() == 1)
-					removableToAntecedent.put(leaf, leafAntcdts.iterator().next());
-			}
-			if (!removableToAntecedent.isEmpty()) {
-				for (String removableLeaf : removableToAntecedent.keySet()) {
-					relation.removeProperty(set.removeProperty(removableLeaf, removableToAntecedent.get(removableLeaf)));
-				}
-				aRemovalHasOccured = true;
-			}
-		}
-		while (aRemovalHasOccured == true);
-		posetReduced = true;
 		*/
 	}
 

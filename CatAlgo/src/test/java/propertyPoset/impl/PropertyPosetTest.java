@@ -81,7 +81,6 @@ public class PropertyPosetTest {
 	@Test
 	public void whenBinaryContextRequestedThenBinaryContextReturned() 
 			throws PropertyPosetException, AlreadyExistsException,	InvalidTypeException {
-		propPosetBD1.reducePoset();
 		BinaryContext context = propPosetBD1.getBinaryContext();
 		/*		
 		LMLogger.getLMLogger();
@@ -95,74 +94,7 @@ public class PropertyPosetTest {
 			lattViewer.setVisible(true); 
 		*/
 		assertTrue(context != null);
-	}
-	
-	
-	@Test
-	public void thisTestCanBeUsedToAnalyzeSyntaxTreesStoredInATextFile() 
-			throws PropertyPosetException, AlreadyExistsException, InvalidTypeException {
-		ISyntaxGrove testGrove = setGrove(e2b_valAcc, new CcFileReaderB());
-		IPropertyPoset testPoset = null;
-		try {
-			System.out.println(testGrove.getPosetMaxChains().getChainsInASingleString());
-			testPoset = new PropertyPoset(testGrove.getPosetMaxChains());
-		}
-		catch (Exception e) {
-			System.out.println("PropertyPosetTest : error during PropertyPoset instantiation " 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		testPoset.reducePoset();
-		BinaryContext context = testPoset.getBinaryContext();
-	
-		LMLogger.getLMLogger();
-		LMImages.getLMImages();
-		LMIcons.getLMIcons();
-
-		ConceptLattice conLattice = new ConceptLattice(context);
-		LatticeStructure lattStruc = new LatticeStructure(conLattice, context, LatticeStructure.BEST);
-		GraphicalLattice graphLatt = new GraphicalLattice(conLattice, lattStruc);
-		LatticeViewer lattViewer = new LatticeViewer(graphLatt);
-		lattViewer.setExtendedState(Frame.MAXIMIZED_BOTH);
-		lattViewer.setVisible(true); 
-			
-		System.out.println("STOP");
 	}	
-	
-	
-	@Test
-	public void whenPosetReductionCalledThenSupIrreducibleLeavesAreRemovedAndEncapsulated() throws Exception {
-		boolean supIrreducibleLeavesAreRemoved;
-		boolean removedPropAreEncapsulated = false;
-		Set<String> leaves = propPosetBD1.getRelation().getPosetleaves();
-		Set<String> supIrreducibleLeaves = new HashSet<String>();
-		for (String leaf : leaves) {
-			if (propPosetBD1.getRelation().getPredecessors(leaf).size() == 1)
-				supIrreducibleLeaves.add(leaf);
-		}
-		propPosetBD1.reducePoset();
-		Set<String> reducedPosetProperties = propPosetBD1.getProperties().getSetOfPropertyNames();
-		supIrreducibleLeavesAreRemoved = !reducedPosetProperties.removeAll(supIrreducibleLeaves);
-		if (supIrreducibleLeavesAreRemoved) {
-			Set<IProperty> encapsulatedProperties = new HashSet<IProperty>();
-			for (IProperty property : propPosetBD1.getProperties().getSetOfProperties()) {
-				encapsulatedProperties.addAll(property.getEncapsulatedProperties());				
-			}
-			Set<IProperty> newEncaps = new HashSet<IProperty>(encapsulatedProperties);
-			while (!newEncaps.isEmpty()) {
-				Set<IProperty> subEncaps = new HashSet<IProperty>();
-				for (IProperty encaps : newEncaps) {
-					subEncaps.addAll(encaps.getEncapsulatedProperties());
-				}
-				newEncaps = subEncaps;
-				encapsulatedProperties.addAll(subEncaps);
-			}
-			for (IProperty encapsProp : encapsulatedProperties) {
-				supIrreducibleLeaves.remove(encapsProp.getPropertyName());
-			}
-			removedPropAreEncapsulated = supIrreducibleLeaves.isEmpty();
-		}
-		assertTrue(supIrreducibleLeavesAreRemoved && removedPropAreEncapsulated);
-	}
 	
 	private static ISyntaxGrove setGrove(Path path, IGenericFileReader fileReader) {
 		ISyntaxGrove grove = null;

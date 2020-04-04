@@ -49,24 +49,5 @@ public interface IPropertyPoset {
 	 * @throws PropertyPosetException
 	 */
 	void makeDimensionValuesIndependent() throws PropertyPosetException;
-	
-	/**
-	 * This method guarantees that the poset is displayed in a reduced form, i.e. rid of its 'non-informative' elements. <br>
-	 * 
-	 * WARNING : to avoid inconsistent results, this method should only be called after the method 
-	 * makeDimensionValuesIndependent() has proceeded. <br>
-	 * 
-	 * Non-informative properties are sup-irreducible leaves of the poset (i.e. leaves with only one predecessor, 
-	 * since the poset is a lower semi-lattice). Those properties usually remain unnoticed or indistinguishable from 
-	 * their antecedent for human subjects, since they do not allow any additional distinction amongst the elements 
-	 * of a context. (In a collection of cars, for the 'redness' of a particular car to be salient, it takes the 
-	 * 'un-redness' (e.g., blueness) of other elements). <br>
-	 * 
-	 * This procedure operates recursively on the poset, as long as new sup-irreducible leaves are found.
-	 * 
-	 * @throws PropertyPosetException 
-	 */
-	void reducePoset() throws PropertyPosetException ;
-
 
 }

@@ -53,17 +53,5 @@ public class PropertySetTest {
 		}
 		set = propPoset.getProperties();
 	}
-	
-	@Test
-	public void whenPropertyRemovedWith2ArgsMethodThenCanBeRetreivedAsEncapsulated() throws PropertyPosetException {
-		Set<String> propNames = set.getSetOfPropertyNames();
-		Iterator<String> propNamesIterator = propNames.iterator();
-		String propToBeEncapsulatedName = propNamesIterator.next();
-		String encapsulatingPropName = propNamesIterator.next();
-		IProperty propToBeEncapsulated = set.getProperty(propToBeEncapsulatedName);
-		set.removeProperty(propToBeEncapsulatedName, encapsulatingPropName);
-		IProperty retreivedProperty = set.getProperty(encapsulatingPropName).getEncapsulatedProperties().iterator().next();
-		assertTrue(propToBeEncapsulated == retreivedProperty);
-	}
 
 }

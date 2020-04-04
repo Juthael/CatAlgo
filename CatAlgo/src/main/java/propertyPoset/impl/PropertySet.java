@@ -87,37 +87,4 @@ public class PropertySet implements IPropertySet {
 		return subset;
 	}
 
-	@Override
-	public IProperty removeProperty(String propertyName, String antecedentName) throws PropertyPosetException {
-		IProperty propToRemove; 
-		try {
-			propToRemove = getProperty(propertyName);
-		}
-		catch (Exception e){
-			throw new PropertyPosetException("the property to remove '" + propertyName + "' cannot be found." );
-		}
-		boolean removed = false;
-		try {
-			removed = setOfIProperties.remove(propToRemove);
-			if (!removed)
-				throw new PropertyPosetException("the property " + propertyName + " hasn't been removed.");
-			else {
-				IProperty antecedentProperty;
-				try {
-					antecedentProperty = getProperty(antecedentName);
-				}
-				catch (Exception e) {
-					throw new PropertyPosetException("the antecedent property " + antecedentName 
-							+ " cannot be found." );
-				}
-				antecedentProperty.addEncapsulatedProp(propToRemove);
-			}
-		}
-		catch (Exception e) {
-			throw new PropertyPosetException("PropertySet.removeProperty : an error has occured. " 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		return propToRemove;
-	}
-
 }

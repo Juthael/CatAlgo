@@ -148,21 +148,6 @@ public interface IRelation {
 	 */
 	int getMaximalRank() throws PropertyPosetException;
 	
-	/**
-	 * After this method has been called, the name of the property given in parameter can neither be found in the 
-	 * relation as an antecedent, nor as a consequent of any other property. 
-	 * 
-	 * Warning : if an non-maximal element of the poset is removed and any element of its upper set is not, then 
-	 * the poset may not be a lower semi-lattice anymore, which can lead to inconsistent behavior. 
-	 * 
-	 * @see IProperty
-	 * @see IPropertyPoset
-	 * @param property the element to remove 
-	 * @return true if the property has actually been removed. 
-	 * @throws PropertyPosetException if the parameter is unknown or if it is an informative property. 
-	 */
-	boolean removeProperty(IProperty property) throws PropertyPosetException;
-	
 	 /**
 	 * This method guarantees values of a dimension are independent, i.e. their intersection is empty. It also identifies 
 	 * informative elements of the poset and populates the dedicated field.<br>

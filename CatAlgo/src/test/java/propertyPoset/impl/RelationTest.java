@@ -184,32 +184,6 @@ public class RelationTest {
 		assertTrue(mockRelation.getMaximalRank() == 3);
 	}
 	
-	@Test
-	public void whenPropertyRemovalRequestedThenPropertyRemovedGivenPropertyName() throws Exception {
-		boolean propRemoved = false;
-		String removableProp = null;
-		Set<String> leaves = truePropPoset.getRelation().getPosetleaves();
-		Iterator<String> leafIterator = leaves.iterator();
-		while (removableProp == null && leafIterator.hasNext()) {
-			String nextLeaf = leafIterator.next();
-			if (truePropPoset.getRelation().getPredecessors(nextLeaf).size() == 1)
-				removableProp = nextLeaf;
-		}
-		String testPredecessor = truePropPoset.getRelation().getPredecessors(removableProp).iterator().next();
-		trueRelation.removeProperty(truePropPoset.getProperties().getProperty(removableProp));
-		try {
-			trueRelation.getConsequents(removableProp);
-		}
-		catch (PropertyPosetException p) {
-			propRemoved = true;
-		}
-		if (propRemoved == true) {
-			propRemoved = (!trueRelation.getConsequents(trueRelation.getPosetRoot()).contains(removableProp)
-						&& !trueRelation.getSuccessors(testPredecessor).contains(removableProp));
-		}
-		assertTrue(propRemoved);
-	}
-	
 	private static void setTrueGrove() {
 		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
 		SwFileReader fileReader = new SwFileReader();

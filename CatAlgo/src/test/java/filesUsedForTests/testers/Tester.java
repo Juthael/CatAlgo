@@ -23,8 +23,6 @@ import propertyPoset.impl.PropertyPoset;
 
 public class Tester {
 
-	//TestTesttest
-	
 	@SuppressWarnings("unused")
 	private static Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
 	@SuppressWarnings("unused")

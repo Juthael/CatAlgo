@@ -1,6 +1,5 @@
 package propertyPoset.impl;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import propertyPoset.IProperty;
@@ -8,10 +7,7 @@ import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
 
 /**
- * A Property is characterized by its name and by its potential 'encapsulated properties'. <br>
- * 
- * Encapsulated properties of a property P are elements removed from the property poset because they 
- * do not not provide any additional information. 
+ * A IProperty has a name, can be part of a set on which an order relation can be defined. <br>
  * 
  * @author Gael Tregouet
  *
@@ -19,7 +15,6 @@ import propertyPoset.exceptions.PropertyPosetException;
 public class Property implements IProperty {
 
 	private String name;
-	private Set<IProperty> encapsulatedProp = new HashSet<IProperty>();
 	
 	/**
 	 * 
@@ -27,11 +22,6 @@ public class Property implements IProperty {
 	 */
 	public Property(String name) {
 		this.name = name;
-	}
-
-	@Override
-	public void addEncapsulatedProp(IProperty prop) {
-		encapsulatedProp.add(prop);
 	}
 
 	@Override
@@ -115,11 +105,6 @@ public class Property implements IProperty {
 					+ System.lineSeparator() + e.getMessage());
 		}
 		return precProp;
-	}
-
-	@Override
-	public Set<IProperty> getEncapsulatedProperties() {
-		return encapsulatedProp;
 	}
 
 	@Override
