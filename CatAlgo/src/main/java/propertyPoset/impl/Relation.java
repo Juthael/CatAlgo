@@ -13,6 +13,7 @@ import propertyPoset.IPropertySet;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
 import propertyPoset.utils.IImplication;
+import propertyPoset.utils.impl.DimensionAnalysis;
 
 /**
  * A Relation is an implementation - endowed with some useful functionalities - of a binary relation on a set of 
@@ -73,7 +74,74 @@ public class Relation implements IRelation {
 		}
 	}
 	
+	@Override
+	public void modifyRelation(String targetProperty, Set<String> newPredecessors) throws PropertyPosetException {
+		updateRelationData();
+		if (relation.containsKey(targetProperty)) {
+			Set<String> currentPredecessors = getPredecessors(targetProperty);
+			if (!currentPredecessors.containsAll(newPredecessors)) {
+				throw new PropertyPosetException("Relation.modifyRelation() : the set of new predecessors " 
+						+ System.lineSeparator() + newPredecessors.toString() + System.lineSeparator() +
+						"of the target property '" + targetProperty + "' must be a subset of its current set of "
+								+ "predecessors : " + System.lineSeparator() + currentPredecessors.toString());
+			}
+			int maxRank = getMaximalRank();
+			for (int i=maxRank-1 ; i>=0 ; i--) {
+				for (String property : relation.keySet()) {
+					if (propertyToRank.get(property) == i
+							&& !property.equals(targetProperty)
+							&& relation.get(property).contains(targetProperty)) {
+						Set<String> propCsqtsClone = new HashSet<String>(relation.get(property));
+						propCsqtsClone.retainAll(newPredecessors);
+						if (propCsqtsClone.isEmpty()) {
+							relation.get(property).clear();
+							relation.get(property).add(property);
+							for (String succ : getSuccessors(property)) {
+								if (!succ.equals(targetProperty))
+									relation.get(property).addAll(relation.get(succ));
+							}
+						}
+					}
+				}
+			}
+			rankMappingIsUpToDate = false;
+			successorRelationIsUpToDate = false;
+			allDataIsUpToDate = false;
+		}
+		else throw new PropertyPosetException("Relation.modifyRelation() : target property '" + targetProperty 
+				+ "' is unknown");
+	}
 	
+	@Override
+	public void addNewProperty(String newProperty, Set<String> predecessors, Set<String> consequents) throws PropertyPosetException {
+		updateRelationData();
+		if (relation.containsKey(newProperty)) {
+			throw new PropertyPosetException("Relation.addNewProperty() : the relation already contains the  "
+					+ "property '" + newProperty + "'.");
+		}
+		if (!relation.keySet().containsAll(predecessors)) {
+			throw new PropertyPosetException("Relation.addNewProperty() : at least one property in the following set "
+					+ System.lineSeparator() + "of predecessors is unknown : " 
+					+ System.lineSeparator() + predecessors.toString());
+		}
+		Set<String> newPropGreaterProps = new HashSet<String>(consequents);
+		newPropGreaterProps.remove(newProperty);
+		if (!relation.keySet().containsAll(newPropGreaterProps)) {
+			throw new PropertyPosetException("Relation.addNewProperty() : at least one property in the following set "
+					+ System.lineSeparator() + "of consequents is unknown : " 
+					+ System.lineSeparator() + newPropGreaterProps.toString());
+		}
+		relation.put(newProperty, consequents);
+		for (String property : relation.keySet()) {
+			Set<String> propConsequents = new HashSet<String>(getConsequents(property));
+			propConsequents.retainAll(predecessors);
+			if (!propConsequents.isEmpty())
+				relation.get(property).addAll(consequents);
+		}
+		rankMappingIsUpToDate = false;
+		successorRelationIsUpToDate = false;
+		allDataIsUpToDate = false;
+	}
 
 	@Override
 	public Set<String> getConsequents(String propName) throws PropertyPosetException {
@@ -254,73 +322,74 @@ public class Relation implements IRelation {
 	}
 	
 	@Override
-	public HashMap<String, String> setDimensionsAndMakeValuesIndependent() throws PropertyPosetException {
-		HashMap<String, String> encapsulations = new HashMap<String, String>();
-		setDimensions();
-		HashSet<String> dimensionsAtStart = new HashSet<String>(dimensions);
-		for (String dimension : dimensionsAtStart) {
-			boolean relationMustBeModified = false;
-			Set<String> dimPredecessors = new HashSet<String>(getPredecessors(dimension));
-			Set<String> minimalAntcdts = new HashSet<String>(getSuccessors(posetRoot));
-			Set<String> falseAntcdts = new HashSet<String>();
-			List<Set<String>> values = new ArrayList<Set<String>>();
-			for (String antcdt : minimalAntcdts) {
-				Set<String> value = intersection(antcdt, dimPredecessors);
-				if (!value.isEmpty()) {
-					if (!values.contains(value))
-						values.add(value);
-				}
-				else falseAntcdts.add(antcdt);
+	public Set<DimensionAnalysis> getDimensionAnalyzes() throws PropertyPosetException{
+		Set<DimensionAnalysis> dimensionAnalyzes = new HashSet<DimensionAnalysis>();
+		updateRelationData();
+		for (String dimension : dimensions) {
+			DimensionAnalysis dimAnalysis = new DimensionAnalysis(dimension);
+			Set<String> precssrsForThisDimInstance = new HashSet<String>();
+			Set<String> remainingPrecssrs;
+			try {
+				remainingPrecssrs = new HashSet<String>(getPredecessors(dimension));
 			}
-			minimalAntcdts.removeAll(falseAntcdts);
-			int val1Idx = 0;
-			int valMax = values.size() - 1;
-			while (val1Idx < valMax) {
-				int val2Idx = val1Idx + 1;
-				boolean valuesModified = false;
-				while (val2Idx <= valMax && valuesModified == false) {
-					Set<String> val1 = new HashSet<String>(values.get(val1Idx));
-					Set<String> val2 = new HashSet<String>(values.get(val2Idx));
-					val1.retainAll(val2);
-					if (!val1.isEmpty()) {
-						for (String valElement : val1) {
-							encapsulations.put(valElement, dimension);
-							dimPredecessors.remove(valElement);
-						}
-						values.clear();
-						falseAntcdts.clear();
-						for (String antcdt : minimalAntcdts) {
-							Set<String> value = intersection(antcdt, dimPredecessors);
-							if (!value.isEmpty()) {
-								if (!values.contains(value))
-									values.add(value);
+			catch (Exception e) {
+				throw new PropertyPosetException("Relation.getDimensionAnalyzes() : cannot get predecessors for "
+						+ "dimension '" + dimension + "'." + System.lineSeparator() + e.getMessage());
+			}
+			String dimensionInstanceIdx = "";
+			do {
+				Set<Set<String>> valuesForThisInstance = new HashSet<Set<String>>();
+				precssrsForThisDimInstance.clear();
+				precssrsForThisDimInstance.addAll(remainingPrecssrs);
+				remainingPrecssrs.clear();
+				List<Set<String>> values;
+				try {
+					values = calculateValues(precssrsForThisDimInstance);
+				}
+				catch (Exception e) {
+					throw new PropertyPosetException("Relation.getDimensionAnalyses() : cannot calculate values of "
+							+ "dimension '"	+ dimension + "'." + System.lineSeparator() + e.getMessage());
+				}
+				int valuesIdx1 = 0;
+				int valuesIdx2;
+				while (valuesIdx1 < values.size()) {
+					valuesForThisInstance.add(values.get(valuesIdx1));
+					Set<String> refSetValues = values.get(valuesIdx1);
+					valuesIdx2 = valuesIdx1 + 1;
+					boolean valuesHaveBeenRecalculated = false;
+					while (valuesIdx2 < values.size() && !valuesHaveBeenRecalculated) {
+						Set<String> refSet = new HashSet<String>(refSetValues);
+						Set<String> comparedSet = new HashSet<String>(values.get(valuesIdx2));
+						if (!refSet.equals(comparedSet)) {
+							refSet.retainAll(comparedSet);
+							if (!refSet.isEmpty()) {
+								remainingPrecssrs.addAll(refSet);
+								precssrsForThisDimInstance.removeAll(remainingPrecssrs);
+								try {
+									values = calculateValues(precssrsForThisDimInstance);
+								}
+								catch (Exception e) {
+									throw new PropertyPosetException("Relation.getDimensionAnalyses() : cannot calculate "
+											+ "values of dimension '"	+ dimension + "'." + System.lineSeparator() 
+											+ e.getMessage());
+								}
+								valuesHaveBeenRecalculated = true;
+								valuesForThisInstance.clear();
+								valuesIdx1 = -1;
 							}
-							else falseAntcdts.add(antcdt);
 						}
-						minimalAntcdts.removeAll(falseAntcdts);
-						valMax = values.size() - 1;
-						valuesModified = true;
-						relationMustBeModified = true;
-						val1Idx--;
+						valuesIdx2++;
 					}
-					else val2Idx++;
+					valuesIdx1++;
 				}
-				val1Idx++;
-			}
-			if (relationMustBeModified) {
-				for (String property : relation.keySet()) {
-					if (!property.equals(dimension) && relation.get(property).contains(dimension)) {
-						Set<String> intersWithPredecessors = intersection(property, dimPredecessors);
-						if (intersWithPredecessors.isEmpty())
-							relation.get(property).remove(dimension);
-					}
-				}
-				rankMappingIsUpToDate = false;
-				successorRelationIsUpToDate = false;
-				allDataIsUpToDate = false;
-			}
+				dimAnalysis.addNewDimensionInstance(dimension.concat(dimensionInstanceIdx));
+				dimAnalysis.addNewPredecessorsToSpecifiedDimensionInstance(
+						dimension.concat(dimensionInstanceIdx), precssrsForThisDimInstance);
+				dimensionInstanceIdx = dimensionInstanceIdx.concat("*");
+			} while (!remainingPrecssrs.isEmpty());
+			dimensionAnalyzes.add(dimAnalysis);
 		}
-		return encapsulations;
+		return dimensionAnalyzes;
 	}
 
 	@Override
@@ -330,7 +399,7 @@ public class Relation implements IRelation {
 				dimensions = new HashSet<String>();
 			try {
 				setSuccessorRelationMapAndRanks();
-				setDimensionsAndMakeValuesIndependent();
+				setDimensions();
 				allDataIsUpToDate = true;	
 			}
 			catch (Exception e) {
@@ -338,6 +407,25 @@ public class Relation implements IRelation {
 						+ System.lineSeparator() + e.getMessage());
 			}
 		}
+	}
+	
+	private List<Set<String>> calculateValues(Set<String> properties) throws PropertyPosetException{
+		Set<Set<String>> setsOfValues = new HashSet<Set<String>>();
+		Set<String> contextAtoms = getSuccessors(getPosetRoot());
+		for (String atom : contextAtoms) {
+			Set<String> setOfValues;
+			try {
+				setOfValues = intersection(atom, properties);
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("Relation.calculateValues : cannot calculate value for atom '"
+						+ atom + "'." + System.lineSeparator() + e.getMessage());
+			}
+			if (!setOfValues.isEmpty()) {
+				setsOfValues.add(setOfValues);
+			}
+		}
+		return new ArrayList<Set<String>>(setsOfValues);
 	}
 
 	/**
@@ -561,8 +649,6 @@ public class Relation implements IRelation {
 						+ System.lineSeparator() + e.getMessage());
 			}
 		}
-		
-		
 	}
 
 }

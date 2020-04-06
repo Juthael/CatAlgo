@@ -1,12 +1,12 @@
 package propertyPoset;
 
-import java.util.HashMap;
 import java.util.Set;
 
 import grammarModel.structure.ISyntaxGrove;
 import propertyPoset.exceptions.PropertyPosetException;
 import propertyPoset.utils.IImplication;
 import propertyPoset.utils.IPosetMaxChains;
+import propertyPoset.utils.impl.DimensionAnalysis;
 
 /**
  * A IRelation is a binary relation on a set of properties, endowed with some additional 
@@ -38,7 +38,31 @@ public interface IRelation {
 	 * @param implication is a pair of properties (A,B) ; A being the 'antecedent' and B the 'consequent'. 
 	 * @throws PropertyPosetException
 	 */
-	public void addImplicationEnsureTransitivity(IImplication implication) throws PropertyPosetException;	
+	public void addImplicationEnsureTransitivity(IImplication implication) throws PropertyPosetException;
+	
+	/**
+	 * Modifies the 'relation' map by removing some elements from the set of predecessors of a specified 
+	 * property, and then modifying the relation in order to maintain its transitivity. <br> 
+	 * 
+	 * A property 'p' is then included in the set of consequents of a property 'q' iff q=p or 
+	 * if at least one of the specified new predecessors is a consequent of q.
+	 * 
+	 * @param targetProperty the property for which new predecessors are specified
+	 * @param newPredecessors the new predecessors
+	 * @throws PropertyPosetException 
+	 */
+	public void modifyRelation(String targetProperty, Set<String> newPredecessors) throws PropertyPosetException;
+	
+	/**
+	 * Adds a new property in the relation, specifying some existent properties as its predecessors and some other 
+	 * as its consequents. 
+	 * Modifies the relation in order to maintain transitivity.  
+	 * @param newProperty
+	 * @param predecessors
+	 * @throws PropertyPosetException 
+	 */
+	public void addNewProperty(String newProperty, Set<String> predecessors, Set<String> consequents) 
+			throws PropertyPosetException;
 	
 	/**
 	 * The set of consequents (or implied properties) of a property P is the set of properties equal to 
@@ -148,19 +172,17 @@ public interface IRelation {
 	 */
 	int getMaximalRank() throws PropertyPosetException;
 	
-	 /**
-	 * This method guarantees values of a dimension are independent, i.e. their intersection is empty. It also identifies 
-	 * informative elements of the poset and populates the dedicated field.<br>
-	 * 
-	 * A dimension is a sup-reducible element of a poset. A value 'v' of a dimension is defined as follows : <br> 
-	 * Let 'V' be the set of the dimension predecessors. A value 'v' can be : <br>
-	 * 1/ a subset of 'V', such that it is the intersection of V with the set of consequents of (at least) one atom 'a'. 
-	 * 2/ the infimum of such a subset.
-	 * 
-	 * @return a map of properties with the property they must encapsulate. Must be proceeded by {@link IPropertySet}
+	/**
+	 * In order to build the set of {@link DimensionAnalysis}, calculates how many dimension instances are necessary 
+	 * to make sure that every dimension has independent values. <br>
+	 * To do so, this method calculate the set of values of a dimension and checks the intersection between two values
+	 * is always an empty set. If this is not the case, the properties in that intersection are set aside and the values 
+	 * of the current instance are recalculated without them. Then the remaining properties are processed to build an 
+	 * additional instance of the dimension, and so on until all properties have been attributed to an instance.    
+	 * @return a {@link DimensionAnalysis} for every sup-reducible element of the poset.
 	 * @throws PropertyPosetException
 	 */
-	HashMap<String, String> setDimensionsAndMakeValuesIndependent() throws PropertyPosetException;
+	Set<DimensionAnalysis> getDimensionAnalyzes() throws PropertyPosetException;
 	
 	/**
 	 * Ensures that all data is up to date. Must be called after any modification.

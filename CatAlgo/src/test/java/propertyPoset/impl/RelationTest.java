@@ -1,12 +1,11 @@
 package propertyPoset.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +24,7 @@ import propertyPoset.IPropertyPoset;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
 import propertyPoset.utils.IImplication;
+import propertyPoset.utils.impl.DimensionAnalysis;
 import propertyPoset.utils.impl.Implication;
 
 public class RelationTest {
@@ -182,6 +182,82 @@ public class RelationTest {
 	@Test
 	public void whenMaximalRankRequestedThenExpectedRankReturned() throws PropertyPosetException {
 		assertTrue(mockRelation.getMaximalRank() == 3);
+	}
+	
+	@Test
+	public void whenDimensionAnalyzesRequiredThenConsistentDimensionAnalyzesReturned() throws PropertyPosetException{
+		Set<DimensionAnalysis> analyzes = trueRelation.getDimensionAnalyzes();
+		/*
+		for(DimensionAnalysis analysis : analyzes) {
+			System.out.println("-------DIMENSION NAME : " + analysis.getDimensionName());
+			for (String instance : analysis.getAllInstancesOfThisDimension()) {
+				System.out.println("Dimension instance : " + instance);
+				System.out.println(analysis.getValuesForThisDimensionInstance(instance));
+			}
+			System.lineSeparator();			
+		}
+		*/
+		int nbOfInstancesForDimension1 = -1;
+		for (DimensionAnalysis analysis : analyzes) {
+			if (analysis.getDimensionName().equals("1")) {
+				nbOfInstancesForDimension1 = analysis.getAllInstancesOfThisDimension().size();
+			}
+		}
+		assertTrue(nbOfInstancesForDimension1 == 2);
+	}
+	
+	@Test
+	public void whenRelationModifiedThenNewRelationIsConsistent() throws PropertyPosetException {
+		boolean modificationIsConsistent = true;
+		String targetProperty = "Relation0";
+		Set<String> targetNewPrec = trueRelation.getPredecessors(targetProperty);
+		String removedPrec = "FirstValue0";
+		targetNewPrec.remove(removedPrec);
+		trueRelation.modifyRelation(targetProperty, targetNewPrec);
+		for (String property : trueRelation.getConsequents(trueRelation.getPosetRoot())) {
+			if (!property.equals(targetProperty)) {
+				if (trueRelation.getConsequents(property).contains(targetProperty)) {
+					Set<String> propertyCsqts = trueRelation.getConsequents(property);
+					propertyCsqts.retainAll(targetNewPrec);
+					if (propertyCsqts.isEmpty()) {
+						modificationIsConsistent = false;
+					}
+				}
+				else {
+					Set<String> propertyCsqts = trueRelation.getConsequents(property);
+					propertyCsqts.retainAll(targetNewPrec);
+					if (!propertyCsqts.isEmpty()) {
+						modificationIsConsistent = false;
+					}
+				}
+			}
+		}
+		assertTrue(modificationIsConsistent);
+	}
+	
+	@Test
+	public void whenNewPropertyIsAddedThenNewRelationIsConsistent() throws PropertyPosetException {
+		boolean relationIsConsistent = true;
+		String newProperty = "RelationO*";
+		Set<String> newPropCsqts = trueRelation.getGreaterProperties("Relation0");
+		newPropCsqts.add(newProperty);
+		newPropCsqts.add("DigiT");
+		Set<String> newPropPrec = trueRelation.getPredecessors("Relation0");
+		newPropPrec.remove("FirstValue0");
+		trueRelation.addNewProperty(newProperty, newPropPrec, newPropCsqts);
+		for (String property : trueRelation.getConsequents(trueRelation.getPosetRoot())) {
+			Set<String> propertyCsqts = trueRelation.getConsequents(property);
+			if (propertyCsqts.contains(newProperty)) {
+				if (!trueRelation.getConsequents(property).containsAll(newPropCsqts))
+					relationIsConsistent = false;
+			}
+			else {
+				propertyCsqts.retainAll(newPropPrec);
+				if (!propertyCsqts.isEmpty())
+					relationIsConsistent = false;
+			}
+		}
+		assertTrue(relationIsConsistent);
 	}
 	
 	private static void setTrueGrove() {
