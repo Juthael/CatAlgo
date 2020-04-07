@@ -39,7 +39,14 @@ public interface IPropertyPoset {
 	BinaryContext getBinaryContext() throws PropertyPosetException;
 	
 	/**
-	 * This method guarantees values of a dimension are independent, i.e. their intersection is empty. <br>
+	 * 
+	 * @return
+	 * @throws PropertyPosetException
+	 */
+	BinaryContext getBinaryContextWithIndependentDimensionValues() throws PropertyPosetException;
+	
+	/**
+	 * This method guarantees that values of a dimension are independent, i.e. their intersection is empty. <br>
 	 * A dimension is a sup-reducible element of a poset for wich a set of independent values can be found. A value 
 	 * 'v' of a dimension is defined as follows : <br> 
 	 * Let 'V' be the set of predecessors of a dimension. A value 'v' can be : <br>
@@ -48,6 +55,6 @@ public interface IPropertyPoset {
 	 * (and both 1/ and 2/, if the subset has a only one element : then this element is its own infimum) <br>
 	 * @throws PropertyPosetException
 	 */
-	void makeDimensionValuesIndependent() throws PropertyPosetException;
+	void ensureDimensionsHaveIndependentValues() throws PropertyPosetException;
 
 }

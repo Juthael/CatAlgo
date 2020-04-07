@@ -35,7 +35,18 @@ public class PropertySet implements IPropertySet {
 		setOfIProperties = new HashSet<IProperty>();
 		for (String name : setOfPropNames)
 			setOfIProperties.add(new Property(name));
-	}	
+	}
+	
+	@Override
+	public void addNewProperty(String name) throws PropertyPosetException {
+		for (IProperty prop : setOfIProperties) {
+			if (prop.getPropertyName().equals(name)) {
+				throw new PropertyPosetException("PropertySet.addNewProperty() : the specified name '" + name 
+						+ "' is already known.");
+			}
+		}
+		setOfIProperties.add(new Property(name));
+	}
 
 	@Override
 	public Set<IProperty> getSetOfProperties() {

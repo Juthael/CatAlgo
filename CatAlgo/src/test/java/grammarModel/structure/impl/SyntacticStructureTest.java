@@ -101,7 +101,7 @@ public class SyntacticStructureTest {
 		try {
 			posetChains = grove1.getPosetMaxChains();
 			posetChainsReturned = (!posetChains.getChains().isEmpty());
-			printChains(posetChains.getChains());
+			//printChains(posetChains.getChains());
 		}
 		catch (Exception e) {
 			posetChainsReturned = false;

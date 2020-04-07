@@ -12,6 +12,7 @@ import propertyPoset.IProperty;
 import propertyPoset.IPropertySet;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
+import propertyPoset.utils.IDimensionAnalysis;
 import propertyPoset.utils.IImplication;
 import propertyPoset.utils.impl.DimensionAnalysis;
 
@@ -113,7 +114,7 @@ public class Relation implements IRelation {
 	}
 	
 	@Override
-	public void addNewProperty(String newProperty, Set<String> predecessors, Set<String> consequents) throws PropertyPosetException {
+	public String addNewProperty(String newProperty, Set<String> predecessors, Set<String> consequents) throws PropertyPosetException {
 		updateRelationData();
 		if (relation.containsKey(newProperty)) {
 			throw new PropertyPosetException("Relation.addNewProperty() : the relation already contains the  "
@@ -141,6 +142,7 @@ public class Relation implements IRelation {
 		rankMappingIsUpToDate = false;
 		successorRelationIsUpToDate = false;
 		allDataIsUpToDate = false;
+		return newProperty;
 	}
 
 	@Override
@@ -322,9 +324,9 @@ public class Relation implements IRelation {
 	}
 	
 	@Override
-	public Set<DimensionAnalysis> getDimensionAnalyzes() throws PropertyPosetException{
-		Set<DimensionAnalysis> dimensionAnalyzes = new HashSet<DimensionAnalysis>();
+	public Set<IDimensionAnalysis> getDimensionAnalyzes() throws PropertyPosetException{
 		updateRelationData();
+		Set<IDimensionAnalysis> dimensionAnalyzes = new HashSet<IDimensionAnalysis>();
 		for (String dimension : dimensions) {
 			DimensionAnalysis dimAnalysis = new DimensionAnalysis(dimension);
 			Set<String> precssrsForThisDimInstance = new HashSet<String>();

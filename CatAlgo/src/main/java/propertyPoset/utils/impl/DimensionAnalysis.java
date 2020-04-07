@@ -45,7 +45,7 @@ public class DimensionAnalysis implements IDimensionAnalysis {
 	}
 
 	@Override
-	public Set<String> getValuesForThisDimensionInstance(String dimName) {
+	public Set<String> getPredecessorsForThisDimensionInstance(String dimName) {
 		return dimInstancesToPredecessors.get(dimName);
 	}
 

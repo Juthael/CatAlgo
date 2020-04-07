@@ -27,7 +27,7 @@ public interface IDimensionAnalysis {
 	
 	Set<String> getNewInstancesOfThisDimension();
 	
-	Set<String> getValuesForThisDimensionInstance(String dimName);
+	Set<String> getPredecessorsForThisDimensionInstance(String dimName);
 	
 	boolean addNewDimensionInstance(String dimName);
 	

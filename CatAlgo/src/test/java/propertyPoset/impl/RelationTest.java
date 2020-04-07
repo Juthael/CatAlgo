@@ -23,8 +23,8 @@ import grammars.seekWhence.utils.SwFileReader;
 import propertyPoset.IPropertyPoset;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
+import propertyPoset.utils.IDimensionAnalysis;
 import propertyPoset.utils.IImplication;
-import propertyPoset.utils.impl.DimensionAnalysis;
 import propertyPoset.utils.impl.Implication;
 
 public class RelationTest {
@@ -186,9 +186,9 @@ public class RelationTest {
 	
 	@Test
 	public void whenDimensionAnalyzesRequiredThenConsistentDimensionAnalyzesReturned() throws PropertyPosetException{
-		Set<DimensionAnalysis> analyzes = trueRelation.getDimensionAnalyzes();
+		Set<IDimensionAnalysis> analyzes = trueRelation.getDimensionAnalyzes();
 		/*
-		for(DimensionAnalysis analysis : analyzes) {
+		for(IDimensionAnalysis analysis : analyzes) {
 			System.out.println("-------DIMENSION NAME : " + analysis.getDimensionName());
 			for (String instance : analysis.getAllInstancesOfThisDimension()) {
 				System.out.println("Dimension instance : " + instance);
@@ -198,7 +198,7 @@ public class RelationTest {
 		}
 		*/
 		int nbOfInstancesForDimension1 = -1;
-		for (DimensionAnalysis analysis : analyzes) {
+		for (IDimensionAnalysis analysis : analyzes) {
 			if (analysis.getDimensionName().equals("1")) {
 				nbOfInstancesForDimension1 = analysis.getAllInstancesOfThisDimension().size();
 			}

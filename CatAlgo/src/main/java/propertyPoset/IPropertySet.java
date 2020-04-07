@@ -2,7 +2,9 @@ package propertyPoset;
 
 import java.util.Set;
 
+import grammars.copycat.branches.Relation;
 import propertyPoset.exceptions.PropertyPosetException;
+import propertyPoset.impl.PropertyPoset;
 
 /**
  * A IPropertySet is a (unordered) set of properties endowed with some basic functionalities. 
@@ -10,6 +12,14 @@ import propertyPoset.exceptions.PropertyPosetException;
  *
  */
 public interface IPropertySet {
+	
+	/**
+	 * The secure way to add a property in the property set is to add the return value of the addNewProperty() method 
+	 * of {@link Relation}. This ensures that the order relation on the {@link PropertyPoset} remains consistent. 
+	 * @param name the name of the new property
+	 * @throws PropertyPosetException 
+	 */
+	void addNewProperty(String name) throws PropertyPosetException;
 	
 	/**
 	 * 

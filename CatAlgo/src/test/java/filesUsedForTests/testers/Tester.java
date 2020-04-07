@@ -53,7 +53,7 @@ public class Tester {
 					+ System.lineSeparator() + e.getMessage());
 		}
 		//testPoset.reducePoset();
-		BinaryContext context = testPoset.getBinaryContext();
+		BinaryContext context = testPoset.getBinaryContextWithIndependentDimensionValues();
 	
 		LMLogger.getLMLogger();
 		LMImages.getLMImages();

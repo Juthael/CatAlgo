@@ -1,5 +1,7 @@
 package propertyPoset.impl;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
@@ -9,6 +11,7 @@ import propertyPoset.IPropertyPoset;
 import propertyPoset.IPropertySet;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
+import propertyPoset.utils.IDimensionAnalysis;
 import propertyPoset.utils.IImplication;
 import propertyPoset.utils.IPosetMaxChains;
 
@@ -67,16 +70,6 @@ public class PropertyPoset implements IPropertyPoset {
 	@Override
 	public BinaryContext getBinaryContext() throws PropertyPosetException {
 		BinaryContext context;
-		if (!dimensionValuesAreIndependent) {
-			try {
-				makeDimensionValuesIndependent();
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("PropertyPoset.getBinaryContext() : error while trying to make values "
-						+ "independent." 
-						+ System.lineSeparator() + e.getMessage());
-			}
-		}
 		String posetName = relation.getPosetRoot();
 		Vector<String> properties = new Vector<String>(set.getSetOfPropertyNames());
 		Vector<Vector<String>> values = new Vector<Vector<String>>();
@@ -94,22 +87,46 @@ public class PropertyPoset implements IPropertyPoset {
 	}
 	
 	@Override
-	public void makeDimensionValuesIndependent() throws PropertyPosetException {
-		/*
-		HashMap<String, String> encapsulatorToEncapsulated;
-		try {
-			encapsulatorToEncapsulated = relation.setDimensionsAndMakeValuesIndependent();
+	public BinaryContext getBinaryContextWithIndependentDimensionValues() throws PropertyPosetException {
+		BinaryContext context;
+		if (!dimensionValuesAreIndependent) {
+			try {
+				ensureDimensionsHaveIndependentValues();
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("PropertyPoset.getBinaryContextWithIndependentDimensionValues() : "
+						+ "error while trying to make values independent." 
+						+ System.lineSeparator() + e.getMessage());
+			}
 		}
-		catch (Exception e) {
-			throw new PropertyPosetException("PropertyPoset.makeDimensionValuesIndependent() : relation modification "
-					+ "has failed." + System.lineSeparator() + e.getMessage());
+		context = getBinaryContext();
+		return context;
+	}
+	
+	@Override
+	public void ensureDimensionsHaveIndependentValues() throws PropertyPosetException {
+		Set<IDimensionAnalysis> dimAnalyzes = relation.getDimensionAnalyzes();
+		for (IDimensionAnalysis dimAnalysis : dimAnalyzes) {
+			if (dimAnalysis.checkIfPosetModificationRequired() == true) {
+				String dimensionName = dimAnalysis.getDimensionName();
+				List<String> instancesForThisDim = dimAnalysis.getAllInstancesOfThisDimension();
+				Set<String> greaterProps = relation.getGreaterProperties(dimensionName);
+				for (int i=0 ; i<instancesForThisDim.size() ; i++) {
+					String instanceName = instancesForThisDim.get(i);
+					Set<String> instancePredecessors = 
+							dimAnalysis.getPredecessorsForThisDimensionInstance(instanceName);
+					if (i==0) {
+						relation.modifyRelation(instanceName, instancePredecessors);
+					}
+					else {
+						Set<String> instanceConsequents = new HashSet<String>(greaterProps);
+						instanceConsequents.add(instanceName);
+						set.addNewProperty(
+								relation.addNewProperty(instanceName, instancePredecessors, instanceConsequents));
+					}
+				}
+			}
 		}
-		for (String encapsulator : encapsulatorToEncapsulated.keySet()) {
-			IProperty encapsulated = set.getProperty(encapsulatorToEncapsulated.get(encapsulator));
-			set.getProperty(encapsulator).addEncapsulatedProp(encapsulated);
-		}
-		dimensionValuesAreIndependent = true;
-		*/
 	}
 
 }

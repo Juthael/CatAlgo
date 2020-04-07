@@ -4,6 +4,7 @@ import java.util.Set;
 
 import grammarModel.structure.ISyntaxGrove;
 import propertyPoset.exceptions.PropertyPosetException;
+import propertyPoset.utils.IDimensionAnalysis;
 import propertyPoset.utils.IImplication;
 import propertyPoset.utils.IPosetMaxChains;
 import propertyPoset.utils.impl.DimensionAnalysis;
@@ -57,11 +58,13 @@ public interface IRelation {
 	 * Adds a new property in the relation, specifying some existent properties as its predecessors and some other 
 	 * as its consequents. 
 	 * Modifies the relation in order to maintain transitivity.  
-	 * @param newProperty
-	 * @param predecessors
+	 * @param newProperty the property to be added
+	 * @param predecessors existing properties as predecessors of the new property
+	 * @param consequents existing properties (or empty set) as consequents of the new property
+	 * @return the new property
 	 * @throws PropertyPosetException 
 	 */
-	public void addNewProperty(String newProperty, Set<String> predecessors, Set<String> consequents) 
+	public String addNewProperty(String newProperty, Set<String> predecessors, Set<String> consequents) 
 			throws PropertyPosetException;
 	
 	/**
@@ -182,7 +185,7 @@ public interface IRelation {
 	 * @return a {@link DimensionAnalysis} for every sup-reducible element of the poset.
 	 * @throws PropertyPosetException
 	 */
-	Set<DimensionAnalysis> getDimensionAnalyzes() throws PropertyPosetException;
+	Set<IDimensionAnalysis> getDimensionAnalyzes() throws PropertyPosetException;
 	
 	/**
 	 * Ensures that all data is up to date. Must be called after any modification.
