@@ -6,7 +6,7 @@ import grammarModel.structure.impl.SyntaxLeaf;
 
 public class DirectioN extends SyntaxLeaf implements ISyntaxLeaf {
 
-	public static final String NAME = "DirectioN";
+	public static final String NAME = "direction";
 	
 	public DirectioN() {
 	}

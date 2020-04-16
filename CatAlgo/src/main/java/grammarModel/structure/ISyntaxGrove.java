@@ -15,9 +15,6 @@ public interface ISyntaxGrove extends ISyntaxBranch {
 	@Override
 	List<ISyntacticStructure> getListOfComponents();
 	
-	@Override
-	void markRedundancies();
-	
 	/**
 	 * Provides each tree and tree component, sub component, etc., with a 'poset element ID'. 
 	 * In order to make sure that two nodes with the same name and same derivation in the syntax tree aren't provided

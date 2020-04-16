@@ -1,19 +1,21 @@
 package grammarModel.structure.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import grammarModel.GrammarModelConstants;
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.ISyntacticStructure;
+import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.utils.ITreePaths;
 
 public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLeaf {
 
-	private final long leafID;
+	private static final String RECURSION_SYMBOL = "#";
 	private static int ID_COUNT = 0;
+	private String recursionMark = "";
+	private final long leafID;
 	
 	public SyntaxLeaf() {
 		leafID = ID_COUNT;
@@ -27,7 +29,7 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 
 	@Override
 	public String getPosetElementName() throws GrammarModelException {
-		return getName();
+		return getName().concat(recursionMark);
 	}
 
 	@Override
@@ -39,22 +41,18 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 	@Override
 	public List<List<String>> getListOfTreeStringPaths() {
 		List<List<String>> treePaths = new ArrayList<List<String>>();
-		if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !this.isRedundant()) {
-			List<String> treePath = new ArrayList<String>();
-			treePath.add(getName());
-			treePaths.add(treePath);
-		}
+		List<String> treePath = new ArrayList<String>();
+		treePath.add(getName());
+		treePaths.add(treePath);
 		return treePaths;
 	}
 
 	@Override
 	public List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException {
 		List<List<String>> posetChains = new ArrayList<List<String>>();
-		if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !this.isRedundant()) {
-			List<String> posetChain = new ArrayList<String>();
-			posetChain.add(getPosetElementName());
-			posetChains.add(posetChain);
-		}
+		List<String> posetChain = new ArrayList<String>();
+		posetChain.add(getPosetElementName());
+		posetChains.add(posetChain);
 		return posetChains;
 		
 	}
@@ -84,6 +82,25 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 	@Override
 	public void setPosetElementID(Map<ITreePaths, String> chainsToIndex) {
 	}
+	
+	@Override
+	public HashMap<String, Integer> setRecursionIndex(){
+		return new HashMap<String, Integer>();
+	}
+	
+	@Override
+	public void setRecursionMark(int recursionIndex) throws GrammarModelException {
+		if (recursionMark.isEmpty()) {
+			for (int i=0 ; i<recursionIndex ; i++) {
+				recursionMark = recursionMark.concat(RECURSION_SYMBOL);
+			}
+		}
+		else throw new GrammarModelException("SyntaxLeaf.setRecursionMark() : the mark has already been set.");
+	}	
+	
+	@Override
+	public void markRecursion() throws GrammarModelException { 
+	}		
 	
 	@Override
 	public boolean replaceComponents(ISyntacticStructure newComp, List<Long> compID) {

@@ -6,7 +6,7 @@ import grammarModel.structure.impl.SyntaxLeaf;
 
 public class ClusteR extends SyntaxLeaf implements ISyntaxLeaf {
 
-	public static final String NAME="ClusteR";
+	public static final String NAME="cluster";
 	
 	public ClusteR() {
 	}

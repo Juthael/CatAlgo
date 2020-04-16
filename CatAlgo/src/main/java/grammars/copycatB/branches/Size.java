@@ -5,13 +5,14 @@ import java.util.List;
 
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
+import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
 import grammars.copycatB.disjunctions.IValueOrClusteredValue;
 import grammars.copycatB.leaves.SizE;
 
 public class Size extends SyntaxBranch implements ISyntaxBranch {
 
-	private static final String NAME = "SetSize";
+	private static final String NAME = "Size";
 	private final SizE sizE;
 	private final IValueOrClusteredValue value;
 	
@@ -23,6 +24,11 @@ public class Size extends SyntaxBranch implements ISyntaxBranch {
 	@Override
 	public String getName() {
 		return NAME;
+	}
+	
+	@Override
+	public ISyntaxLeaf getEponymLeaf() {
+		return sizE;
 	}
 
 	@Override

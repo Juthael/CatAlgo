@@ -54,6 +54,19 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	public void setPosetElementID(Map<ITreePaths, String> pathsToIndex);
 	
 	/**
+	 * The recursion mark on an eponym property leaf indicate the degree of recursion of its predecessor. 
+	 * @throws GrammarModelException 
+	 */
+	public void setRecursionMark(int recursionIndex) throws GrammarModelException;
+	
+	/**
+	 * Since a leaf can't be recursive, this implementation of the markRecursion() method of 
+	 * {@link ISyntacticStructure} doesn't do anything. 
+	 */
+	@Override
+	public void markRecursion() throws GrammarModelException;
+	
+	/**
 	 * This inherited method is irrelevant for a syntax leaf, since it has no component. Has no reason to be 
 	 * called, but if so, does not cause any error. 
 	 */

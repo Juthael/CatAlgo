@@ -3,10 +3,9 @@ package grammars.copycatB.leaves;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxLeaf;
-import grammars.copycatB.disjunctions.ICoordinateOrCoordinatE;
 import grammars.copycatB.disjunctions.IValueOrClusteredValue;
 
-public class ValuE extends SyntaxLeaf implements ISyntaxLeaf, IValueOrClusteredValue, ICoordinateOrCoordinatE {
+public class ValuE extends SyntaxLeaf implements ISyntaxLeaf, IValueOrClusteredValue {
 
 	public final String value;
 	

@@ -6,7 +6,7 @@ import grammarModel.structure.impl.SyntaxLeaf;
 
 public class CcStrinG extends SyntaxLeaf implements ISyntaxLeaf {
 
-	public static final String NAME = "CcStrinG";
+	public static final String NAME = "ccString";
 	
 	public CcStrinG() {
 	}

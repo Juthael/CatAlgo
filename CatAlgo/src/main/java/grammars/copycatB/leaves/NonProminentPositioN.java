@@ -7,7 +7,7 @@ import grammars.copycatB.disjunctions.IPositionAttribute;
 
 public class NonProminentPositioN extends SyntaxLeaf implements ISyntaxLeaf, IPositionAttribute {
 
-	public static final String NAME = "NonProminentPositioN";
+	public static final String NAME = "nonProminentPosition";
 	
 	public NonProminentPositioN() {
 	}

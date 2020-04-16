@@ -24,31 +24,33 @@ public interface ISyntaxBranch extends ISyntacticStructure {
 	boolean replaceComponents(ISyntacticStructure newComp, List<Long> compIDs);
 	
 	@Override
-	public String getPosetElementName() throws GrammarModelException;
+	String getPosetElementName() throws GrammarModelException;
 	
 	@Override
-	public List<List<String>> getListOfTreeStringPaths();
+	List<List<String>> getListOfTreeStringPaths();
 	
 	@Override
-	public List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException;
+	List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException;
 	
 	@Override
-	public List<Long> getListOfLeafIDs();	
+	List<Long> getListOfLeafIDs();	
 	
 	@Override
-	public String getStringOfTerminals();
+	String getStringOfTerminals();
+	
+	ISyntaxLeaf getEponymLeaf();
 	
 	@Override
-	public boolean getIDHasBeenSet();
+	boolean getIDHasBeenSet();
 	
 	/**
 	 * 
 	 * @return true if this syntax branch is a tree, i.e. if its name is the start element of the context-free
 	 * grammar at use.
 	 */
-	public boolean isATree();
+	boolean isATree();
 	
 	@Override
-	public void setPosetElementID(Map<ITreePaths, String> pathsToString) throws GrammarModelException;
+	void setPosetElementID(Map<ITreePaths, String> pathsToString) throws GrammarModelException;
 	
 }

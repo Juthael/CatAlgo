@@ -21,7 +21,7 @@ import grammars.copycatB.branches.Position;
 import grammars.copycatB.branches.ProminentPosition;
 import grammars.copycatB.branches.Sequence;
 import grammars.copycatB.branches.Size;
-import grammars.copycatB.disjunctions.ICoordinateOrCoordinatE;
+import grammars.copycatB.branches.SubCoordinate;
 import grammars.copycatB.disjunctions.IDirectionValue;
 import grammars.copycatB.disjunctions.IEndPositionValue;
 import grammars.copycatB.disjunctions.IPositionAttribute;
@@ -32,6 +32,7 @@ import grammars.copycatB.disjunctions.IValueOrClusteredValue;
 import grammars.copycatB.leaves.CcStrinG;
 import grammars.copycatB.leaves.CentralPositioN;
 import grammars.copycatB.leaves.ClusteR;
+import grammars.copycatB.leaves.CoordinatE;
 import grammars.copycatB.leaves.DirectioN;
 import grammars.copycatB.leaves.EndPositioN;
 import grammars.copycatB.leaves.FirstPositioN;
@@ -81,7 +82,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(ccString, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "CcStrinG" :
+		case "ccString" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -98,7 +99,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(ccStrinG, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "CentralPositioN" :
+		case "centralPosition" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -135,7 +136,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(cluster, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "ClusteR" :
+		case "cluster" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -153,23 +154,43 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 			}
 			break;	
 		case "Coordinate" :
-			if (components.size() != 2) {
-				throw new FileReaderException(
-						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 2));
-			}
-			else {
+			if (components.size() == 2 || components.size() == 3) {
 				Coordinate coordinate;
 				try {
-					ValuE valuE = (ValuE) components.get(0);
-					ICoordinateOrCoordinatE coordinatE = (ICoordinateOrCoordinatE) components.get(1);
-					coordinate = new Coordinate(valuE, coordinatE);
-					
+					CoordinatE coordinatE = (CoordinatE) components.get(0);
+					ValuE valuE = (ValuE) components.get(1);
+					coordinate = new Coordinate(coordinatE, valuE);
+					if (components.size() == 3) {
+						Coordinate superCoordinate = (Coordinate) components.get(2);
+						coordinate = new SubCoordinate(coordinate, superCoordinate);
+					}
 				}
 				catch (Exception e) {
 					throw new FileReaderException(
 							getExceptionMessage2(nodeName, treeIndex, pathIndex, nodeIndex, e.getMessage()));
 				}
 				putStructureIntoArray(coordinate, treeIndex, pathIndex, nodeIndex);
+			}
+			else {
+				throw new FileReaderException(
+						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 2));
+			}
+			break;	
+		case "coordinate" :
+			if (!components.isEmpty()) {
+				throw new FileReaderException(
+						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
+			}
+			else {
+				CoordinatE coordinatE;
+				try {
+					coordinatE = new CoordinatE();
+				}
+				catch (Exception e) {
+					throw new FileReaderException(
+							getExceptionMessage2(nodeName, treeIndex, pathIndex, nodeIndex, e.getMessage()));
+				}
+				putStructureIntoArray(coordinatE, treeIndex, pathIndex, nodeIndex);
 			}
 			break;			
 		case "Direction" :
@@ -191,7 +212,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(direction, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "DirectioN" :
+		case "direction" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -227,7 +248,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(endPosition, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "EndPositioN" :
+		case "endPosition" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -244,7 +265,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(endPositioN, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "FirstPositioN" :
+		case "firstPosition" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -261,7 +282,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(firstPositioN, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "FirstStrinG" :
+		case "firstString" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -297,7 +318,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(firstValue, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "FirstValuE" :
+		case "firstValue" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -314,7 +335,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(firstValuE, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "FromLeftToRighT" :
+		case "fromLeftToRight" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -331,7 +352,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(fromLeftToRighT, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "FromRightToLefT" :
+		case "fromRightToLeft" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -367,7 +388,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(increment, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "IncremenT" :
+		case "increment" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -384,7 +405,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(incremenT, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "LastPositioN" :
+		case "lastPosition" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -423,7 +444,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(letter, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "LetteR" :
+		case "letter" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -459,7 +480,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(letterValue, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "LetterValuE" :
+		case "letterValue" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -476,7 +497,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(letterValuE, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "NonProminentPositioN" :
+		case "nonProminentPosition" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -512,7 +533,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(pattern, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "PatterN" :
+		case "pattern" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -539,7 +560,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				try {
 					PositioN positioN = (PositioN) components.get(0);
 					IPositionAttribute positionAttribute = (IPositionAttribute) components.get(1);
-					ICoordinateOrCoordinatE coordinate = (ICoordinateOrCoordinatE) components.get(2);
+					Coordinate coordinate = (Coordinate) components.get(2);
 					position = new Position(positioN, positionAttribute, coordinate);
 				}
 				catch (Exception e) {
@@ -549,7 +570,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(position, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "PositioN" :
+		case "position" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -586,7 +607,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(prominentPosition, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "ProminentPositioN" :
+		case "prominentPosition" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -603,7 +624,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(prominentPositioN, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "SecondStrinG" :
+		case "secondString" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -640,7 +661,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(sequence, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "SequencE" :
+		case "sequence" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -676,7 +697,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 				putStructureIntoArray(size, treeIndex, pathIndex, nodeIndex);
 			}
 			break;
-		case "SizE" :
+		case "size" :
 			if (!components.isEmpty()) {
 				throw new FileReaderException(
 						getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 0));
@@ -695,27 +716,7 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 			break;
 		default : 
 			if(nodeIndex+1 < treeDescriptions[treeIndex][pathIndex].length) {
-				if (isInteger(nodeName)) {
-					if (components.size() != 2) {
-						throw new FileReaderException(
-								getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 2));
-					}
-					else {
-						Coordinate coordinate;
-						try {
-							ValuE valuE = (ValuE) components.get(0);
-							ICoordinateOrCoordinatE coordinatE = (ICoordinateOrCoordinatE) components.get(1);
-							coordinate = new Coordinate(valuE, coordinatE);
-						}
-						catch (Exception e) {
-							throw new FileReaderException(
-									getExceptionMessage2(
-											nodeName, treeIndex, pathIndex, nodeIndex, e.getMessage()));
-						}
-						putStructureIntoArray(coordinate, treeIndex, pathIndex, nodeIndex);
-					}
-				}
-				else if (nodeName.contains("clustered")) {
+				if (nodeName.contains("clustered")) {
 					if (components.size() != 2) {
 						throw new FileReaderException(
 								getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 2));
@@ -795,25 +796,6 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 		sB.append(" ; Node : ");
 		sB.append(Integer.toString(nodeIndex));
 		return sB.toString();
-	}	
-	
-	private static boolean isInteger(String s) {
-		boolean integer = true;
-		if(s.isEmpty())
-			integer = false;
-		else {
-			int i = 0;
-			while (integer == true && i < s.length()) {
-				char current = s.charAt(i);
-				if(current == '-') {
-					if (i != 0 || s.length() == 1)
-						integer = false;
-				}
-				else integer = Character.isDigit(current);
-				i++;
-			}
-		}
-		return integer;
-	}	
+	}
 
 }

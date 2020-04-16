@@ -7,7 +7,7 @@ import grammars.copycatB.disjunctions.IDirectionValue;
 
 public class FromRightToLefT extends SyntaxLeaf implements ISyntaxLeaf, IDirectionValue {
 
-	public static final String NAME = "FromRightToLefT";
+	public static final String NAME = "fromRightToLeft";
 	
 	public FromRightToLefT() {
 	}

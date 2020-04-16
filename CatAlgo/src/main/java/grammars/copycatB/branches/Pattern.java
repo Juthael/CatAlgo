@@ -5,6 +5,7 @@ import java.util.List;
 
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
+import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
 import grammars.copycatB.disjunctions.IRule;
 import grammars.copycatB.disjunctions.IValueOrClusteredValue;
@@ -25,6 +26,11 @@ public class Pattern extends SyntaxBranch implements ISyntaxBranch, IRule {
 	public String getName() {
 		return NAME;
 	}
+	
+	@Override
+	public ISyntaxLeaf getEponymLeaf() {
+		return patterN;
+	}		
 
 	@Override
 	public List<ISyntacticStructure> getListOfComponents() {

@@ -7,7 +7,7 @@ import grammars.copycatB.disjunctions.ISpecifiedProminentPosition;
 
 public class CentralPositioN extends SyntaxLeaf implements ISyntaxLeaf, ISpecifiedProminentPosition {
 
-	public static final String NAME = "CentralPositioN";
+	public static final String NAME = "centralPosition";
 	
 	public CentralPositioN() {
 	}

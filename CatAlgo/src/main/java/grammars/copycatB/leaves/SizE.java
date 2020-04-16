@@ -6,7 +6,7 @@ import grammarModel.structure.impl.SyntaxLeaf;
 
 public class SizE extends SyntaxLeaf implements ISyntaxLeaf {
 
-	public static final String NAME="SizE";
+	public static final String NAME="size";
 	
 	public SizE() {
 	}

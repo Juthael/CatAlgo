@@ -31,8 +31,7 @@ public class Tester {
 	private static Path e2 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_ab-bc_ijk.txt");
 	@SuppressWarnings("unused")
 	private static Path e2b = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_a-bb-c_ijk.txt");
-	@SuppressWarnings("unused")
-	private static Path e2b_valAcc = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_a-bb-c_ijk_valuesAccessible.txt");
+
 	
 	@SuppressWarnings("unused")
 	private static Path e2_ijk = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_ijk.txt");
@@ -42,7 +41,7 @@ public class Tester {
 	}
 
 	public static void main(String[] args) throws Exception {
-		ISyntaxGrove testGrove = setGrove(e2b_valAcc, new CcFileReaderB());
+		ISyntaxGrove testGrove = setGrove(e2b, new CcFileReaderB());
 		IPropertyPoset testPoset = null;
 		try {
 			System.out.println(testGrove.getPosetMaxChains().getChainsInASingleString());
@@ -89,14 +88,13 @@ public class Tester {
 		ISyntaxGrove grove = null;
 		try {
 			grove = fileReader.getSyntacticGrove(path);
-			grove.markRedundancies();
+			grove.markRecursion();
 			grove.setPosetElementID();
 		}
 		catch (Exception e) {
 			System.out.print("PropertySetTest : error during SyntacticGrove instantiation. " + System.lineSeparator() 
 				+ e.getMessage());
-		}
-		// printChains(trueGrove.getListOfSyntacticStringChains());	
+		}	
 		return grove;
 	}
 

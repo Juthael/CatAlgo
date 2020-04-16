@@ -6,7 +6,7 @@ import grammarModel.structure.impl.SyntaxLeaf;
 
 public class PositioN extends SyntaxLeaf implements ISyntaxLeaf {
 
-	public static final String NAME = "PositioN";
+	public static final String NAME = "position";
 	
 	public PositioN() {
 	}

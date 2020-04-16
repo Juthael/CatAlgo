@@ -1,6 +1,7 @@
 package grammarModel.structure.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -19,6 +20,8 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	private String posetID = "";
 	private boolean iDHasBeenSet = false;
 	protected boolean tree = false;
+	protected int recursionIndex = 0;
+	protected boolean recursionIndexHasBeenSet = false;
 	
 	public SyntaxBranch() {
 	}
@@ -44,6 +47,43 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	}
 	
 	@Override
+	public Map<String, Integer> setRecursionIndex() throws GrammarModelException {
+		Map<String, Integer> propNameToRecursionIdx = new HashMap<String, Integer>();
+		if (!recursionIndexHasBeenSet) {
+			for (ISyntacticStructure component : getListOfComponents()) {
+				Map<String, Integer> compPropNameToRecursIdx = component.setRecursionIndex();
+				for (String propName : compPropNameToRecursIdx.keySet()) {
+					if (!propNameToRecursionIdx.containsKey(propName) 
+							|| (propNameToRecursionIdx.get(propName) < compPropNameToRecursIdx.get(propName))) {
+						propNameToRecursionIdx.put(propName, compPropNameToRecursIdx.get(propName));
+					}
+				}
+			}
+			if (propNameToRecursionIdx.containsKey(this.getName())) {
+				recursionIndex = propNameToRecursionIdx.get(this.getName()) + 1;
+				propNameToRecursionIdx.put(this.getName(), recursionIndex);
+			}
+			else {
+				propNameToRecursionIdx.put(this.getName(), recursionIndex);
+			}
+		}
+		else throw new GrammarModelException("SyntacticStructure.eliminateRecursion() : this method has already "
+				+ "been called.");
+		recursionIndexHasBeenSet = true;
+		return propNameToRecursionIdx;
+	}	
+	
+	@Override
+	public void markRecursion() throws GrammarModelException {
+		if (recursionIndexHasBeenSet) {
+			ISyntaxLeaf eponymLeaf = getEponymLeaf();
+			eponymLeaf.setRecursionMark(recursionIndex);
+		}
+		else throw new GrammarModelException("SyntaxBranch.markRecursion() : recursion cannot be marked if "
+				+ "the recursion index hasn't been set beforehand.");
+	}
+	
+	@Override
 	public String getPosetElementName() throws GrammarModelException {
 		if (iDHasBeenSet == false) {
 			throw new GrammarModelException("SyntaxBranch.getPosetFullName() : "
@@ -56,12 +96,10 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	public List<List<String>> getListOfTreeStringPaths(){
 		List<List<String>> synChains = new ArrayList<List<String>>();
 		for (ISyntacticStructure component : getListOfComponents()) {
-			if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !component.isRedundant()) {
-				List<List<String>> compSynChains = component.getListOfTreeStringPaths();
-				for (List<String> chain : compSynChains) {
-					chain.add(0, getName());
-					synChains.add(chain);
-				}
+			List<List<String>> compSynChains = component.getListOfTreeStringPaths();
+			for (List<String> chain : compSynChains) {
+				chain.add(0, getName());
+				synChains.add(chain);
 			}
 		}
 		return synChains;
@@ -71,12 +109,10 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	public List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException {
 		List<List<String>> posetChains = new ArrayList<List<String>>();
 		for (ISyntacticStructure component : getListOfComponents()) {
-			if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !component.isRedundant()) {
-				List<List<String>> compPosetChains = component.getListOfPosetMaxStringChains();
-				for (List<String> chain : compPosetChains) {
-					chain.add(0, getPosetElementName());
-					posetChains.add(chain);
-				}
+			List<List<String>> compPosetChains = component.getListOfPosetMaxStringChains();
+			for (List<String> chain : compPosetChains) {
+				chain.add(0, getPosetElementName());
+				posetChains.add(chain);
 			}
 		}
 		return posetChains;
@@ -120,9 +156,7 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	public void setPosetElementID(Map<ITreePaths, String> chainsToIndex) throws GrammarModelException {
 		posetID = chainsToIndex.get(getTreePaths());
 		for (ISyntacticStructure component : getListOfComponents()) {
-			if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !component.isRedundant()) {
-				component.setPosetElementID(chainsToIndex);
-			}
+			component.setPosetElementID(chainsToIndex);
 		}
 		iDHasBeenSet = true;
 	}

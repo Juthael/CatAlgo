@@ -7,7 +7,7 @@ import grammars.copycatB.disjunctions.IEndPositionValue;
 
 public class FirstPositioN extends SyntaxLeaf implements ISyntaxLeaf, IEndPositionValue {
 
-	public static final String NAME = "FirstPositioN";
+	public static final String NAME = "firstPosition";
 	
 	public FirstPositioN() {
 	}

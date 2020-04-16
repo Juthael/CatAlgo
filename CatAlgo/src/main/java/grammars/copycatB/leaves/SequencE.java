@@ -6,7 +6,7 @@ import grammarModel.structure.impl.SyntaxLeaf;
 
 public class SequencE extends SyntaxLeaf implements ISyntaxLeaf {
 
-	public static final String NAME="SequencE";
+	public static final String NAME="sequence";
 	
 	public SequencE() {
 	}

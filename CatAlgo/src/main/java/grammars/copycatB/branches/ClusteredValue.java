@@ -5,6 +5,7 @@ import java.util.List;
 
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
+import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
 import grammars.copycatB.disjunctions.IValueOrClusteredValue;
 import grammars.copycatB.leaves.ValuE;
@@ -25,6 +26,11 @@ public class ClusteredValue extends SyntaxBranch implements ISyntaxBranch, IValu
 		String valueString = valuE.getName();
 		return valueString.concat(NAME);
 	}
+	
+	@Override
+	public ISyntaxLeaf getEponymLeaf() {
+		return valuE;
+	}	
 
 	@Override
 	public List<ISyntacticStructure> getListOfComponents() {

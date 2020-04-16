@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import grammarModel.GrammarModelConstants;
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.utils.ITreePaths;
@@ -15,11 +14,8 @@ import propertyPoset.utils.impl.Implication;
 import propertyPoset.utils.impl.PosetMaxChains;
 
 public abstract class SyntacticStructure implements ISyntacticStructure {
-
-	protected boolean redundant;
 	
 	public SyntacticStructure() {
-		redundant = false;
 	}
 
 	@Override
@@ -36,8 +32,8 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 		Set<ITreePaths> setOfPaths = new HashSet<ITreePaths>();
 		setOfPaths.add(getTreePaths());
 		for (ISyntacticStructure component : getListOfComponents()) {
-			if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !component.isRedundant())
-				setOfPaths.addAll(component.getSetOfTreePaths());
+			setOfPaths.addAll(component.getSetOfTreePaths());
+				
 		}
 		return setOfPaths;
 	}
@@ -58,13 +54,11 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 		IImplication reflexive = new Implication(posetFullName, posetFullName);
 		implications.add(reflexive);
 		for (ISyntacticStructure component : getListOfComponents()) {
-			if (!GrammarModelConstants.REDUNDANCIES_REMOVED || !component.isRedundant()) {
-				Set<IImplication> compImplications = component.getImplications();
-				implications.addAll(compImplications);
-				for (IImplication compImplication : compImplications) {
-					IImplication newImpl = new Implication(posetFullName, compImplication.getConsequent());
-					implications.add(newImpl);
-				}
+			Set<IImplication> compImplications = component.getImplications();
+			implications.addAll(compImplications);
+			for (IImplication compImplication : compImplications) {
+				IImplication newImpl = new Implication(posetFullName, compImplication.getConsequent());
+				implications.add(newImpl);
 			}
 		}
 		return implications;
@@ -84,41 +78,6 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 			}
 		}
 		return hasThisProperty;
-	}
-	
-	@Override
-	public boolean isRedundant() {
-		return redundant;
-	}
-	
-	@Override
-	public void markRedundancies() {
-		List<ISyntacticStructure> components = getListOfComponents();
-		for (int i=0 ; i < components.size() ; i++) {
-			String currTerminals = 
-					GrammarModelConstants.SEPARATOR.concat(components.get(i).getStringOfTerminals());
-			for (int j=0 ; j < components.size() ; j++) {
-				if (i != j && !components.get(i).isRedundant() && !components.get(j).isRedundant()) {
-					String comparedTerminals = 
-							GrammarModelConstants.SEPARATOR.concat(components.get(j).getStringOfTerminals());
-					if (comparedTerminals.contains(currTerminals)) {
-						components.get(i).setAsRedundant();
-					}					
-				}
-			}
-		}
-		for (ISyntacticStructure component : components) {
-			if (!component.isRedundant())
-				component.markRedundancies();
-		}
-	}
-	
-	@Override
-	public void setAsRedundant() {
-		redundant = true;
-		for (ISyntacticStructure component : getListOfComponents()) {
-			component.setAsRedundant();
-		}
 	}
 	
 	@Override

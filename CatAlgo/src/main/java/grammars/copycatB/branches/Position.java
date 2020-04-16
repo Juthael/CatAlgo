@@ -5,8 +5,8 @@ import java.util.List;
 
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
+import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
-import grammars.copycatB.disjunctions.ICoordinateOrCoordinatE;
 import grammars.copycatB.disjunctions.IPositionAttribute;
 import grammars.copycatB.leaves.PositioN;
 
@@ -15,9 +15,9 @@ public class Position extends SyntaxBranch implements ISyntaxBranch {
 	private static final String NAME = "Position";
 	private final PositioN positioN;
 	private final IPositionAttribute positionAttribute;
-	private final ICoordinateOrCoordinatE coordinate;
+	private final Coordinate coordinate;
 	
-	public Position(PositioN positioN, IPositionAttribute positionAttribute, ICoordinateOrCoordinatE coordinate) {
+	public Position(PositioN positioN, IPositionAttribute positionAttribute, Coordinate coordinate) {
 		this.positioN = positioN;
 		this.positionAttribute = positionAttribute;
 		this.coordinate = coordinate;
@@ -27,6 +27,11 @@ public class Position extends SyntaxBranch implements ISyntaxBranch {
 	public String getName() {
 		return NAME;
 	}
+	
+	@Override
+	public ISyntaxLeaf getEponymLeaf() {
+		return positioN;
+	}	
 
 	@Override
 	public List<ISyntacticStructure> getListOfComponents() {
@@ -41,7 +46,7 @@ public class Position extends SyntaxBranch implements ISyntaxBranch {
 	public ISyntacticStructure clone() {
 		PositioN positioNClone = (PositioN) positioN.clone();
 		IPositionAttribute positionAttributeClone = (IPositionAttribute) positionAttribute.clone();
-		ICoordinateOrCoordinatE valuOrValuEClone = (ICoordinateOrCoordinatE) coordinate.clone();
+		Coordinate valuOrValuEClone = (Coordinate) coordinate.clone();
 		return new Position(positioNClone, positionAttributeClone, valuOrValuEClone);
 	}
 

@@ -3,29 +3,26 @@ package grammars.copycatB.leaves;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxLeaf;
-import grammars.copycatB.disjunctions.ICoordinateOrCoordinatE;
 
-public class CoordinatE extends SyntaxLeaf implements ISyntaxLeaf, ICoordinateOrCoordinatE {
+public class CoordinatE extends SyntaxLeaf implements ISyntaxLeaf {
 
-	private final String value;
+	private static final String NAME = "coordinate";
 	
-	public CoordinatE(String value) {
-		this.value = value;
+	public CoordinatE() {
 	}
 
-	public CoordinatE(String value, long leafID) {
+	public CoordinatE(long leafID) {
 		super(leafID);
-		this.value = value;
 	}
 
 	@Override
 	public String getName() {
-		return value;
+		return NAME;
 	}
 
 	@Override
 	public ISyntacticStructure clone() {
-		return new CoordinatE(value, super.getLeafID());
+		return new CoordinatE(super.getLeafID());
 	}
 
 }

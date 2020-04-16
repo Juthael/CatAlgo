@@ -5,6 +5,7 @@ import java.util.List;
 
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
+import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
 import grammars.copycatB.disjunctions.IValueOrClusteredValue;
 import grammars.copycatB.leaves.LetterValuE;
@@ -24,6 +25,11 @@ public class LetterValue extends SyntaxBranch implements ISyntaxBranch {
 	public String getName() {
 		return NAME;
 	}
+	
+	@Override
+	public ISyntaxLeaf getEponymLeaf() {
+		return letterValuE;
+	}		
 
 	@Override
 	public List<ISyntacticStructure> getListOfComponents() {

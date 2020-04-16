@@ -6,7 +6,7 @@ import grammarModel.structure.impl.SyntaxLeaf;
 
 public class FirstValuE extends SyntaxLeaf implements ISyntaxLeaf {
 
-	public static final String NAME = "FirstValuE";
+	public static final String NAME = "firstValue";
 	
 	public FirstValuE() {
 	}

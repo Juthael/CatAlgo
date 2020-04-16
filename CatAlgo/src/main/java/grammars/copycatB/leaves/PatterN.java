@@ -6,7 +6,7 @@ import grammarModel.structure.impl.SyntaxLeaf;
 
 public class PatterN extends SyntaxLeaf implements ISyntaxLeaf {
 
-	public static final String NAME = "PatterN";
+	public static final String NAME = "pattern";
 	
 	public PatterN() {
 	}

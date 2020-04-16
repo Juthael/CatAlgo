@@ -5,6 +5,7 @@ import java.util.List;
 
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
+import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
 import grammars.copycatB.disjunctions.IRule;
 import grammars.copycatB.leaves.ClusteR;
@@ -26,6 +27,11 @@ public class Cluster extends SyntaxBranch implements ISyntaxBranch {
 	public String getName() {
 		return NAME;
 	}
+	
+	@Override
+	public ISyntaxLeaf getEponymLeaf() {
+		return clusteR;
+	}	
 
 	@Override
 	public List<ISyntacticStructure> getListOfComponents() {

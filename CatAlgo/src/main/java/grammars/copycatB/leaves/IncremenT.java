@@ -6,7 +6,7 @@ import grammarModel.structure.impl.SyntaxLeaf;
 
 public class IncremenT extends SyntaxLeaf implements ISyntaxLeaf {
 
-	public static final String NAME = "IncremenT";
+	public static final String NAME = "increment";
 	
 	public IncremenT() {
 	}

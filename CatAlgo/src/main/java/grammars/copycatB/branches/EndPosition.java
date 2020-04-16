@@ -5,6 +5,7 @@ import java.util.List;
 
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
+import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
 import grammars.copycatB.disjunctions.IEndPositionValue;
 import grammars.copycatB.disjunctions.ISpecifiedProminentPosition;
@@ -25,6 +26,11 @@ public class EndPosition extends SyntaxBranch implements ISyntaxBranch, ISpecifi
 	public String getName() {
 		return NAME;
 	}
+	
+	@Override
+	public ISyntaxLeaf getEponymLeaf() {
+		return endPositioN;
+	}		
 
 	@Override
 	public List<ISyntacticStructure> getListOfComponents() {

@@ -7,7 +7,7 @@ import grammars.copycatB.disjunctions.IStringName;
 
 public class FirstStrinG extends SyntaxLeaf implements ISyntaxLeaf, IStringName {
 
-	public static final String NAME = "FirstStrinG";
+	public static final String NAME = "firstString";
 	
 	public FirstStrinG() {
 	}

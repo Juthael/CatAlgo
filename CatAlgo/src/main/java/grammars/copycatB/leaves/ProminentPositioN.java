@@ -6,7 +6,7 @@ import grammarModel.structure.impl.SyntaxLeaf;
 
 public class ProminentPositioN extends SyntaxLeaf implements ISyntaxLeaf {
 
-	public static final String NAME = "ProminentPositioN";
+	public static final String NAME = "prominentPosition";
 	
 	public ProminentPositioN() {
 	}
