@@ -2,7 +2,6 @@ package propertyPoset;
 
 import java.util.Set;
 
-import grammars.copycat.branches.Relation;
 import propertyPoset.exceptions.PropertyPosetException;
 import propertyPoset.impl.PropertyPoset;
 

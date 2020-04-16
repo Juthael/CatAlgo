@@ -32,8 +32,10 @@ public class SyntacticStructureTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		/*
 		backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
 		fileReader = new SwFileReader();
+		*/
 	}
 	
 	@Before

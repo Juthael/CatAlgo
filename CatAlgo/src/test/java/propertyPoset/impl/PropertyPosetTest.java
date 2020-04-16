@@ -28,7 +28,7 @@ import fca.gui.util.constant.LMImages;
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IGenericFileReader;
 import grammars.copycat.utils.CcFileReader;
-import grammars.copycatB.utils.CcFileReaderB;
+import grammars.copycat2Strings.utils.CcFileReaderB;
 import grammars.seekWhence.utils.SwFileReader;
 import propertyPoset.IProperty;
 import propertyPoset.IPropertyPoset;
