@@ -1,8 +1,7 @@
 package grammarModel.structure.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -14,12 +13,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.structure.ISyntaxBranch;
-import grammarModel.structure.ISyntaxGrove;
 import grammarModel.structure.ISyntacticStructure;
-import grammarModel.utils.IChains;
+import grammarModel.structure.ISyntaxGrove;
+import grammarModel.utils.IGenericFileReader;
 import grammarModel.utils.ITreePaths;
-import grammars.seekWhence.utils.SwFileReader;
+import grammars.copycat2Strings.utils.CcFileReaderB;
 import propertyPoset.utils.IImplication;
 import propertyPoset.utils.IPosetMaxChains;
 
@@ -27,21 +25,19 @@ import propertyPoset.utils.IPosetMaxChains;
 public class SyntacticStructureTest {
 
 	public ISyntaxGrove grove;
-	public static Path backburnDozen1;
-	public static SwFileReader fileReader;
+	public static Path e2;
+	public static IGenericFileReader fileReader;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		/*
-		backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
-		fileReader = new SwFileReader();
-		*/
+		e2 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_a-bb-c_ijk.txt");
+		fileReader = new CcFileReaderB();
 	}
 	
 	@Before
 	public void setUpBeforEach() throws Exception {
 		try {
-			grove = fileReader.getSyntacticGrove(backburnDozen1);
+			grove = fileReader.getSyntacticGrove(e2);
 			// printChains(grove.getListOfSyntacticStringChains());
 		}
 		catch (Exception e) {
@@ -142,67 +138,11 @@ public class SyntacticStructureTest {
 	
 	@Test
 	public void whenHasThisPropertyIsCalledThenTheCorrectBooleanValueIsReturned() {
-		boolean correctValueReturned = grove.hasThisProperty("ArithSeq");
+		boolean correctValueReturned = grove.hasThisProperty("Letter");
 		if (correctValueReturned)
-			correctValueReturned = !grove.hasThisProperty("Symmetry");
+			correctValueReturned = !grove.hasThisProperty("falseProp");
 		assertTrue(correctValueReturned);
 	}
-	
-	@Test
-	public void whenRedundancyIsMarkedThenRedundantComponentsCanBeRetrieved() {
-		boolean redundanciesRetrieved;
-		ISyntaxGrove grove1 = (ISyntaxGrove) grove.clone();
-		try {
-			grove1.setPosetElementID();
-		} catch (GrammarModelException e) {
-			System.out.println("SyntacticStructureTest.whenRedundancyIsMarkedThenRedundantComponentsCanBeRetrieved() : "
-					+ System.lineSeparator() + "cannot set Poset Element ID." + System.lineSeparator() 
-					+ e.getMessage());
-		}
-		List<ISyntacticStructure> trees = grove1.getListOfComponents();
-		/*
-		for (ISyntacticStructure tree : trees) {
-			try {
-				System.out.println(tree.getPosetMaxChains().getChainsInASingleString());
-			}
-			catch (Exception e) {
-				System.out.println("SyntacticStructureTest.whenRedundancyIsMarkedThenRedundantComponentsCanBeRetrieved() : "
-						+ System.lineSeparator() + "cannot retrieve chains." + System.lineSeparator() 
-						+ e.getMessage());
-			}
-		}
-		*/
-		try {
-			grove1.markRedundancies();
-		}	
-		catch (Exception e) {
-			redundanciesRetrieved = false;
-			System.out.println("SyntacticStructureTest.whenRedundancyIsMarkedThenRedundantComponentsCanBeRetrieved() : "
-					+ System.lineSeparator() + "error during redundancy marking" + System.lineSeparator() 
-					+ e.getMessage());
-		}
-		/*
-		for (ISyntacticStructure tree : trees) {
-			try {
-				System.out.println(tree.getPosetMaxChains().getChainsInASingleString());
-			}
-			catch (Exception e) {
-				System.out.println("SyntacticStructureTest.whenRedundancyIsMarkedThenRedundantComponentsCanBeRetrieved() : "
-						+ System.lineSeparator() + "cannot retrieve chains." + System.lineSeparator() 
-						+ e.getMessage());
-			}
-		}
-		*/			
-		List<ISyntacticStructure> redundantStructures = new ArrayList<ISyntacticStructure>();
-		List<ISyntacticStructure> allStructures = getAllStructures(grove1);
-		for (ISyntacticStructure structure : allStructures) {
-			if (structure.isRedundant()) {
-				redundantStructures.add(structure);
-			}
-		}
-		redundanciesRetrieved = !redundantStructures.isEmpty();
-		assertTrue(redundanciesRetrieved);
-	}		
 	
 	@Test
 	public void whenClonedThenASyntacticStructureIsReturned() {
@@ -219,6 +159,65 @@ public class SyntacticStructureTest {
 					+ e.getMessage());
 		}
 		assertTrue(structureReturned);
+	}	
+	
+	@Test
+	public void whenRecursionIndexCalledThenExpectedIndexReturned() throws GrammarModelException {
+		/*
+		ValuE valuE = new ValuE("1");
+		CoordinatE coordinatE = new CoordinatE(); 
+		Coordinate coordinate = new Coordinate(coordinatE, valuE);
+		ValuE superValuE = new ValuE("2");
+		CoordinatE superCoordinatE = new CoordinatE();
+		Coordinate superCoordinate = new Coordinate(superCoordinatE, superValuE);
+		ValuE superSuperValuE = new ValuE("3");
+		CoordinatE superSuperCoordinatE = new CoordinatE();
+		Coordinate superSuperCoordinate = new Coordinate(superSuperCoordinatE, superSuperValuE);
+		superCoordinate = new SubCoordinate(superCoordinate, superSuperCoordinate);
+		coordinate = new SubCoordinate(coordinate, superCoordinate);
+		
+		System.out.println(coordinate.getTreePaths().getChainsInASingleString());
+		
+		coordinate.setRecursionIndex();
+		
+		assertTrue(coordinate.getRecursionIndex() == 2);
+		*/
+		assertTrue(false);
+	}
+	
+	@Test
+	public void whenRecursionMarkingCalledThenExpectedMarksAppended() throws GrammarModelException {
+		/*
+		ValuE valuE = new ValuE("1");
+		CoordinatE coordinatE = new CoordinatE(); 
+		Coordinate coordinate = new Coordinate(coordinatE, valuE);
+		ValuE superValuE = new ValuE("2");
+		CoordinatE superCoordinatE = new CoordinatE();
+		Coordinate superCoordinate = new Coordinate(superCoordinatE, superValuE);
+		ValuE superSuperValuE = new ValuE("3");
+		CoordinatE superSuperCoordinatE = new CoordinatE();
+		Coordinate superSuperCoordinate = new Coordinate(superSuperCoordinatE, superSuperValuE);
+		superCoordinate = new SubCoordinate(superCoordinate, superSuperCoordinate);
+		coordinate = new SubCoordinate(coordinate, superCoordinate);
+		/*
+		System.out.println(coordinate.getTreePaths().getChainsInASingleString() + System.lineSeparator());
+		*/
+		/*
+		List<ISyntacticStructure> listOfComponents = new ArrayList<ISyntacticStructure>();
+		listOfComponents.add(coordinate);
+		String name = "test";
+		ISyntaxGrove grove = new SyntaxGrove(name, listOfComponents);
+		grove.markRecursion();
+		grove.setPosetElementID();
+		*/
+		/*
+		System.out.println(grove.getPosetMaxChains().getChainsInASingleString());
+		*/
+		/*
+		assertTrue(coordinatE.getPosetElementName().equals("coordinate##") 
+				&& superCoordinatE.getPosetElementName().equals("coordinate#"));
+		*/
+		assertTrue(false);
 	}	
 	
 	private static void printChains(ITreePaths chains) {

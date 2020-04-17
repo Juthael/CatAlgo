@@ -1,14 +1,14 @@
-package grammars.copycat2Strings.branches;
+package grammarModel.defaultRules.branches;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import grammarModel.defaultRules.disjunctions.IRule;
+import grammarModel.defaultRules.leaves.ClusteR;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
-import grammars.copycat2Strings.disjunctions.IRule;
-import grammars.copycat2Strings.leaves.ClusteR;
 
 public class Cluster extends SyntaxBranch implements ISyntaxBranch {
 

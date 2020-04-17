@@ -1,4 +1,4 @@
-package grammars.copycat2Strings.leaves;
+package grammarModel.defaultRules.leaves;
 
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxLeaf;

@@ -13,7 +13,8 @@ import org.junit.Test;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IChains;
-import grammars.seekWhence.utils.SwFileReader;
+import grammarModel.utils.IGenericFileReader;
+import grammars.copycat2Strings.utils.CcFileReaderB;
 
 public class SyntaxGroveTest {
 
@@ -21,10 +22,10 @@ public class SyntaxGroveTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");		
-		SwFileReader fileReader = new SwFileReader();
+		Path e2 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_a-bb-c_ijk.txt");		
+		IGenericFileReader fileReader = new CcFileReaderB();
 		try {
-			grove = fileReader.getSyntacticGrove(backburnDozen1);
+			grove = fileReader.getSyntacticGrove(e2);
 			// printChains(grove.getListOfSyntacticStringChains());
 		}
 		catch (Exception e) {

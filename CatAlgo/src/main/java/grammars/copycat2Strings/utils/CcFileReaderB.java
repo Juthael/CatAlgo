@@ -2,14 +2,23 @@ package grammars.copycat2Strings.utils;
 
 import java.util.List;
 
+import grammarModel.defaultRules.branches.Cluster;
+import grammarModel.defaultRules.branches.ClusteredValue;
+import grammarModel.defaultRules.branches.CoordSubValue;
+import grammarModel.defaultRules.branches.Coordinate;
+import grammarModel.defaultRules.branches.Size;
+import grammarModel.defaultRules.disjunctions.IRule;
+import grammarModel.defaultRules.disjunctions.IValuEOrCoordSubValue;
+import grammarModel.defaultRules.disjunctions.IValueOrClusteredValue;
+import grammarModel.defaultRules.leaves.ClusteR;
+import grammarModel.defaultRules.leaves.CoordinatE;
+import grammarModel.defaultRules.leaves.SizE;
+import grammarModel.defaultRules.leaves.ValuE;
 import grammarModel.exceptions.FileReaderException;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.utils.IGenericFileReader;
 import grammarModel.utils.impl.GenericFileReader;
 import grammars.copycat2Strings.branches.CcString;
-import grammars.copycat2Strings.branches.Cluster;
-import grammars.copycat2Strings.branches.ClusteredValue;
-import grammars.copycat2Strings.branches.Coordinate;
 import grammars.copycat2Strings.branches.Direction;
 import grammars.copycat2Strings.branches.EndPosition;
 import grammars.copycat2Strings.branches.FirstValue;
@@ -20,19 +29,13 @@ import grammars.copycat2Strings.branches.Pattern;
 import grammars.copycat2Strings.branches.Position;
 import grammars.copycat2Strings.branches.ProminentPosition;
 import grammars.copycat2Strings.branches.Sequence;
-import grammars.copycat2Strings.branches.Size;
-import grammars.copycat2Strings.branches.SubCoordinate;
 import grammars.copycat2Strings.disjunctions.IDirectionValue;
 import grammars.copycat2Strings.disjunctions.IEndPositionValue;
 import grammars.copycat2Strings.disjunctions.IPositionAttribute;
-import grammars.copycat2Strings.disjunctions.IRule;
 import grammars.copycat2Strings.disjunctions.ISpecifiedProminentPosition;
 import grammars.copycat2Strings.disjunctions.IStringName;
-import grammars.copycat2Strings.disjunctions.IValueOrClusteredValue;
 import grammars.copycat2Strings.leaves.CcStrinG;
 import grammars.copycat2Strings.leaves.CentralPositioN;
-import grammars.copycat2Strings.leaves.ClusteR;
-import grammars.copycat2Strings.leaves.CoordinatE;
 import grammars.copycat2Strings.leaves.DirectioN;
 import grammars.copycat2Strings.leaves.EndPositioN;
 import grammars.copycat2Strings.leaves.FirstPositioN;
@@ -50,8 +53,6 @@ import grammars.copycat2Strings.leaves.PositioN;
 import grammars.copycat2Strings.leaves.ProminentPositioN;
 import grammars.copycat2Strings.leaves.SecondStrinG;
 import grammars.copycat2Strings.leaves.SequencE;
-import grammars.copycat2Strings.leaves.SizE;
-import grammars.copycat2Strings.leaves.ValuE;
 
 public class CcFileReaderB extends GenericFileReader implements IGenericFileReader {
 
@@ -154,16 +155,12 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 			}
 			break;	
 		case "Coordinate" :
-			if (components.size() == 2 || components.size() == 3) {
+			if (components.size() == 2) {
 				Coordinate coordinate;
 				try {
 					CoordinatE coordinatE = (CoordinatE) components.get(0);
-					ValuE valuE = (ValuE) components.get(1);
+					IValuEOrCoordSubValue valuE = (IValuEOrCoordSubValue) components.get(1);
 					coordinate = new Coordinate(coordinatE, valuE);
-					if (components.size() == 3) {
-						Coordinate superCoordinate = (Coordinate) components.get(2);
-						coordinate = new SubCoordinate(coordinate, superCoordinate);
-					}
 				}
 				catch (Exception e) {
 					throw new FileReaderException(
@@ -716,24 +713,36 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 			break;
 		default : 
 			if(nodeIndex+1 < treeDescriptions[treeIndex][pathIndex].length) {
-				if (nodeName.contains("clustered")) {
+				if (isInteger(nodeName)) {
 					if (components.size() != 2) {
 						throw new FileReaderException(
 								getExceptionMessage1(nodeName, components, treeIndex, pathIndex, nodeIndex, 2));
 					}
 					else {
-						ClusteredValue clusteredValue;
 						try {
 							ValuE valuE = (ValuE) components.get(0);
-							Cluster cluster = (Cluster) components.get(1);
-							clusteredValue = new ClusteredValue(valuE, cluster);
+							Object obj = (Object) components.get(1);
+							if (obj instanceof grammarModel.defaultRules.branches.Cluster) {
+								ClusteredValue clusteredValue;
+								Cluster cluster = (Cluster) obj;
+								clusteredValue = new ClusteredValue(valuE, cluster);
+								putStructureIntoArray(clusteredValue, treeIndex, pathIndex, nodeIndex);
+							}
+							else if (obj instanceof grammarModel.defaultRules.branches.Coordinate) {
+								CoordSubValue coordSubValue;
+								Coordinate coordinate = (Coordinate) obj;
+								coordSubValue = new CoordSubValue(valuE, coordinate);
+								putStructureIntoArray(coordSubValue, treeIndex, pathIndex, nodeIndex);
+							}
+							else throw new FileReaderException("Unknown object " + obj.toString() + ". " 
+									+ System.lineSeparator());
 						}
 						catch (Exception e) {
 							throw new FileReaderException(
 									getExceptionMessage2(
 											nodeName, treeIndex, pathIndex, nodeIndex, e.getMessage()));
 						}
-						putStructureIntoArray(clusteredValue, treeIndex, pathIndex, nodeIndex);
+						
 					}
 				}
 				else {
@@ -797,5 +806,17 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 		sB.append(Integer.toString(nodeIndex));
 		return sB.toString();
 	}
+	
+	private static boolean isInteger(String s) {
+	    if(s.isEmpty()) return false;
+	    for(int i = 0; i < s.length(); i++) {
+	        if(i == 0 && s.charAt(i) == '-') {
+	            if(s.length() == 1) return false;
+	            else continue;
+	        }
+	        if(Character.digit(s.charAt(i),10) < 0) return false;
+	    }
+	    return true;
+	}	
 
 }

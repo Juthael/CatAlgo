@@ -1,7 +1,9 @@
 package grammarModel.structure.impl;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
@@ -15,8 +17,36 @@ import propertyPoset.utils.impl.PosetMaxChains;
 
 public abstract class SyntacticStructure implements ISyntacticStructure {
 	
+	protected int recursionIndex = 0;
+	protected boolean recursionIndexHasBeenSet = false;
+	
 	public SyntacticStructure() {
 	}
+	
+	@Override
+	public Map<String, Integer> setRecursionIndex() throws GrammarModelException {
+		Map<String, Integer> propNameToRecursionIdx = new HashMap<String, Integer>();
+		if (!recursionIndexHasBeenSet) {
+			for (ISyntacticStructure component : getListOfComponents()) {
+				Map<String, Integer> compPropNameToRecursIdx = component.setRecursionIndex();
+				for (String propName : compPropNameToRecursIdx.keySet()) {
+					if (!propNameToRecursionIdx.containsKey(propName) 
+							|| (propNameToRecursionIdx.get(propName) < compPropNameToRecursIdx.get(propName))) {
+						propNameToRecursionIdx.put(propName, compPropNameToRecursIdx.get(propName));
+					}
+				}
+			}
+			if (propNameToRecursionIdx.containsKey(this.getName())) {
+				recursionIndex = propNameToRecursionIdx.get(this.getName()) + 1;
+				propNameToRecursionIdx.put(this.getName(), recursionIndex);
+			}
+			else propNameToRecursionIdx.put(this.getName(), recursionIndex);
+		}
+		else throw new GrammarModelException("SyntacticStructure.setRecursionIndex() : this method has already "
+				+ "been called.");
+		recursionIndexHasBeenSet = true;
+		return propNameToRecursionIdx;
+	}		
 
 	@Override
 	public ITreePaths getTreePaths() throws GrammarModelException {
@@ -63,6 +93,11 @@ public abstract class SyntacticStructure implements ISyntacticStructure {
 		}
 		return implications;
 	}
+	
+	@Override
+	public int getRecursionIndex() {
+		return recursionIndex;
+	}	
 	
 	@Override
 	public boolean hasThisProperty(String prop) {

@@ -3,12 +3,12 @@ package grammars.copycat2Strings.branches;
 import java.util.ArrayList;
 import java.util.List;
 
+import grammarModel.defaultRules.disjunctions.IRule;
+import grammarModel.defaultRules.disjunctions.IValueOrClusteredValue;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
-import grammars.copycat2Strings.disjunctions.IRule;
-import grammars.copycat2Strings.disjunctions.IValueOrClusteredValue;
 import grammars.copycat2Strings.leaves.PatterN;
 
 public class Pattern extends SyntaxBranch implements ISyntaxBranch, IRule {

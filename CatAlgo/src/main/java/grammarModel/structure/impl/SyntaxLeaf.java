@@ -1,7 +1,6 @@
 package grammarModel.structure.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -77,15 +76,10 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 	@Override
 	public boolean getIDHasBeenSet() {
 		return true;
-	}
+	}	
 	
 	@Override
 	public void setPosetElementID(Map<ITreePaths, String> chainsToIndex) {
-	}
-	
-	@Override
-	public HashMap<String, Integer> setRecursionIndex(){
-		return new HashMap<String, Integer>();
 	}
 	
 	@Override

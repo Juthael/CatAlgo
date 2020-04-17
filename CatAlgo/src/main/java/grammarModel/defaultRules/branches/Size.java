@@ -1,14 +1,14 @@
-package grammars.copycat2Strings.branches;
+package grammarModel.defaultRules.branches;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import grammarModel.defaultRules.disjunctions.IValueOrClusteredValue;
+import grammarModel.defaultRules.leaves.SizE;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
-import grammars.copycat2Strings.disjunctions.IValueOrClusteredValue;
-import grammars.copycat2Strings.leaves.SizE;
 
 public class Size extends SyntaxBranch implements ISyntaxBranch {
 

@@ -1,17 +1,17 @@
-package grammars.copycat2Strings.leaves;
+package grammarModel.defaultRules.leaves;
 
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxLeaf;
 
-public class ClusteR extends SyntaxLeaf implements ISyntaxLeaf {
+public class SizE extends SyntaxLeaf implements ISyntaxLeaf {
 
-	public static final String NAME="cluster";
+	public static final String NAME="size";
 	
-	public ClusteR() {
+	public SizE() {
 	}
 
-	public ClusteR(long leafID) {
+	public SizE(long leafID) {
 		super(leafID);
 	}
 
@@ -22,7 +22,7 @@ public class ClusteR extends SyntaxLeaf implements ISyntaxLeaf {
 
 	@Override
 	public ISyntacticStructure clone() {
-		return new ClusteR(super.getLeafID());
+		return new SizE(super.getLeafID());
 	}
 
 }

@@ -23,25 +23,13 @@ import propertyPoset.impl.PropertyPoset;
 
 public class Tester {
 
-	@SuppressWarnings("unused")
-	private static Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
-	@SuppressWarnings("unused")
-	private static Path m1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "M1_abc_ijk.txt");
-	@SuppressWarnings("unused")
-	private static Path e2 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_ab-bc_ijk.txt");
-	@SuppressWarnings("unused")
-	private static Path e2b = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_a-bb-c_ijk.txt");
-
-	
-	@SuppressWarnings("unused")
-	private static Path e2_ijk = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_ijk.txt");
+	private static Path e2 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_a-bb-c_ijk.txt");
 	
 	public Tester() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public static void main(String[] args) throws Exception {
-		ISyntaxGrove testGrove = setGrove(e2b, new CcFileReaderB());
+		ISyntaxGrove testGrove = setGrove(e2, new CcFileReaderB());
 		IPropertyPoset testPoset = null;
 		try {
 			System.out.println(testGrove.getPosetMaxChains().getChainsInASingleString());

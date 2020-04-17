@@ -126,6 +126,12 @@ public interface ISyntacticStructure extends Cloneable {
 	boolean getIDHasBeenSet();
 	
 	/**
+	 * A-> A -> A : first A's recursion index is 2
+	 * @return
+	 */
+	int getRecursionIndex();
+	
+	/**
 	 * @param prop property name, referring to an element of the context-free grammar at use. 
 	 * @return true if the parameter is the name of this structure generating node, or the name of any derived
 	 * node in the syntax tree.  
@@ -156,6 +162,7 @@ public interface ISyntacticStructure extends Cloneable {
 	/**
 	 * The recursion index of a structure of type A is the maximal number of sub-structures of type A it contains in 
 	 * a single chain. 
+	 * May need to be overloaded if the structure is a clustered value.
 	 * @return
 	 * @throws GrammarModelException 
 	 */

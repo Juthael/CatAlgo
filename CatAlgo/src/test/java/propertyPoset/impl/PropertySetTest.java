@@ -1,22 +1,16 @@
 package propertyPoset.impl;
 
-import static org.junit.Assert.assertTrue;
-
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Iterator;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import grammarModel.structure.ISyntaxGrove;
-import grammars.seekWhence.utils.SwFileReader;
-import propertyPoset.IProperty;
+import grammarModel.utils.IGenericFileReader;
+import grammars.copycat2Strings.utils.CcFileReaderB;
 import propertyPoset.IPropertyPoset;
 import propertyPoset.IPropertySet;
-import propertyPoset.exceptions.PropertyPosetException;
 
 public class PropertySetTest {
 	
@@ -26,8 +20,8 @@ public class PropertySetTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() {
-		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
-		SwFileReader fileReader = new SwFileReader();
+		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_a-bb-c_ijk.txt");		
+		IGenericFileReader fileReader = new CcFileReaderB();
 		try {
 			grove = fileReader.getSyntacticGrove(backburnDozen1);
 			grove.setPosetElementID();

@@ -4,9 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
@@ -14,27 +11,19 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxGrove;
-import grammarModel.structure.impl.SyntaxGrove;
-import grammars.seekWhence.branches.Value;
-import grammars.seekWhence.leaves.ValuE;
-import grammars.seekWhence.utils.SwFileReader;
+import grammarModel.utils.IGenericFileReader;
+import grammars.copycat2Strings.utils.CcFileReaderB;
 import propertyPoset.IPropertyPoset;
 import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
 import propertyPoset.utils.IDimensionAnalysis;
-import propertyPoset.utils.IImplication;
-import propertyPoset.utils.impl.Implication;
 
 public class RelationTest {
 	
 	private static ISyntaxGrove trueGrove;
-	private static ISyntaxGrove mockGrove;
 	private IPropertyPoset truePropPoset;
-	private IPropertyPoset mockPropPoset;
 	private static IRelation trueRelation;
-	private static IRelation mockRelation;
 	
 	/*
 	 * mockGrove chains :
@@ -51,7 +40,6 @@ public class RelationTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		setTrueGrove();
-		setMockGrove();
 	}
 
 	@Before
@@ -65,19 +53,11 @@ public class RelationTest {
 					+ System.lineSeparator() + e.getMessage());
 		}
 		trueRelation = truePropPoset.getRelation();
-		try {
-			//System.out.println(grove.getPosetMaxChains().getChainsInASingleString());
-			mockPropPoset = new PropertyPoset(mockGrove.getPosetMaxChains());
-		}
-		catch (Exception e) {
-			System.out.println("PropertySetTest : error during OriginalPropertyPoset instantiation, with param 'mockGrove' " 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		mockRelation = mockPropPoset.getRelation();
 	}
 
 	@Test
 	public void whenImplicationIsAddedThenConsequentCanBeRetreivedAsGreaterProperty() throws PropertyPosetException {
+		/*
 		Set<String> greaterBefore = mockRelation.getGreaterProperties("2");
 		IImplication impl = new Implication("2", "3");
 		mockRelation.addImplication(impl);;
@@ -85,10 +65,13 @@ public class RelationTest {
 		boolean threeWasntGreaterThen = !greaterBefore.contains("3");
 		boolean threeIsGreaterNow = greaterNow.contains("3");
 		assertTrue(threeWasntGreaterThen && threeIsGreaterNow);
+		*/
+		assertTrue(false);
 	}
 	
 	@Test
 	public void whenImplicationIsAddedWithTransitivityGuaranteeThenTransitivityVerified() throws PropertyPosetException {
+		/*
 		boolean ifSmallerThan8ThenDontKnowFor3Before = false;
 		for (String property : mockPropPoset.getProperties().getSetOfPropertyNames()) {
 			if (mockRelation.getGreaterProperties(property).contains("8") 
@@ -105,32 +88,43 @@ public class RelationTest {
 				ifSmallerThan8ThenSmallerThan3Now = false;
 		}
 		assertTrue(ifSmallerThan8ThenDontKnowFor3Before && ifSmallerThan8ThenSmallerThan3Now);
+		*/
+		assertTrue(false);
 	}
 	
 	@Test
 	public void whenSuccessorRequestedThenReturnedGivenPropertyName() throws PropertyPosetException {
+		/*
 		Set<String> arithSeq1Succ = trueRelation.getSuccessors("ArithSeq1");
 		boolean expectedSetSize = (arithSeq1Succ.size() == 3);
 		boolean expectedSetElem1 = arithSeq1Succ.contains("ArithSeQ");
 		boolean expectedSetElem2 = arithSeq1Succ.contains("FirstValue1");
 		boolean expectedSetElem3 = arithSeq1Succ.contains("Increment2");
 		assertTrue(expectedSetSize && expectedSetElem1 && expectedSetElem2 && expectedSetElem3);
+		*/
+		assertTrue(false);
 	}
 	
 	@Test
 	public void whenPredecessorRequestedThenReturnedGivenPropertyName() throws PropertyPosetException {
+		/*
 		Set<String> arithSeq1Prec = trueRelation.getPredecessors("ArithSeq1");
 		boolean expectedSetSize = (arithSeq1Prec.size() == 1);
 		boolean expectedSetElem = arithSeq1Prec.contains("Relation1");
 		assertTrue(expectedSetSize && expectedSetElem);
+		*/
+		assertTrue(false);
 	}
 	
 	@Test
 	public void whenRankRequestedThenReturnedGivenPropertyName() throws PropertyPosetException {
+		/*
 		boolean incremenTRankIs8 = (trueRelation.getRank("IncremenT") == 8);
 		boolean digitORankIs1 = (trueRelation.getRank("Digit0") == 1);
 		boolean arithSeq2RankIs3 = (trueRelation.getRank("ArithSeq2") == 3);
 		assertTrue(incremenTRankIs8 && digitORankIs1 && arithSeq2RankIs3);		
+		*/
+		assertTrue(false);
 	}
 	
 	@Test
@@ -141,7 +135,8 @@ public class RelationTest {
 			if (trueRelation.checkIfDimension(prop))
 				System.out.println(prop);
 		}
-		 */		
+		 */	
+		/*
 		boolean propRelation2 = trueRelation.checkIfDimension("Relation2");
 		boolean propRelation0 = trueRelation.checkIfDimension("Relation0");
 		boolean propFirstValue1 = trueRelation.checkIfDimension("FirstValue1");
@@ -158,10 +153,13 @@ public class RelationTest {
 		boolean notPropSize0 = !trueRelation.checkIfDimension("Size0");
 		assertTrue(propRelation2 && propRelation0 && propFirstValue1 && propSize1 && propRelatioN && propArithSeQ
 				&& prop1 && propIncremenT && prop3 && propPositioN && propNoAlterN && prop2 && propDigiT && notPropSize0);
+		*/
+		assertTrue(false);
 	}
 	
 	@Test
 	public void whenPosetLeavesRequestedThenExpectedPropertyNamesReturned() throws PropertyPosetException {
+		/*
 		Set<String> expectedLeaves = new HashSet<String>();
 		expectedLeaves.add("RelatioN");
 		expectedLeaves.add("SizE");
@@ -177,17 +175,19 @@ public class RelationTest {
 		expectedLeaves.add("DigiT");
 		Set<String> returnedLeaves = trueRelation.getPosetleaves();
 		assertTrue(expectedLeaves.equals(returnedLeaves));
+		*/
+		assertTrue(false);
 	}
 	
 	@Test
 	public void whenMaximalRankRequestedThenExpectedRankReturned() throws PropertyPosetException {
-		assertTrue(mockRelation.getMaximalRank() == 3);
+		assertTrue(false);
 	}
 	
 	@Test
-	public void whenDimensionAnalyzesRequiredThenConsistentDimensionAnalyzesReturned() throws PropertyPosetException{
-		Set<IDimensionAnalysis> analyzes = trueRelation.getDimensionAnalyzes();
+	public void whenDimensionAnalyzesRequiredThenConsistentDimensionAnalyzesReturned() throws PropertyPosetException{		
 		/*
+		Set<IDimensionAnalysis> analyzes = trueRelation.getDimensionAnalyzes();
 		for(IDimensionAnalysis analysis : analyzes) {
 			System.out.println("-------DIMENSION NAME : " + analysis.getDimensionName());
 			for (String instance : analysis.getAllInstancesOfThisDimension()) {
@@ -197,6 +197,7 @@ public class RelationTest {
 			System.lineSeparator();			
 		}
 		*/
+		/*
 		int nbOfInstancesForDimension1 = -1;
 		for (IDimensionAnalysis analysis : analyzes) {
 			if (analysis.getDimensionName().equals("1")) {
@@ -204,10 +205,13 @@ public class RelationTest {
 			}
 		}
 		assertTrue(nbOfInstancesForDimension1 == 2);
+		*/
+		assertTrue(false);
 	}
 	
 	@Test
 	public void whenRelationModifiedThenNewRelationIsConsistent() throws PropertyPosetException {
+		/*
 		boolean modificationIsConsistent = true;
 		String targetProperty = "Relation0";
 		Set<String> targetNewPrec = trueRelation.getPredecessors(targetProperty);
@@ -233,10 +237,13 @@ public class RelationTest {
 			}
 		}
 		assertTrue(modificationIsConsistent);
+		*/
+		assertTrue(false);
 	}
 	
 	@Test
 	public void whenNewPropertyIsAddedThenNewRelationIsConsistent() throws PropertyPosetException {
+		/*
 		boolean relationIsConsistent = true;
 		String newProperty = "RelationO*";
 		Set<String> newPropCsqts = trueRelation.getGreaterProperties("Relation0");
@@ -258,14 +265,16 @@ public class RelationTest {
 			}
 		}
 		assertTrue(relationIsConsistent);
+		*/
+		assertTrue(false);
 	}
 	
 	private static void setTrueGrove() {
-		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
-		SwFileReader fileReader = new SwFileReader();
+		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_a-bb-c_ijk.txt");
+		IGenericFileReader fileReader = new CcFileReaderB();
 		try {
 			trueGrove = fileReader.getSyntacticGrove(backburnDozen1);
-			trueGrove.markRedundancies();
+			trueGrove.markRecursion();
 			trueGrove.setPosetElementID();
 		}
 		catch (Exception e) {
@@ -275,207 +284,4 @@ public class RelationTest {
 		// printChains(trueGrove.getListOfSyntacticStringChains());	
 	}
 	
-	private static void setMockGrove() throws GrammarModelException {
-		/*
-		 * mockGrove chains :
-		 * grove/2/2
-		 * grove/2/7/7
-		 * grove/2/7/8
-		 * grove/3/3
-		 * grove/3/4/4
-		 * grove/3/4/3
-		 * grove/7/7
-		 * grove/7/8
-		 */
-		ValuE valuE2 = new ValuE("2");
-		ValuE valuE7 = new ValuE("7");
-		ValuE valuE8 = new ValuE("8");
-		ValuE valuE3 = new ValuE("3");
-		ValuE valuE4 = new ValuE("4");
-		Value value7i8 = new Value(valuE7, valuE8);
-		Value value4i3 = new Value(valuE4, valuE3);
-		Value value2ii7i8 = new Value(valuE2, value7i8);
-		Value value3ii4i3 = new Value(valuE3, value4i3);
-		List<ISyntacticStructure> components = new ArrayList<ISyntacticStructure>();
-		components.add(value2ii7i8);
-		components.add(value3ii4i3);
-		components.add(value7i8);
-		mockGrove = new SyntaxGrove("grove", components);
-		mockGrove.setPosetElementID();
-	}
-	
-	/* truePoset max chains : 
-SeekWhenceCtxt0/Digit4/DigiT
-SeekWhenceCtxt0/Digit4/Relation2/Size0/Relation1/RelatioN
-SeekWhenceCtxt0/Digit4/Relation2/Size0/Relation1/Size1/SizE
-SeekWhenceCtxt0/Digit4/Relation2/Size0/Relation1/Size1/3
-SeekWhenceCtxt0/Digit4/Relation2/Size0/Relation1/ArithSeq1/ArithSeQ
-SeekWhenceCtxt0/Digit4/Relation2/Size0/Relation1/ArithSeq1/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit4/Relation2/Size0/Relation1/ArithSeq1/FirstValue1/1
-SeekWhenceCtxt0/Digit4/Relation2/Size0/Relation1/ArithSeq1/Increment2/IncremenT
-SeekWhenceCtxt0/Digit4/Relation2/Size0/Relation1/ArithSeq1/Increment2/1
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/FirstValue0/Relation0/RelatioN
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/FirstValue0/Relation0/Size1/SizE
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/FirstValue0/Relation0/Size1/3
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/ArithSeQ
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/FirstValue1/1
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/Increment1/IncremenT
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/Increment1/0
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/Increment0/Relation0/RelatioN
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/Increment0/Relation0/Size1/SizE
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/Increment0/Relation0/Size1/3
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/ArithSeQ
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/FirstValue1/1
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/Increment1/IncremenT
-SeekWhenceCtxt0/Digit4/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/Increment1/0
-SeekWhenceCtxt0/Digit4/Position4/PositioN
-SeekWhenceCtxt0/Digit4/Position4/NoAlterN
-SeekWhenceCtxt0/Digit4/Position4/1_1/1
-SeekWhenceCtxt0/Digit1/DigiT
-SeekWhenceCtxt0/Digit1/Relation2/Size0/Relation1/RelatioN
-SeekWhenceCtxt0/Digit1/Relation2/Size0/Relation1/Size1/SizE
-SeekWhenceCtxt0/Digit1/Relation2/Size0/Relation1/Size1/3
-SeekWhenceCtxt0/Digit1/Relation2/Size0/Relation1/ArithSeq1/ArithSeQ
-SeekWhenceCtxt0/Digit1/Relation2/Size0/Relation1/ArithSeq1/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit1/Relation2/Size0/Relation1/ArithSeq1/FirstValue1/1
-SeekWhenceCtxt0/Digit1/Relation2/Size0/Relation1/ArithSeq1/Increment2/IncremenT
-SeekWhenceCtxt0/Digit1/Relation2/Size0/Relation1/ArithSeq1/Increment2/1
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/FirstValue0/Relation0/RelatioN
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/FirstValue0/Relation0/Size1/SizE
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/FirstValue0/Relation0/Size1/3
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/ArithSeQ
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/FirstValue1/1
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/Increment1/IncremenT
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/Increment1/0
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/Increment0/Relation0/RelatioN
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/Increment0/Relation0/Size1/SizE
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/Increment0/Relation0/Size1/3
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/ArithSeQ
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/FirstValue1/1
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/Increment1/IncremenT
-SeekWhenceCtxt0/Digit1/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/Increment1/0
-SeekWhenceCtxt0/Digit1/Position0/PositioN
-SeekWhenceCtxt0/Digit1/Position0/NoAlterN
-SeekWhenceCtxt0/Digit1/Position0/1_2/1
-SeekWhenceCtxt0/Digit1/Position0/1_2/2
-SeekWhenceCtxt0/Digit0/DigiT
-SeekWhenceCtxt0/Digit0/Relation2/Size0/Relation1/RelatioN
-SeekWhenceCtxt0/Digit0/Relation2/Size0/Relation1/Size1/SizE
-SeekWhenceCtxt0/Digit0/Relation2/Size0/Relation1/Size1/3
-SeekWhenceCtxt0/Digit0/Relation2/Size0/Relation1/ArithSeq1/ArithSeQ
-SeekWhenceCtxt0/Digit0/Relation2/Size0/Relation1/ArithSeq1/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit0/Relation2/Size0/Relation1/ArithSeq1/FirstValue1/1
-SeekWhenceCtxt0/Digit0/Relation2/Size0/Relation1/ArithSeq1/Increment2/IncremenT
-SeekWhenceCtxt0/Digit0/Relation2/Size0/Relation1/ArithSeq1/Increment2/1
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/FirstValue0/Relation0/RelatioN
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/FirstValue0/Relation0/Size1/SizE
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/FirstValue0/Relation0/Size1/3
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/ArithSeQ
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/FirstValue1/1
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/Increment1/IncremenT
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/Increment1/0
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/Increment0/Relation0/RelatioN
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/Increment0/Relation0/Size1/SizE
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/Increment0/Relation0/Size1/3
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/ArithSeQ
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/FirstValue1/1
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/Increment1/IncremenT
-SeekWhenceCtxt0/Digit0/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/Increment1/0
-SeekWhenceCtxt0/Digit0/Position3/PositioN
-SeekWhenceCtxt0/Digit0/Position3/NoAlterN
-SeekWhenceCtxt0/Digit0/Position3/2_2/2
-SeekWhenceCtxt0/Digit3/DigiT
-SeekWhenceCtxt0/Digit3/Relation2/Size0/Relation1/RelatioN
-SeekWhenceCtxt0/Digit3/Relation2/Size0/Relation1/Size1/SizE
-SeekWhenceCtxt0/Digit3/Relation2/Size0/Relation1/Size1/3
-SeekWhenceCtxt0/Digit3/Relation2/Size0/Relation1/ArithSeq1/ArithSeQ
-SeekWhenceCtxt0/Digit3/Relation2/Size0/Relation1/ArithSeq1/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit3/Relation2/Size0/Relation1/ArithSeq1/FirstValue1/1
-SeekWhenceCtxt0/Digit3/Relation2/Size0/Relation1/ArithSeq1/Increment2/IncremenT
-SeekWhenceCtxt0/Digit3/Relation2/Size0/Relation1/ArithSeq1/Increment2/1
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/FirstValue0/Relation0/RelatioN
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/FirstValue0/Relation0/Size1/SizE
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/FirstValue0/Relation0/Size1/3
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/ArithSeQ
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/FirstValue1/1
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/Increment1/IncremenT
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/Increment1/0
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/Increment0/Relation0/RelatioN
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/Increment0/Relation0/Size1/SizE
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/Increment0/Relation0/Size1/3
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/ArithSeQ
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/FirstValue1/1
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/Increment1/IncremenT
-SeekWhenceCtxt0/Digit3/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/Increment1/0
-SeekWhenceCtxt0/Digit3/Position2/PositioN
-SeekWhenceCtxt0/Digit3/Position2/NoAlterN
-SeekWhenceCtxt0/Digit3/Position2/1_3/1
-SeekWhenceCtxt0/Digit3/Position2/1_3/3
-SeekWhenceCtxt0/Digit2/DigiT
-SeekWhenceCtxt0/Digit2/Relation2/Size0/Relation1/RelatioN
-SeekWhenceCtxt0/Digit2/Relation2/Size0/Relation1/Size1/SizE
-SeekWhenceCtxt0/Digit2/Relation2/Size0/Relation1/Size1/3
-SeekWhenceCtxt0/Digit2/Relation2/Size0/Relation1/ArithSeq1/ArithSeQ
-SeekWhenceCtxt0/Digit2/Relation2/Size0/Relation1/ArithSeq1/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit2/Relation2/Size0/Relation1/ArithSeq1/FirstValue1/1
-SeekWhenceCtxt0/Digit2/Relation2/Size0/Relation1/ArithSeq1/Increment2/IncremenT
-SeekWhenceCtxt0/Digit2/Relation2/Size0/Relation1/ArithSeq1/Increment2/1
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/FirstValue0/Relation0/RelatioN
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/FirstValue0/Relation0/Size1/SizE
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/FirstValue0/Relation0/Size1/3
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/ArithSeQ
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/FirstValue1/1
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/Increment1/IncremenT
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/Increment1/0
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/Increment0/Relation0/RelatioN
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/Increment0/Relation0/Size1/SizE
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/Increment0/Relation0/Size1/3
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/ArithSeQ
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/FirstValue1/1
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/Increment1/IncremenT
-SeekWhenceCtxt0/Digit2/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/Increment1/0
-SeekWhenceCtxt0/Digit2/Position1/PositioN
-SeekWhenceCtxt0/Digit2/Position1/NoAlterN
-SeekWhenceCtxt0/Digit2/Position1/2_3/2
-SeekWhenceCtxt0/Digit2/Position1/2_3/3
-SeekWhenceCtxt0/Digit5/DigiT
-SeekWhenceCtxt0/Digit5/Relation2/Size0/Relation1/RelatioN
-SeekWhenceCtxt0/Digit5/Relation2/Size0/Relation1/Size1/SizE
-SeekWhenceCtxt0/Digit5/Relation2/Size0/Relation1/Size1/3
-SeekWhenceCtxt0/Digit5/Relation2/Size0/Relation1/ArithSeq1/ArithSeQ
-SeekWhenceCtxt0/Digit5/Relation2/Size0/Relation1/ArithSeq1/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit5/Relation2/Size0/Relation1/ArithSeq1/FirstValue1/1
-SeekWhenceCtxt0/Digit5/Relation2/Size0/Relation1/ArithSeq1/Increment2/IncremenT
-SeekWhenceCtxt0/Digit5/Relation2/Size0/Relation1/ArithSeq1/Increment2/1
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/FirstValue0/Relation0/RelatioN
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/FirstValue0/Relation0/Size1/SizE
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/FirstValue0/Relation0/Size1/3
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/ArithSeQ
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/FirstValue1/1
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/Increment1/IncremenT
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/FirstValue0/Relation0/ArithSeq0/Increment1/0
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/Increment0/Relation0/RelatioN
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/Increment0/Relation0/Size1/SizE
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/Increment0/Relation0/Size1/3
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/ArithSeQ
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/FirstValue1/FirstValuE
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/FirstValue1/1
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/Increment1/IncremenT
-SeekWhenceCtxt0/Digit5/Relation2/ArithSeq2/Increment0/Relation0/ArithSeq0/Increment1/0
-SeekWhenceCtxt0/Digit5/Position5/PositioN
-SeekWhenceCtxt0/Digit5/Position5/NoAlterN
-SeekWhenceCtxt0/Digit5/Position5/3_3/3
-	 */
-
 }

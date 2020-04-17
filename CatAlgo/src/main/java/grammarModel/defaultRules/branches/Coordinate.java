@@ -1,23 +1,23 @@
-package grammars.copycat2Strings.branches;
+package grammarModel.defaultRules.branches;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import grammarModel.defaultRules.disjunctions.IValuEOrCoordSubValue;
+import grammarModel.defaultRules.leaves.CoordinatE;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
-import grammars.copycat2Strings.leaves.CoordinatE;
-import grammars.copycat2Strings.leaves.ValuE;
 
 public class Coordinate extends SyntaxBranch implements ISyntaxBranch {
 
 	private static final String NAME = "Coordinate";
 	private CoordinatE coordinatE;
-	private ValuE valuE;
+	private IValuEOrCoordSubValue value;
 	
-	public Coordinate(CoordinatE coordinatE, ValuE valuE) {
-		this.valuE = valuE;
+	public Coordinate(CoordinatE coordinatE, IValuEOrCoordSubValue value) {
+		this.value = value;
 		this.coordinatE = coordinatE;
 	}
 
@@ -30,24 +30,20 @@ public class Coordinate extends SyntaxBranch implements ISyntaxBranch {
 	public ISyntaxLeaf getEponymLeaf() {
 		return coordinatE;
 	}	
-	
-	public ValuE getValuE() {
-		return valuE;
-	}	
 
 	@Override
 	public List<ISyntacticStructure> getListOfComponents() {
 		List<ISyntacticStructure> components = new ArrayList<ISyntacticStructure>();
 		components.add(coordinatE);
-		components.add(valuE);
+		components.add(value);
 		return components;
 	}
 
 	@Override
 	public ISyntacticStructure clone() {
 		CoordinatE coordinatEClone = (CoordinatE) coordinatE.clone();
-		ValuE valuEClone = (ValuE) valuE.clone();
-		return new Coordinate(coordinatEClone, valuEClone);
+		IValuEOrCoordSubValue valueClone = (IValuEOrCoordSubValue) value.clone();
+		return new Coordinate(coordinatEClone, valueClone);
 	}
 
 }

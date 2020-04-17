@@ -11,7 +11,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import grammarModel.structure.ISyntaxGrove;
-import grammars.seekWhence.utils.SwFileReader;
+import grammarModel.utils.IGenericFileReader;
+import grammars.copycat2Strings.utils.CcFileReaderB;
 import propertyPoset.utils.IImplication;
 import propertyPoset.utils.IPosetMaxChains;
 import propertyPoset.utils.impl.PosetMaxChains;
@@ -23,10 +24,10 @@ public class PosetMaxChainsTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "BD1_1_12_123.txt");
-		SwFileReader fileReader = new SwFileReader();
+		Path e2 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_a-bb-c_ijk.txt");
+		IGenericFileReader fileReader = new CcFileReaderB();
 		try {
-			grove = fileReader.getSyntacticGrove(backburnDozen1);
+			grove = fileReader.getSyntacticGrove(e2);
 			// printChains(grove.getListOfSyntacticStringChains());
 		}
 		catch (Exception e) {
