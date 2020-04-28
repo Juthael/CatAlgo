@@ -120,7 +120,7 @@ Letter/LetterValue/3/Cluster/Size/size
 Letter/LetterValue/3/Cluster/Size/1/1
 Letter/LetterValue/3/Cluster/Size/1/Cluster/cluster
 Letter/LetterValue/3/Cluster/Size/1/Cluster/Size/size
-Letter/LetterValue/3/Cluster/Size/1/Cluster/Size/6
+Letter/LetterValue/3/Cluster/Size/1/Cluster/Size/3
 Letter/LetterValue/3/Cluster/Size/1/Cluster/Pattern/pattern
 Letter/LetterValue/3/Cluster/Size/1/Cluster/Pattern/1,2,1
 Letter/LetterValue/3/Cluster/Sequence/sequence
