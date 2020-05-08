@@ -25,7 +25,7 @@ public class RandomPlacE extends SyntaxLeaf implements ISyntaxLeaf, IPosition {
 
 	@Override
 	public ISyntacticStructure clone() {
-		return new SupplieD (super.getLeafID());
+		return new RandomPlacE (super.getLeafID());
 	}
 
 }

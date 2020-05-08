@@ -18,17 +18,20 @@ import fca.gui.util.constant.LMImages;
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IGenericFileReader;
 import grammars.copycat2Strings.utils.CcFileReaderB;
+import grammars.sphex.utils.SphexFileReader;
 import propertyPoset.IPropertyPoset;
 import propertyPoset.impl.PropertyPoset;
 
 public class Tester {
 
 	private static Path e2 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_a-bb-c_ijk.txt");
+	private static Path sphex = Paths.get(".", "src", "test", "java", "filesUsedForTests", "usualSphex.txt");
 	
 	public Tester() {
 	}
 
 	public static void main(String[] args) throws Exception {
+		//ISyntaxGrove testGrove = setGrove(e2, new CcFileReaderB());
 		ISyntaxGrove testGrove = setGrove(e2, new CcFileReaderB());
 		IPropertyPoset testPoset = null;
 		try {

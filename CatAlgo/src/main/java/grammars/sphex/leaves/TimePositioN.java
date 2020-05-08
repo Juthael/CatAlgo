@@ -4,14 +4,14 @@ import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxLeaf;
 
-public class ProcedurE extends SyntaxLeaf implements ISyntaxLeaf {
+public class TimePositioN extends SyntaxLeaf implements ISyntaxLeaf {
 
-	private static final String NAME = "procedure";
+	private static final String NAME = "timePosition";
 	
-	public ProcedurE() {
+	public TimePositioN() {
 	}
 
-	public ProcedurE(long leafID) {
+	public TimePositioN(long leafID) {
 		super(leafID);
 	}
 
@@ -22,7 +22,7 @@ public class ProcedurE extends SyntaxLeaf implements ISyntaxLeaf {
 
 	@Override
 	public ISyntacticStructure clone() {
-		return new SupplieD (super.getLeafID());
+		return new TimePositioN (super.getLeafID());
 	}
 
 }

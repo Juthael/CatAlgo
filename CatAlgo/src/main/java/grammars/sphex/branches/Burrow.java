@@ -7,6 +7,7 @@ import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
+import grammars.sphex.disjunctions.IDoWithBurrow;
 import grammars.sphex.leaves.BurroW;
 
 public class Burrow extends SyntaxBranch implements ISyntaxBranch {
@@ -15,14 +16,17 @@ public class Burrow extends SyntaxBranch implements ISyntaxBranch {
 	private BurroW burroW;
 	private InspectionStatus inspectionStatus;
 	private SupplyStatus supplyStatus;
-	private Procedure procedure;
+	private IDoWithBurrow doWithBurrow;
+	private TimePosition timePosition;
 	
 	
-	public Burrow(BurroW burroW, InspectionStatus inspectionStatus, SupplyStatus supplyStatus, Procedure procedure) {
+	public Burrow(BurroW burroW, InspectionStatus inspectionStatus, SupplyStatus supplyStatus, IDoWithBurrow doWithBurrow, 
+			TimePosition timePosition) {
 		this.burroW = burroW;
 		this.inspectionStatus = inspectionStatus;
 		this.supplyStatus = supplyStatus;
-		this.procedure = procedure;
+		this.doWithBurrow = doWithBurrow;
+		this.timePosition = timePosition;
 	}
 
 	@Override
@@ -36,7 +40,8 @@ public class Burrow extends SyntaxBranch implements ISyntaxBranch {
 		components.add(burroW);
 		components.add(inspectionStatus);
 		components.add(supplyStatus);
-		components.add(procedure);
+		components.add(doWithBurrow);
+		components.add(timePosition);
 		return components;
 	}
 
@@ -50,8 +55,9 @@ public class Burrow extends SyntaxBranch implements ISyntaxBranch {
 		BurroW burroWClone = (BurroW) burroW.clone();
 		InspectionStatus inspectionStatusClone = (InspectionStatus) inspectionStatus.clone();
 		SupplyStatus supplyStatusClone = (SupplyStatus) supplyStatus.clone();
-		Procedure procedureClone = (Procedure) procedure.clone();
-		return new Burrow(burroWClone, inspectionStatusClone, supplyStatusClone, procedureClone);
+		IDoWithBurrow doWithBurrowClone = (IDoWithBurrow) doWithBurrow.clone();
+		TimePosition timePositionClone = (TimePosition) timePosition.clone();
+		return new Burrow(burroWClone, inspectionStatusClone, supplyStatusClone, doWithBurrowClone, timePositionClone);
 	}
 
 }

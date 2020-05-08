@@ -7,17 +7,17 @@ import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
-import grammars.sphex.leaves.ProcedurE;
+import grammars.sphex.leaves.TimePositioN;
 import grammars.sphex.leaves.SteP;
 
-public class Procedure extends SyntaxBranch implements ISyntaxBranch {
+public class TimePosition extends SyntaxBranch implements ISyntaxBranch {
 
-	private static final String NAME = "Procedure";
-	private ProcedurE procedurE;
+	private static final String NAME = "TimePosition";
+	private TimePositioN timePositioN;
 	private SteP steP;
 	
-	public Procedure(ProcedurE procedurE, SteP steP) {
-		this.procedurE = procedurE;
+	public TimePosition(TimePositioN timePositioN, SteP steP) {
+		this.timePositioN = timePositioN;
 		this.steP = steP;
 	}
 
@@ -29,21 +29,21 @@ public class Procedure extends SyntaxBranch implements ISyntaxBranch {
 	@Override
 	public List<ISyntacticStructure> getListOfComponents() {
 		List<ISyntacticStructure> components = new ArrayList<ISyntacticStructure>();
-		components.add(procedurE);
+		components.add(timePositioN);
 		components.add(steP);
 		return components;
 	}
 
 	@Override
 	public ISyntaxLeaf getEponymLeaf() {
-		return procedurE;
+		return timePositioN;
 	}
 
 	@Override
 	public ISyntacticStructure clone() {
-		ProcedurE procedurEClone = (ProcedurE) procedurE.clone();
+		TimePositioN procedurEClone = (TimePositioN) timePositioN.clone();
 		SteP stePClone = (SteP) steP.clone();
-		return new Procedure(procedurEClone, stePClone);
+		return new TimePosition(procedurEClone, stePClone);
 	}
 
 }

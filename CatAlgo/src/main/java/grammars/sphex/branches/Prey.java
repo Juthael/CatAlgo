@@ -16,13 +16,13 @@ public class Prey extends SyntaxBranch implements ISyntaxBranch {
 	private PreY preY;
 	private Position position;
 	private IDoWithPrey doWithPrey;
-	private Procedure procedure;
+	private TimePosition timePosition;
 	
-	public Prey(PreY preY, Position position, IDoWithPrey doWithPrey, Procedure procedure) {
+	public Prey(PreY preY, Position position, IDoWithPrey doWithPrey, TimePosition timePosition) {
 		this.preY = preY;
 		this.position = position;
 		this.doWithPrey = doWithPrey;
-		this.procedure = procedure;
+		this.timePosition = timePosition;
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class Prey extends SyntaxBranch implements ISyntaxBranch {
 		components.add(preY);
 		components.add(position);
 		components.add(doWithPrey);
-		components.add(procedure);
+		components.add(timePosition);
 		return components;
 	}
 
@@ -50,8 +50,8 @@ public class Prey extends SyntaxBranch implements ISyntaxBranch {
 		PreY preYClone = (PreY) preY.clone();
 		Position positionClone = (Position) position.clone();
 		IDoWithPrey doWithPreyClone = (IDoWithPrey) doWithPrey.clone();
-		Procedure procedureClone = (Procedure) procedure.clone();
-		return new Prey(preYClone, positionClone, doWithPreyClone, procedureClone);
+		TimePosition timePositionClone = (TimePosition) timePosition.clone();
+		return new Prey(preYClone, positionClone, doWithPreyClone, timePositionClone);
 	}
 
 }

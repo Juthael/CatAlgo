@@ -22,7 +22,7 @@ public class PreY extends SyntaxLeaf implements ISyntaxLeaf {
 
 	@Override
 	public ISyntacticStructure clone() {
-		return new SupplieD (super.getLeafID());
+		return new PreY (super.getLeafID());
 	}
 
 }
