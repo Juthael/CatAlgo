@@ -144,7 +144,7 @@ public interface ISyntacticStructure extends Cloneable {
 	 * @param pathsToIndex a map that associates tree paths with a unique ID. 
 	 * @throws GrammarModelException
 	 */
-	void setPosetElementID(Map<ITreePaths, String> pathsToIndex) throws GrammarModelException;
+	void setPosetElementID(Map<ITreePaths, Integer> pathsToIndex) throws GrammarModelException;
 	
 	/**
 	 * Replaces a target leaf ({@link ISyntaxLeaf}) component by a new component. 

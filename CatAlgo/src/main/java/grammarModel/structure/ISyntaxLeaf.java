@@ -51,7 +51,7 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	 * is overridden in order to have no-effect.
 	 */
 	@Override
-	public void setPosetElementID(Map<ITreePaths, String> pathsToIndex);
+	public void setPosetElementID(Map<ITreePaths, Integer> pathsToIndex);
 	
 	/**
 	 * The recursion mark on an eponym property leaf indicate the degree of recursion of its predecessor. 

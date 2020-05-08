@@ -45,7 +45,7 @@ public class SyntaxGrove extends SyntaxBranch implements ISyntaxGrove {
 	public void setPosetElementID() throws GrammarModelException {
 		Set<ITreePaths> setOfITreePaths = getSetOfTreePaths();
 		Map<String, Integer> rootToIndex = new HashMap<String, Integer>();
-		Map<ITreePaths, String> pathsToIndex = new HashMap<ITreePaths, String>();
+		Map<ITreePaths, Integer> pathsToIndex = new HashMap<ITreePaths, Integer>();
 		for (ITreePaths paths : setOfITreePaths) {
 			String root = paths.getRoot();
 			if (!rootToIndex.containsKey(root)) {
@@ -56,7 +56,7 @@ public class SyntaxGrove extends SyntaxBranch implements ISyntaxGrove {
 				index++;
 				rootToIndex.put(root, index);
 			}
-			pathsToIndex.put(paths, rootToIndex.get(root).toString());
+			pathsToIndex.put(paths, rootToIndex.get(root));
 		}
 		setPosetElementID(pathsToIndex);
 	}

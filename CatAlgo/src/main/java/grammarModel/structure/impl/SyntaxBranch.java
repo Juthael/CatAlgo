@@ -123,8 +123,8 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	}
 	
 	@Override
-	public void setPosetElementID(Map<ITreePaths, String> chainsToIndex) throws GrammarModelException {
-		posetID = chainsToIndex.get(getTreePaths());
+	public void setPosetElementID(Map<ITreePaths, Integer> chainsToIndex) throws GrammarModelException {
+		posetID = Integer.toString(chainsToIndex.get(getTreePaths()));
 		for (ISyntacticStructure component : getListOfComponents()) {
 			component.setPosetElementID(chainsToIndex);
 		}

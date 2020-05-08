@@ -79,7 +79,7 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 	}	
 	
 	@Override
-	public void setPosetElementID(Map<ITreePaths, String> chainsToIndex) {
+	public void setPosetElementID(Map<ITreePaths, Integer> chainsToIndex) {
 	}
 	
 	@Override

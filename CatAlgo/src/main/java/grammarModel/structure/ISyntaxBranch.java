@@ -51,6 +51,6 @@ public interface ISyntaxBranch extends ISyntacticStructure {
 	boolean isATree();
 	
 	@Override
-	void setPosetElementID(Map<ITreePaths, String> pathsToString) throws GrammarModelException;
+	void setPosetElementID(Map<ITreePaths, Integer> pathsToString) throws GrammarModelException;
 	
 }
