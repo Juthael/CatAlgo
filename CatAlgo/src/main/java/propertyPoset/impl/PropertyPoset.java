@@ -1,7 +1,11 @@
 package propertyPoset.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -29,6 +33,7 @@ public class PropertyPoset implements IPropertyPoset {
 	private IPropertySet set;
 	private IRelation relation;
 	private boolean dimensionValuesAreIndependent = false;
+	private boolean posetReduced = false;
 	
 	/**
 	 * @param setOfPropNames names of a set of properties
@@ -70,25 +75,6 @@ public class PropertyPoset implements IPropertyPoset {
 	@Override
 	public BinaryContext getBinaryContext() throws PropertyPosetException {
 		BinaryContext context;
-		String posetName = relation.getPosetRoot();
-		Vector<String> properties = new Vector<String>(set.getSetOfPropertyNames());
-		Vector<Vector<String>> values = new Vector<Vector<String>>();
-		for (String antecedent : properties) {
-			Vector<String> valuesForThisAntcdt = new Vector<String>();
-			for (String potentialConsequent : properties) {
-				if (relation.getConsequents(antecedent).contains(potentialConsequent))
-					valuesForThisAntcdt.add(BinaryContext.TRUE);
-				else valuesForThisAntcdt.add(BinaryContext.FALSE);
-			}
-			values.add(valuesForThisAntcdt);
-		}
-		context = new BinaryContext(posetName, properties, properties, values);
-		return context;
-	}
-	
-	@Override
-	public BinaryContext getBinaryContextWithIndependentDimensionValues() throws PropertyPosetException {
-		BinaryContext context;
 		if (!dimensionValuesAreIndependent) {
 			try {
 				ensureDimensionsHaveIndependentValues();
@@ -99,7 +85,32 @@ public class PropertyPoset implements IPropertyPoset {
 						+ System.lineSeparator() + e.getMessage());
 			}
 		}
-		context = getBinaryContext();
+		if (!posetReduced) {
+			try {
+				reducePoset();
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("PropertyPoset.getBinaryContext() : error during poset reduction."
+						+ System.lineSeparator() + "Cannot proceed if poset hasn't been reduced.");
+			}
+		}
+		String posetName = relation.getPosetRoot();
+		Vector<String> explicitProperties = new Vector<String>();
+		List<String> properties = new ArrayList<String>(set.getSetOfPropertyNames());
+		for (String property : properties) {
+			explicitProperties.add(set.getProperty(property).getPropertyExplicitName());
+		}
+		Vector<Vector<String>> values = new Vector<Vector<String>>();
+		for (String antecedent : properties) {
+			Vector<String> valuesForThisAntcdt = new Vector<String>();
+			for (String potentialConsequent : properties) {
+				if (relation.getConsequents(antecedent).contains(potentialConsequent))
+					valuesForThisAntcdt.add(BinaryContext.TRUE);
+				else valuesForThisAntcdt.add(BinaryContext.FALSE);
+			}
+			values.add(valuesForThisAntcdt);
+		}
+		context = new BinaryContext(posetName, explicitProperties, explicitProperties, values);
 		return context;
 	}
 	
@@ -128,5 +139,42 @@ public class PropertyPoset implements IPropertyPoset {
 			}
 		}
 	}
+	
+	@Override
+	public void reducePoset() throws PropertyPosetException {
+		if (!dimensionValuesAreIndependent)
+			ensureDimensionsHaveIndependentValues();
+		boolean aRemovalHasOccured;
+		do {
+			aRemovalHasOccured = false;
+			Set<String> leaves = relation.getPosetleaves();
+			Map<String, String> removableToAntecedent = new HashMap<String, String>();
+			for (String property : set.getSetOfPropertyNames()) {
+				Set<String> greaterProps = relation.getGreaterProperties(property);
+				if (!greaterProps.isEmpty() && leaves.containsAll(greaterProps)) {
+					Iterator<String> greaterPropsIte = greaterProps.iterator();
+					boolean allGreaterPropsHaveOnly1Pred = true;
+					while (greaterPropsIte.hasNext() && allGreaterPropsHaveOnly1Pred == true) {
+						String greaterProp = greaterPropsIte.next();
+						allGreaterPropsHaveOnly1Pred = (relation.getPredecessors(greaterProp).size() == 1);
+					}
+					if (allGreaterPropsHaveOnly1Pred) {
+						greaterPropsIte = greaterProps.iterator();
+						while (greaterPropsIte.hasNext()) {
+							removableToAntecedent.put(greaterPropsIte.next(), property);
+						}
+					}
+				}
+			}
+			if (!removableToAntecedent.isEmpty()) {
+				for (String removableLeaf : removableToAntecedent.keySet()) {
+					relation.removeProperty(set.removeProperty(removableLeaf, removableToAntecedent.get(removableLeaf)));
+				}
+				aRemovalHasOccured = true;
+			}
+		}
+		while (aRemovalHasOccured == true);
+		posetReduced = true;
+	}	
 
 }

@@ -393,6 +393,25 @@ public class Relation implements IRelation {
 		}
 		return dimensionAnalyzes;
 	}
+	
+	@Override
+	public boolean removeProperty(IProperty property) throws PropertyPosetException {
+		boolean propertyRemoved = false;
+		String propertyName = property.getPropertyName();
+		if (!relation.containsKey(propertyName))
+			throw new PropertyPosetException("Relation.removeProperty() : the property " 
+					+ propertyName + " is unknown");
+		else {
+			relation.remove(propertyName);
+			for (Set<String> consequents : relation.values())
+				consequents.remove(propertyName);
+			propertyRemoved = true;
+			allDataIsUpToDate = false;
+			rankMappingIsUpToDate = false;
+			successorRelationIsUpToDate = false;
+		}
+		return propertyRemoved;
+	}	
 
 	@Override
 	public void updateRelationData() throws PropertyPosetException {

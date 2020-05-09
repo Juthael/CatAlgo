@@ -173,7 +173,7 @@ public interface IRelation {
 	 * @return the maximal rank value among all the poset elements. 
 	 * @throws PropertyPosetException 
 	 */
-	int getMaximalRank() throws PropertyPosetException;
+	int getMaximalRank() throws PropertyPosetException;	
 	
 	/**
 	 * In order to build the set of {@link DimensionAnalysis}, calculates how many dimension instances are necessary 
@@ -186,6 +186,21 @@ public interface IRelation {
 	 * @throws PropertyPosetException
 	 */
 	Set<IDimensionAnalysis> getDimensionAnalyzes() throws PropertyPosetException;
+	
+	/**
+	 * After this method has been called, the name of the property given in parameter can neither be found in the 
+	 * relation as an antecedent, nor as a consequent of any other property. 
+	 * 
+	 * Warning : if an non-maximal element of the poset is removed and any element of its upper set is not, then 
+	 * the poset may not be a lower semi-lattice anymore, which can lead to inconsistent behavior. 
+	 * 
+	 * @see IProperty
+	 * @see IPropertyPoset
+	 * @param property the element to remove 
+	 * @return true if the property has actually been removed. 
+	 * @throws PropertyPosetException if the parameter is unknown or if it is an informative property. 
+	 */
+	boolean removeProperty(IProperty property) throws PropertyPosetException;	
 	
 	/**
 	 * Ensures that all data is up to date. Must be called after any modification.

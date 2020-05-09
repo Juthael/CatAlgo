@@ -1,5 +1,7 @@
 package propertyPoset.impl;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import propertyPoset.IProperty;
@@ -7,7 +9,10 @@ import propertyPoset.IRelation;
 import propertyPoset.exceptions.PropertyPosetException;
 
 /**
- * A IProperty has a name, can be part of a set on which an order relation can be defined. <br>
+ * A Property is characterized by its name and by its potential 'encapsulated properties'. <br>
+ * 
+ * Encapsulated properties of a property P are elements removed from the property poset because they 
+ * do not not provide any additional information. 
  * 
  * @author Gael Tregouet
  *
@@ -15,6 +20,7 @@ import propertyPoset.exceptions.PropertyPosetException;
 public class Property implements IProperty {
 
 	private String name;
+	private Set<IProperty> encapsulatedProp = new HashSet<IProperty>();
 	
 	/**
 	 * 
@@ -23,11 +29,36 @@ public class Property implements IProperty {
 	public Property(String name) {
 		this.name = name;
 	}
+	
+	@Override
+	public void addEncapsulatedProp(IProperty prop) {
+		encapsulatedProp.add(prop);
+	}	
 
 	@Override
 	public String getPropertyName() {
 		return name;
 	}
+	
+	@Override
+	public String getPropertyExplicitName() {
+		String returnedName; 
+		if (encapsulatedProp.isEmpty())
+			returnedName = name;
+		else {
+			StringBuilder sB = new StringBuilder();
+			Iterator<IProperty> propIterator = encapsulatedProp.iterator();
+			sB.append("(");
+			sB.append(propIterator.next().getPropertyExplicitName());
+			while (propIterator.hasNext()) {
+				sB.append(" ");
+				sB.append(propIterator.next().getPropertyExplicitName());
+			}
+			sB.append(")");
+			returnedName = sB.toString();
+		}
+		return returnedName;
+	}	
 	
 	@Override
 	public Set<String> getAntecedents(IRelation rel) throws PropertyPosetException {
@@ -107,6 +138,11 @@ public class Property implements IProperty {
 		return precProp;
 	}
 
+	@Override
+	public Set<IProperty> getEncapsulatedProperties() {
+		return encapsulatedProp;
+	}	
+	
 	@Override
 	public int getRank(IRelation rel) throws PropertyPosetException {
 		int rank;
