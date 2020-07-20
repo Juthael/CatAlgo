@@ -31,12 +31,13 @@ public class Tester {
 	}
 
 	public static void main(String[] args) throws Exception {
+		ISyntaxGrove testGrove = setGrove(sphex, new SphexFileReader());
 		//ISyntaxGrove testGrove = setGrove(e2, new CcFileReaderB());
-		ISyntaxGrove testGrove = setGrove(e2, new CcFileReaderB());
 		IPropertyPoset testPoset = null;
 		try {
 			System.out.println(testGrove.getPosetMaxChains().getChainsInASingleString());
 			testPoset = new PropertyPoset(testGrove.getPosetMaxChains());
+			System.out.println(System.lineSeparator() + testPoset.getChains().getChainsInASingleString());
 		}
 		catch (Exception e) {
 			System.out.println("PropertyPosetTest : error during PropertyPoset instantiation " 

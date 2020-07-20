@@ -18,6 +18,7 @@ import propertyPoset.exceptions.PropertyPosetException;
 import propertyPoset.utils.IDimensionAnalysis;
 import propertyPoset.utils.IImplication;
 import propertyPoset.utils.IPosetMaxChains;
+import propertyPoset.utils.impl.PosetMaxChains;
 
 /**
  * A PropertyPoset is an implementation of a partially ordered set whose elements are properties. <br>
@@ -75,24 +76,12 @@ public class PropertyPoset implements IPropertyPoset {
 	@Override
 	public BinaryContext getBinaryContext() throws PropertyPosetException {
 		BinaryContext context;
-		if (!dimensionValuesAreIndependent) {
-			try {
-				ensureDimensionsHaveIndependentValues();
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("PropertyPoset.getBinaryContextWithIndependentDimensionValues() : "
-						+ "error while trying to make values independent." 
-						+ System.lineSeparator() + e.getMessage());
-			}
+		try {
+			ensurePosetConsistency();
 		}
-		if (!posetReduced) {
-			try {
-				reducePoset();
-			}
-			catch (Exception e) {
-				throw new PropertyPosetException("PropertyPoset.getBinaryContext() : error during poset reduction."
-						+ System.lineSeparator() + "Cannot proceed if poset hasn't been reduced.");
-			}
+		catch (Exception e) {
+			throw new PropertyPosetException("PropertyPoset.getBinaryContext() : cannot ensure poset consistency." 
+					+ System.lineSeparator() + e.getMessage());
 		}
 		String posetName = relation.getPosetRoot();
 		Vector<String> explicitProperties = new Vector<String>();
@@ -112,6 +101,34 @@ public class PropertyPoset implements IPropertyPoset {
 		}
 		context = new BinaryContext(posetName, explicitProperties, explicitProperties, values);
 		return context;
+	}
+	
+	@Override
+	public IPosetMaxChains getChains() throws PropertyPosetException {
+		IPosetMaxChains chains;
+		try {
+			ensurePosetConsistency();
+		}
+		catch (Exception e) {
+			throw new PropertyPosetException("PropertyPoset.getBinaryContext() : cannot ensure poset consistency." 
+					+ System.lineSeparator() + e.getMessage());
+		}
+		List<List<String>> stringChains = relation.getChains();
+		List<List<String>> stringChainsWithExplicitNames = new ArrayList<List<String>>();
+		for (List<String> singlechain : stringChains) {
+			List<String> singleChainWithExplicitNames = new ArrayList<String>();
+			for (String property : singlechain) {
+				singleChainWithExplicitNames.add(set.getProperty(property).getPropertyExplicitName());
+			}
+			stringChainsWithExplicitNames.add(singleChainWithExplicitNames);
+		}
+		try {
+			chains = new PosetMaxChains(stringChainsWithExplicitNames);
+		} catch (Exception e) {
+			throw new PropertyPosetException("PropertyPoset.getChains() : PosetMaxChains() instantiation failed." 
+					+ System.lineSeparator() + e.getMessage());
+		}
+		return chains;
 	}
 	
 	@Override
@@ -176,5 +193,30 @@ public class PropertyPoset implements IPropertyPoset {
 		while (aRemovalHasOccured == true);
 		posetReduced = true;
 	}	
+	
+	private void ensurePosetConsistency() throws PropertyPosetException {
+		if (!dimensionValuesAreIndependent) {
+			try {
+				//HERE
+				//ensureDimensionsHaveIndependentValues();
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("PropertyPoset.ensurePosetConsistency() : "
+						+ "error while trying to make values independent." 
+						+ System.lineSeparator() + e.getMessage());
+			}
+		}
+		if (!posetReduced) {
+			try {
+				//HERE
+				// reducePoset();
+			}
+			catch (Exception e) {
+				throw new PropertyPosetException("PropertyPoset.ensurePosetConsistency() : error during poset reduction."
+						+ System.lineSeparator() + "Cannot proceed if poset hasn't been reduced." 
+						+ System.lineSeparator() + e.getMessage());
+			}
+		}
+	}
 
 }

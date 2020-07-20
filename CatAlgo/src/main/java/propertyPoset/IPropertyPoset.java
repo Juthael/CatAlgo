@@ -3,6 +3,7 @@ package propertyPoset;
 import fca.LatticeMiner;
 import fca.core.context.binary.BinaryContext;
 import propertyPoset.exceptions.PropertyPosetException;
+import propertyPoset.utils.IPosetMaxChains;
 
 /**
  * A IPropertyPoset is a partially ordered set whose elements are 'properties'. <br>
@@ -36,6 +37,13 @@ public interface IPropertyPoset {
 	 * @throws PropertyPosetException 
 	 */
 	BinaryContext getBinaryContext() throws PropertyPosetException;
+	
+	/**
+	 * 
+	 * @return chains with explicit names (see {@link IProperty}
+	 * @throws PropertyPosetException 
+	 */
+	IPosetMaxChains getChains() throws PropertyPosetException;	
 	
 	/**
 	 * This method guarantees that values of a dimension are independent, i.e. their intersection is empty. <br>

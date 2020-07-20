@@ -1,5 +1,6 @@
 package propertyPoset;
 
+import java.util.List;
 import java.util.Set;
 
 import grammarModel.structure.ISyntaxGrove;
@@ -135,6 +136,13 @@ public interface IRelation {
 	 * @throws PropertyPosetException 
 	 */
 	int getRank(String propName) throws PropertyPosetException;
+	
+	/**
+	 * 
+	 * @return chains
+	 * @throws PropertyPosetException 
+	 */
+	List<List<String>> getChains() throws PropertyPosetException;
 	
 	/**
 	 * A dimension is a property that some elements of a context have in common, and which is also 

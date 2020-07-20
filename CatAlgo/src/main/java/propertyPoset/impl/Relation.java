@@ -283,6 +283,39 @@ public class Relation implements IRelation {
 		}
 		else return propertyToRank.get(propName);
 	}
+	
+	@Override
+	public List<List<String>> getChains() throws PropertyPosetException{
+		return getChainsFrom(posetRoot);
+	}
+	
+	private List<List<String>> getChainsFrom(String property) throws PropertyPosetException{
+		List<List<String>> chains = new ArrayList<List<String>>();
+		try {
+			Set<String> propSuccessors = getSuccessors(property);
+			if (propSuccessors.isEmpty()) {
+				List<String> initializedChain = new ArrayList<String>();
+				initializedChain.add(property);
+				chains.add(initializedChain);
+			}
+			else {
+				for (String propSuccessor : propSuccessors) {
+					List<List<String>> succChains = getChainsFrom(propSuccessor);
+					for (List<String> succChain : succChains) {
+						List<String> chain = new ArrayList<String>();
+						chain.add(property);
+						chain.addAll(succChain);
+						chains.add(chain);
+					}
+				}	
+			}
+		}
+		catch (Exception e) {
+			throw new PropertyPosetException("Relation.getChainsFrom() : cannot get chains for property " + property + ". "
+					+ System.lineSeparator() + e.getMessage());
+		}
+		return chains;
+	}
 
 	@Override
 	public boolean checkIfDimension(String propName) throws PropertyPosetException {
