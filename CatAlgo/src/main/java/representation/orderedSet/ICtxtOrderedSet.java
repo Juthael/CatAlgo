@@ -1,4 +1,4 @@
-package representation;
+package representation.orderedSet;
 
 public interface ICtxtOrderedSet {
 

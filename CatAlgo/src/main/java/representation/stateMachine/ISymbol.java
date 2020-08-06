@@ -1,7 +1,7 @@
 package representation.stateMachine;
 
-import representation.ICtxtOrderedSet;
-import representation.IOrderedSet;
+import representation.orderedSet.ICtxtOrderedSet;
+import representation.orderedSet.IOrderedSetOfAttributes;
 
 /**
  * A ISymbol is a subset of a {@link ICtxtOrderedSet} that may not be connected. Every maximal connected subset of a ISymbol is 
@@ -27,7 +27,7 @@ public interface ISymbol {
 	
 	/**
 	 * @return the number of IValues it contains or, equivalently, the number of maximal connected subsets that can be found 
-	 * in its {@link IOrderedSet}. 
+	 * in its {@link IOrderedSetOfAttributes}. 
 	 */
 	int nbOfValues();
 
