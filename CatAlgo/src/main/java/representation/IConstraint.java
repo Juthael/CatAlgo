@@ -7,7 +7,7 @@ package representation;
  * 
  * A IConstraint contains a word (i.e. a string of symbols) representing a path in the flow chart of a state machine. 
  * This word is meant to be an address of a certain state of this machine. Besides, if the machine contains interface 
- * states waiting for an implementation, then the path may contain free variables, which are place holders for yet 
+ * states waiting for an implementation, then the path may contain free variables, which are placeholders for yet 
  * unknown steps. <br> 
  *   
  * As an example, let <i> p </i> be the path in a constraint associated to a state <i> S </i> in a category-machine, 

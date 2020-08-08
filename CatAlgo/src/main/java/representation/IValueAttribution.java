@@ -10,6 +10,7 @@ package representation;
  * Value themselves are implemented as state (sub-)machines. <br>
  * A IValueAttribution maps a dimension to a value.
  * 
+ * @see representation.IValue
  * @see representation.ISymbol
  * @see representation.IState
  * @see representation.IStateMachine
@@ -33,7 +34,7 @@ public interface IValueAttribution {
 	 * 
 	 * @return the value (i.e. state machine) given to the dimension
 	 */
-	IStateMachine getValue();
+	IValue getValue();
 	
 	/**
 	 * 
