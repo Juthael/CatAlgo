@@ -1,5 +1,5 @@
 package representation;
 
-public interface IFunctionalExpression {
+public interface IFunctionalExpression extends IDescription {
 
 }
