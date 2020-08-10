@@ -1,18 +1,21 @@
 package representation;
 
+import java.util.Map;
+
 /**
- * A binary relation is one of the three equivalent format that can be used to describe an element of a context ; the two 
- * others being a regular language (i.e. a set of words accepted by a finite state machine) and a functional expression. 
- * Each one of this format can be translated in one of the others, in order to proceed some format-specific operations 
- * (e.g., set operations with binary relations).<br>
+ * A binary relation is one of the three equivalent {@link IDescription} format that can be used to describe an element 
+ * of a context ; the two others being a regular language (i.e. a set of words accepted by a finite state machine) and 
+ * a functional expression. Each one of this format can be translated in one of the others, in order to proceed some 
+ * format-specific operations (e.g., set operations with binary relations).<br>
  * 
  * A binary relation <i> R </i> is a set of pairs <i> (x,y) </i>, where <i> x </i> and <i> y </i> are symbols. If this 
  * relation is used to describe an object, then <i> x </i> and <i> y </i> are properties and <i> (x,y) ∈ R </i> (or 
- * <i> xRy </i>) means "<i> x </i> implies <i> y </i>" (e.g. "color implies blue").   
+ * <i> xRy </i>) means "<i> x </i> <b> is </b> <i> y </i>" (e.g. "color is blue").   
  * 
+ * @see representation.IDescription
  * @see representation.ILanguage
  * @see representation.IFunctionalExpression
- * @see representation.ISymbol * 
+ * @see representation.ISymbol
  * 
  * @author Gael Tregouet
  *
@@ -38,24 +41,34 @@ public interface IBinaryRelation extends IDescription {
 	 * 
 	 * @return the language associated with this relation
 	 */
+	@Override
 	ILanguage getLanguage();
 	
 	/**
-	 * The language associated with this relation is determined first, and then the machine that accepts it.
-	 * 
-	 * @see representation.ILanguage
-	 * @return the state machine that produces the language associated with this relation
-	 */
-	IStateMachine getStateMachine();
-	
-	/**
-	 * The language associated with this relation is determined first, and then its equivalent functional expression.
+	 * The language associated with this relation is determined first, and will provide its equivalent functional expression.
 	 * 
 	 * @see representation.ILanguage
 	 * @return
 	 */
+	@Override
 	IFunctionalExpression getFunctionalExpression();
 	
-	IGrammar getGrammar();
+	/**
+	 * 
+	 * @return the map of the relation, mapping <i> x </i> to <i> y </i> iff <i> xRy </i>
+	 */
+	Map<ISymbol, ISymbol> getRelationMap();	
+	
+	/**
+	 * A restricted grammar is the minimal knowledge base required to proceed the description of a 
+	 * given object or category (regardless of the format at use). <br> 
+	 * 
+	 * A rule <i> x ::= y </i> exists in the returned grammar iff <i> xRy </i>.
+	 * 
+	 * @see representation.IDescription
+	 * @return the restricted grammar associated with this description
+	 */
+	@Override
+	IGrammar getRestrictedGrammar();
 
 }
