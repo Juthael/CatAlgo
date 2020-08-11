@@ -48,9 +48,10 @@ public interface ITransition {
 	
 	/**
 	 * 
-	 * @return the probability of this transition to happen while evaluating an 'accept' word
+	 * @return the probability that this transition will occur while evaluating an "accept" word, assuming that 
+	 * the current active state in the machine is the input state of this transition  
 	 */
-	float getFrequency();
+	float getProbability();
 	
 	/**
 	 * 
@@ -64,5 +65,12 @@ public interface ITransition {
 	 * @return a report on this transition displayed in a single String
 	 */
 	String toString();
+	
+	/**
+	 * 
+	 * @param probability the probability that this transition will occur while evaluating an "accept" word, 
+	 * assuming that the current active state in the machine is the input state of this transition.
+	 */
+	void setProbability(float probability);
 
 }

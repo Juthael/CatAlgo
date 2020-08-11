@@ -83,13 +83,13 @@ public interface IFunctionalExpression extends IDescription {
 	ISymbol[][] getApplicationArray();
 	
 	/**
-	 * A restricted grammar is the minimal knowledge base required to proceed the description of a 
+	 * A local grammar is the minimal knowledge base required to proceed the description of a 
 	 * given object or category (regardless of the format at use). <br> 
 	 * 
-	 * The language equivalent to this functional expression is built first, and then provides the restricted grammar.
+	 * The language equivalent to this functional expression is built first, and then provides the local grammar.
 	 * 
 	 * @see representation.ILanguage
-	 * @return the restricted grammar associated with this description
+	 * @return the local grammar associated with this description
 	 */
 	IGrammar getRestrictedGrammar();
 

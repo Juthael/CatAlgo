@@ -86,9 +86,9 @@ public interface ISpecifications {
 	 * undetermined parts. This path has the form of a word with free variables acting as placeholders for the 
 	 * yet unknown parts of the path. <br>
 	 * 
-	 * Now, if this path is thought of as a functional expression, it can be made more precise by applying 
-	 * arguments (words) to its free variables. So a constraint <i> c </i> is just a more specific version 
-	 * of of a constraint <i> c' </i> if the path associated with <i> c' </i> is the result of the application 
+	 * If this path is thought of as a functional expression, it can be made more precise by applying 
+	 * arguments (words) to its free variables. A constraint <i> c </i> is then just a more specific version 
+	 * of a constraint <i> c' </i> if the path associated with <i> c' </i> is the result of the application 
 	 * of arguments to free variables in the path associated with <i> c </i>. <br>
 	 * 
 	 * Finally, specifications <i> S' </i> can be said to extend specifications <i> S </i> if any constraint 

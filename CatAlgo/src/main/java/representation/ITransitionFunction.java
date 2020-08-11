@@ -52,6 +52,28 @@ public interface ITransitionFunction {
 	Set<ITransition> getTransitionsToState(IStateName stateName);
 	
 	/**
+	 * @see representation.IState
+	 * @param stateID the state ID
+	 * @return the name of the state
+	 */
+	IStateName getStateName(int stateID);
+	
+	/**
+	 * @see representation.IState
+	 * @see representation.ITransitionFunction
+	 * @param stateName the name of the state
+	 * @return the rules of the state, displayed as a subset of the transition function
+	 */
+	Set<ITransition> getStateRules(IStateName stateName);
+	
+	/**
+	 * 
+	 * @param stateName the name of the state
+	 * @return the specifications of the state
+	 */
+	ISpecifications getStateSpecifications(IStateName stateName);
+	
+	/**
 	 * Any transition function can be translated into a context-free grammar. <br>
 	 * 
 	 * If a transition exists from <i> q<sub>1</sub> </i> to <i> q<sub>2</sub> </i> with the symbol <i> s<sub>1</sub> </i>, 
@@ -67,5 +89,12 @@ public interface ITransitionFunction {
 	 * @return the sum of all the transitions' costs
 	 */
 	float getCost();
+	
+	/**
+	 * For every transition, calculates the probability that it will occur while evaluating an "accept" word, 
+	 * assuming that the current active state in the machine is the input state of this transition ; then calls the 
+	 * ITransition.setProbability() method.
+	 */
+	void setTransitionProbabilities();
 
 }

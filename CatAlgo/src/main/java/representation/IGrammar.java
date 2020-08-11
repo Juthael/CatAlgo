@@ -41,6 +41,13 @@ public interface IGrammar {
 	
 	/**
 	 * 
+	 * @param antecedent the name of a symbol
+	 * @return the number of rules with the specified symbol as an antecedent
+	 */
+	int getNbOfRulesWhoseAntecedentIs(String antecedent);
+	
+	/**
+	 * 
 	 * @param any object
 	 * @return true if the specified object is a IGrammar that contains the same set of rules ; false otherwise 
 	 * @see representation.IGrammaticalRule

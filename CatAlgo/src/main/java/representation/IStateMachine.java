@@ -34,6 +34,10 @@ public interface IStateMachine {
 	
 	float getCost();
 	
-	void setStateNamesAndRules();
+	void setStateNames(ITransitionFunction tFunction);
+	
+	void setStateRules(ITransitionFunction tFunction);
+	
+	void setStateSpecifications(ITransitionFunction tFunction);
 
 }

@@ -14,7 +14,9 @@ public interface IRepresentation extends IStateMachine {
 	
 	Set<IContextObject> getObjectsThatConformTo(IFunctionalExpression specifiedProperty);
 	
-	IStateMachine getOptimalStateMachine();
+	IAlgorithmicDescription getOptimalAlgorithmicDescription();
+	
+	Set<IAlgorithmicDescription> getAllAlgorithmicDescriptions();
 	
 	IStateMachine getRepresentationRestrictedTo(Set<IContextObject> specifiedObjects);
 	

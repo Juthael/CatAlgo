@@ -12,8 +12,6 @@ public interface ICategory extends IStateMachine, IState {
 	
 	Set<IContextObject> getExtent();
 	
-	float getContextualFrequency();
-	
-	ITransition getTransitionTo(ICategory specifiedCategory);	
+	ITransition getTransitionTo(ICategory category);	
 
 }

@@ -81,15 +81,15 @@ public interface ILanguage extends IDescription {
 	IStateMachine getStateMachine();
 	
 	/**
-	 * A restricted grammar is the minimal knowledge base required to proceed the description of a 
+	 * A local grammar is the minimal knowledge base required to proceed the description of a 
 	 * given object or category (regardless of the format at use). <br> 
 	 * 
 	 * A rule <i> x ::= y </i> exists in the returned grammar iff a word <i> w </i> can be found in 
 	 * this language such that <i> xy </i> is a substring of <i> w </i>.	 * .
 	 * 
-	 * @return the restricted grammar associated with this description
+	 * @return the local grammar associated with this description
 	 */
 	@Override
-	IGrammar getRestrictedGrammar();
+	IGrammar getLocalGrammar();
 	
 }
