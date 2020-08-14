@@ -91,6 +91,7 @@ public interface IState {
 	 * 
 	 * @see representation.ISpecifications
 	 * @see representation.IStateMachine
+	 * @see representation.ICategoryTransitionBuilder
 	 * @param state any state
 	 * @return true if this state's specifications are extended by the specified state's specifications
 	 */

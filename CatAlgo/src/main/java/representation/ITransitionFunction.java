@@ -3,14 +3,17 @@ package representation;
 import java.util.Set;
 
 /**
- * A ITransitionFunction determines which transition from a state to another is allowed in a state machine, 
- * when a given state reads a given symbol. Put differently : it specifies, for any state of the state machine, 
- * which rules are associated with it. 
+ * <p>
+ * A ITransitionFunction determines which transition is allowed in a state machine when a given state reads a given 
+ * symbol. Put differently : it specifies, for any state of the state machine, which rules are associated with it. 
  * <br>
+ * </p>
  * 
- * It consists in a set of transitions ( {@link ITransition} ). Each transition associates an input state 
- * and an input symbol with an output state. A transition function has a cost, reflecting the quantity of information
- * it contains. This cost is the sum of all the transitions' costs. 
+ * <p>
+ * The transition function consists in a set of transitions ( {@link ITransition} ). Each transition associates an 
+ * input state and an input symbol with an output state. A transition function has a cost, reflecting the quantity 
+ * of information it contains. This cost is the sum of all the transitions' costs.
+ * </p> 
  * 
  * @see representation.ITransition
  * @see representation.IState
@@ -83,18 +86,5 @@ public interface ITransitionFunction {
 	 * @return the context-free grammar associated with this transition function 
 	 */
 	IGrammar getRestrictedGrammar();	
-	
-	/**
-	 * 
-	 * @return the sum of all the transitions' costs
-	 */
-	float getCost();
-	
-	/**
-	 * For every transition, calculates the probability that it will occur while evaluating an "accept" word, 
-	 * assuming that the current active state in the machine is the input state of this transition ; then calls the 
-	 * ITransition.setProbability() method.
-	 */
-	void setTransitionProbabilities();
 
 }

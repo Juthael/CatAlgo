@@ -1,11 +1,10 @@
 package representation;
 
 /**
- * An IEvaluation keeps track of a transition that has occurred when a state has evaluated a given symbol of 
- * a given word. These tracks are recorded in the evaluation log.
+ * An evaluation is a detailed report on a single step in the evaluation process of a word entered in a finite state machine.
+ * All evaluations are kept in the evaluation log. 
  * 
- * @see representation.IState
- * @see representation.ISymbol
+ * @see representation.IStateMachine
  * @see representation.IWord
  * @see representation.IEvaluationLog
  * 
@@ -13,24 +12,6 @@ package representation;
  *
  */
 public interface IEvaluation {
-	
-	/**
-	 * 
-	 * @return the ID of the input {@link IState}
-	 */
-	int getInputStateID();
-	
-	/**
-	 * 
-	 * @return the evaluated {@link ISymbol}
-	 */
-	ISymbol getSymbol();
-	
-	/**
-	 * 
-	 * @return the ID of the output {@link IState}
-	 */
-	int getOutputStateID();
 	
 	/**
 	 * 

@@ -3,7 +3,7 @@ package representation;
 import java.util.Set;
 
 /**
- * ISpecifications are a set of constraint associated with any state of a state machine. They provide the prerequisite to 
+ * Specifications are constraints that can be associated with any state of a state machine. They provide the prerequisite to 
  * meet for any state or value from another machine, if they are to be defined as eligible counterparts of this state. <br>
  * 
  * Counterparts can be two states from two different machines (one being a category, and the other being a sub-category 
@@ -94,6 +94,7 @@ public interface ISpecifications {
 	 * Finally, specifications <i> S' </i> can be said to extend specifications <i> S </i> if any constraint 
 	 * in <i> S </i> can be paired with an equally or more precise constraint in <i> S' </i>.  
 	 * 
+	 * @see representation.ICategoryTransitionBuilder
 	 * @param specifications any specifications
 	 * @return true if the specified specifications are not contradictory to these ones, but only more precise
 	 */

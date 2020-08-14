@@ -2,42 +2,217 @@ package representation;
 
 import java.util.Set;
 
+/**
+ * <p> 
+ * A state machine is a finite-state automaton if it is a categorical state machine ( {@link ICategory} ), and a finite-state
+ * automaton with some additional features if it is a representational state machine ( {@link IRepresentation} ). <br>
+ * </p> 
+ * 
+ * <p>
+ * A finite-state automaton (or FSA) is an abstract machine that can be in exactly one of a finite number of <i> states </i> 
+ * at any given time. The FSA is defined by a list of its states, its initial state, its accept states, and the inputs that 
+ * trigger each transition.
+ * </p>
+ * 
+ * <p>
+ * Every state machine has a <i> language </i>, and can be described by specifying this language. It is composed of all words 
+ * (i.e., string of symbols) that, when entered into the machine, result in a sequence of transitions ending with an accept 
+ * state. 
+ * </p>
+ * 
+ * <p> Every state also has an ID, which is a random integer, and a name, which is a designation of this state in a more 
+ * human-like way. <br>
+ * 
+ * @see representation.ICategory
+ * @see representation.IRepresentation
+ * @see representation.IState
+ * @see representation.IStartState
+ * @see representation.IAcceptState
+ * @see representation.ITransition
+ * @see representation.ILanguage
+ * @see representation.IWord
+ * @see representation.ISymbol
+ * @see representation.IStateName
+ * @author Gael Tregouet
+ *
+ */
 public interface IStateMachine {
 	
+	/**
+	 * 
+	 * @return the states of the machine
+	 */
 	Set<IState> getStates();
 	
+	/**
+	 * A transition function accepts as an input a state and a symbol, and returns a state as an output. 
+	 * By doing so, it determines which transition is allowed in the machine when a given state reads a given 
+	 * symbol.
+	 * @see representation.ITransition
+	 * @see representation.IState
+	 * @see representation.ISymbol
+	 * @return the transition function of the machine
+	 */
 	ITransitionFunction ITransitionFunction();
 	
+	/**
+	 * The language of a machine is composed of all the words it <i> accepts </i>. A word is accepted by a machine 
+	 * when its input into the machine results in a sequence of state transitions that leads to an "accept" state. 
+	 * @see representation.IAcceptState
+	 * @return the language of the machine
+	 */
 	ILanguage getLanguage();
 	
+	/**
+	 * Since every state machine can be defined by its language, and every language can be condensed in a single functional 
+	 * expression, then every machine can be defined by a functional expression. <br>
+	 * @see representation.ILanguage
+	 * @return a description of the machine in the form of a functional expression
+	 */
 	IFunctionalExpression getFunctionalExpression();
 	
+	/**
+	 * Since every state machine can be defined by its language, and every language coded in a binary relation, 
+	 * then every machine can be defined by a binary relation. <br>
+	 * 
+	 * @see representation.ILanguage
+	 * @return a description of the machine in the form of a binary relation
+	 */
 	IBinaryRelation getBinaryRelation();
 	
-	IGrammar getRestrictedGrammar();
+	/**
+	 * The local grammar contains one or more substitution rules for every symbol allowing a transition from any state 
+	 * to this state. It is to be substituted by any symbol allowing a transition from this state to another state. <br>
+	 * If <i> x </i> is a symbol of the first kind, and <i> y </i> a symbol of the latter, then <i> x ::= y </i>.
+	 * 
+	 * @see representation.ISymbol
+	 * @see representation.ITransition
+	 * @see representation.IState
+	 * @return the state local context-free grammar
+	 */
+	IGrammar getStateLocalGrammar();
 	
+	/**
+	 * Specifications are constraints that can be associated with any state of a state machine. They provide the prerequisite 
+	 * to meet for any state or value from another machine, if they are to be defined as eligible counterparts of this 
+	 * state. <br>
+	 * @return the state's specifications
+	 */
 	ISpecifications getSpecifications();
 	
+	/**
+	 * 
+	 * @param word the word entered into the state machine
+	 * @return true if this word belongs to the language of this machine ; false otherwise
+	 */
 	IEvaluationLog evaluateWord(IWord word);
 	
+	/**
+	 * The name of a state is a designation of this state in a roughly human-like way. <br> 
+	 * It makes use of the flow chart of the state's machine, and contains the smallest sequences of symbols in this 
+	 * flow chart that leads unequivocally to the state at hand. <br>
+	 * 
+	 * @see representation.ISymbol
+	 * @param name the name of a state
+	 * @return the state of the machine having the specified name if it can be found ; null otherwise
+	 */
 	IState getState(IStateName name);
 	
+	/**
+	 * 
+	 * @param iD a random integer
+	 * @return the state of the machine having the specified ID if it can be found ; null otherwise
+	 */
 	IState getState (int iD);
 	
+	/**
+	 * The start state of the machine is the one that reads the first symbol of any input word. 
+	 * 
+	 * @see representation.ISymbol
+	 * @see representation.IWord
+	 * @return the start state of the machine
+	 */
 	IStartState getStartState();
 	
+	/**
+	 * An interface state is a place-holder state, in a state machine that is partially undetermined. <br> 
+	 * It is meant to be implemented by a value, i.e. a state or a block of state having the configuration of 
+	 * a sub-machine.
+	 * 
+	 * @see representation.IValue
+	 * @see representation.IValueAttribution
+	 * @return the interface states
+	 */
 	Set<IInterfaceState> getInterfaces();
 	
+	/**
+	 * An interface state is a place-holder state, in a state machine that is partially undetermined. <br> 
+	 * It is meant to be implemented by a value, i.e. a state or a block of state having the configuration of 
+	 * a sub-machine.
+	 * 
+	 * @see representation.IInterfaceState
+	 * @see representation.IValue
+	 * @see representation.IValueAttribution
+	 * @return
+	 */
 	int getNbOfInterfaces();
 	
+	/**
+	 * An accept state is state that, if it becomes active as a result of a transition triggered by the reading 
+	 * of the last symbol of a word, defines this word as part of the machine's language.
+	 * 
+	 * @see representation.ITransition
+	 * @see representation.ISymbol
+	 * @see representation.IWord
+	 * @see representation.ILanguage
+	 * @return the set of all the accept states in this machine
+	 */
 	Set<IAcceptState> getAcceptStates();
 	
+	/**
+	 * The cost of a machine is a measure of the amount of information it contains. It equals the cost of its 
+	 * transition function.  
+	 * 
+	 * @see ITransitionFunction
+	 * @return the cost of the machine
+	 */
 	float getCost();
 	
+	/**
+	 * Since the name of a state depends on the structure of the machine it belongs to, state names are derived 
+	 * from the transition function. <br>
+	 * 
+	 * @see representation.IState
+	 * @see representation.IStateName
+	 * @see representation.ITransitionFunction
+	 * @param tFunction the machine's transition function
+	 */
 	void setStateNames(ITransitionFunction tFunction);
 	
+	/**
+	 * The rules associated with a given state are a subset of the transition function, composed of all the 
+	 * transitions that have this state as their input state. 
+	 * 
+	 * @see representation.IState
+	 * @see representation.ITransitionFunction
+	 * @see representation.ITransition
+	 * @param tFunction the machine's transition function
+	 */
 	void setStateRules(ITransitionFunction tFunction);
 	
+	/**
+	 * Specifications are constraints that can be associated with any state of a state machine. They provide the 
+	 * prerequisite to meet for any state or value from another machine, if they are to be defined as eligible 
+	 * counterparts of this state. <br>
+	 * 
+	 * Since the specifications of a state depend on the structure of the machine it belongs to, specifications are 
+	 * derived from the transition function. <br>
+	 * 
+	 * @see representation.IState
+	 * @see representation.ISpecifications
+	 * @see representation.ITransitionFunction
+	 * @param tFunction the machine's transition function
+	 */
 	void setStateSpecifications(ITransitionFunction tFunction);
 
 }
