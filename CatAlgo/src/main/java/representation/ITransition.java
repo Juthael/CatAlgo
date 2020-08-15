@@ -72,8 +72,8 @@ public interface ITransition {
 	 * 1 (amount of surprise = -log<sub>2</sub>(1) = 0), except for transitions inside a descriptive machine. 
 	 * <br> 
 	 * 
-	 * Consequently, there is no reason this method should be called, except for transitions inside a 
-	 * descriptive machine.  
+	 * Consequently, there is no reason this method should be called, except for transitions inside an 
+	 * algorithmic descriptive machine.  
 	 * 
 	 * @see representation.IAlgorithmicDescription
 	 * @see representation.ITransitionCostCalculator
