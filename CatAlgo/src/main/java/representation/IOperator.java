@@ -4,11 +4,11 @@ import java.util.Set;
 
 /**
  * <p>
- * A IOperator attributes values to dimensions of a category. <br>
+ * An operator attributes values to dimensions of a category. <br>
  * </p>
  * 
  * <p>
- * A IOperator can be described on two different levels : <br>
+ * An operator can be described on two different levels : <br>
  * -it is a symbol on which a state of a <i> representational state machine </i> can operate ( {@link IRepresentation} ). <br> 
  * -it is also a list of value attributions, specifying which informations must be provided on a given category to get the 
  * definition of a given sub-category. <br>

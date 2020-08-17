@@ -28,7 +28,7 @@ import java.util.Set;
  * whose extent only contains themselves). <br>
  * An <i> algorithmic description </i> can then be defined as a sub-machine of the representational machine, in
  * the flow chart of which a single path can be found from the signified to any object in the context (the different 
- * paths in the flow chart can of course have common sections, which makes the description more efficient). The 
+ * paths in the flow chart can of course have common sections, which makes the description all the more efficient). The 
  * "single path constraint" is consistent with the way we verbally describe a context : a multi-path description would 
  * yield something like "this is a big blue ball, and also something blue that is big and that is a ball, and also..." <br>
  * Many algorithmic descriptions of a single representation can usually be generated. But they are assigned a cost, 
@@ -145,7 +145,7 @@ public interface IRepresentation extends IStateMachine {
 	Set<IContextObject> getObjectsThatConformTo(IFunctionalExpression specifiedProperty);
 	
 	/**
-	 * Returns the more efficient algorithmic description (or description program) of the 
+	 * Returns the most efficient algorithmic description (or description program) of the 
 	 * representation. 
 	 * 
 	 * @return the most efficient algorithmic description of the representation

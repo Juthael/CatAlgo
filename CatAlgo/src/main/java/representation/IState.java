@@ -65,7 +65,8 @@ public interface IState {
 	Set<ITransition> getRules();
 	
 	/**
-	 * The local grammar is the minimal knowledge base required to proceed the description of this state intent. <br>
+	 * The local grammar maps every symbol that allows a transition to this state with every symbol that allows a 
+	 * transition from this state. <br>
 	 * 
 	 * @return the context-free grammar associated with this state
 	 */

@@ -11,7 +11,7 @@ package representation;
  * 
  * <p>
  * An <i> algorithmic description </i> can then be defined as a sub-machine of the representational machine, in
- * the flow chart of which a single path can be found from the signified to any object in the context (the different 
+ * the flow chart of which a single path can be found from the start state to any object in the context (the different 
  * paths in the flow chart can of course have common sections, which makes the description more efficient). The 
  * "single path constraint" is consistent with the way we verbally describe a context : a multi-path description would 
  * yield something like "this is a big blue ball, and also something blue that is big and that is a ball, and also..." <br>

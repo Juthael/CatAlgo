@@ -60,15 +60,16 @@ public interface IBinaryRelation extends IDescription {
 	Map<ISymbol, ISymbol> getRelationMap();	
 	
 	/**
-	 * A local grammar is the minimal knowledge base required to proceed the description of a 
-	 * given object or category (regardless of the format at use). <br> 
+	 * A description's grammar is the minimal knowledge base required to proceed the description of a 
+	 * given object or category (regardless of the format at use). <br>
 	 * 
-	 * A rule <i> x ::= y </i> exists in the returned grammar iff <i> xRy </i>.
+	 * A rule <i> x ::= y </i> exists in the returned grammar iff <i> xRy </i> and no <i> z </i> can be found 
+	 * such that <i> xRz </i> and <i> zRy </i>.
 	 * 
 	 * @see representation.IDescription
-	 * @return the local grammar associated with this description
+	 * @return the grammar associated with this description
 	 */
 	@Override
-	IGrammar getLocalGrammar();
+	IGrammar getGrammar();
 
 }

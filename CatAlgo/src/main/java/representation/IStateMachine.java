@@ -81,16 +81,15 @@ public interface IStateMachine {
 	IBinaryRelation getBinaryRelation();
 	
 	/**
-	 * The local grammar contains one or more substitution rules for every symbol allowing a transition from any state 
-	 * to this state. It is to be substituted by any symbol allowing a transition from this state to another state. <br>
-	 * If <i> x </i> is a symbol of the first kind, and <i> y </i> a symbol of the latter, then <i> x ::= y </i>.
+	 * For every one of its states, the machine grammar maps every symbol that allows a transition to it with every 
+	 * symbol that allows a transition from it. <br>
 	 * 
 	 * @see representation.ISymbol
 	 * @see representation.ITransition
 	 * @see representation.IState
 	 * @return the state local context-free grammar
 	 */
-	IGrammar getStateLocalGrammar();
+	IGrammar getMachineGrammar();
 	
 	/**
 	 * Specifications are constraints that can be associated with any state of a state machine. They provide the prerequisite 

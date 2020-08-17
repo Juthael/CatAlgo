@@ -40,14 +40,14 @@ import java.util.Set;
  * Following these observations, a "representational" machine ( {@link IRepresentation} ) can then be 
  * devised with the following properties : <br>
  * -The representational machine is a finite state automaton (FSA), with the special feature that each 
- * one of its state is a contextually-relevant category, and therefore is itself a regular finite state 
+ * one of its state is a contextually relevant category, and therefore is itself a regular finite state 
  * automaton ( {@link ICategory} ). This makes the representational machine a <i> meta-machine </i>. <br>
  * -A transition exists in the representational machine between a state <i> A </i> and a 
  * state <i> B </i> iff <i> A </i> is a super-category of <i> B </i>. <br>
  * -As in any FSA, the transition function takes as input a state and a symbol, and returns a state. 
  * But this time the symbol is not an arbitrary element from a predetermined alphabet. It is a tailor-made 
  * operator which, by attributing values to dimensions an declaring new dimensions inside 
- * these values, is indeed a procedure that transforms one "category" machine into another (dimensions 
+ * these values, display a procedure that transforms one "category" machine into another (dimensions 
  * being <i> interface states </i>, acting as place holders in the categorical machine ; and values 
  * being states or "sub-machines" implementing these interfaces). <br>
  * </p>

@@ -83,13 +83,13 @@ public interface IFunctionalExpression extends IDescription {
 	ISymbol[][] getApplicationArray();
 	
 	/**
-	 * A local grammar is the minimal knowledge base required to proceed the description of a 
-	 * given object or category (regardless of the format at use). <br> 
+	 * A description's grammar is the minimal knowledge base required to proceed the description of a 
+	 * given object or category (regardless of the format at use). <br>
 	 * 
-	 * The language equivalent to this functional expression is built first, and then provides the local grammar.
+	 * The language equivalent to this functional expression is built first, and then provides the grammar.
 	 * 
 	 * @see representation.ILanguage
-	 * @return the local grammar associated with this description
+	 * @return the grammar associated with this description
 	 */
 	IGrammar getRestrictedGrammar();
 
