@@ -3,30 +3,47 @@ package representation;
 import java.util.Set;
 
 /**
- * An algorithmic description builder is in charge of finding all possible ways to describe a representation. <br> 
+ * <p>
+ * An algorithmic description builder is in charge of finding all possible ways to describe a representation. <br>
+ * </p> 
  * 
+ * <p>
  * Each description is a program, whose size (i.e. the amount of information it uses) 
- * can be calculated. This allows a description builder to provide the most efficient description of a representation. 
+ * can be calculated. This allows a description builder to provide the most efficient description of a representation.
+ * </p>
  * 
- * An <i> algorithmic description </i> ( {@link IAlgorithmicDescription} ) can be defined as a sub-machine of the 
+ * <p>
+ * An <i> algorithmic description </i> ( {@link IAlgorithmicDescription} ) can be defined as a restricted 
  * representational machine, in the flow chart of which a single path can be found from the start state to any object 
  * in the context (the different paths in the flow chart can of course have common sections, which makes the 
  * description more efficient). The set of descriptions can therefore be built this way : <br>
- * .for each object in a context of <i> n </i> objects, 
- * ..for every path leading to the object state from the start state in the machine's flow chart, determine the 
- * sequence of transitions in the transition function that allows it. Each sequence is a subset of the transition 
- * function <br>
- * .build all possible algorithmic descriptions such as it is formed by the union of <i> n </i> subsets, 
- * each one of these subsets allowing a path (i.e. a sequence of transitions) from the start state to one
- * of the object states (there must be one path for each object in each description). HERE    
+ * .associate each of the <i> n </i> object states in the representation to any subset of the transition function that 
+ * forms a sequence of transitions (i.e., a path) from the start state to the object state.   <br>
+ * .calculate all possible unions of <i> n </i> subsets of the transition function, such as every object state has been 
+ * previously mapped with one of these subsets. This results in a set of descriptions. <br>
+ * </p>  
  * 
  * @author Gael Tregouet
  *
  */
 public interface IAlgorithmicDescriptionBuilder {
 	
-	IAlgorithmicDescription getOptimalAlgorithmicDescription();
+	/**
+	 * 
+	 * @return the description that uses the least amount of information
+	 */
+	IAlgorithmicDescription getAlgorithmicDescriptionWithLowestCost();
 	
+	/**
+	 * 
+	 * @return the description that achieves the best encoding of its signified. 
+	 */
+	IAlgorithmicDescription getAlgorithmicDescriptionWithMostEfficientEncoding();
+	
+	/**
+	 * 
+	 * @return any possible description of the representation
+	 */
 	Set<IAlgorithmicDescription> getAllAlgorithmicDescriptions();
 
 }

@@ -2,16 +2,22 @@ package representation;
 
 import java.util.Set;
 
+import representation.exceptions.RepresentationException;
+
 
 /**
- * A regular language is one of the three equivalent {@link IDescription} format that can be used to describe an element of a 
+ * <p> 
+ * A regular language is one of the three equivalent description format that can be used to describe an element of a 
  * context ; the two others being a binary relation and a functional expression. Each one of this format can be translated in 
- * one of the others, in order to proceed some format-specific operations (e.g., set operations with binary relations).
+ * one of the others, in order to proceed some format-specific operations (e.g., set operations with binary relations). <br>
+ * </p>
  * 
+ * <p>
  * As a regular language, a ILanguage is composed of all the words (i.e., strings of symbols) accepted by a given state 
  * machine of the 'finite state automaton' (FSA) type. For any regular language, a FSA machine can be found to accept it. 
  * If a language is a description of an object or a category, then each of its word describes an accessible 
- * property or an attainable goal on this object, or on any object of this category.  
+ * property or an attainable goal on this object, or on any object of this category. <br>
+ * </p>  
  * 
  * @see representation.IDescription
  * @see representation.IWord
@@ -91,5 +97,21 @@ public interface ILanguage extends IDescription {
 	 */
 	@Override
 	IGrammar getGrammar();
+	
+	/**
+	 * Returns the number of arguments that the specified symbol, when regarded as a function, accepts. <br>
+	 * 
+	 * The number of arguments of a symbol <i> s </i> can be found using the following procedure : <br> 
+	 * .find a word in the language that has the form <i> XsY </i>, with <i> X </i> and <i> Y </i> being 
+	 * (possibly empty) sub-strings. <br>
+	 * .count the number of words in the language beginning with the substring <i> Xs </i>. This returns the 
+	 * number of arguments for <i> s </i>. <br>  
+	 * 
+	 * @param symbol any symbol that is used by the description
+	 * @return the number of arguments accepted by the specified symbol
+	 * @throws RepresentationException if the specified symbol is not actually used in the description
+	 */
+	@Override
+	int getNbOfArgumentsFor(ISymbol symbol);
 	
 }

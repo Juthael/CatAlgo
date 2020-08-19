@@ -10,7 +10,7 @@ package representation;
  * </p>
  * 
  * <p>
- * An <i> algorithmic description </i> can then be defined as a sub-machine of the representational machine, in
+ * An <i> algorithmic description </i> can then be defined as as a restricted representational machine, in
  * the flow chart of which a single path can be found from the start state to any object in the context (the different 
  * paths in the flow chart can of course have common sections, which makes the description more efficient). The 
  * "single path constraint" is consistent with the way we verbally describe a context : a multi-path description would 
@@ -23,7 +23,7 @@ package representation;
  * <p> 
  * Although being representational machines, algorithmic descriptions have a specific transition function 
  * ( {@link IAlgorithmicDescriptionTF} ) that ensures that the "one path constraint" is effectively met, and that 
- * allows the calculation of a "cost" for every description. 
+ * allows the calculation of a "cost" and of a "coding efficiency" for every description. 
  * </p>
  * 
  * @see representation.IRepresentation

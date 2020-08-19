@@ -2,6 +2,8 @@ package representation;
 
 import java.util.Set;
 
+import representation.exceptions.RepresentationException;
+
 /**
  * <p>
  * A <i> representation </i> is an information structure that determines which categories are being perceived 
@@ -142,42 +144,90 @@ public interface IRepresentation extends IStateMachine {
 	 * @param specifiedProperty a property, expressed as a functional expression. 
 	 * @return the set of objects on which the specified property can be verified.
 	 */
-	Set<IContextObject> getObjectsThatConformTo(IFunctionalExpression specifiedProperty);
+	Set<IContextObject> getObjectsThatHave(IFunctionalExpression specifiedProperty);
 	
 	/**
-	 * Returns the most efficient algorithmic description (or description program) of the 
-	 * representation. 
+	 * Returns the representation's description that uses the least amount of information. 
 	 * 
-	 * @return the most efficient algorithmic description of the representation
+	 * @return the representation's description that uses the least amount of information
 	 */
-	IAlgorithmicDescription getOptimalAlgorithmicDescription();
+	IAlgorithmicDescription getLowestCostDescription();
 	
 	/**
-	 * Returns all possible algorithmic descriptions (or description programs) of the representation.
+	 * Returns the representation's description that uses the least amount of information, amongst
+	 * all descriptions matching the target object with an eligible counterpart. <br>
 	 * 
-	 * @return all possible algorithmic descriptions of the representation
+	 * The target object is the only object whose intent meets the constraint expressed in the first 
+	 * parameter (in the form of a functional expression). The target is matched if the description 
+	 * contains a state whose extent includes only two objects : the target, and any other object 
+	 * meeting the constraint expressed in the second parameter. 
+	 * 
+	 * Having one category of their own in the representation's description, and sharing this property
+	 * with no other object, makes these two objects (target and match) counterparts. 
+	 * 
+	 * @param constraintOnTargetObj a property that can be found in a single object in the context
+	 * @param constraintOnMatch a property that can be found in at least one object in the context
+	 * @return the optimal (with regard to information cost) description matching the target object 
+	 * with a counterpart
+	 * @throws RepresentationException if more than one target object, or no match object, have 
+	 * been found.  
 	 */
-	Set<IAlgorithmicDescription> getAllAlgorithmicDescriptions();
+	IAlgorithmicDescription getLowestCostDescriptionWithMatch(
+			IFunctionalExpression constraintOnTarget, IFunctionalExpression constraintOnMatch);
 	
 	/**
-	 * Returns the representation of a sub-context in which all objects apart from the specified ones 
-	 * have been removed.  
 	 * 
-	 * @param specifiedObjects
-	 * @return
+	 * @return the representation's description that achieves the best encoding of its signified.
 	 */
-	IRepresentation getRepresentationRestrictedTo(Set<IContextObject> specifiedObjects);
+	IAlgorithmicDescription getBestEncodingDescription();
 	
 	/**
-	 * Returns an object that, amongst all objects having the specified property, is the most similar 
-	 * to the specified object. 
+	 * Returns the representation's description that best encodes its signified, amongst
+	 * all descriptions matching the target object with an eligible counterpart. <br>
 	 * 
-	 * @param targetObject the object of which a counterpart having the specified property must be 
-	 * found 
-	 * @param specifiedProperty a property that any counterpart of the specified object must have
-	 * @return the object that best meets the specified constraints
+	 * The target object is the only object whose intent meets the constraint expressed in the first 
+	 * parameter (in the form of a functional expression). The target is matched if the description 
+	 * contains a state whose extent includes only two objects : the target, and any other object 
+	 * meeting the constraint expressed in the second parameter. 
+	 * 
+	 * Having one category of their own in the representation's description, and sharing this property
+	 * with no other object, these to objects (target and match) are regarded as counterparts. 
+	 * 
+	 * @param constraintOnTargetObj a property that can be found in a single object in the context
+	 * @param constraintOnMatch a property that can be found in at least one object in the context
+	 * @return the optimal (with regard to coding efficiency) description matching the target object 
+	 * with a counterpart
+	 * @throws RepresentationException if more than one target object, or no match object, have 
+	 * been found.  
 	 */
-	IContextObject getMostSimilarObjToTargetObjWithSpecifiedProp(IContextObject targetObject, 
-			IFunctionalExpression specifiedProperty);
+	IAlgorithmicDescription getBestEncodingDescriptionWithMatch(
+			IFunctionalExpression constraintOnTargetObj, IFunctionalExpression constraintOnMatch);
+	
+	/**
+	 * Returns all possible descriptions of the representation.
+	 * 
+	 * @return all possible descriptions of the representation
+	 */
+	Set<IAlgorithmicDescription> getAllDescriptions();
+	
+	/**
+	 * Returns all descriptions matching the target object with an eligible counterpart. <br>
+	 * 
+	 * The target object is the only object whose intent meets the constraint expressed in the first 
+	 * parameter (in the form of a functional expression). The target is matched if the description 
+	 * contains a state whose extent includes only two objects : the target, and any other object 
+	 * meeting the constraint expressed in the second parameter. 
+	 * 
+	 * Having one category of their own in the representation's description, and sharing this property
+	 * with no other object, these to objects (target and match) are regarded as counterparts. 
+	 * 
+	 * @param constraintOnTargetObj a property that can be found in a single object in the context
+	 * @param constraintOnMatch a property that can be found in at least one object in the context
+	 * @return all descriptions matching the target object with a counterpart
+	 * @throws RepresentationException if more than one target object, or no match object, have 
+	 * been found.  
+	 */
+	Set<IAlgorithmicDescription> getAllDescriptionsWithMatch(
+			IFunctionalExpression constraintOnTargetObj, IFunctionalExpression constraintOnMatch);
 
 }

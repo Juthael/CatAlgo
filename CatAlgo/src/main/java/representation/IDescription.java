@@ -1,5 +1,7 @@
 package representation;
 
+import representation.exceptions.RepresentationException;
+
 /**
  * A IDescription is the description of an object in a given context, or the description (intent) of a category. 
  * It can be displayed as a binary relation, as a regular language or as a functional expression. 
@@ -48,5 +50,30 @@ public interface IDescription {
 	 * @return the grammar associated with this description
 	 */
 	IGrammar getGrammar();
+	
+	/**
+	 * Returns the number of arguments that the specified symbol, when regarded as a function, accepts. <br>
+	 * 
+	 * @param symbol any symbol that is used by the description
+	 * @return the number of arguments accepted by the specified symbol
+	 * @throws RepresentationException if the specified symbol is not actually used in the description
+	 */
+	int getNbOfArgumentsFor(ISymbol symbol);
+	
+	/**
+	 * Returns true if this description is an instance of the specified description. <br>
+	 * 
+	 * It means that any statement from the specified description remains true in this one, although 
+	 * it can be specified with additional information. <br>
+	 * 
+	 * The most convenient way to find out if a description <i> A </i> meets a description <i> B </i> is 
+	 * to adopt a binary relation format for both, and check that <i> A </i> 's relation is a subset 
+	 * of <i> B </i>'s. <br>
+	 * 
+	 * @see representation.IBinaryRelation
+	 * @param description
+	 * @return true if this description is an instance of the specified description
+	 */
+	boolean meets(IDescription description);	
 
 }

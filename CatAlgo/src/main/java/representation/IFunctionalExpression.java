@@ -1,8 +1,10 @@
 package representation;
 
+import representation.exceptions.RepresentationException;
+
 /**
  * <p>
- * A functional expression is one of the three equivalent {@link IDescription} format that can be used to describe an element 
+ * A functional expression is one of the three equivalent description format that can be used to describe an element 
  * of a context ; the two others being a regular language (i.e. a set of words accepted by a finite state machine) and 
  * a binary relation. Each one of this format can be translated in one of the others, in order to proceed some 
  * format-specific operations (e.g., set operations with binary relations).<br>
@@ -19,7 +21,7 @@ package representation;
  * .<i> F = abc </i> <br>
  * => "<i> F </i> is a <i> a </i> that is <i> b </i>, and this <i> ab </i> is <i> c </i>." <br>
  * .<i> F = a(b ∧ c) </i> <br>
- * => "<i> F </i> is a <i> a </i> that is <i> b </i> and <i> d </i>." <br>
+ * => "<i> F </i> is a <i> a </i> that is <i> b </i> and <i> c </i>." <br>
  * </p>
  * 
  * <p>
@@ -30,6 +32,9 @@ package representation;
  * - <i> d </i> -> "pierced" <br>
  * </p>
  * 
+ * @see representation.IDescription
+ * @see representation.ILanguage
+ * @see representation.IBinaryRelation
  * @author Gael Tregouet
  *
  */
@@ -91,6 +96,26 @@ public interface IFunctionalExpression extends IDescription {
 	 * @see representation.ILanguage
 	 * @return the grammar associated with this description
 	 */
-	IGrammar getRestrictedGrammar();
+	@Override
+	IGrammar getGrammar();
 
+	/**
+	 * Returns the number of arguments that the specified symbol, when regarded as a function, accepts. <br>
+	 * 
+	 * The number of arguments of a symbol <i> s </i> can be found using the following procedure : <br>
+	 * 
+	 * <p> 
+	 * .find a coordinate for the symbol in the functional expression array. This coordinate is of 
+	 * the form <code> [i][j]..[y][z] </code>. <br>
+	 * .if <i> z ≠ 0 </i>, return 0 <br>
+	 * .else return <code> [i][j]..[y].length </code> - 1 <br
+	 * </p>
+	 * 
+	 * @param symbol any symbol that is used by the description
+	 * @return the number of arguments accepted by the specified symbol
+	 * @throws RepresentationException if the specified symbol is not actually used in the description
+	 */
+	@Override
+	int getNbOfArgumentsFor(ISymbol symbol);	
+	
 }

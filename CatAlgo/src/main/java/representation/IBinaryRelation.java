@@ -2,15 +2,21 @@ package representation;
 
 import java.util.Map;
 
+import representation.exceptions.RepresentationException;
+
 /**
- * A binary relation is one of the three equivalent {@link IDescription} format that can be used to describe an element 
+ * <p>
+ * A binary relation is one of the three equivalent description format that can be used to describe an element 
  * of a context ; the two others being a regular language (i.e. a set of words accepted by a finite state machine) and 
  * a functional expression. Each one of this format can be translated in one of the others, in order to proceed some 
  * format-specific operations (e.g., set operations with binary relations).<br>
+ * </p>
  * 
+ * <p>
  * A binary relation <i> R </i> is a set of pairs <i> (x,y) </i>, where <i> x </i> and <i> y </i> are symbols. If this 
  * relation is used to describe an object, then <i> x </i> and <i> y </i> are properties and <i> (x,y) ∈ R </i> (or 
- * <i> xRy </i>) means "<i> x </i> <b> is </b> <i> y </i>" (e.g. "color is blue").   
+ * <i> xRy </i>) means "<i> x </i> <b> is </b> <i> y </i>" (e.g. "color is blue"). <br>
+ * </p>   
  * 
  * @see representation.IDescription
  * @see representation.ILanguage
@@ -71,5 +77,20 @@ public interface IBinaryRelation extends IDescription {
 	 */
 	@Override
 	IGrammar getGrammar();
+	
+	/**
+	 * Returns the number of arguments that the specified symbol, when regarded as a function, accepts. <br>
+	 * 
+	 * The most convenient way to obtain this number from a binary relation is to build its equivalent language 
+	 * or functional expression first, and then to call this same method on them.  
+	 * 
+	 * @see representation.ILanguage
+	 * @see representation.IBinaryRelation
+	 * @param symbol any symbol that is used by the description
+	 * @return the number of arguments accepted by the specified symbol
+	 * @throws RepresentationException if the specified symbol is not actually used in the description
+	 */
+	@Override
+	int getNbOfArgumentsFor(ISymbol symbol);	
 
 }
