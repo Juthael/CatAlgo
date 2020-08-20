@@ -6,24 +6,44 @@ import representation.exceptions.RepresentationException;
 
 /**
  * <p>
- * A <i> representation </i> is an information structure that determines which categories are being perceived 
- * in a given context (a context is a set of objects), and what relationships exist between them. 
- * For a subject, to develop a representation of a given context consists in the building of a category 
- * network structured by inheritance relationships. This will allow him to : <br>
+ * A <i> representation </i> is an information structure that determines which categories are 
+ * being perceived in a given context (a context is a set of objects), and which relations bind them. 
+ * For a subject, to develop a representation of a given context consists in the building of a structured 
+ * and tailor-made category network. This will allow him to : <br>
  * -abstract the context, i.e. access to general categories that summarize what is true about any object 
  * to which they apply. <br>
  * -find paths in this network to access properties and goals on objects as efficiently as possible. <br>
  * </p>
  * 
+ * <p> 
+ * A representation of a context is constructed out of a set of object's descriptions (one for every object 
+ * in the context), provided by a "context input" ( {@link IContextInput} ). <br>
+ * Among several equivalent description formats (see {@link IDescription}), an object can be described as a binary relation 
+ * ( {@link IBinaryRelation} ) ; so can be a category. The contextually relevant categories that can be used 
+ * for the description of a given context are to be found in the Galois lattice <i> Gal(O,P,M) </i>, 
+ * where : <br>
+ * -<i> O </i> is the set of objects <br>
+ * -<i> P </i> is the set of <i> pairs of attributes </i> formed by the union of the binary relations describing 
+ * objects. <br> 
+ * -<i> M </i> is the mapping of <i> O </i> in <i> P </i>. <br>
+ * Every element in this lattice, except for its minimum, is a category that can be described in terms of its 
+ * <i> intent <i> (i.e. its meaning, expressed by a binary relation) or in terms of its <i> extent </i> (the 
+ * subset of objects to which it applies). The lattice's atoms are categories whose extent includes a single object, 
+ * so they can be assimilated to this object. <br>
+ * The lattice provides an inclusion order over the set of categories such as, <i> A </i> and <i> B </i> being two 
+ * categories, <i> B </i> is a sub-category of <i> A </i> if <i> A </i>'s intent is a subset of <i> B </i>'s, or 
+ * (equivalently) if <i> B </i>'s extent is a subset of <i> A </i>'s. <br>
+ * </p>
+ * 
  * <p>
- * Any representation has a <i> signified </i>, which is its most general category. The signified tells what 
- * is true about any object in the context. It is named so because because it emerges from the grouping of the 
- * set of objects that constitutes the context, as if it were "coded" by this context, which would then act as 
- * its signifier (following Saussure's terminology). <br>
+ * An important element of this lattice is its maximum, called the <i> signified </i>. It is the most general category, 
+ * the one that applies to every object in the context and tells what is true about all of them. It is named so because 
+ * it emerges from the grouping of the set of objects that constitutes the context, as if it were "coded" by this context, 
+ * which would then act as the signified's <i> signifier </i> (following Saussure's terminology). <br>
  * </p>
  * 
  * <p> 
- * Each representation can be described following a descriptive program or <i> algorithmic description </i>. 
+ * Each representation can be verbalized following a descriptive program or <i> algorithmic description </i>. 
  * This program will first describe the signified, and then specify which additional information must be brought 
  * to it in order to obtain its relevant sub-categories. By going down the network this way, from categories to 
  * their sub-categories, one finally reach the objects of the context (which are the smallest categories, 
@@ -35,18 +55,19 @@ import representation.exceptions.RepresentationException;
  * yield something like "this is a big blue ball, and also something blue that is big and that is a ball, and also..." <br>
  * Many algorithmic descriptions of a single representation can usually be generated. But they are assigned a cost, 
  * which is a measure of the amount of information they use ; this way, one description amongst all possible ones 
- * can be designed as the most efficient and as such, as the preferential description of the representation. <br> 
+ * can be designed as the most efficient and as such, as the preferential description of the representation (see 
+ * {@link IAlgorithmicDescription}). <br> 
  * </p>
  * 
  * <p>
- * It is proposed here to implement such representations as states machines ( {@link IRepresentation} ), with the 
- * following properties : <br>
+ * In order to take into account all previous considerations about relations, it is proposed here to implement them as 
+ * states machines ( {@link IRepresentation} ), with the following properties : <br>
  * -The representational machine is a finite state automaton (FSA), with the special feature that each 
- * one of its state is a contextually-relevant category. Categories being themselves implemented as
+ * one of its state is a contextually relevant category. Categories being themselves implemented as
  * finite state automata ( {@link ICategory} ), this makes the representational machine a <i> 
  * meta-machine </i>. <br>
  * -A transition exists in the representational machine between a state <i> A </i> and a 
- * state <i> B </i> iff <i> A </i> is a super-category of <i> B </i> (which makes <i> B </i>. <br>
+ * state <i> B </i> iff <i> A </i> is a super-category of <i> B </i>. <br>
  * -As in any FSA, the transition function takes as input a state and a symbol, and returns a state. 
  * But this time the symbol is not an arbitrary element from a predetermined alphabet. It is a tailor-made 
  * operator which, by attributing values to dimensions an declaring new dimensions inside 
@@ -55,6 +76,10 @@ import representation.exceptions.RepresentationException;
  * being states or "sub-machines" implementing these interfaces). <br>
  * </p> 
  * 
+ * @see representation.IContextInput
+ * @see representation.IDescription
+ * @see representation.IBinaryRelation
+ * @see representation.IAlgorithmicDescription
  * @see representation.IStateMachine
  * @see representation.ICategory
  * @see representation.IState

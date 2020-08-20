@@ -3,12 +3,13 @@ package representation;
 import representation.exceptions.RepresentationException;
 
 /**
- * A IDescription is the description of an object in a given context, or the description (intent) of a category. 
- * It can be displayed as a binary relation, as a regular language or as a functional expression. 
+ * A description can apply to any category, including objects (which are regarded as categories whose extent includes 
+ * a single element). It can be displayed as a binary relation, as a regular language or as a functional expression. 
  * All of these formats are equivalent and interchangeable, although some operations are format-specific (like set 
- * operations on a binary relation, or the evaluation of a word by a state machine). 
+ * operations on a binary relation, or the evaluation of a word by the state machine accepting a regular language). 
  * 
  * @see representation.ICategory
+ * @see representation.IContextObject
  * @see representation.IBinaryRelation
  * @see representation.ILanguage
  * @see representation.IFunctionalExpression
