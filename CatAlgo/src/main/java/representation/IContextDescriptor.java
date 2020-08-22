@@ -2,19 +2,22 @@ package representation;
 
 import java.util.Set;
 
+import representation.exceptions.RepresentationException;
+
 /**
  * <p>
- * A context descriptor describes a context of objects : its says what these objects are and, to do so, makes the best 
- * use of tailor-made categories discovered in the representation building process, and of the relationships that bind 
- * them. <br>
+ * A context descriptor describes a context of objects : its says what these objects are, taken individually or in 
+ * relevant groupings, by making the best use of tailor-made categories discovered in the representation building 
+ * process, and of the relationships that bind them. <br>
  * </p>
  * 
  * <p>
- * A representation is an information structure that determines which categories are being perceived in a given context, 
- * and how they are organized. Thus, the main assignment of a representation's constructor is to generate these contextually 
- * relevant categories. To know how it can be done, see {@link IRepresentation}. <br>
+ * A context description is based on a representation, which is an information structure that determines which categories 
+ * are being perceived in a given context, and how they are organized. To know how these categories can be generated, see 
+ * {@link IRepresentation}. <br>
  * </p>
  * 
+ * <p>
  * Once the network of categories has been established, the paths that will be used within it to describe the context 
  * still need to be determined. There usually are many possibilities, not all of which are equally efficient. For a 
  * given context input, the context descriptor can return every possible description, or only the most efficient one 
@@ -68,38 +71,131 @@ public interface IContextDescriptor {
 	
 	/**
 	 * Returns <i> n </i> representations, for <i> n </i> context inputs given to the constructor as parameters. 
-	 * @return a set of representations. 
+	 * 
 	 * @see representation.IContextInput
+	 * @return a set of representations. 
 	 */
 	Set<IRepresentation> getRepresentations();
 	
 	/**
-	 * Every available context representation provides its most information-efficient description ; among which only 
-	 * the optimal one (in terms of information cost) is returned. <br>
+	 * Every available context representation provides its most information-efficient description ; among all 
+	 * these descriptions, only the optimal one (in terms of information cost) is returned. <br>
 	 * 
 	 * To know more about information quantification, see {@link IAlgorithmicDescription}, 
 	 * {@link ITransitionCostCalculator}. <br>
-	 * @return the most information-efficient description of a context
+	 * 
+	 * @see representation.IRepresentation
 	 * @see representation.IAlgorithmicDescription
 	 * @see representation.ITransitionCostCalculator
+	 * @return the most information-efficient description of a context
 	 */
 	IAlgorithmicDescription getLowestCostDescription();
 	
+	/**
+	 * Every available context representation provides its most cost-efficient description, among all descriptions 
+	 * matching the target object with an eligible counterpart. From this set of descriptions, only the optimal one (
+	 * the one using the least amount of information) is returned. <br>
+	 * 
+	 * To know more about information quantification, see {@link IAlgorithmicDescription}, 
+	 * {@link ITransitionCostCalculator}. <br>
+	 * 
+	 * To know more about object matching, see {@link IRepresentation}. <br>
+	 * 
+	 * @see representation.IRepresentation
+	 * @see representation.IAlgorithmicDescription
+	 * @see representation.ITransitionCostCalculator
+	 * @param constraintOnTarget a constraint that is satisfied by a single object in the context (the target object)
+	 * @param constraintOnMatch a constraint that is satisfied by at least one object in the context (the matchable objects)
+	 * @return the most cost-efficient description among those that meet the matching constraint
+	 * @throws RepresentationException if the matching constraint cannot be met in a given representation  
+	 */
 	IAlgorithmicDescription getLowestCostDescriptionWithMatch(
 			IFunctionalExpression constraintOnTarget, IFunctionalExpression constraintOnMatch);
 	
+	/**
+	 * Every available context representation provides the description that best encodes its signified. 
+	 * Among all these descriptions, only the optimal one (in terms of coding efficiency) is returned. <br>
+	 * 
+	 * To know more about the signified's encoding, see {@link IAlgorithmicDescription}. <br>
+	 * 
+	 * To know more about information quantification, see {@link IAlgorithmicDescription}, 
+	 * {@link ITransitionCostCalculator}. <br>
+	 * 
+	 * @see representation.IRepresentation
+	 * @see representation.ISignified
+	 * @see representation.IAlgorithmicDescription
+	 * @see representation.ITransitionCostCalculator
+	 * @return the most cost-efficient description among those that meet the matching constraint  
+	 */
 	IAlgorithmicDescription getBestEncodingDescription();
 	
+	/**
+	 * Every available context representation provides its description that best encodes its signified, among all descriptions 
+	 * matching the target object with an eligible counterpart. From this set of descriptions, only the optimal one (in terms 
+	 * of coding efficiency) is returned. <br>
+	 * 
+	 * To know more about the signified's encoding, see {@link IAlgorithmicDescription}. <br>
+	 * 
+	 * To know more about information quantification, see {@link IAlgorithmicDescription}, 
+	 * {@link ITransitionCostCalculator}. <br>
+	 * 
+	 * To know more about object matching, see {@link IRepresentation}.
+	 * 
+	 * @see representation.IRepresentation
+	 * @see representation.ISignified
+	 * @see representation.IAlgorithmicDescription
+	 * @see representation.ITransitionCostCalculator
+	 * @param constraintOnTarget a constraint that is satisfied by a single object in the context (the target object)
+	 * @param constraintOnMatch a constraint that is satisfied by at least one object in the context (the matchable objects)
+	 * @return the best encoding description among those that meet the matching constraint  
+	 * @throws RepresentationException if the matching constraint cannot be met in a given representation  
+	 */
 	IAlgorithmicDescription getBestEncodingDescriptionWithMatch(
 			IFunctionalExpression constraintOnTarget, IFunctionalExpression constraintOnMatch);
 	
+	/**
+	 * Every available context representation provides the set of all its alternative descriptions ; the union of these 
+	 * sets is returned. 
+	 * 
+	 * @see representation.IRepresentation
+	 * @return every possible description of this context, regardless of the representation on which it is based
+	 */
 	Set<IAlgorithmicDescription> getAllAlgorithmicDescriptions();
 	
+	/**
+	 * Every available context representation provides the set of all its descriptions matching the target object with an 
+	 * eligible counterpart. <br>
+	 * 
+	 * To know more about object matching, see {@link IRepresentation}. <br>
+	 * 
+	 * @see representation.IRepresentation
+	 * @param constraintOnTarget a constraint that is satisfied by a single object in the context (the target object)
+	 * @param constraintOnMatch a constraint that is satisfied by at least one object in the context (the matchable objects)
+	 * @return every possible description of this context, regardless of the representation on which it is based, provided that
+	 * this description matches the target object with a counterpart
+	 * @throws RepresentationException if the matching constraint cannot be met in a given representation
+	 */
 	Set<IAlgorithmicDescription> getAllAlgorithmicDescriptionsWithMatch(
 			IFunctionalExpression constraintOnTarget, IFunctionalExpression constraintOnMatch);
 	
+	/**
+	 * Every description being generated by a representation, and every representation by a context input, returns the 
+	 * context input that led to the specified description.
+	 * 
+	 * @see representation.IRepresentation
+	 * @param description any description
+	 * @return the context input that generated the specified description
+	 * @throws RepresentationException if no context input has been found
+	 */
 	IContextInput getContextInputThatGenerated(IAlgorithmicDescription description);
 	
+	/**
+	 * Returns the representation that generated the specified description. 
+	 * 
+	 * @param description any description
+	 * @return the representation that generated the specified description
+	 * @throws RepresentationException if no representation has been found
+	 */
 	IRepresentation getRepresentationThatGenerated(IAlgorithmicDescription description);
 	
 	

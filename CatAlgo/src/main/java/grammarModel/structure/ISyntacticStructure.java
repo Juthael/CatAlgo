@@ -8,151 +8,134 @@ import grammarModel.exceptions.GrammarModelException;
 import grammarModel.utils.ITreePaths;
 import propertyPoset.utils.IImplication;
 import propertyPoset.utils.IPosetMaxChains;
+import representation.IBinaryRelation;
 
 /**
- * The ISyntacticStructure abstract type defines an element (derivation rule or terminal symbol) of a context-free grammar. 
- * The composition relationship that defines a type in object-oriented programming ("any instance of class A has 
- * an instance of class B and an instance of class C for components") is used here as an equivalent to the derivation 
- * relationship of a context-free grammar ("the symbol A can be substituted by the string of symbols "BC").  
- * Thus, any instance of ISyntacticStructure is truly a derivation of a given symbol in a syntax 
- * tree, from a node to its generated terminals (if the symbol is not a terminal itself). So ISyntacticStructure can then 
- * be extended in order to be instantiated as : <br> 
- * 1/ a syntax tree terminal node, or syntax 'leaf' : {@link ISyntaxLeaf} <br> 
- * 2/ the derivation from a non-terminal node, or syntax 'branch' : {@link ISyntaxBranch} <br>
- * 3/ a whole syntax tree  : also a {@link ISyntaxBranch}, but whose name is the start element of the context-free 
+ * <p>
+ * Any <i> class </i> implementing the syntactic structure interface defines an element (derivation rule or 
+ * terminal symbol) of a context-free grammar. <br> 
+ * The composition relationship that defines a type in object-oriented programming ("any instance of class A 
+ * has an instance of class B and an instance of class C for components") is used here as an equivalent to the 
+ * derivation rule of a context-free grammar ("the symbol A can be substituted by the string of symbols "BC").
+ * </p>
+ * 
+ * <p>
+ * Thus, any <i> instance </i> of a class implementing the syntactic structure interface represents a 
+ * derivation of a given symbol in the form of a syntax tree, whose this symbol is the root of (and its unique 
+ * element if it is a terminal). Any such instance yields a string of terminals that forms a <i> functional 
+ * expression </i>, which is a descriptive statement about the object to which this structure is associated. 
+ * This description can also be provided as a <i> binary relation </i>. (see {@link representation.IDescription}) <br>
+ * </p> 
+ * 
+ * <p> 
+ * Accordingly, the syntactic structure interface can be extended in order to describe : <br> 
+ * 1/ a <i> syntax leaf </i>, which is a syntax tree terminal node : {@link ISyntaxLeaf}. A leaf can either be a 
+ * function, or a variable given as an argument to a function. <br> 
+ * 2/ a <i> syntax branch </i>, which is a derivation from a non-terminal node : {@link ISyntaxBranch}. A syntax branch 
+ * has two components or more. The first component is a 'function' leaf ; its arguments are the strings of 
+ * terminals resulting from the derivation of every other components.  <br>
+ * 3/ a <i> syntax tree </i>, which is a syntax branch whose name is the start element of the context-free 
  * grammar at use <br>
- * 4/ also, a list of syntax trees : {@link ISyntaxGrove}. <br>
- *  
+ * 4/ a <i> syntax grove </i>, which is a list of syntax trees : {@link ISyntaxGrove}. <br>
+ * </p>
+ * 
+ * s
  * @author Gael Tregouet
  *
  */
 public interface ISyntacticStructure extends Cloneable {
 
-	/**
-	 * @return the name (or type) of this structure, which is also the name of the generating node in the syntax tree 
-	 * from which its components are derived : it therefore refers to a grammatical element of the context-free grammar 
-	 * at use. 
-	 * Two different syntactic structures may have the same name, if this name is a non-terminal element (or 'variable') 
-	 * of the context-free grammar that can lead to different derivations.
-	 */
-	String getName();
-	
-	/**
-	 * @return a list of paths that contains all the spanning paths of the syntactic structure (from its 
-	 * generating node to one of its terminals).   
-	 * @throws GrammarModelException
-	 */
-	ITreePaths getTreePaths() throws GrammarModelException;
-	
-	/**
-	 * @return the set of spanning paths associated with this structure, plus all the sets associated with any of 
-	 * its components, sub-components. etc. 
-	 * @throws GrammarModelException
-	 */
-	Set<ITreePaths> getSetOfTreePaths() throws GrammarModelException;
-	
-	/**
-	 * @return the set of spanning chains of the poset (lower semilattice) that can be derived from this 
-	 * syntactic structure.
-	 * @see IOriginalPropertyPoset
-	 * @throws GrammarModelException
-	 */
-	IPosetMaxChains getPosetMaxChains() throws GrammarModelException;
+	//Getters
 	
 	/**
 	 * 
-	 * @return the set of implications associated with the poset (lower semilattice) that can be derived from this
-	 * syntactic structure.
-	 * @see IPosetMaxChains
-	 * @throws GrammarModelException
+	 * @return a clone object
 	 */
-	Set<IImplication> getImplications() throws GrammarModelException;		
-	
 	ISyntacticStructure clone();
 	
-	/**
-	 * A 'poset element name' is used to generate the property poset spanning chains from the syntactic structure, 
-	 * and ultimately the property poset itself.
-	 * It is a concatenation of the syntactic element 'name' with an index generated to make sure that that structures 
-	 * belonging to the same 'syntactic glove' can't return the same 'poset element name' if they don't have the same 
-	 * components. 
-	 * Put another way : two nodes from syntax trees belonging to the same glove (and possibly having the same name) 
-	 * can't generate the same 'poset element name' if they don't also generate the same derivation.
-	 * 
-	 * @see IPosetMaxChains, IOriginalPropertyPoset
-	 * 
-	 * @return a 'poset element name'.   
-	 * @throws GrammarModelException
-	 */
-	String getPosetElementName() throws GrammarModelException;
+	IBinaryRelation getBinaryRelation
 	
 	/**
-	 * @return the list of component structures. The composition relationship between ISyntacticStructure objects 
-	 * being an equivalent to the derivation relationship between nodes of a syntax tree, component structures 
-	 * represent the nodes of a syntax tree that are directly derived from the generating node of this structure
-	 * (the one that gives this structure its name). 
+	 * Returns the list of this structure's components. Each component name is one of the right-terms of the grammatical 
+	 * rule to which this structure is associated. <br>
+	 * 
+	 * @return the list of this structure's components.
 	 */
 	List<ISyntacticStructure> getListOfComponents();
 	
 	/**
-	 * @return  a list of lists of strings, representing all the spanning paths of the syntactic structure 
-	 * (leading from its generating node to one of its terminals).
+	 * Returns the list of IDs associated with any terminal ({@link ISyntaxLeaf}) derived from this structure's root.
+	 * @return the list of IDs associated with any terminal ({@link ISyntaxLeaf}) derived from this structure's root. 
 	 */
-	List<List<String>> getListOfTreeStringPaths();
+	List<Long> getListOfLeafIDs();	
 	
 	/**
-	 * @return  a list of lists of strings, representing the set of spanning chains of the poset (lower semilattice) 
-	 * that can be derived from this syntactic structure.
+	 * Returns the name of the syntactic structure, which is the left-term of the grammatical rule to which it is 
+	 * associated. <br> 
+	 * 
+	 * A syntactic structure instance can be regarded as a syntax tree ; in this case, the structure's name is the 
+	 * tree's root. <br>
+	 * 
+	 * @return the name of the syntactic structure
 	 */
-	List<List<String>> getListOfPosetMaxStringChains() throws GrammarModelException;
+	String getName();
 	
 	/**
-	 * @return the list of IDs associated with every syntax leaf ({@link ISyntaxLeaf}) that can be derived from this 
-	 * structure's generating node. 
-	 * (All {@link ISyntaxLeaf} have a leafID). 
+	 * Returns the list of paths (as a list of lists) in this structure's tree, from the symbol that gives 
+	 * the syntactic structure its name to any reachable terminal. <br>
+	 * @return  the list of paths from the symbol that gives the syntactic structure its name to any reachable terminal.
 	 */
-	List<Long> getListOfLeafIDs();
+	List<List<String>> getPathsAsListOfStrings();	
 	
 	/**
-	 * @return a concatenation (with a separator) of the names of the syntax leaves (or terminals) that can be derived from 
-	 * this structure's generating node. If the node is itself a terminal (because the structure {@link ISyntaxLeaf}),  
-	 * its name is returned.  
+	 * <p>
+	 * The recursion index equals to the maximum number of occurrences of the structure's name can be found in a single path 
+	 * of its syntax tree, at any place but the beginning.. <br>
+	 * 
+	 * A recursion index is used to make sure that two different structures can never yield the same 
+	 * binary relation. It allows to add a distinctive mark to recursive symbols with the markRecursion() method. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * How it works (<i> X </i> and <i> Y </i> are any substring) : <br>
+	 * <i> a -> X -> a -> Y -> a </i> : first <i> A </i>'s recursion index is 2
+	 * </p>
+	 * 
+	 * @see representation.IBinaryRelation
+	 * @return the recursion index of this structure
 	 */
-	String getStringOfTerminals();
+	int getRecursionIndex();	
 	
 	/**
-	 * @return true if this structure has been provided with an ID, and can subsequently generate a 'poset element name'.
-	 */
-	boolean getIDHasBeenSet();
-	
-	/**
-	 * A-> A -> A : first A's recursion index is 2
-	 * @return
-	 */
-	int getRecursionIndex();
-	
-	/**
-	 * @param prop property name, referring to an element of the context-free grammar at use. 
-	 * @return true if the parameter is the name of this structure generating node, or the name of any derived
-	 * node in the syntax tree.  
-	 */
-	boolean hasThisProperty(String prop);
-		
-	/**
-	 * Provides this structure (and its components, sub-components, etc.) with a 'poset element ID', mapped with 
-	 * its generated list of paths. This method is called by {@link ISyntaxGrove}.
-	 * @param pathsToIndex a map that associates tree paths with a unique ID. 
+	 * Returns the list of paths (with navigating functionalities) in this structure's tree, from the symbol that gives 
+	 * the syntactic structure its name to any reachable terminal. <br>
+	 * 
+	 * @return the list of paths from the symbol that gives the syntactic structure its name to any reachable terminal.
 	 * @throws GrammarModelException
 	 */
-	void setPosetElementID(Map<ITreePaths, Integer> pathsToIndex) throws GrammarModelException;
+	ITreePaths getTreePaths() throws GrammarModelException;	
+	
+	//Setters
 	
 	/**
-	 * Replaces a target leaf ({@link ISyntaxLeaf}) component by a new component. 
+	 * If 'a' is a branch of type {A} that leads to a sub-branch of the same type : a(A#, (...(a(A,(...)))...)
+	 * @param recursionIndex
+	 */
+	void markRecursion() throws GrammarModelException;	
+	
+	/**
+	 * <p>
+	 * Replaces a terminal ({@link ISyntaxLeaf}) component by a new component. <br>
+	 * </p>
+	 * 
+	 * <p>
 	 * Syntax tree 'growth' involves the replacement of leaves by new branches ({@link ISyntaxBranch}) ; 
-	 * or, rarely, by new leaves. 
-	 * These new components are injected in the structure whith the IDs of the leaf they are meant to replace. If one 
+	 * or, rarely, by new leaves. <br> 
+	 * These new components are injected in the structure with the IDs of the leaf they are meant to replace. If one 
 	 * of the structure component is a target leaf, then it is replaced ; otherwise, the same method is recursively 
-	 * called on every non-terminal component, with the same parameters.  
+	 * called on every non-terminal component, with the same parameters. <br>
+	 * </p>
+	 * 
 	 * @param newComp new syntactic component
 	 * @param compIDs IDs of the leaves to be replaced
 	 * @return true if a replacement has occurred. 
@@ -160,18 +143,19 @@ public interface ISyntacticStructure extends Cloneable {
 	boolean replaceComponents(ISyntacticStructure newComp, List<Long> compIDs);
 	
 	/**
-	 * The recursion index of a structure of type A is the maximal number of sub-structures of type A it contains in 
-	 * a single chain. 
-	 * May need to be overloaded if the structure is a clustered value.
+	 * The recursion index equals the maximum number of occurrences of the structure's name that can be found in 
+	 * a single <i> argument </i> path of its syntax tree, minus one. <br>
+	 * 
+	 * An argument path is a path does not lead to the structure's <i> function </i> (see {@link ISyntaxBranch}). <br>
+	 * 
+	 * <p>
+	 * How it works (<i> X </i> and <i> Y </i> are any substring) : <br>
+	 * <i> a -> X -> a -> Y -> a </i> : first <i> A </i>'s recursion index is 2 <br>
+	 * </p>.
+	 * 
 	 * @return
 	 * @throws GrammarModelException 
 	 */
 	Map<String, Integer> setRecursionIndex() throws GrammarModelException;
-	
-	/**
-	 * If 'a' is a branch of type {A} that leads to a sub-branch of the same type : a(A#, (...(a(A,(...)))...)
-	 * @param recursionIndex
-	 */
-	void markRecursion() throws GrammarModelException;
 		
 }

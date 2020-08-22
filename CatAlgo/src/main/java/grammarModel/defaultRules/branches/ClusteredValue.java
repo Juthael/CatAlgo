@@ -36,6 +36,9 @@ public class ClusteredValue extends SyntaxBranch implements ISyntaxBranch, IValu
 					propNameToRecursionIdx.put(propName, clusterPropNameToRecursIdx.get(propName));
 				}
 			}
+			/*returned map not put into 'propNameToRecursionIdx' map, because valuE and clusteredValuE have the same name : 
+			 * would create artificial redundancy
+			 */
 			valuE.setRecursionIndex();
 			if (propNameToRecursionIdx.containsKey(this.getName())) {
 				recursionIndex = propNameToRecursionIdx.get(this.getName()) + 1;

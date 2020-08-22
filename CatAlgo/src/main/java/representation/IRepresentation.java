@@ -172,24 +172,34 @@ public interface IRepresentation extends IStateMachine {
 	Set<IContextObject> getObjectsThatHave(IFunctionalExpression specifiedProperty);
 	
 	/**
-	 * Returns the representation's description that uses the least amount of information. 
+	 * Returns the representation's description that uses the least amount of information.
 	 * 
+	 * To know more about information quantification, see {@link IAlgorithmicDescription}, 
+	 * {@link ITransitionCostCalculator}. <br>
+	 * 
+	 * @see representation.IAlgorithmicDescription
+	 * @see representation.ITransitionCostCalculator
 	 * @return the representation's description that uses the least amount of information
 	 */
 	IAlgorithmicDescription getLowestCostDescription();
 	
 	/**
-	 * Returns the representation's description that uses the least amount of information, amongst
+	 * Returns the representation's description that uses the least amount of information, among
 	 * all descriptions matching the target object with an eligible counterpart. <br>
 	 * 
 	 * The target object is the only object whose intent meets the constraint expressed in the first 
 	 * parameter (in the form of a functional expression). The target is matched if the description 
 	 * contains a state whose extent includes only two objects : the target, and any other object 
-	 * meeting the constraint expressed in the second parameter. 
+	 * meeting the constraint expressed in the second parameter. <br>
 	 * 
 	 * Having one category of their own in the representation's description, and sharing this property
-	 * with no other object, makes these two objects (target and match) counterparts. 
+	 * with no other object, makes these two objects (target and match) counterparts. <br> 
 	 * 
+	 * To know more about information quantification, see {@link IAlgorithmicDescription}, 
+	 * {@link ITransitionCostCalculator}. <br>
+	 * 
+	 * @see representation.IAlgorithmicDescription
+	 * @see representation.ITransitionCostCalculator
 	 * @param constraintOnTargetObj a property that can be found in a single object in the context
 	 * @param constraintOnMatch a property that can be found in at least one object in the context
 	 * @return the optimal (with regard to information cost) description matching the target object 
@@ -201,23 +211,40 @@ public interface IRepresentation extends IStateMachine {
 			IFunctionalExpression constraintOnTarget, IFunctionalExpression constraintOnMatch);
 	
 	/**
+	 * Returns the representation's description that achieves the best encoding of its signified. <br>
 	 * 
+	 * To know more about the signified's encoding, see {@link IAlgorithmicDescription}.
+	 * 
+	 * To know more about information quantification, see {@link IAlgorithmicDescription}, 
+	 * {@link ITransitionCostCalculator}. <br>
+	 * 
+	 * @see representation.ISignified
+	 * @see representation.IAlgorithmicDescription
+	 * @see representation.ITransitionCostCalculator
 	 * @return the representation's description that achieves the best encoding of its signified.
 	 */
 	IAlgorithmicDescription getBestEncodingDescription();
 	
 	/**
-	 * Returns the representation's description that best encodes its signified, amongst
+	 * Returns the representation's description that best encodes its signified, among
 	 * all descriptions matching the target object with an eligible counterpart. <br>
 	 * 
 	 * The target object is the only object whose intent meets the constraint expressed in the first 
 	 * parameter (in the form of a functional expression). The target is matched if the description 
 	 * contains a state whose extent includes only two objects : the target, and any other object 
-	 * meeting the constraint expressed in the second parameter. 
+	 * meeting the constraint expressed in the second parameter. <br>
 	 * 
 	 * Having one category of their own in the representation's description, and sharing this property
-	 * with no other object, these to objects (target and match) are regarded as counterparts. 
+	 * with no other object, these to objects (target and match) are regarded as counterparts. <br>
 	 * 
+	 * To know more about the signified's encoding, see {@link IAlgorithmicDescription}.
+	 * 
+	 * To know more about information quantification, see {@link IAlgorithmicDescription}, 
+	 * {@link ITransitionCostCalculator}. <br>
+	 * 
+	 * @see representation.ISignified
+	 * @see representation.IAlgorithmicDescription
+	 * @see representation.ITransitionCostCalculator
 	 * @param constraintOnTargetObj a property that can be found in a single object in the context
 	 * @param constraintOnMatch a property that can be found in at least one object in the context
 	 * @return the optimal (with regard to coding efficiency) description matching the target object 
