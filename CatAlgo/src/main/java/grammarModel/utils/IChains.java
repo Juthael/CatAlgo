@@ -3,7 +3,6 @@ package grammarModel.utils;
 import java.util.List;
 
 import grammarModel.exceptions.GrammarModelException;
-import propertyPoset.utils.IPosetMaxChains;
 /**
  * IChains contains an indexed list of indexed lists of Strings, with navigation functionalities (a 'chain' 
  * is a list of Strings, so IChains is a list of chains). 

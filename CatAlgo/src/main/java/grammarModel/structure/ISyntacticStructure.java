@@ -154,7 +154,8 @@ public interface ISyntacticStructure extends Cloneable {
 	
 	/**
 	 * <p>
-	 * Replaces a terminal ({@link ISyntaxLeaf}) component by a new component. <br>
+	 * Replaces a terminal ({@link ISyntaxLeaf}) component by a new component, provided that the terminal is 
+	 * declared as implementing an interface whose the new component is also an implementation of. <br>
 	 * </p>
 	 * 
 	 * <p>
@@ -175,8 +176,7 @@ public interface ISyntacticStructure extends Cloneable {
 	 * <p>
 	 * The recursion index equals the maximum number of occurrences of the structure's name that can be found in 
 	 * a single <i> argument </i> path of its syntax tree, minus one. <br>
-	 * 
-	 * An argument path is a path does not lead to the structure's <i> function </i> (see {@link ISyntaxBranch}). <br>
+	 * An argument path is one that does not end with a "function" leaf (see {@link ISyntaxLeaf}). <br>
 	 * </p>
 	 * 
 	 * <p>
