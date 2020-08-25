@@ -3,6 +3,7 @@ package grammarModel.structure;
 import java.util.List;
 
 import grammarModel.exceptions.GrammarModelException;
+import grammarModel.utils.ITreePaths;
 
 /**
  * <p>
@@ -22,7 +23,7 @@ import grammarModel.exceptions.GrammarModelException;
  * <p>
  * The tree generation process imposes that a (variable) leaf can be replaced by a new branch. To allow this, 
  * any leaf must be associated with a unique ID number, which is used to identify it as the target of a replacement 
- * procedure (see {@link ISyntaxBranch#replaceComponents(ISyntacticStructure, List)}). <br>
+ * procedure (see {@link ISyntaxBranch#replaceArguments(ISyntacticStructure, List)}). <br>
  * </p>  
  * 
  * @see grammarModel.structure.ISyntacticStructure
@@ -65,6 +66,15 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	@Override
 	public List<List<String>> getPathsAsListsOfStrings();
 	
+	/**
+	 * Returns the list of paths (with navigating functionalities) in this structure's tree, from the symbol that gives 
+	 * the syntactic structure its name to any reachable terminal. <br>
+	 * 
+	 * @return the list of paths from the symbol that gives the syntactic structure its name to any reachable terminal.
+	 * @throws GrammarModelException
+	 */
+	ITreePaths getTreePaths();		
+	
 	//setters
 	
 	/**
@@ -79,7 +89,7 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	 * It only exists so it can be called on any syntactic structure component without throwing errors. 
 	 */
 	@Override
-	public boolean replaceComponents(ISyntacticStructure newComp, List<Long> compID);	
+	public boolean replaceArguments(ISyntacticStructure newComp, List<Long> compID);	
 	
 	/**
 	 * The recursion mark on a function leaf indicate the degree of recursion of this function. It can 

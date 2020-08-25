@@ -97,7 +97,7 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 	}		
 	
 	@Override
-	public boolean replaceComponents(ISyntacticStructure newComp, List<Long> compID) {
+	public boolean replaceArguments(ISyntacticStructure newComp, List<Long> compID) {
 		return false;
 	}
 

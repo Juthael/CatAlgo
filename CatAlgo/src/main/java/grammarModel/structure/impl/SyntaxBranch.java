@@ -2,6 +2,7 @@ package grammarModel.structure.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -15,6 +16,7 @@ import grammarModel.utils.ITreePaths;
 import representation.dataFormats.IBinaryRelation;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.impl.BinaryRelation;
+import representation.dataFormats.impl.FunctionalExpression;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.impl.Symbol;
 
@@ -71,12 +73,27 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	
 	@Override
 	public IFunctionalExpression getFunctionalExpression() {
-		ISymbol functionSymbol = new Symbol(getFunction().getName());
-		ISymbol[][] applicationArray = new ISymbol[1][getArguments().size() + 1];
-		applicationArray[0][0] = functionSymbol;
+		IFunctionalExpression functionalExpression;
+		Map<List<Integer>, ISymbol> coordinatesOntoSymbols = new HashMap<List<Integer>, ISymbol>();
+		ISymbol thisFunction = new Symbol(getFunction().getName());
+		List<Integer> thisCoordinate = new ArrayList<Integer>();
+		//A function has no coordinate, unless it belongs to an argument of another function ; so the list remains empty
+		coordinatesOntoSymbols.put(thisCoordinate, thisFunction);
+		int argIndex = 0;
 		for (ISyntacticStructure argument : getArguments()) {
-			
+			Map<List<Integer>, ISymbol> argCoordinatesOntoSymbols = 
+					argument.getFunctionalExpression().getCoordinatesOntoSymbols();
+			for (List<Integer> coordinate : argCoordinatesOntoSymbols.keySet()) {
+				ISymbol currentSymbol = argCoordinatesOntoSymbols.get(coordinate);
+				List<Integer> currentSymbolNewCoordinate = new ArrayList<Integer>();
+				currentSymbolNewCoordinate.add(argIndex);
+				currentSymbolNewCoordinate.addAll(coordinate);
+				coordinatesOntoSymbols.put(currentSymbolNewCoordinate, currentSymbol);
+			}
+			argIndex++;
 		}
+		functionalExpression = new FunctionalExpression(coordinatesOntoSymbols);
+		return functionalExpression;
 	}
 	
 	@Override
@@ -84,7 +101,6 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	
 	@Override
 	public List<Long> getListOfLeafIDs() {
-		//VERIFIER
 		List<Long> leafIDs = new ArrayList<Long>();
 		for (ISyntacticStructure component : getListOfComponents()) {
 			leafIDs.addAll(component.getListOfLeafIDs());
@@ -94,15 +110,15 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	
 	@Override
 	public List<List<String>> getPathsAsListsOfStrings() {
-		List<List<String>> synChains = new ArrayList<List<String>>();
+		List<List<String>> paths = new ArrayList<List<String>>();
 		for (ISyntacticStructure component : getListOfComponents()) {
-			List<List<String>> compSynChains = component.getListOfTreeStringPaths();
-			for (List<String> chain : compSynChains) {
+			List<List<String>> compPaths = component.getPathsAsListsOfStrings();
+			for (List<String> chain : compPaths) {
 				chain.add(0, getName());
-				synChains.add(chain);
+				paths.add(chain);
 			}
 		}
-		return synChains;
+		return paths;
 	}
 	
 	@Override
@@ -125,7 +141,7 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	}
 	
 	@Override
-	public boolean replaceComponents(ISyntacticStructure newComp, List<Long> compIDs) {
+	public boolean replaceArguments(ISyntacticStructure newComp, List<Long> compIDs) {
 		boolean compReplaced = false;
 		ListIterator<ISyntacticStructure> compIt = getListOfComponents().listIterator();
 		while (compIt.hasNext() && compReplaced == false) {
@@ -137,7 +153,7 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 					compReplaced = true;
 				}
 				else {
-					compReplaced = comp.replaceComponents(newComp, compIDs);
+					compReplaced = comp.replaceArguments(newComp, compIDs);
 				}
 			}
 		}
@@ -145,29 +161,25 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	}
 	
 	@Override
-	public Map<String, Integer> setRecursionIndex() throws GrammarModelException {
-		//VERIFIER
-		Map<String, Integer> propNameToRecursionIdx = new HashMap<String, Integer>();
+	public Map<String, Integer> setRecursionIndex() {
+		Map<String, Integer> nameToRecursionIdx = new HashMap<String, Integer>();
 		if (!recursionIndexHasBeenSet) {
-			for (ISyntacticStructure component : getListOfComponents()) {
-				Map<String, Integer> compPropNameToRecursIdx = component.setRecursionIndex();
-				for (String propName : compPropNameToRecursIdx.keySet()) {
-					if (!propNameToRecursionIdx.containsKey(propName) 
-							|| (propNameToRecursionIdx.get(propName) < compPropNameToRecursIdx.get(propName))) {
-						propNameToRecursionIdx.put(propName, compPropNameToRecursIdx.get(propName));
+			for (ISyntacticStructure arguments : getArguments()) {
+				Map<String, Integer> argNameToRecursIdx = arguments.setRecursionIndex();
+				for (String argName : argNameToRecursIdx.keySet()) {
+					if (!nameToRecursionIdx.containsKey(argName) 
+							|| (nameToRecursionIdx.get(argName) < argNameToRecursIdx.get(argName))) {
+						nameToRecursionIdx.put(argName, argNameToRecursIdx.get(argName));
 					}
 				}
 			}
-			if (propNameToRecursionIdx.containsKey(this.getName())) {
-				recursionIndex = propNameToRecursionIdx.get(this.getName()) + 1;
-				propNameToRecursionIdx.put(this.getName(), recursionIndex);
+			if (nameToRecursionIdx.containsKey(this.getName())) {
+				recursionIndex = nameToRecursionIdx.get(this.getName()) + 1;
 			}
-			else propNameToRecursionIdx.put(this.getName(), recursionIndex);
+			nameToRecursionIdx.put(this.getName(), recursionIndex);
+			recursionIndexHasBeenSet = true;
 		}
-		else throw new GrammarModelException("SyntacticStructure.setRecursionIndex() : this method has already "
-				+ "been called.");
-		recursionIndexHasBeenSet = true;
-		return propNameToRecursionIdx;
+		return nameToRecursionIdx;
 	}		
 
 }

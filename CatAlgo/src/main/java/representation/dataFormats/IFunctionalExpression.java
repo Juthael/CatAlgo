@@ -1,5 +1,8 @@
 package representation.dataFormats;
 
+import java.util.List;
+import java.util.Map;
+
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 
@@ -51,6 +54,21 @@ public interface IFunctionalExpression extends IDescription {
 	IBinaryRelation getBinaryRelation();
 	
 	/**
+	 * The functional expression is encoded as a mapping of coordinates (that allow to locate every element in the expression) 
+	 * to symbols (that can be found on this location). <br>  
+	 * 
+	 * For a given functional expression <i> F = i(j(k ∧ l) ∧  m) </i>, here the resulting mapping : <br> 
+	 * {} => <i> i </i> <br>
+	 * {0} => <i> j </i> <br>
+	 * {0,0} => <i> k </i> <br>
+	 * {0,1} => <i> l </i> <br>
+	 * {1} => <i> m </i> <br>
+	 * 
+	 * @return the map that encodes the functional expression
+	 */
+	Map<List<Integer>, ISymbol> getCoordinatesOntoSymbols();	
+	
+	/**
 	 * The regular language equivalent to this functional expression is built following the procedure described 
 	 * below. <br>
 	 * 
@@ -72,21 +90,6 @@ public interface IFunctionalExpression extends IDescription {
 	 */
 	@Override
 	ILanguage getLanguage();
-	
-	/**
-	 * The  array of symbols encoding the application relation in this functional expression is built according to 
-	 * the procedure illustrated below. <br>
-	 * 
-	 * For a given functional expression <i> F = i(j(k ∧ l) ∧  m) </i>, here are the symbol coordinates in the array : <br> 
-	 * .<i> i </i> : [0][0] <br>
-	 * .<i> j </i> : [0][1][0] <br>
-	 * .<i> k </i> : [0][1][1] <br>
-	 * .<i> l </i> : [0][1][2] <br>
-	 * .<i> m </i> : [0][2] <br>
-	 * 
-	 * @return the array of symbols that encodes the application relation in this functional expression
-	 */
-	ISymbol[][] getApplicationArray();
 	
 	/**
 	 * A description's grammar is the minimal knowledge base required to proceed the description of a 

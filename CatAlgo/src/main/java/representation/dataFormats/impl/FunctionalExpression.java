@@ -1,5 +1,8 @@
 package representation.dataFormats.impl;
 
+import java.util.List;
+import java.util.Map;
+
 import representation.dataFormats.IBinaryRelation;
 import representation.dataFormats.IDescription;
 import representation.dataFormats.IFunctionalExpression;
@@ -9,7 +12,7 @@ import representation.stateMachine.ISymbol;
 
 public class FunctionalExpression implements IFunctionalExpression {
 
-	public FunctionalExpression(ISymbol[][] applicationArray) {
+	public FunctionalExpression(Map<List<Integer>, ISymbol> coordinatesOntoSymbols) {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -32,13 +35,13 @@ public class FunctionalExpression implements IFunctionalExpression {
 	}
 
 	@Override
-	public ILanguage getLanguage() {
+	public Map<List<Integer>, ISymbol> getCoordinatesOntoSymbols() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
+	}	
+	
 	@Override
-	public ISymbol[][] getApplicationArray() {
+	public ILanguage getLanguage() {
 		// TODO Auto-generated method stub
 		return null;
 	}

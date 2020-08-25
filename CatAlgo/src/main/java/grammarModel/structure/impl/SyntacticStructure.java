@@ -50,12 +50,13 @@ public abstract class SyntacticStructure implements ISyntacticStructure, Cloneab
 	}
 	
 	@Override
-	public ITreePaths getTreePaths() throws GrammarModelException {
+	public ITreePaths getTreePaths() {
 		ITreePaths treePaths;
 		List<List<String>> listOfPaths = getPathsAsListsOfStrings();
 		List<Long> leafIDs = getListOfLeafIDs();
 		treePaths = new TreePaths(listOfPaths, leafIDs);
 		return treePaths;
+		//HERE gérer ça et passer aux leafs (interface et classe)
 	}	
 	
 	//setters
@@ -64,9 +65,9 @@ public abstract class SyntacticStructure implements ISyntacticStructure, Cloneab
 	public abstract void markRecursion() throws GrammarModelException;
 	
 	@Override 
-	public abstract boolean replaceComponents(ISyntacticStructure newComp, List<Long> compIDs);
+	public abstract boolean replaceArguments(ISyntacticStructure newArg, List<Long> leafIDs);
 	
 	@Override
-	public abstract Map<String, Integer> setRecursionIndex() throws GrammarModelException;
+	public abstract Map<String, Integer> setRecursionIndex();
 
 }

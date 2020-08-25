@@ -141,7 +141,7 @@ public interface ISyntacticStructure extends Cloneable {
 	 * @return the list of paths from the symbol that gives the syntactic structure its name to any reachable terminal.
 	 * @throws GrammarModelException
 	 */
-	ITreePaths getTreePaths() throws GrammarModelException;	
+	ITreePaths getTreePaths();	
 	
 	//setters
 	
@@ -156,24 +156,24 @@ public interface ISyntacticStructure extends Cloneable {
 	
 	/**
 	 * <p>
-	 * Replaces a terminal ({@link ISyntaxLeaf}) component by a new component, provided that the terminal is 
-	 * declared as implementing an interface whose the new component is also an implementation of. <br>
+	 * Replaces a terminal ({@link ISyntaxLeaf}) argument by a new argument, provided that the terminal is 
+	 * declared as implementing an interface whose the new argument is also an implementation of. <br>
 	 * </p>
 	 * 
 	 * <p>
 	 * Syntax tree 'growth' involves the replacement of leaves by new branches ({@link ISyntaxBranch}) ; 
 	 * or, rarely, by new leaves. <br> 
-	 * These new components are injected in the structure with the IDs of the leaf they are meant to replace. If one 
-	 * of the structure component is a target leaf, then it is replaced ; otherwise, the same method is recursively 
-	 * called on every non-terminal component, with the same parameters. <br>
+	 * These new argument are injected in the structure with the IDs of the leaf they are meant to replace. If one 
+	 * of the structure argument is a target leaf, then it is replaced ; otherwise, the same method is recursively 
+	 * called on every argument, with the same parameters. <br>
 	 * </p>
 	 * 
 	 * @see grammarModel.structure.ISyntaxLeaf
-	 * @param newComp new syntactic component
-	 * @param compIDs IDs of the leaves to be replaced
+	 * @param newComp new argument
+	 * @param leafIDs IDs of the leaves to be replaced
 	 * @return true if a replacement has occurred. 
 	 */
-	boolean replaceComponents(ISyntacticStructure newComp, List<Long> compIDs);
+	boolean replaceArguments(ISyntacticStructure newArg, List<Long> leafIDs);
 	
 	/**
 	 * <p>
