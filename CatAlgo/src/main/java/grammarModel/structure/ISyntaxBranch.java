@@ -27,7 +27,7 @@ import grammarModel.utils.ITreePaths;
  * 
  * @see grammarModel.structure.ISyntacticStructure
  * @see grammarModel.structure.ISyntaxLeaf
- * @see representation.IFunctionalExpression
+ * @see representation.dataFormats.IFunctionalExpression
  * @author Gael Tregouet
  *
  */
@@ -38,7 +38,7 @@ public interface ISyntaxBranch extends ISyntacticStructure {
 	/**
 	 * Returns the components whose generated functional expressions are the arguments of this syntax branch's function. 
 	 * 
-	 * @see representation.IFunctionalExpression
+	 * @see representation.dataFormats.IFunctionalExpression
 	 * @return the components that generate the arguments of this branch's function
 	 */
 	List<ISyntacticStructure> getArguments();
@@ -51,39 +51,37 @@ public interface ISyntaxBranch extends ISyntacticStructure {
 	ISyntaxLeaf getFunction();	
 	
 	/**
-	 * Returns the list of IDs associated with any terminal ({@link ISyntaxLeaf}) derived from this structure's root. <br>
+	 * {@inheritDoc}
 	 * 
-	 * The returned list is a concatenation of the lists returned by this branch components. <br>
+	 * <p>
+	 * The returned list is a concatenation of the lists returned by every component. <br>
+	 * </p>
 	 * 
 	 * @see grammarModel.structure.ISyntaxLeaf
-	 * @return the list of IDs associated with any terminal ({@link ISyntaxLeaf}) derived from this structure's root. 
 	 */
 	@Override
 	List<Long> getListOfLeafIDs();
 	
 	/**
-	 * Returns the list of paths (as a list of lists of strings) in this structure's tree, from the symbol that gives 
-	 * the syntactic structure its name to any reachable terminal. <br>
+	 * {@inheritDoc}
 	 * 
+	 * <p>
 	 * The list is constructed out of every component's paths lists. They are all included in a single list 
-	 * of paths and the structure's name is inserted at the beginning of every path. 
-	 * 
-	 * @return the list of paths from the symbol that gives the syntactic structure its name to any reachable terminal.
+	 * of paths and the structure's name is inserted at the beginning of every path.
+	 * </p> 
 	 */
 	@Override
 	List<List<String>> getPathsAsListsOfStrings();
 	
 	/**
-	 * Returns the list of paths (with navigating functionalities) in this structure's tree, from the symbol that gives 
-	 * the syntactic structure its name to any reachable terminal. <br>
+	 * {@inheritDoc}
 	 * 
-	 * The {@link ITreePaths} is constructed out of every component's tree paths. 
-	 * 
-	 * @return the list of paths from the symbol that gives the syntactic structure its name to any reachable terminal.
-	 * @throws GrammarModelException
+	 * <p>
+	 * The returned tree path is constructed out of every component's tree paths.
+	 * </p> 
 	 */
 	@Override
-	ITreePaths getTreePaths() throws GrammarModelException;		
+	ITreePaths getTreePaths();		
 	
 	/**
 	 * Returns true if this syntax branch is a tree, i.e. if its name is the start element of the context-free
@@ -96,50 +94,22 @@ public interface ISyntaxBranch extends ISyntacticStructure {
 	//setters
 	
 	/**
-	 * Adds a distinctive mark to the function leaves derived from recursive symbols. <br> 
+	 * {@inheritDoc}
 	 * 
+	 * <p>
 	 * The branch's recursion index must have been set previously. If this index equals <i> n </i>, then the 
-	 * function leaf of this branch has <i> n </i> recursion marks added at the end of its name. 
+	 * function leaf of this branch has <i> n </i> recursion marks added at the end of its name. <br> 
 	 * 
 	 * This method is recursively called in every component of the branch. 
+	 * </p>
 	 * 
 	 * @see grammarModel.structure.ISyntaxLeaf
 	 */
 	@Override
-	void markRecursion();
+	void markRecursion() throws GrammarModelException;
 	
 	/**
-	 * <p>
-	 * Replaces a terminal ({@link ISyntaxLeaf}) component by a new component, provided that the terminal is 
-	 * declared as implementing an interface whose the new component is also an implementation of. <br>
-	 * </p>
-	 * 
-	 * <p>
-	 * Syntax tree 'growth' involves the replacement of leaves by new branches ; or, rarely, by new leaves. <br> 
-	 * These new components are injected in the structure with the IDs of the leaf they are meant to replace. If one 
-	 * of the structure component is a target leaf, then it is replaced ; otherwise, the same method is recursively 
-	 * called on every non-terminal component, with the same parameters. <br>
-	 * </p>
-	 * 
-	 * @see grammarModel.structure.ISyntaxLeaf
-	 * @param newComp new syntactic component
-	 * @param compIDs IDs of the leaves to be replaced
-	 * @return true if a replacement has occurred. 
-	 */
-	@Override
-	boolean replaceComponents(ISyntacticStructure newComp, List<Long> compIDs);
-	
-	/**
-	 * <p>
-	 * The recursion index equals the maximum number of occurrences of the structure's name that can be found in 
-	 * a single <i> argument </i> path of its syntax tree, minus one. <br>
-	 * An argument path is one that does not end with a "function" leaf (see {@link ISyntaxLeaf}). <br>
-	 * </p>
-	 * 
-	 * <p>
-	 * How it works (<i> X </i> and <i> Y </i> are any substring) : <br>
-	 * <i> a -> X -> a -> Y -> a </i> : first <i> A </i>'s recursion index is 2 <br>
-	 * </p>.
+	 * {@inheritDoc}
 	 * 
 	 * <p>
 	 * This method must be called first on every <i> argument </i> component of the branch. The returned maps are merged 
@@ -149,10 +119,9 @@ public interface ISyntaxBranch extends ISyntacticStructure {
 	 * (which has to be 0). Finally, the map is returned. <br> 
 	 * </p>
 	 * 
-	 * @return a mapping of every non functional
-	 * @throws GrammarModelException 
+	 * @see grammarModel.structure.ISyntaxLeaf
 	 */
 	@Override
-	Map<String, Integer> setRecursionIndex() throws GrammarModelException;
+	Map<String, Integer> setRecursionIndex();
 
 }

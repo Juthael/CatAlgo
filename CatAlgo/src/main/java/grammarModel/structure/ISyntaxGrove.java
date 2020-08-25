@@ -2,9 +2,8 @@ package grammarModel.structure;
 
 import java.util.List;
 
-import grammarModel.exceptions.GrammarModelException;
-import representation.IContextInput;
-import representation.IRepresentation;
+import representation.inputOutput.IContextInput;
+import representation.stateMachine.IRepresentation;
 
 /**
  * <p>
@@ -21,9 +20,9 @@ import representation.IRepresentation;
  * </p> 
  * 
  * @see grammarModel.structure.ISyntaxBranch
- * @see representation.IFunctionalExpression
- * @see representation.IContextInput
- * @see representation.IRepresentation
+ * @see representation.dataFormats.IFunctionalExpression
+ * @see representation.inputOutput.IContextInput
+ * @see representation.stateMachine.IRepresentation
  * @author Gael Tregouet
  *
  */

@@ -27,7 +27,7 @@ import grammarModel.exceptions.GrammarModelException;
  * 
  * @see grammarModel.structure.ISyntacticStructure
  * @see grammarModel.structure.ISyntaxBranch
- * @see representation.IFunctionalExpression
+ * @see representation.dataFormats.IFunctionalExpression
  * @author Gael Tregouet
  *
  */
