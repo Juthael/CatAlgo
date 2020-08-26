@@ -2,17 +2,14 @@ package grammarModel.structure.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import grammarModel.GrammarModelConstants;
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
-import grammarModel.utils.ITreePaths;
 import representation.dataFormats.IBinaryRelation;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.impl.BinaryRelation;
@@ -30,18 +27,15 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	//getters
 	
 	@Override
+	public abstract ISyntacticStructure clone();	
+	
+	@Override
 	public List<ISyntacticStructure> getArguments() {
 		List<ISyntacticStructure> arguments = getListOfComponents();
 		ISyntaxLeaf function = getFunction();
 		arguments.remove(function);
 		return arguments;
 	}
-	
-	@Override
-	public abstract SyntaxLeaf getFunction();
-	
-	@Override
-	public abstract ISyntacticStructure clone() throws CloneNotSupportedException;
 	
 	@Override
 	public IBinaryRelation getBinaryRelation() {
@@ -69,7 +63,10 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 		}
 		relation = new BinaryRelation(symbolMap);
 		return relation;
-	}
+	}	
+	
+	@Override
+	public abstract ISyntaxLeaf getFunction();
 	
 	@Override
 	public IFunctionalExpression getFunctionalExpression() {

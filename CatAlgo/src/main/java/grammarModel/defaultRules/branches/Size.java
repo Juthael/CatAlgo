@@ -20,30 +20,32 @@ public class Size extends SyntaxBranch implements ISyntaxBranch {
 		this.sizE = sizE;
 		this.value = value;
 	}
-
+	
+	//getters
+	
 	@Override
-	public String getName() {
-		return NAME;
+	public ISyntacticStructure clone() {
+		SizE sizEClone = (SizE) sizE.clone();
+		IValueOrClusteredValue valueClone = (IValueOrClusteredValue) value.clone();
+		return new Size(sizEClone, valueClone);
 	}
 	
 	@Override
-	public ISyntaxLeaf getEponymLeaf() {
+	public ISyntaxLeaf getFunction() {
 		return sizE;
 	}
-
+	
 	@Override
 	public List<ISyntacticStructure> getListOfComponents() {
 		List<ISyntacticStructure> components = new ArrayList<ISyntacticStructure>();
 		components.add(sizE);
 		components.add(value);
 		return components;
-	}
+	}		
 
 	@Override
-	public ISyntacticStructure clone() {
-		SizE sizEClone = (SizE) sizE.clone();
-		IValueOrClusteredValue valueClone = (IValueOrClusteredValue) value.clone();
-		return new Size(sizEClone, valueClone);
+	public String getName() {
+		return NAME;
 	}
 
 }

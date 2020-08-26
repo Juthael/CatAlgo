@@ -10,7 +10,7 @@ import representation.stateMachine.infoQuantification.ITransitionCostCalculator;
 
 /**
  * <p>
- * A context descriptor describes a context of objects : its says what these objects are, taken individually or in 
+ * A context descriptor describes a context of objects : it says what these objects are, taken individually or in 
  * relevant groupings, by making the best use of tailor-made categories discovered in the representation building 
  * process, and of the relationships that bind them. <br>
  * </p>
@@ -46,7 +46,7 @@ import representation.stateMachine.infoQuantification.ITransitionCostCalculator;
  * ways, the description that a subject will perceive as being the <i> real </i> one will be the <i> most efficient </i> 
  * one. <br>
  * (It's hard to tell whether one is more "real" than the other in the previous example, by the way. Sometimes, no obvious 
- * solution emerges). <br>
+ * solution emerge). <br>
  * </p>
  * 
  * <p>

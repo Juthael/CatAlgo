@@ -20,30 +20,32 @@ public class Coordinate extends SyntaxBranch implements ISyntaxBranch {
 		this.value = value;
 		this.coordinatE = coordinatE;
 	}
-
-	@Override
-	public String getName() {
-		return NAME;
-	}
+	
+	//getters
 	
 	@Override
-	public ISyntaxLeaf getEponymLeaf() {
+	public ISyntacticStructure clone() {
+		CoordinatE coordinatEClone = (CoordinatE) coordinatE.clone();
+		IValuEOrCoordSubValue valueClone = (IValuEOrCoordSubValue) value.clone();
+		return new Coordinate(coordinatEClone, valueClone);
+	}	
+	
+	@Override
+	public ISyntaxLeaf getFunction() {
 		return coordinatE;
 	}	
-
+	
 	@Override
 	public List<ISyntacticStructure> getListOfComponents() {
 		List<ISyntacticStructure> components = new ArrayList<ISyntacticStructure>();
 		components.add(coordinatE);
 		components.add(value);
 		return components;
-	}
-
+	}	
+	
 	@Override
-	public ISyntacticStructure clone() {
-		CoordinatE coordinatEClone = (CoordinatE) coordinatE.clone();
-		IValuEOrCoordSubValue valueClone = (IValuEOrCoordSubValue) value.clone();
-		return new Coordinate(coordinatEClone, valueClone);
-	}
+	public String getName() {
+		return NAME;
+	}	
 
 }

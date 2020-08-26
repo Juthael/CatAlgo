@@ -31,7 +31,7 @@ public abstract class GenericFileReader implements IGenericFileReader {
 
 	@Override
 	public ISyntaxGrove getSyntacticGrove(Path path) throws FileReaderException {
-		List<ISyntacticStructure> trees = new ArrayList<ISyntacticStructure>();
+		List<ISyntaxBranch> trees = new ArrayList<ISyntaxBranch>();
 		treeDescriptions = setDescriptions(path);
 		structures = setStructures(treeDescriptions);
 		for (int treeIndex=0 ; treeIndex < treeDescriptions.length ; treeIndex++)

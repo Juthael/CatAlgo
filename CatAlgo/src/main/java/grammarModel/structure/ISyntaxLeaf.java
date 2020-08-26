@@ -1,20 +1,20 @@
 package grammarModel.structure;
 
 import java.util.List;
+import java.util.Map;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.utils.ITreePaths;
 
 /**
  * <p>
  * Any <i> class </i> implementing the syntax leaf interface represents a terminal symbol of a context-free 
  * grammar. As is the case for any syntactic structure, the composition relationship that defines 
  * a leaf <i> L </i> as <i> contained </i> by a syntax branch <i> B </i> is an equivalent of a context-free 
- * grammar derivation rule such as <i> B ::= L | (...) </i>. <br>
+ * grammar derivation rule such as <i> B ::= L | (...) </i>, with <i> L </i> being a terminal. <br>
  * </p>
  * 
  * <p>
- * Any syntax branch instance yields a string of terminals that forms a <i> functional expression </i>, which
+ * Any syntax branch <i> instance </i> yields a string of terminals that forms a <i>functional expression</i>, which
  * consists in the application of a function to a list of arguments. Accordingly, a leaf can either be a 
  * "function" leaf, or a simple variable. This has no consequence on its implementation, since both types of 
  * leaves refer to the same interface and the same implementation. <br>   
@@ -36,14 +36,19 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	
 	//getters
 	
+	//HERE, faire entrer getBinaryRelation et getFunctionalExpression dans l'interface (ainsi que dans celle de ISyntaxBranch, 
+	//et dans le schéma UML. Puis implémenter pour SyntaxLeaf (déjà fait pour SyntaxBranch)
+	
 	/**
-	 * Returns the leaf ID.
+	 * Returns the leaf unique ID.
 	 * @return the leaf ID. 
 	 */
 	public long getLeafID();
 	
 	/**
-	 * Returns an empty list, sinc a leaf can't have any component
+	 * {@inheritDoc}
+	 * However, since a leaf is a terminal, the rule it is associated with has no right term, and therefore a leaf has no 
+	 * component. The returned list is empty. <br> 
 	 * 
 	 * @return an empty list
 	 */
@@ -51,7 +56,8 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	public List<ISyntacticStructure> getListOfComponents();
 	
 	/**
-	 * Returns a list that only contains the leaf ID.
+	 * {@inheritDoc}
+	 * In this case, since a leaf can't be derived, the returned list only contains the leaf's own ID.
 	 * 
 	 * @return a list with only the leaf ID
 	 */
@@ -59,37 +65,49 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	public List<Long> getListOfLeafIDs();	
 	
 	/**
-	 * Returns a list that contains a single list, that contains a single string : this leaf's name. 
+	 * {@inheritDoc}
+	 * In this case, there is only one path that only contains the leaf. So the returned list contains a single 
+	 * list, that contains a single string : this leaf's name. 
 	 * 
 	 * @return this structure's unique path, with this leaf as a single element
 	 */
 	@Override
 	public List<List<String>> getPathsAsListsOfStrings();
 	
-	/**
-	 * Returns the list of paths (with navigating functionalities) in this structure's tree, from the symbol that gives 
-	 * the syntactic structure its name to any reachable terminal. <br>
-	 * 
-	 * @return the list of paths from the symbol that gives the syntactic structure its name to any reachable terminal.
-	 * @throws GrammarModelException
-	 */
-	ITreePaths getTreePaths();		
-	
 	//setters
 	
 	/**
-	 * Since a leaf has no component, there is nothing to mark, so this method doesn't do anything. <br>
-	 * It only exists so it can be called on any syntactic structure component without throwing errors.  
+	 * {@inheritDoc}
+	 * 
+	 * <p>
+	 * Since a leaf has no component, there is nothing to mark, so this method doesn't do anything. 
+	 * It only exists so it can be called on any syntactic structure component without throwing errors. <br>
+	 * </p>  
 	 */
 	@Override
 	public void markRecursion() throws GrammarModelException;	
 	
 	/**
-	 * Since a leaf has no component, this method doesn't do anything. <br>
-	 * It only exists so it can be called on any syntactic structure component without throwing errors. 
+	 * {@inheritDoc}
+	 * 
+	 * <p>
+	 * Since a leaf has no component, this method doesn't do anything when called on it. 
+	 * It only exists so it can be called on any syntactic structure component, regardless of the sub-type. <br>
+	 * </p> 
 	 */
 	@Override
-	public boolean replaceArguments(ISyntacticStructure newComp, List<Long> compID);	
+	public boolean replaceArguments(ISyntacticStructure newComp, List<Long> compID);
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * <p>
+	 * Obviously, if the structure is a leaf, the only mapping returned is that of the leaf's name to the index 
+	 * <code> 0 </code>. <br>
+	 * </p> 
+	 */
+	@Override
+	public Map<String, Integer> setRecursionIndex();
 	
 	/**
 	 * The recursion mark on a function leaf indicate the degree of recursion of this function. It can 

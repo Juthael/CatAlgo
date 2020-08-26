@@ -22,7 +22,7 @@ public abstract class SyntacticStructure implements ISyntacticStructure, Cloneab
 	//getters
 	
 	@Override
-	public abstract ISyntacticStructure clone() throws CloneNotSupportedException;
+	public abstract ISyntacticStructure clone();
 	
 	@Override
 	public abstract IBinaryRelation getBinaryRelation();
@@ -50,13 +50,12 @@ public abstract class SyntacticStructure implements ISyntacticStructure, Cloneab
 	}
 	
 	@Override
-	public ITreePaths getTreePaths() {
+	public ITreePaths getTreePaths() throws GrammarModelException {
 		ITreePaths treePaths;
 		List<List<String>> listOfPaths = getPathsAsListsOfStrings();
 		List<Long> leafIDs = getListOfLeafIDs();
 		treePaths = new TreePaths(listOfPaths, leafIDs);
 		return treePaths;
-		//HERE gérer ça et passer aux leafs (interface et classe)
 	}	
 	
 	//setters

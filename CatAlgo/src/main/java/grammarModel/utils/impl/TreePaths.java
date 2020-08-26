@@ -2,10 +2,8 @@ package grammarModel.utils.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.utils.ITreePaths;
@@ -25,8 +23,8 @@ public class TreePaths extends Chains implements ITreePaths {
 	}
 	
 	@Override
-	public Map<List<String>, Set<Long>> getPathToLeafIDs() throws GrammarModelException {
-		Map<List<String>, Set<Long>> pathToLeafID = new HashMap<List<String>, Set<Long>>();
+	public Map<List<String>, List<Long>> getPathToLeafIDs() throws GrammarModelException {
+		Map<List<String>, List<Long>> pathToLeafID = new HashMap<List<String>, List<Long>>();
 		List<List<String>> paths = super.getChains();
 		try {
 			for (int i=0 ; i < paths.size() ; i++) {
@@ -37,9 +35,9 @@ public class TreePaths extends Chains implements ITreePaths {
 					pathToLeafID.get(path).add(leafIDs.get(i));
 				}
 				else {
-					Set<Long> newSetOfIDs = new HashSet<Long>();
-					newSetOfIDs.add(leafIDs.get(i));
-					pathToLeafID.put(path, newSetOfIDs);
+					List<Long> newListOfIDs = new ArrayList<Long>();
+					newListOfIDs.add(leafIDs.get(i));
+					pathToLeafID.put(path, newListOfIDs);
 				}
 			}	
 		}
@@ -66,16 +64,6 @@ public class TreePaths extends Chains implements ITreePaths {
 		}
 		else throw new GrammarModelException("TreePaths.getLeaf() : leaf not found.");
 		return leaf;
-	}
-	
-	@Override
-	public boolean hasProperty(String property) throws GrammarModelException {
-		boolean propertyFound = false;
-		resetIndexes();
-		while (propertyFound == false && this.hasNext()) {
-			propertyFound = this.next().equals(property);
-		}
-		return propertyFound;
 	}
 
 }

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import grammarModel.exceptions.GrammarModelException;
-import grammarModel.utils.ITreePaths;
 
 /**
  * <p>
@@ -44,7 +43,7 @@ public interface ISyntaxBranch extends ISyntacticStructure {
 	List<ISyntacticStructure> getArguments();
 	
 	/**
-	 * Returns this branch's function, in the form of a syntax leaf. 
+	 * Returns a branch's function, in the form of a syntax leaf. 
 	 * 
 	 * @return the branch's function
 	 */
@@ -72,16 +71,6 @@ public interface ISyntaxBranch extends ISyntacticStructure {
 	 */
 	@Override
 	List<List<String>> getPathsAsListsOfStrings();
-	
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * <p>
-	 * The returned tree path is constructed out of every component's tree paths.
-	 * </p> 
-	 */
-	@Override
-	ITreePaths getTreePaths();		
 	
 	/**
 	 * Returns true if this syntax branch is a tree, i.e. if its name is the start element of the context-free

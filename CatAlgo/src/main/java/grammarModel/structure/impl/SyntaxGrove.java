@@ -1,77 +1,66 @@
 package grammarModel.structure.impl;
 
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
+import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxGrove;
-import grammarModel.structure.ISyntaxLeaf;
-import grammarModel.structure.ISyntacticStructure;
-import grammarModel.utils.ITreePaths;
+import representation.dataFormats.IDescription;
+import representation.inputOutput.IContextInput;
+import representation.inputOutput.impl.ContextInput;
 
-public class SyntaxGrove extends SyntaxBranch implements ISyntaxGrove {
+public class SyntaxGrove implements ISyntaxGrove {
 
 	private String name;
-	private List<ISyntacticStructure> listOfTrees;
+	private List<ISyntaxBranch> listOfTrees;
 	
-	public SyntaxGrove(String name, List<ISyntacticStructure> listOfTrees) {
+	public SyntaxGrove(String name, List<ISyntaxBranch> listOfTrees) {
 		this.name = name;
 		this.listOfTrees = listOfTrees;
 	}
+	
+	//getters
+	
+	@Override
+	public ISyntaxGrove clone() {
+		return new SyntaxGrove(getName(), getListOfTrees());
+	}
+	
+	@Override
+	public IContextInput getContextInput() {
+		IContextInput contextInput;
+		Set<IDescription> objectDescriptions = new HashSet<IDescription>();
+		for (ISyntaxBranch tree : listOfTrees) {
+			objectDescriptions.add(tree.getBinaryRelation());
+		}
+		contextInput = new ContextInput(objectDescriptions);
+		return contextInput;
+	}
+	
+	@Override
+	public List<ISyntaxBranch> getListOfTrees() {
+		return listOfTrees;
+	}	
+	
+	//setters
 
 	@Override
 	public String getName() {
 		return name;
 	}
 	
-	@Override
-	public List<ISyntacticStructure> getListOfComponents() {
-		return listOfTrees;
-	}
+
 	
 	@Override
 	public void markRecursion() throws GrammarModelException {
-		for (ISyntacticStructure component : listOfTrees) {
-			component.setRecursionIndex();
+		for (ISyntaxBranch tree : listOfTrees) {
+			tree.setRecursionIndex();
 		}
-		for (ISyntacticStructure component : listOfTrees) {
-			component.markRecursion();
+		for (ISyntaxBranch tree : listOfTrees) {
+			tree.markRecursion();
 		}
 	}
 	
-	@Override
-	public void setPosetElementID() throws GrammarModelException {
-		Set<ITreePaths> setOfITreePaths = getSetOfTreePaths();
-		Map<String, Integer> rootToIndex = new HashMap<String, Integer>();
-		Map<ITreePaths, Integer> pathsToIndex = new HashMap<ITreePaths, Integer>();
-		for (ITreePaths paths : setOfITreePaths) {
-			String root = paths.getRoot();
-			if (!rootToIndex.containsKey(root)) {
-				rootToIndex.put(root, 0);
-			}
-			else {
-				Integer index = rootToIndex.get(root);
-				index++;
-				rootToIndex.put(root, index);
-			}
-			pathsToIndex.put(paths, rootToIndex.get(root));
-		}
-		setPosetElementID(pathsToIndex);
-	}
-
-	@Override
-	public ISyntacticStructure clone() {
-		return new SyntaxGrove(getName(), getListOfComponents());
-	}
-
-	/**
-	 * A grove has no leaf.
-	 */
-	@Override
-	public ISyntaxLeaf getEponymLeaf() {
-		return null;
-	}
-
 }

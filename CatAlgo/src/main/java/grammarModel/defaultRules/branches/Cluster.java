@@ -22,25 +22,8 @@ public class Cluster extends SyntaxBranch implements ISyntaxBranch {
 		this.size = size;
 		this.rule = rule;
 	}
-
-	@Override
-	public String getName() {
-		return NAME;
-	}
 	
-	@Override
-	public ISyntaxLeaf getEponymLeaf() {
-		return clusteR;
-	}	
-
-	@Override
-	public List<ISyntacticStructure> getListOfComponents() {
-		List<ISyntacticStructure> components = new ArrayList<ISyntacticStructure>();
-		components.add(clusteR);
-		components.add(size);
-		components.add(rule);
-		return components;
-	}
+	//getters
 
 	@Override
 	public ISyntacticStructure clone() {
@@ -48,6 +31,29 @@ public class Cluster extends SyntaxBranch implements ISyntaxBranch {
 		Size sizeClone = (Size) size.clone();
 		IRule ruleClone = (IRule) rule.clone();
 		return new Cluster(clusteRClone, sizeClone, ruleClone);
+	}	
+	
+	@Override
+	public ISyntaxLeaf getFunction() {
+		return clusteR;
 	}
+	
+	@Override
+	public List<ISyntacticStructure> getListOfComponents() {
+		List<ISyntacticStructure> components = new ArrayList<ISyntacticStructure>();
+		components.add(clusteR);
+		components.add(size);
+		components.add(rule);
+		return components;
+	}	
+	
+	@Override
+	public String getName() {
+		return NAME;
+	}
+
+
+
+
 
 }
