@@ -117,7 +117,7 @@ public interface ISyntacticStructure extends Cloneable {
 	 * 
 	 * An argument path is a path that does not lead to the structure's <i> function </i> (see {@link ISyntaxBranch}). <br>
 	 * 
-	 * The recursion index is used to make sure that two diffe)rent structures can never yield the same 
+	 * The recursion index is used to make sure that two different structures can never yield the same 
 	 * binary relation. It allows the addition a distinctive mark to the function leaves derived from recursive symbols
 	 * (see {@link #markRecursion()}). <br>
 	 * </p>

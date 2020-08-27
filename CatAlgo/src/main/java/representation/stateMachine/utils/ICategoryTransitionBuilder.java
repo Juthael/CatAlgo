@@ -12,7 +12,6 @@ import representation.stateMachine.IRepresentation;
 import representation.stateMachine.ISpecifications;
 import representation.stateMachine.IState;
 import representation.stateMachine.ITransition;
-import representation.stateMachine.ITransitionFunction;
 import representation.stateMachine.IValue;
 import representation.stateMachine.IValueAttribution;
 

@@ -35,7 +35,7 @@ public class DragPreyIn extends SyntaxBranch implements ISyntaxBranch, IDoWithBu
 	}
 
 	@Override
-	public ISyntaxLeaf getEponymLeaf() {
+	public ISyntaxLeaf getFunction() {
 		return dragPreyIN;
 	}
 

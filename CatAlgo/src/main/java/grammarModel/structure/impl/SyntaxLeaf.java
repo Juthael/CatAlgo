@@ -8,6 +8,12 @@ import java.util.Map;
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxLeaf;
+import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IFunctionalExpression;
+import representation.dataFormats.impl.BinaryRelation;
+import representation.dataFormats.impl.FunctionalExpression;
+import representation.stateMachine.ISymbol;
+import representation.stateMachine.impl.Symbol;
 
 public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLeaf {
 
@@ -27,6 +33,24 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 	}
 	
 	//getters
+	
+	@Override
+	public IBinaryRelation getBinaryRelation() {
+		IBinaryRelation relation;
+		Map<ISymbol, ISymbol> symbolMap = new HashMap<ISymbol, ISymbol>();
+		relation = new BinaryRelation(symbolMap);
+		return relation;
+	}
+	
+	@Override
+	public IFunctionalExpression getFunctionalExpression() {
+		IFunctionalExpression expression;
+		ISymbol leafSymbol = new Symbol(name);
+		Map<List<Integer>, ISymbol> coordinatesOntoSymbols = new HashMap<List<Integer>, ISymbol>();
+		coordinatesOntoSymbols.put(new ArrayList<Integer>(), leafSymbol);
+		expression = new FunctionalExpression(coordinatesOntoSymbols);
+		return expression;
+	}
 	
 	@Override
 	public long getLeafID() {

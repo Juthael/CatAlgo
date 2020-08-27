@@ -35,7 +35,7 @@ public class DropOnThreshold extends SyntaxBranch implements ISyntaxBranch, IDoW
 	}
 
 	@Override
-	public ISyntaxLeaf getEponymLeaf() {
+	public ISyntaxLeaf getFunction() {
 		return dropOnThresholD;
 	}
 

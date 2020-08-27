@@ -27,7 +27,7 @@ public class CcString extends SyntaxBranch implements ISyntaxBranch {
 	}
 	
 	@Override
-	public ISyntaxLeaf getEponymLeaf() {
+	public ISyntaxLeaf getFunction() {
 		return ccStrinG;
 	}	
 

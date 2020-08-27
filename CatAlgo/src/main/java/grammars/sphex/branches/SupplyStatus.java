@@ -35,7 +35,7 @@ public class SupplyStatus extends SyntaxBranch implements ISyntaxBranch {
 	}
 
 	@Override
-	public ISyntaxLeaf getEponymLeaf() {
+	public ISyntaxLeaf getFunction() {
 		return supplyStatuS;
 	}
 

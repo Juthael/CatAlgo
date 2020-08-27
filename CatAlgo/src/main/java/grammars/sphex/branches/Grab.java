@@ -35,7 +35,7 @@ public class Grab extends SyntaxBranch implements ISyntaxBranch, IDoWithPrey {
 	}
 
 	@Override
-	public ISyntaxLeaf getEponymLeaf() {
+	public ISyntaxLeaf getFunction() {
 		return graB;
 	}
 

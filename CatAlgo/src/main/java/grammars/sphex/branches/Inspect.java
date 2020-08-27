@@ -35,7 +35,7 @@ public class Inspect extends SyntaxBranch implements ISyntaxBranch, IDoWithBurro
 	}
 
 	@Override
-	public ISyntaxLeaf getEponymLeaf() {
+	public ISyntaxLeaf getFunction() {
 		return inspecT;
 	}
 

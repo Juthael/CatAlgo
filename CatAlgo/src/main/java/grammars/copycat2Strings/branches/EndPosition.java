@@ -28,7 +28,7 @@ public class EndPosition extends SyntaxBranch implements ISyntaxBranch, ISpecifi
 	}
 	
 	@Override
-	public ISyntaxLeaf getEponymLeaf() {
+	public ISyntaxLeaf getFunction() {
 		return endPositioN;
 	}		
 

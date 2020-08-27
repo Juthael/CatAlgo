@@ -32,7 +32,7 @@ public class Letter extends SyntaxBranch implements ISyntaxBranch {
 	}
 	
 	@Override
-	public ISyntaxLeaf getEponymLeaf() {
+	public ISyntaxLeaf getFunction() {
 		return letteR;
 	}	
 

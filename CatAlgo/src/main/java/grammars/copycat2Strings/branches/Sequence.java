@@ -29,7 +29,7 @@ public class Sequence extends SyntaxBranch implements ISyntaxBranch, IRule {
 	}
 	
 	@Override
-	public ISyntaxLeaf getEponymLeaf() {
+	public ISyntaxLeaf getFunction() {
 		return sequencE;
 	}	
 

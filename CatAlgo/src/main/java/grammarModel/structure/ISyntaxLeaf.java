@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import grammarModel.exceptions.GrammarModelException;
+import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IFunctionalExpression;
 
 /**
  * <p>
@@ -36,8 +38,37 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	
 	//getters
 	
-	//HERE, faire entrer getBinaryRelation et getFunctionalExpression dans l'interface (ainsi que dans celle de ISyntaxBranch, 
-	//et dans le schéma UML. Puis implémenter pour SyntaxLeaf (déjà fait pour SyntaxBranch)
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * <p>
+	 * However, a leaf being composed of a single element, the relation returned is an empty set of pairs. 
+	 * </p>
+	 * 
+	 * @see grammarModel.structure.ISyntaxBranch#getBinaryRelation()
+	 */
+	@Override
+	public IBinaryRelation getBinaryRelation();
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * <p>
+	 * The functional expression returned by a leaf contains a single term : the leaf's name. <br>
+	 * A leaf is a component of a syntax branch. As such, its single term will either be : <br> 
+	 * -a function applying to the the branch's arguments, if the leaf is the branch's <i> function leaf. </i> <br>
+	 * -an element of the branch's list of arguments otherwise. <br>
+	 * </p>  
+	 * 
+	 * <p>
+	 * Until it is declared as an argument (or part of an argument) of a function, the term returned has no coordinate (i.e., 
+	 * its coordinate list remains empty). <br> 
+	 * </p>
+	 * 
+	 * @see grammarModel.structure.ISyntaxBranch
+	 */
+	@Override
+	public IFunctionalExpression getFunctionalExpression();
 	
 	/**
 	 * Returns the leaf unique ID.
@@ -47,8 +78,11 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * <p>
 	 * However, since a leaf is a terminal, the rule it is associated with has no right term, and therefore a leaf has no 
-	 * component. The returned list is empty. <br> 
+	 * component. The returned list is empty. <br>
+	 * </p> 
 	 * 
 	 * @return an empty list
 	 */
@@ -57,7 +91,10 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	
 	/**
 	 * {@inheritDoc}
-	 * In this case, since a leaf can't be derived, the returned list only contains the leaf's own ID.
+	 * 
+	 * <p>
+	 * In the case of a leaf, since it can't be derived, the returned list only contains the leaf's own ID.
+	 * </p>
 	 * 
 	 * @return a list with only the leaf ID
 	 */
@@ -66,8 +103,11 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	
 	/**
 	 * {@inheritDoc}
-	 * In this case, there is only one path that only contains the leaf. So the returned list contains a single 
-	 * list, that contains a single string : this leaf's name. 
+	 * 
+	 * <p>
+	 * In the case of a leaf, there is only one path, that only contains one element. So the returned list contains a single 
+	 * list, that contains a single string : this leaf's name.
+	 * </p> 
 	 * 
 	 * @return this structure's unique path, with this leaf as a single element
 	 */

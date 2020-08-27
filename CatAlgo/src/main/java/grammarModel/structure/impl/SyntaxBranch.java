@@ -27,9 +27,6 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	//getters
 	
 	@Override
-	public abstract ISyntacticStructure clone();	
-	
-	@Override
 	public List<ISyntacticStructure> getArguments() {
 		List<ISyntacticStructure> arguments = getListOfComponents();
 		ISyntaxLeaf function = getFunction();
@@ -66,9 +63,6 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	}	
 	
 	@Override
-	public abstract ISyntaxLeaf getFunction();
-	
-	@Override
 	public IFunctionalExpression getFunctionalExpression() {
 		IFunctionalExpression functionalExpression;
 		Map<List<Integer>, ISymbol> coordinatesOntoSymbols = new HashMap<List<Integer>, ISymbol>();
@@ -92,9 +86,6 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 		functionalExpression = new FunctionalExpression(coordinatesOntoSymbols);
 		return functionalExpression;
 	}
-	
-	@Override
-	public abstract List<ISyntacticStructure> getListOfComponents();	
 	
 	@Override
 	public List<Long> getListOfLeafIDs() {

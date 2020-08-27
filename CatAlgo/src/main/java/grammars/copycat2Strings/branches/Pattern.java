@@ -28,7 +28,7 @@ public class Pattern extends SyntaxBranch implements ISyntaxBranch, IRule {
 	}
 	
 	@Override
-	public ISyntaxLeaf getEponymLeaf() {
+	public ISyntaxLeaf getFunction() {
 		return patterN;
 	}		
 

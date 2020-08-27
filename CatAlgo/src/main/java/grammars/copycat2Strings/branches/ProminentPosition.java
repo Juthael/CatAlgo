@@ -28,7 +28,7 @@ public class ProminentPosition extends SyntaxBranch implements ISyntaxBranch, IP
 	}
 	
 	@Override
-	public ISyntaxLeaf getEponymLeaf() {
+	public ISyntaxLeaf getFunction() {
 		return prominentPositioN;
 	}		
 
