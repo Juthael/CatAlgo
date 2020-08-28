@@ -1,7 +1,8 @@
 package representation.dataFormats;
 
-import java.util.Map;
+import java.util.Set;
 
+import grammarModel.structure.ISyntaxGrove;
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 
@@ -17,7 +18,14 @@ import representation.stateMachine.ISymbol;
  * A binary relation <i> R </i> is a set of pairs <i> (x,y) </i>, where <i> x </i> and <i> y </i> are symbols. If this 
  * relation is used to describe an object, then <i> x </i> and <i> y </i> are properties and <i> (x,y) ∈ R </i> (or 
  * <i> xRy </i>) means "<i> x </i> <b> is </b> <i> y </i>" (e.g. "color is blue"). <br>
- * </p>   
+ * </p> 
+ * 
+ * <p>
+ * Warning : the {@link IBinaryRelation} type can (and should) only deal with well-founded binary relations. Otherwise, 
+ * exceptions will be thrown and/or errors will occur. <br>
+ * The {@link ISyntaxGrove#markRecursion()} method provides a recursion index mechanism. This allows to be sure that the 
+ * descriptions in the generated context input ({@link ISyntaxGrove#getContextInput()}) will only yield well-founded relations. 
+ * </p>
  * 
  * @see representation.dataFormats.IDescription
  * @see representation.dataFormats.ILanguage
@@ -47,9 +55,10 @@ public interface IBinaryRelation extends IDescription {
 	 * <i> R </i> that contains <i> S </i>. 
 	 * 
 	 * @return the language associated with this relation
+	 * @throws RepresentationException if an error has occured
 	 */
 	@Override
-	ILanguage getLanguage();
+	ILanguage getLanguage() throws RepresentationException;
 	
 	/**
 	 * The language associated with this relation is determined first, and will provide its equivalent functional expression.
@@ -61,10 +70,11 @@ public interface IBinaryRelation extends IDescription {
 	IFunctionalExpression getFunctionalExpression();
 	
 	/**
+	 * Returns the pair of symbols of the binary relation. 
 	 * 
-	 * @return the map of the relation, mapping <i> x </i> to <i> y </i> iff <i> xRy </i>
+	 * @return the pairs of symbols of the binary relation
 	 */
-	Map<ISymbol, ISymbol> getRelationMap();	
+	Set<IPair> getPairs();	
 	
 	/**
 	 * A description's grammar is the minimal knowledge base required to proceed the description of a 

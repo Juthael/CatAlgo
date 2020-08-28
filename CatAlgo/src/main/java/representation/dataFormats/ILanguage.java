@@ -1,5 +1,6 @@
 package representation.dataFormats;
 
+import java.util.List;
 import java.util.Set;
 
 import representation.exceptions.RepresentationException;
@@ -63,10 +64,16 @@ public interface ILanguage extends IDescription {
 	IFunctionalExpression getFunctionalExpression();
 	
 	/**
-	 * 
+	 * Returns the set of words that constitutes this language
 	 * @return the set of words that constitutes this language
 	 */
-	Set<IWord> getWords();	
+	Set<IWord> getWords();
+	
+	/**
+	 * Returns the list of words that constitutes this language, in a lexicographic order
+	 * @return the list of words that constitutes this language, in a lexicographic order
+	 */
+	List<IWord> getDictionary();
 
 	/**
 	 * The machine <i> M </i> is built from its language <i> L<sub>M</sub> </i>. <br>

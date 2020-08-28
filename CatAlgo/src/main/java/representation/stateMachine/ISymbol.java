@@ -11,12 +11,20 @@ package representation.stateMachine;
  */
 public interface ISymbol {
 	
+	//getters
+	
+	@Override
+	boolean equals(Object o);
+	
 	/**
 	 * If the symbol is an arbitrary symbol (and not an operator); its cost always equals 0.
 	 * @return the cost of the symbol
 	 * @see representation.stateMachine.IOperator
 	 */
 	int getCost();
+	
+	@Override
+	int hashCode();
 	
 	/**
 	 * 

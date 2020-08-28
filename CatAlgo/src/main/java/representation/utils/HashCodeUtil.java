@@ -34,7 +34,7 @@ public final class HashCodeUtil {
 
   /*** chars.  */
   public static int hash(int aSeed, char aChar) {
-    log("char...");
+    //log("char...");
     return firstTerm(aSeed) + (int)aChar;
   }
 
