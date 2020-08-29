@@ -74,7 +74,7 @@ public class MaxTransitiveChain implements Cloneable {
 	
 	// setters
 	
-	public void extend (ISymbol newChainElem, Set<Pair> relation) throws RepresentationException  {
+	public void extend (ISymbol newChainElem, Set<IPair> relation) throws RepresentationException  {
 		if (relation.isEmpty() || this.relation.containsAll(relation)) {
 			/*
 			 * If an element can be appended to the chain although no new pair is added to the relation, 

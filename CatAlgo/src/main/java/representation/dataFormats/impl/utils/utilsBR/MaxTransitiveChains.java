@@ -19,7 +19,7 @@ public class MaxTransitiveChains {
 	
 	//setters
 	
-	public boolean addNewChain(MaxTransitiveChain specifiedChain) {
+	public boolean add(MaxTransitiveChain specifiedChain) {
 		boolean isMaxChain = true;
 		Set<MaxTransitiveChain> nonMaxChains = new HashSet<MaxTransitiveChain>();
 		Iterator<MaxTransitiveChain> chainIterator = maxTransChains.iterator();

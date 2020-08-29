@@ -14,8 +14,12 @@ import representation.stateMachine.IWord;
 
 public class Language implements ILanguage {
 
+	private Set<IWord> words;
+	private List<IWord> dictionary;
+	
 	public Language(Set<IWord> words) {
-		// TODO Auto-generated constructor stub
+		this.words = words;
+		dictionary = getWordsInLexicographicOrder(words);
 	}
 
 	@Override
@@ -70,6 +74,11 @@ public class Language implements ILanguage {
 	public int getNbOfArgumentsFor(ISymbol symbol) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	private List<IWord> getWordsInLexicographicOrder(Set<IWord> words){
+		// HERE
+		
 	}
 
 }

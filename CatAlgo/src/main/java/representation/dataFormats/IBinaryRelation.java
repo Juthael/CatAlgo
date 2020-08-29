@@ -55,19 +55,23 @@ public interface IBinaryRelation extends IDescription {
 	 * <i> R </i> that contains <i> S </i>. 
 	 * 
 	 * @return the language associated with this relation
-	 * @throws RepresentationException if an error has occured
+	 * @throws RepresentationException if an error has occurred while transforming the binary relation into a language
 	 */
 	@Override
 	ILanguage getLanguage() throws RepresentationException;
 	
 	/**
-	 * The language associated with this relation is determined first, and will provide its equivalent functional expression.
+	 * Returns the functional expression equivalent to this binary relation. <br>
+	 * 
+	 * The most convenient way to get this functional expression is to transform the relation into a language first, and 
+	 * then to call {@link ILanguage#getFunctionalExpression()}.
 	 * 
 	 * @see representation.dataFormats.ILanguage
-	 * @return
+	 * @return the functional expression equivalent to this binary relation
+	 * @throws RepresentationException if an error has occured while building the language (used as an intermediate format)
 	 */
 	@Override
-	IFunctionalExpression getFunctionalExpression();
+	IFunctionalExpression getFunctionalExpression() throws RepresentationException;
 	
 	/**
 	 * Returns the pair of symbols of the binary relation. 
@@ -77,17 +81,26 @@ public interface IBinaryRelation extends IDescription {
 	Set<IPair> getPairs();	
 	
 	/**
+	 * <p>
 	 * A description's grammar is the minimal knowledge base required to proceed the description of a 
 	 * given object or category (regardless of the format at use). <br>
 	 * 
 	 * A rule <i> x ::= y </i> exists in the returned grammar iff <i> xRy </i> and no <i> z </i> can be found 
-	 * such that <i> xRz </i> and <i> zRy </i>.
+	 * such that <i> xRz </i> and <i> zRy </i>. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * The most convenient way to get a grammar out of a relation is to transform the relation into a language 
+	 * first, and then call {@link ILanguage#getGrammar()}.
 	 * 
 	 * @see representation.dataFormats.IDescription
+	 * @see representation.dataFormats.ILanguage
 	 * @return the grammar associated with this description
+	 * @throws RepresentationException if the language equivalent to this relation, 
+	 * and which is needed as an intermediate format, cannot be built
 	 */
 	@Override
-	IGrammar getGrammar();
+	IGrammar getGrammar() throws RepresentationException;
 	
 	/**
 	 * Returns the number of arguments that the specified symbol, when regarded as a function, accepts. <br>
@@ -100,8 +113,10 @@ public interface IBinaryRelation extends IDescription {
 	 * @param symbol any symbol that is used by the description
 	 * @return the number of arguments accepted by the specified symbol
 	 * @throws RepresentationException if the specified symbol is not actually used in the description
+	 * @throws RepresentationException if the language equivalent to this relation, 
+	 * and which is needed as an intermediate format, cannot be built
 	 */
 	@Override
-	int getNbOfArgumentsFor(ISymbol symbol);	
+	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;	
 
 }
