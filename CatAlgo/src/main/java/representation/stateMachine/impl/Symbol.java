@@ -14,6 +14,11 @@ public class Symbol implements ISymbol {
 	//getters
 	
 	@Override
+	public int compareTo(ISymbol anotherSymbol) {
+		return name.compareTo(anotherSymbol.toString());
+	}
+	
+	@Override
 	public boolean equals(Object o) {
 		boolean oEqualsThis;
 		if (o == this)

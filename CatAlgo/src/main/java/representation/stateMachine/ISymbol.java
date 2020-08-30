@@ -9,9 +9,17 @@ package representation.stateMachine;
  * @author Gael Tregouet
  *
  */
-public interface ISymbol {
+public interface ISymbol extends Comparable<ISymbol> {
 	
 	//getters
+	
+	/**
+	 * Calls the {@link String#compareTo(String)} method on the symbol's name, with the other symbol's name in argument. 
+	 * @return 0 if the symbol name is equal to this name ; a value less than 0 if this symbol's name is lexicographically 
+	 * less than the specified symbol's name ; and a value grater than 0 otherwise
+	 */
+	@Override
+	int compareTo(ISymbol anotherSymbol);	
 	
 	@Override
 	boolean equals(Object o);

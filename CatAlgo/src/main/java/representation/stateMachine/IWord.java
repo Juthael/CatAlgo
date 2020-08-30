@@ -29,6 +29,6 @@ public interface IWord extends Comparable<IWord> {
 	 * @return <i>-1</i> if this word is before the specified word in the lexicographic order ; <i>0</i> if it is the same word ;  <i>1</i> otherwise.
 	 */
 	@Override
-	int compareTo(IWord word);
+	int compareTo(IWord anotherWord);
 
 }

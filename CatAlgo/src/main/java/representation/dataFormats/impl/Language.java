@@ -1,5 +1,9 @@
 package representation.dataFormats.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -8,36 +12,61 @@ import representation.dataFormats.IDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.IGrammar;
 import representation.dataFormats.ILanguage;
+import representation.dataFormats.IPair;
+import representation.dataFormats.impl.utils.utilsBR.Pair;
 import representation.stateMachine.IStateMachine;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.IWord;
 
 public class Language implements ILanguage {
 
-	private Set<IWord> words;
 	private List<IWord> dictionary;
 	
 	public Language(Set<IWord> words) {
-		this.words = words;
 		dictionary = getWordsInLexicographicOrder(words);
 	}
 
 	@Override
 	public ILanguage getLanguage() {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 
 	@Override
 	public boolean meets(IDescription description) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean specifiedDescIsMet;
+		IBinaryRelation thisRelation = getBinaryRelation();
+		IBinaryRelation otherRelation = description.getBinaryRelation();
+		specifiedDescIsMet = otherRelation.getPairs().containsAll(thisRelation.getPairs());
+		return specifiedDescIsMet;
 	}
 
 	@Override
 	public IBinaryRelation getBinaryRelation() {
-		// TODO Auto-generated method stub
-		return null;
+		IBinaryRelation relation;
+		Set<IPair> pairs = new HashSet<IPair>();
+		IWord previousWord = null;
+		for (IWord word : dictionary) {
+			if (previousWord != null) {
+				/*
+				 * HERE refaire avec des listes et indexs plutôt qu'itérateurs
+				 * Commenter binaryRelation.getLanguage
+				 */
+				Iterator<ISymbol> previousWordIte = previousWord.getSymbolIterator();
+				Iterator<ISymbol> thisWordConsequentIte = word.getSymbolIterator();
+				boolean equalSoFar = true;
+				while (previousWordIte.hasNext() && thisWordConsequentIte.hasNext() && equalSoFar) {
+					equalSoFar = previousWordIte.next().equals(thisWordConsequentIte.next());
+				}
+				Iterator<ISymbol> thisWordAntecedentIte = word.getSymbolIterator();
+				while (thisWordAntecedentIte.hasNext()) {
+					ISymbol antecedent = thisWordAntecedentIte.next();
+					while (thisWordConsequentIte.hasNext()) {
+						ISymbol consequent = thisWordConsequentIte.next();
+						pairs.add(new Pair(antecedent, consequent));
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -77,8 +106,9 @@ public class Language implements ILanguage {
 	}
 	
 	private List<IWord> getWordsInLexicographicOrder(Set<IWord> words){
-		// HERE
-		
+		List<IWord> dictionary = new ArrayList<IWord>(words);
+		Collections.sort(dictionary);
+		return dictionary;
 	}
 
 }
