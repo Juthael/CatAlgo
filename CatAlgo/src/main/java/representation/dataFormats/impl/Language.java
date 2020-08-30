@@ -3,7 +3,6 @@ package representation.dataFormats.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -44,34 +43,26 @@ public class Language implements ILanguage {
 	public IBinaryRelation getBinaryRelation() {
 		IBinaryRelation relation;
 		Set<IPair> pairs = new HashSet<IPair>();
-		IWord previousWord = null;
 		for (IWord word : dictionary) {
-			if (previousWord != null) {
-				/*
-				 * HERE refaire avec des listes et indexs plutôt qu'itérateurs
-				 * Commenter binaryRelation.getLanguage
-				 */
-				Iterator<ISymbol> previousWordIte = previousWord.getSymbolIterator();
-				Iterator<ISymbol> thisWordConsequentIte = word.getSymbolIterator();
-				boolean equalSoFar = true;
-				while (previousWordIte.hasNext() && thisWordConsequentIte.hasNext() && equalSoFar) {
-					equalSoFar = previousWordIte.next().equals(thisWordConsequentIte.next());
+			List<ISymbol> listOfSymbols = word.getListOfSymbols();
+			int antecedentIdx = 0;
+			int consequentIdx;
+			while (antecedentIdx < listOfSymbols.size()) {
+				consequentIdx = antecedentIdx + 1;
+				while (consequentIdx < listOfSymbols.size()) {
+					pairs.add(new Pair(listOfSymbols.get(antecedentIdx), listOfSymbols.get(consequentIdx)));
+					consequentIdx++;
 				}
-				Iterator<ISymbol> thisWordAntecedentIte = word.getSymbolIterator();
-				while (thisWordAntecedentIte.hasNext()) {
-					ISymbol antecedent = thisWordAntecedentIte.next();
-					while (thisWordConsequentIte.hasNext()) {
-						ISymbol consequent = thisWordConsequentIte.next();
-						pairs.add(new Pair(antecedent, consequent));
-					}
-				}
+				antecedentIdx++;
 			}
 		}
+		relation = new BinaryRelation(pairs);
+		return relation;
 	}
 
 	@Override
 	public IFunctionalExpression getFunctionalExpression() {
-		// TODO Auto-generated method stub
+		// HERE
 		return null;
 	}
 
