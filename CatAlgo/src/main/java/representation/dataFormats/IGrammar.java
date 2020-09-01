@@ -10,28 +10,24 @@ import java.util.Set;
  */
 public interface IGrammar {
 	
-	/**
-	 * 
-	 * @return the set of rules
-	 */
-	Set<IGrammaticalRule> getGrammaticalRules();
+	//getters
 	
 	/**
-	 * 
+	 * Checks that the specified rule belongs to this grammar.
 	 * @param rule a grammatical rule
-	 * @return
+	 * @return true if the specified rule belongs to this grammar
 	 */
 	boolean contains(IGrammaticalRule rule);
 	
 	/**
-	 * 
+	 * Checks that every rule among the specified set of rules belongs to this grammar.
 	 * @param rules a set of grammatical rules
-	 * @return
+	 * @return true if every rule from the specified set belongs to this grammar ; false otherwise
 	 */
 	boolean contains(Set<IGrammaticalRule> rules);
 	
 	/**
-	 * 
+	 * Checks that the specified grammar is a subset of this grammar.
 	 * @param grammar a context-free grammar
 	 * @return true if the set of rules contained in the specified grammar is also contained in this 
 	 * grammar ; false otherwise
@@ -39,27 +35,29 @@ public interface IGrammar {
 	 */
 	boolean contains(IGrammar grammar);
 	
+	@Override
+	boolean equals(Object object);	
+	
 	/**
-	 * 
+	 * Return this grammar's set of rules.
+	 * @return the set of rules
+	 */
+	Set<IGrammaticalRule> getGrammaticalRules();	
+	
+	/**
+	 * Returns the number of rules in this grammar with the specified symbol as an antecedent.
 	 * @param antecedent the name of a symbol
 	 * @return the number of rules with the specified symbol as an antecedent
 	 */
 	int getNbOfRulesWhoseAntecedentIs(String antecedent);
 	
-	/**
-	 * 
-	 * @param any object
-	 * @return true if the specified object is a IGrammar that contains the same set of rules ; false otherwise 
-	 * @see representation.dataFormats.IGrammaticalRule
-	 */
-	@Override
-	boolean equals(Object object);
-	
-	/**
-	 * 
-	 * @return the hashcode
-	 */
 	@Override
 	int hashCode();
+	
+	//setters
+	
+	void add(IGrammaticalRule grammaticalRule);
+	
+	
 
 }

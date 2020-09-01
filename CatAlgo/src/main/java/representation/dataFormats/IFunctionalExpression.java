@@ -58,11 +58,11 @@ public interface IFunctionalExpression extends IDescription {
 	 * to symbols (that can be found on this location). <br>  
 	 * 
 	 * For a given functional expression <i> F = i(j(k ∧ l) ∧  m) </i>, here the resulting mapping : <br> 
-	 * {} => <i> i </i> <br>
-	 * {0} => <i> j </i> <br>
-	 * {0,0} => <i> k </i> <br>
-	 * {0,1} => <i> l </i> <br>
-	 * {1} => <i> m </i> <br>
+	 * {0} => <i> i </i> <br>
+	 * {0,0} => <i> j </i> <br>
+	 * {0,0,0} => <i> k </i> <br>
+	 * {0,0,1} => <i> l </i> <br>
+	 * {0,1} => <i> m </i> <br>
 	 * 
 	 * @return the map that encodes the functional expression
 	 */

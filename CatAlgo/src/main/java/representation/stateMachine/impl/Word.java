@@ -30,6 +30,14 @@ public class Word implements IWord {
 		}
 		return result;
 	}
+	
+	@Override
+	public ISymbol get(int index) {
+		ISymbol symbol = null;
+		if (index < size())
+			symbol = listOfSymbols.get(index);
+		return symbol;
+	}
 
 	@Override
 	public List<ISymbol> getListOfSymbols() {
@@ -39,6 +47,11 @@ public class Word implements IWord {
 	@Override
 	public Iterator<ISymbol> getSymbolIterator() {
 		return listOfSymbols.iterator();
+	}
+	
+	@Override
+	public int size() {
+		return listOfSymbols.size();
 	}
 
 }

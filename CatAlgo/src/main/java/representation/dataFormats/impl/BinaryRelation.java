@@ -41,8 +41,9 @@ public class BinaryRelation implements IBinaryRelation {
 	@Override
 	public ILanguage getLanguage() throws RepresentationException {
 		ILanguage language;
-		Set<MaxTransitiveChain> knownTransChain = new HashSet<MaxTransitiveChain>();
-		MaxTransitiveChains finalTransChain = new MaxTransitiveChains();
+		Set<MaxTransitiveChain> knownTransChains = new HashSet<MaxTransitiveChain>();
+		//maximal transitive chains that can't be extended
+		MaxTransitiveChains finalTransChains = new MaxTransitiveChains();
 		ISymbol root;
 		try {
 			root = getRoot();
@@ -52,18 +53,32 @@ public class BinaryRelation implements IBinaryRelation {
 				+ e.getMessage());
 		}
 		MaxTransitiveChain rootChain = new MaxTransitiveChain(root);
-		knownTransChain.add(rootChain);
-		while (!knownTransChain.isEmpty()) {
+		//maximal transitive chains known so far, but these chains may be extended
+		knownTransChains.add(rootChain);
+		while (!knownTransChains.isEmpty()) {
+			//new chains built on this run of the 'while' loop, by extending known transitive chains
 			Set<MaxTransitiveChain> newTransChains = new HashSet<MaxTransitiveChain>();
-			for (MaxTransitiveChain currentChain : knownTransChain) {
+			for (MaxTransitiveChain currentChain : knownTransChains) {
 				ISymbol lastSymbol = currentChain.getLast();
 				Set<IPair> newChainPairs = getPairsStartingWith(lastSymbol);
 				if (newChainPairs.isEmpty())
-					finalTransChain.add(currentChain);
+					//this chain cannot be extended, so put in final chains
+					finalTransChains.add(currentChain);
 				else {
+					/*
+					 * pairs exist to extend this chain; but until proven otherwise, the associated transitive 
+					 * relation does not and the proposed chain extensions do not comply with the transitivity 
+					 * constraint.  
+					 */
 					boolean currentChainHasBeenExtended = false;
+					/* 
+					 * for each new pair that could extend the chain, searches for the pairs that must be added to the 
+					 * chain's associated relation, in order for it to remain transitive after the extension
+					 */
 					for (IPair newChainPair : newChainPairs) {
+						//symbol that could be put at the end of the current chain
 						ISymbol newSymbol = newChainPair.getConsequent();
+						//pairs that must be added to the chain's associated relation if the chain is to be extended
 						Set<IPair> relationExtensForTransitivity = new HashSet<IPair>();
 						boolean remainsTransitive = true;
 						int chainIndex = 0;
@@ -83,13 +98,13 @@ public class BinaryRelation implements IBinaryRelation {
 						}
 					}
 					if (!currentChainHasBeenExtended)
-						finalTransChain.add(currentChain);
+						finalTransChains.add(currentChain);
 				}
 			}
-			knownTransChain = newTransChains;
+			knownTransChains = newTransChains;
 		}
 		Set<IWord> words = new HashSet<IWord>();
-		for (MaxTransitiveChain chain : finalTransChain.getMaxTransChains())
+		for (MaxTransitiveChain chain : finalTransChains.getMaxTransChains())
 			words.add(new Word(chain.getChain()));
 		language = new Language(words);
 		return language;
