@@ -13,9 +13,11 @@ import representation.dataFormats.IBinaryRelation;
 import representation.dataFormats.IDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.IGrammar;
+import representation.dataFormats.IGrammaticalRule;
 import representation.dataFormats.ILanguage;
 import representation.dataFormats.IPair;
 import representation.dataFormats.impl.utils.utilsBR.Pair;
+import representation.exceptions.RepresentationException;
 import representation.stateMachine.IStateMachine;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.IWord;
@@ -152,14 +154,66 @@ public class Language implements ILanguage {
 
 	@Override
 	public IGrammar getGrammar() {
-		// TODO Auto-generated method stub
-		return null;
+		IGrammar grammar = new Grammar();
+		for (IWord word : dictionary) {
+			List<ISymbol> listOfSymbols = word.getListOfSymbols();
+			int antIndex;
+			int consIndex;
+			for (antIndex = 0 ; antIndex < word.size() - 1 ; antIndex++) {
+				for(consIndex = antIndex + 1 ; consIndex < word.size() ; consIndex++) {
+					IGrammaticalRule rule = new GrammaticalRule(listOfSymbols.get(antIndex), listOfSymbols.get(consIndex));
+					grammar.add(rule);
+				}
+			}
+		}
+		return grammar;
 	}
 
 	@Override
-	public int getNbOfArgumentsFor(ISymbol symbol) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException {
+		//CHECK HERE
+		int nbOfArguments = 0;
+		//finds the first occurrence of a word containing the specified symbol
+		int firstWordWithSymbolIndex = -1;
+		int wordIndex = 0;
+		while ((firstWordWithSymbolIndex == -1) || (wordIndex < dictionary.size())) {
+			if (dictionary.get(wordIndex).getListOfSymbols().contains(symbol))
+				firstWordWithSymbolIndex = wordIndex;
+			else wordIndex++;
+		}
+		/*
+		 * If word found, retrieves the arguments given to the function ending with the specified symbol
+		 * (this function is the sublist (of the word's list of symbols) that ends with the 
+		 * specified symbol)
+		 */
+		if (firstWordWithSymbolIndex != -1) {
+			Set<ISymbol> arguments = new HashSet<ISymbol>();
+			//gets the function ending with the specified symbol
+			List<ISymbol> function = new ArrayList<ISymbol>();
+			ISymbol currSymbol;
+			int symbolIndex = 0;
+			do {
+				currSymbol = dictionary.get(wordIndex).get(symbolIndex);
+				function.add(currSymbol);
+				if (!currSymbol.equals(symbol))
+					symbolIndex++;
+			} while (!currSymbol.equals(symbol));
+			//finds the arguments, if the symbol is not terminal
+			if (symbolIndex < dictionary.get(wordIndex).size() - 1) {
+				boolean functionFoundInThisWord = true;
+				while (functionFoundInThisWord && wordIndex < dictionary.size()) {
+					arguments.add(dictionary.get(wordIndex).get(symbolIndex + 1));
+					wordIndex++;
+					functionFoundInThisWord = 
+							function.equals(dictionary.get(wordIndex).getListOfSymbols().subList(0, function.size()));
+				}
+			}
+			nbOfArguments = arguments.size();
+		}
+		//if no word found with the specified symbol, throws new Exception
+		else throw new RepresentationException("Language.getNbOfArgumentsFor(ISymbol) : the specified symbol " 
+				+ System.lineSeparator() + "cannot be found in the words of this language");
+		return nbOfArguments;
 	}
 	
 	private List<IWord> getWordsInLexicographicOrder(Set<IWord> words){

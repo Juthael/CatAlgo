@@ -109,19 +109,28 @@ public interface ILanguage extends IDescription {
 	IGrammar getGrammar();
 	
 	/**
+	 * <p>
 	 * Returns the number of arguments that the specified symbol, when regarded as a function, accepts. <br>
+	 * </p>
 	 * 
+	 * <p>
 	 * The number of arguments of a symbol <i> s </i> can be found using the following procedure : <br> 
 	 * .find a word in the language that has the form <i> XsY </i>, with <i> X </i> and <i> Y </i> being 
 	 * (possibly empty) sub-strings. <br>
 	 * .count the number of words in the language beginning with the substring <i> Xs </i>. This returns the 
-	 * number of arguments for <i> s </i>. <br>  
+	 * number of arguments for <i> s </i>. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * WARNING : the result may be inconsistent if the same symbol is found both in a terminal and non-terminal 
+	 * position, as <i> c </i> in <i> a/b/c, a/c/d/e, (...) </i>.
+	 * </p>
 	 * 
 	 * @param symbol any symbol that is used by the description
 	 * @return the number of arguments accepted by the specified symbol
 	 * @throws RepresentationException if the specified symbol is not actually used in the description
 	 */
 	@Override
-	int getNbOfArgumentsFor(ISymbol symbol);
+	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;
 	
 }

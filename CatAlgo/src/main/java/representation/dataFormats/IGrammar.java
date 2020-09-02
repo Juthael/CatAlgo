@@ -2,6 +2,8 @@ package representation.dataFormats;
 
 import java.util.Set;
 
+import representation.stateMachine.ISymbol;
+
 /**
  * A IGrammar is a context-free grammar, implemented as a collection of rules mapping an antecedent with a consequent. 
  * 
@@ -46,10 +48,10 @@ public interface IGrammar {
 	
 	/**
 	 * Returns the number of rules in this grammar with the specified symbol as an antecedent.
-	 * @param antecedent the name of a symbol
+	 * @param any symbol
 	 * @return the number of rules with the specified symbol as an antecedent
 	 */
-	int getNbOfRulesWhoseAntecedentIs(String antecedent);
+	int getNbOfRulesWhoseAntecedentIs(ISymbol symbol);
 	
 	@Override
 	int hashCode();

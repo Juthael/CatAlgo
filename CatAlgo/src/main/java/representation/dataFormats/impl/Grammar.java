@@ -5,6 +5,8 @@ import java.util.Set;
 
 import representation.dataFormats.IGrammar;
 import representation.dataFormats.IGrammaticalRule;
+import representation.stateMachine.ISymbol;
+import representation.utils.HashCodeUtil;
 
 public class Grammar implements IGrammar {
 
@@ -43,33 +45,41 @@ public class Grammar implements IGrammar {
 			equals = false;
 		else {
 			IGrammar other = (IGrammar) o;
-			equals = ()
+			equals = ((grammaticalRules.size() == other.getGrammaticalRules().size()) 
+					&& (grammaticalRules.containsAll(other.getGrammaticalRules())));
 		}
-		
+		return equals;
 	}
 	
 	@Override
 	public Set<IGrammaticalRule> getGrammaticalRules() {
-		// TODO Auto-generated method stub
-		return null;
+		return grammaticalRules;
 	}	
 
 	@Override
-	public int getNbOfRulesWhoseAntecedentIs(String antecedent) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getNbOfRulesWhoseAntecedentIs(ISymbol symbol) {
+		Set<IGrammaticalRule> rulesWithSpecifiedAnt = new HashSet<IGrammaticalRule>();
+		for (IGrammaticalRule rule : grammaticalRules) {
+			if (rule.getAntecedent().equals(symbol))
+				rulesWithSpecifiedAnt.add(rule);
+		}
+		return rulesWithSpecifiedAnt.size();
 	}
 	
 	@Override
 	public int hashCode() {
-		
+		int hashCode = 0;
+		for (IGrammaticalRule rule : grammaticalRules) {
+			hashCode += (rule.hashCode() + HashCodeUtil.SEED);
+		}
+		return hashCode;
 	}
 	
 	//setters
 	
 	@Override
 	public void add(IGrammaticalRule grammaticalRule) {
-		
+		grammaticalRules.add(grammaticalRule);
 	}
 
 }
