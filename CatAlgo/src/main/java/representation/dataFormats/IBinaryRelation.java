@@ -38,6 +38,41 @@ import representation.stateMachine.ISymbol;
 public interface IBinaryRelation extends IDescription {
 	
 	/**
+	 * Returns the functional expression equivalent to this binary relation. <br>
+	 * 
+	 * The most convenient way to get this functional expression is to transform the relation into a language first, and 
+	 * then to call {@link ILanguage#getFunctionalExpression()}.
+	 * 
+	 * @see representation.dataFormats.ILanguage
+	 * @return the functional expression equivalent to this binary relation
+	 * @throws RepresentationException if an error has occured while building the language (used as an intermediate format)
+	 */
+	@Override
+	IFunctionalExpression getFunctionalExpression() throws RepresentationException;	
+	
+	/**
+	 * <p>
+	 * A description's grammar is the minimal knowledge base required to proceed the description of a 
+	 * given object or category (regardless of the format at use). <br>
+	 * 
+	 * A rule <i> x ::= y </i> exists in the returned grammar iff <i> xRy </i> and no <i> z </i> can be found 
+	 * such that <i> xRz </i> and <i> zRy </i>. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * The most convenient way to get a grammar out of a relation is to transform the relation into a language 
+	 * first, and then call {@link ILanguage#getGrammar()}.
+	 * 
+	 * @see representation.dataFormats.IDescription
+	 * @see representation.dataFormats.ILanguage
+	 * @return the grammar associated with this description
+	 * @throws RepresentationException if the language equivalent to this relation, 
+	 * and which is needed as an intermediate format, cannot be built
+	 */
+	@Override
+	IGrammar getGrammar() throws RepresentationException;	
+	
+	/**
 	 * The language <i> L<sub>M</sub> </i> associated with a binary relation <i> R </i> is the set of all the 
 	 * <i> maximal transitive non-redundant strings </i> in <i> R </i>. <br>
 	 * 
@@ -61,62 +96,32 @@ public interface IBinaryRelation extends IDescription {
 	ILanguage getLanguage() throws RepresentationException;
 	
 	/**
-	 * Returns the functional expression equivalent to this binary relation. <br>
-	 * 
-	 * The most convenient way to get this functional expression is to transform the relation into a language first, and 
-	 * then to call {@link ILanguage#getFunctionalExpression()}.
-	 * 
-	 * @see representation.dataFormats.ILanguage
-	 * @return the functional expression equivalent to this binary relation
-	 * @throws RepresentationException if an error has occured while building the language (used as an intermediate format)
-	 */
-	@Override
-	IFunctionalExpression getFunctionalExpression() throws RepresentationException;
-	
-	/**
-	 * Returns the pair of symbols of the binary relation. 
-	 * 
-	 * @return the pairs of symbols of the binary relation
-	 */
-	Set<IPair> getPairs();	
-	
-	/**
-	 * <p>
-	 * A description's grammar is the minimal knowledge base required to proceed the description of a 
-	 * given object or category (regardless of the format at use). <br>
-	 * 
-	 * A rule <i> x ::= y </i> exists in the returned grammar iff <i> xRy </i> and no <i> z </i> can be found 
-	 * such that <i> xRz </i> and <i> zRy </i>. <br>
-	 * </p>
-	 * 
-	 * <p>
-	 * The most convenient way to get a grammar out of a relation is to transform the relation into a language 
-	 * first, and then call {@link ILanguage#getGrammar()}.
-	 * 
-	 * @see representation.dataFormats.IDescription
-	 * @see representation.dataFormats.ILanguage
-	 * @return the grammar associated with this description
-	 * @throws RepresentationException if the language equivalent to this relation, 
-	 * and which is needed as an intermediate format, cannot be built
-	 */
-	@Override
-	IGrammar getGrammar() throws RepresentationException;
-	
-	/**
-	 * Returns the number of arguments that the specified symbol, when regarded as a function, accepts. <br>
+	 * {@inheritDoc}
 	 * 
 	 * The most convenient way to obtain this number from a binary relation is to build its equivalent language 
 	 * or functional expression first, and then to call this same method on them.  
 	 * 
 	 * @see representation.dataFormats.ILanguage
 	 * @see representation.dataFormats.IBinaryRelation
-	 * @param symbol any symbol that is used by the description
-	 * @return the number of arguments accepted by the specified symbol
 	 * @throws RepresentationException if the specified symbol is not actually used in the description
 	 * @throws RepresentationException if the language equivalent to this relation, 
-	 * and which is needed as an intermediate format, cannot be built
+	 * which is needed as an intermediate format, cannot be built
 	 */
 	@Override
-	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;	
+	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;		
+	
+	/**
+	 * Returns the pair of symbols of the binary relation. 
+	 * 
+	 * @return the pairs of symbols of the binary relation
+	 */
+	Set<IPair> getPairs();
+	
+	/**
+	 * Returns the binary relation as a String
+	 * @return a string containing every pair <i>(x, y)</i> such as <i>xRy</i> 
+	 */
+	@Override
+	String toString();
 
 }

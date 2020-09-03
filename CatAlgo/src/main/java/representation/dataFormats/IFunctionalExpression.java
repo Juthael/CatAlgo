@@ -45,7 +45,15 @@ import representation.stateMachine.ISymbol;
 public interface IFunctionalExpression extends IDescription {
 	
 	/**
-	 * The language equivalent to this functional expression is built first, and then provides the binary relation.
+	 * <p>
+	 * Returns the binary relation equivalent to this functional expression. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * Let <i> x </i> and <i> y </i> be two symbols that can respectively be found in the functional expression at coordinates
+	 * <i>c<sub>1</sub></i> = [ <i>a, b, (...), i</i> ] and <i>c<sub>2</sub></i> = [ <i>a, b, (...), i, (...) </i> ], such as 
+	 * <i>c<sub>1</sub></i> is a substring of <i>c<sub>2</sub></i> ; then <i> xRy </i>.
+	 * </p> 
 	 * 
 	 * @see representation.dataFormats.ILanguage
 	 * @return the binary relation equivalent to this functional expression 
@@ -58,68 +66,96 @@ public interface IFunctionalExpression extends IDescription {
 	 * to symbols (that can be found on this location). <br>  
 	 * 
 	 * For a given functional expression <i> F = i(j(k ∧ l) ∧  m) </i>, here the resulting mapping : <br> 
-	 * {0} => <i> i </i> <br>
-	 * {0,0} => <i> j </i> <br>
-	 * {0,0,0} => <i> k </i> <br>
-	 * {0,0,1} => <i> l </i> <br>
-	 * {0,1} => <i> m </i> <br>
+	 * [0] => <i> i </i> <br>
+	 * [0, 0] => <i> j </i> <br>
+	 * [0, 0, 0] => <i> k </i> <br>
+	 * [0, 0, 1] => <i> l </i> <br>
+	 * [0, 1] => <i> m </i> <br>
 	 * 
 	 * @return the map that encodes the functional expression
 	 */
 	Map<List<Integer>, ISymbol> getCoordinatesOntoSymbols();	
 	
 	/**
+	 * <p>
+	 * A description's grammar is the minimal knowledge base required to proceed the description of a 
+	 * given object or category (regardless of the format at use). <br>
+	 * </p>
+	 * 
+	 * Let <i> x </i> and <i> y </i> be two symbols that can respectively be found in the functional expression at coordinates
+	 * <i>c<sub>1</sub></i> = [ <i>a, b, (...), i</i> ] and <i>c<sub>2</sub></i> = [ <i>a, b, (...), i, j </i> ], such as 
+	 * <i>c<sub>1</sub></i> is a substring of <i>c<sub>2</sub></i> and |<i>c<sub>2</sub></i>| = |<i>c<sub>1</sub></i>+1| ; 
+	 * then <i>x</i> ::= <i>y</i>.
+	 * 
+	 * @see representation.dataFormats.ILanguage
+	 * @return the grammar associated with this description
+	 */
+	@Override
+	IGrammar getGrammar();	
+	
+	/**
+	 * <p>
 	 * The regular language equivalent to this functional expression is built following the procedure described 
 	 * below. <br>
+	 * </p>
 	 * 
-	 * From a functional expression with one or more conjunction, a set of words is composed 
+	 * <p>
+	 * <b>Example :</b> <br> 
+	 * <i> F = i(j(k ∧ l) ∧  m) </i> <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>'Natural' procedure : </b> <br> 
+	 * Out of a functional expression with one or more conjunction, a set of words is built 
 	 * by iterating the procedure below, until no more conjunction is left <br>
 	 * 
 	 * -If <i> a(b ∧ c) </i> then <i> (ab, ac) </i> <br>  
 	 * 
-	 * Example : <br> 
-	 * <i> F = i(j(k ∧ l) ∧  m) </i> <br>
+
 	 * 
 	 * Procedure : <br>
 	 * .<i> ij(k ∧ l) </i> <br>
 	 * ..<i> ijk => ∈ L<sub>M</sub> </i> <br>
 	 * ..<i> ijl => ∈ L<sub>M</sub> </i> <br>
 	 * .<i> im => ∈ L<sub>M</sub> </i> <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * <b> Alternative procedure : </b> <br>
+	 * .Search for the terminal elements (in the example : <i>k</i>, <i>l</i> and <i>m</i>). Their coordinates are a sublist 
+	 * of no other coordinate. <br>
+	 * .for each terminal <i>t</i> of coordinates [<i>a, b, c, (...), i</i>], <br>
+	 * ..build the word <i> m </i> = [<i>o, p, q, (...), t</i>] with <i> o </i> having the coordinates [<i>a</i>] ; <i> p </i> 
+	 * -> [<i>a, b</i>] ; <i> q </i> -> [<i>a, b, c</i>], etc. <br>
 	 * 
 	 * @return the regular language equivalent to this functional expression
 	 */
 	@Override
 	ILanguage getLanguage();
-	
-	/**
-	 * A description's grammar is the minimal knowledge base required to proceed the description of a 
-	 * given object or category (regardless of the format at use). <br>
-	 * 
-	 * The language equivalent to this functional expression is built first, and then provides the grammar.
-	 * 
-	 * @see representation.dataFormats.ILanguage
-	 * @return the grammar associated with this description
-	 */
-	@Override
-	IGrammar getGrammar();
 
 	/**
-	 * Returns the number of arguments that the specified symbol, when regarded as a function, accepts. <br>
+	 * {@inheritDoc}
 	 * 
-	 * The number of arguments of a symbol <i> s </i> can be found using the following procedure : <br>
-	 * 
-	 * <p> 
-	 * .find a coordinate for the symbol in the functional expression array. This coordinate is of 
-	 * the form <code> [i][j]..[y][z] </code>. <br>
-	 * .if <i> z ≠ 0 </i>, return 0 <br>
-	 * .else return <code> [i][j]..[y].length </code> - 1 <br
+	 * <p>
+	 * The number of arguments for a symbol <i> s </i> can be found using the following procedure : <br>
+	 * .find an occurrence of <i>s</i> in the functional expression. Let <i>c<sub>s</sub></i> be its
+	 * coordinates. <br>
+	 * .any symbol <i>x</i> of coordinates <i>c<sub>x</sub></i>, such as <i>c<sub>s</sub></i> is a substring of 
+	 *  <i>c<sub>x</sub></i> and |<i>c<sub>x</sub></i>| = |<i>c<sub>s</sub></i>| + 1 is an argument of the same function 
+	 *  ending with <i>s</i>. <br>
+	 * .if <i>n</i> such symbols have been found, then this function has <i>n</i> arguments, and any other function ending 
+	 * with <i>s</i> will have <i>n</i> arguments.
 	 * </p>
 	 * 
-	 * @param symbol any symbol that is used by the description
-	 * @return the number of arguments accepted by the specified symbol
-	 * @throws RepresentationException if the specified symbol is not actually used in the description
 	 */
 	@Override
-	int getNbOfArgumentsFor(ISymbol symbol);	
+	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;	
+	
+	/**
+	 * The functional expression as a String.
+	 * @return the functional expression as a String
+	 */
+	@Override
+	String toString();
 	
 }

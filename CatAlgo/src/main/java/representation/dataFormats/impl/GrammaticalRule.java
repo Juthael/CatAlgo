@@ -6,8 +6,8 @@ import representation.utils.HashCodeUtil;
 
 public class GrammaticalRule implements IGrammaticalRule {
 
-	private ISymbol antecedent;
-	private ISymbol consequent;
+	private final ISymbol antecedent;
+	private final ISymbol consequent;
 	
 	public GrammaticalRule(ISymbol antecedent, ISymbol consequent) {
 		this.antecedent = antecedent;

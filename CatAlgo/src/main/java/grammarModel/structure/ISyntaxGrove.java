@@ -48,6 +48,7 @@ public interface ISyntaxGrove extends Cloneable {
 	List<ISyntaxBranch> getListOfTrees();
 	
 	/**
+	 * Returns the name of the context. <br>
 	 * 
 	 * @return the name of the context.
 	 */

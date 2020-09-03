@@ -2,14 +2,17 @@ package grammarModel.structure.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxLeaf;
 import representation.dataFormats.IBinaryRelation;
 import representation.dataFormats.IFunctionalExpression;
+import representation.dataFormats.IPair;
 import representation.dataFormats.impl.BinaryRelation;
 import representation.dataFormats.impl.FunctionalExpression;
 import representation.stateMachine.ISymbol;
@@ -37,8 +40,8 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 	@Override
 	public IBinaryRelation getBinaryRelation() {
 		IBinaryRelation relation;
-		Map<ISymbol, ISymbol> symbolMap = new HashMap<ISymbol, ISymbol>();
-		relation = new BinaryRelation(symbolMap);
+		Set<IPair> relationPairs = new HashSet<IPair>();
+		relation = new BinaryRelation(relationPairs);
 		return relation;
 	}
 	

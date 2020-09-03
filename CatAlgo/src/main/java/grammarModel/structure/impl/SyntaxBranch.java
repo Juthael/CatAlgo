@@ -2,9 +2,11 @@ package grammarModel.structure.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
@@ -12,8 +14,10 @@ import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
 import representation.dataFormats.IBinaryRelation;
 import representation.dataFormats.IFunctionalExpression;
+import representation.dataFormats.IPair;
 import representation.dataFormats.impl.BinaryRelation;
 import representation.dataFormats.impl.FunctionalExpression;
+import representation.dataFormats.impl.utils.utilsBR.Pair;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.impl.Symbol;
 
@@ -36,30 +40,30 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	
 	@Override
 	public IBinaryRelation getBinaryRelation() {
-		IBinaryRelation relation;
+		IBinaryRelation branchRelation;
+		Set<IPair> branchRelationPairs = new HashSet<IPair>();
 		ISyntaxLeaf function = getFunction();
 		ISymbol functionSymbol = new Symbol(function.getName());
 		List<ISyntacticStructure> arguments = getArguments();
-		Map<ISymbol, ISymbol> symbolMap = new HashMap<ISymbol, ISymbol>();
 		for (ISyntacticStructure argument : arguments) {
 			IBinaryRelation argRelation = argument.getBinaryRelation();
-			if (argRelation.getRelationMap().isEmpty()) {
+			if (argRelation.getPairs().isEmpty()) {
 				//then argument is a syntax leaf
 				ISymbol argSymbol = new Symbol(argument.getName());
-				symbolMap.put(functionSymbol, argSymbol);
+				branchRelationPairs.add(new Pair(functionSymbol, argSymbol));
 			}
 			else {
 				//then argument is a syntax branch
-				Map<ISymbol, ISymbol> argSymbolMap = argRelation.getRelationMap();
-				for (ISymbol antSymbol : argSymbolMap.keySet()) {
-					symbolMap.put(functionSymbol, antSymbol);
-					symbolMap.put(functionSymbol, argSymbolMap.get(antSymbol));
+				Set<IPair> argRelationPairs = argRelation.getPairs();
+				for (IPair currentArgPair : argRelationPairs) {
+					branchRelationPairs.add(new Pair(functionSymbol, currentArgPair.getAntecedent()));
+					branchRelationPairs.add(new Pair(functionSymbol, currentArgPair.getConsequent()));
 				}
-				symbolMap.putAll(argSymbolMap);
+				branchRelationPairs.addAll(argRelationPairs);
 			}
 		}
-		relation = new BinaryRelation(symbolMap);
-		return relation;
+		branchRelation = new BinaryRelation(branchRelationPairs);
+		return branchRelation;
 	}	
 	
 	@Override

@@ -29,17 +29,6 @@ public interface IDescription {
 	IBinaryRelation getBinaryRelation();
 	
 	/**
-	 * A ILanguage is a regular language. It is composed of all the words (i.e., strings of symbols) accepted by a given 
-	 * state machine of the 'finite state automaton' (FSA) type. For any regular language, a FSA machine can be found to accept it. 
-	 * If a language is a description of an object or a category, then each of its word is a functional expression describing 
-	 * an accessible property or an attainable goal on this object, or on any object of this category.  
-	 * @return the description as a language
-	 * @throws RepresentationException if an error has occurred while building the language out of another 
-	 * description format
-	 */
-	ILanguage getLanguage() throws RepresentationException;
-	
-	/**
 	 * A functional expression is a statement that uses the function/argument(s) formalism to describe an object or a category. 
 	 * As the word of a language, it is made up of a string of symbols ; but unlike a word, it makes use of the 
 	 * conjunction symbol " ∧ " which allows a single function to describe a whole object or category.  
@@ -47,7 +36,7 @@ public interface IDescription {
 	 * @throws RepresentationException if an error has occurred while converting a description format into another in 
 	 * order to build the functional expression
 	 */
-	IFunctionalExpression getFunctionalExpression() throws RepresentationException;
+	IFunctionalExpression getFunctionalExpression() throws RepresentationException;	
 	
 	/**
 	 * A description's grammar is the minimal knowledge base required to proceed the description of a 
@@ -57,18 +46,18 @@ public interface IDescription {
 	 * @throws RepresentationException if an error has occurred while converting a description format into another in 
 	 * order to build the description's grammar
 	 */
-	IGrammar getGrammar() throws RepresentationException;
+	IGrammar getGrammar() throws RepresentationException;	
 	
 	/**
-	 * Returns the number of arguments that the specified symbol, when regarded as a function, accepts. <br>
-	 * 
-	 * @param symbol any symbol that is used by the description
-	 * @return the number of arguments accepted by the specified symbol
-	 * @throws RepresentationException if the specified symbol is not actually used in the description
-	 * @throws RepresentationException if an error has occurred while converting a description format into another in 
-	 * order to get the number of arguments
+	 * A ILanguage is a regular language. It is composed of all the words (i.e., strings of symbols) accepted by a given 
+	 * state machine of the 'finite state automaton' (FSA) type. For any regular language, a FSA machine can be found to accept it. 
+	 * If a language is a description of an object or a category, then each of its word is a functional expression describing 
+	 * an accessible property or an attainable goal on this object, or on any object of this category.  
+	 * @return the description as a language
+	 * @throws RepresentationException if an error has occurred while building the language out of another 
+	 * description format
 	 */
-	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;
+	ILanguage getLanguage() throws RepresentationException;
 	
 	/**
 	 * Returns true if this description is an instance of the specified description. <br>
@@ -84,6 +73,17 @@ public interface IDescription {
 	 * @param description
 	 * @return true if this description is an instance of the specified description
 	 */
-	boolean meets(IDescription description);	
+	boolean meets(IDescription description);		
+	
+	/**
+	 * Returns the number of arguments that any function that ends with the specified symbol will accept as an input. <br>
+	 * 
+	 * @param symbol any symbol that is used by the description
+	 * @return the number of arguments accepted by any function ending with the specified symbol
+	 * @throws RepresentationException if the specified symbol is not actually used in the description
+	 * @throws RepresentationException if an error has occurred while converting a description format into another in 
+	 * order to get the number of arguments
+	 */
+	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;
 
 }

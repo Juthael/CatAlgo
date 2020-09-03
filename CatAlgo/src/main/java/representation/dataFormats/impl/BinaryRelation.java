@@ -1,6 +1,7 @@
 package representation.dataFormats.impl;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import representation.dataFormats.IBinaryRelation;
@@ -19,7 +20,7 @@ import representation.stateMachine.impl.Word;
 
 public class BinaryRelation implements IBinaryRelation {
 	
-	Set<IPair> pairs;
+	private final Set<IPair> pairs;
 
 	public BinaryRelation(Set<IPair> pairs) {
 		this.pairs = pairs;
@@ -29,15 +30,35 @@ public class BinaryRelation implements IBinaryRelation {
 	public IBinaryRelation getBinaryRelation() {
 		return this;
 	}
-
+	
 	@Override
-	public boolean meets(IDescription description) {
-		boolean otherDescMeetsThis;
-		Set<IPair> otherSetOfPairs = description.getBinaryRelation().getPairs();
-		otherDescMeetsThis = (otherSetOfPairs.containsAll(pairs));
-		return otherDescMeetsThis;
-	}
-
+	public IFunctionalExpression getFunctionalExpression() throws RepresentationException {
+		IFunctionalExpression functionalExpression;
+		try {
+			functionalExpression =  getLanguage().getFunctionalExpression();
+		}
+		catch (RepresentationException e) {
+			throw new RepresentationException("BinaryRelation.getFunctionalExpression() : the language is needed as "
+					+ "an intermediate format ; an error has occured while building it." + System.lineSeparator() 
+					+ e.getMessage());
+		}
+		return functionalExpression;
+	}	
+	
+	@Override
+	public IGrammar getGrammar() throws RepresentationException {
+		IGrammar grammar;
+		try {
+			grammar =  getLanguage().getGrammar();
+		}
+		catch (RepresentationException e) {
+			throw new RepresentationException("BinaryRelation.getGrammar() : the language is needed as "
+					+ "an intermediate format ; an error has occured while building it." + System.lineSeparator() 
+					+ e.getMessage());
+		}
+		return grammar;
+	}	
+	
 	@Override
 	public ILanguage getLanguage() throws RepresentationException {
 		ILanguage language;
@@ -108,41 +129,8 @@ public class BinaryRelation implements IBinaryRelation {
 			words.add(new Word(chain.getChain()));
 		language = new Language(words);
 		return language;
-	}
-
-	@Override
-	public IFunctionalExpression getFunctionalExpression() throws RepresentationException {
-		IFunctionalExpression functionalExpression;
-		try {
-			functionalExpression =  getLanguage().getFunctionalExpression();
-		}
-		catch (RepresentationException e) {
-			throw new RepresentationException("BinaryRelation.getFunctionalExpression() : the language is needed as "
-					+ "an intermediate format ; an error has occured while building it." + System.lineSeparator() 
-					+ e.getMessage());
-		}
-		return functionalExpression;
-	}
-
-	@Override
-	public Set<IPair> getPairs() {
-		return pairs;
-	}
-
-	@Override
-	public IGrammar getGrammar() throws RepresentationException {
-		IGrammar grammar;
-		try {
-			grammar =  getLanguage().getGrammar();
-		}
-		catch (RepresentationException e) {
-			throw new RepresentationException("BinaryRelation.getGrammar() : the language is needed as "
-					+ "an intermediate format ; an error has occured while building it." + System.lineSeparator() 
-					+ e.getMessage());
-		}
-		return grammar;
-	}
-
+	}	
+	
 	@Override
 	public int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException {
 		int nbOfArguments;
@@ -160,6 +148,44 @@ public class BinaryRelation implements IBinaryRelation {
 			}
 		}
 		return nbOfArguments;
+	}	
+	
+	@Override
+	public Set<IPair> getPairs() {
+		return pairs;
+	}	
+
+	@Override
+	public boolean meets(IDescription description) {
+		boolean otherDescMeetsThis;
+		Set<IPair> otherSetOfPairs = description.getBinaryRelation().getPairs();
+		otherDescMeetsThis = (otherSetOfPairs.containsAll(pairs));
+		return otherDescMeetsThis;
+	}
+	
+	@Override
+	public String toString() {
+		String binaryRelationString;
+		StringBuilder sB = new StringBuilder();
+		Iterator<IPair> pairIterator = pairs.iterator();
+		int newLineIndex = 0;
+		while (pairIterator.hasNext()) {
+			IPair currentPair = pairIterator.next();
+			sB.append("(" 
+				+ currentPair.getAntecedent().toString() 
+				+ ", " 
+				+ currentPair.getConsequent().toString()
+				+ ")");
+			if (pairIterator.hasNext())
+				sB.append(", ");
+			if (newLineIndex == 8) {
+				sB.append(System.lineSeparator());
+				newLineIndex = 0;
+			}
+			else newLineIndex++;
+		}
+		binaryRelationString = sB.toString();
+		return binaryRelationString;
 	}
 	
 	private ISymbol getRoot() throws RepresentationException {

@@ -45,6 +45,12 @@ public interface ILanguage extends IDescription {
 	IBinaryRelation getBinaryRelation();
 	
 	/**
+	 * Returns the list of words that constitutes this language, in a lexicographic order
+	 * @return the list of words that constitutes this language, in a lexicographic order
+	 */
+	List<IWord> getDictionary();	
+	
+	/**
 	 * The functional expression equivalent to this language can be inferred from the flowchart of the machine that 
 	 * accepts it. <br> 
 	 * 
@@ -64,17 +70,36 @@ public interface ILanguage extends IDescription {
 	IFunctionalExpression getFunctionalExpression();
 	
 	/**
-	 * Returns the set of words that constitutes this language
-	 * @return the set of words that constitutes this language
+	 * A description's grammar is the minimal knowledge base required to proceed the description of a 
+	 * given object or category (regardless of the format at use). <br> 
+	 * 
+	 * A rule <i> x ::= y </i> exists in the returned grammar iff a word <i> w </i> can be found in 
+	 * this language such that <i> xy </i> is a substring of <i> w </i>.	 * .
+	 * 
+	 * @return the grammar associated with this description
 	 */
-	Set<IWord> getWords();
+	@Override
+	IGrammar getGrammar();	
 	
 	/**
-	 * Returns the list of words that constitutes this language, in a lexicographic order
-	 * @return the list of words that constitutes this language, in a lexicographic order
+	 * {@inheritDoc}
+	 * 
+	 * <p>
+	 * The number of arguments for a symbol <i> s </i> can be found using the following procedure : <br> 
+	 * .find a word in the language that has the form <i> XsY </i>, with <i> X </i> and <i> Y </i> being 
+	 * (possibly empty) sub-strings. <br>
+	 * .count the number of words in the language beginning with the substring <i> Xs </i>. This returns the 
+	 * number of arguments for <i> s </i>. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * WARNING : the result may be inconsistent if the same symbol is found both in a terminal and non-terminal 
+	 * position, as <i> c </i> in <i> a/b/c, a/c/d/e, (...) </i>.
+	 * </p>
 	 */
-	List<IWord> getDictionary();
-
+	@Override
+	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;	
+	
 	/**
 	 * The machine <i> M </i> is built from its language <i> L<sub>M</sub> </i>. <br>
 	 * 
@@ -94,43 +119,19 @@ public interface ILanguage extends IDescription {
 	 * 
 	 * @return a state machine that accepts this language
 	 */
-	IStateMachine getStateMachine();
+	IStateMachine getStateMachine();	
 	
 	/**
-	 * A description's grammar is the minimal knowledge base required to proceed the description of a 
-	 * given object or category (regardless of the format at use). <br> 
-	 * 
-	 * A rule <i> x ::= y </i> exists in the returned grammar iff a word <i> w </i> can be found in 
-	 * this language such that <i> xy </i> is a substring of <i> w </i>.	 * .
-	 * 
-	 * @return the grammar associated with this description
+	 * Returns the set of words that constitutes this language
+	 * @return the set of words that constitutes this language
 	 */
-	@Override
-	IGrammar getGrammar();
+	Set<IWord> getWords();
 	
 	/**
-	 * <p>
-	 * Returns the number of arguments that the specified symbol, when regarded as a function, accepts. <br>
-	 * </p>
-	 * 
-	 * <p>
-	 * The number of arguments of a symbol <i> s </i> can be found using the following procedure : <br> 
-	 * .find a word in the language that has the form <i> XsY </i>, with <i> X </i> and <i> Y </i> being 
-	 * (possibly empty) sub-strings. <br>
-	 * .count the number of words in the language beginning with the substring <i> Xs </i>. This returns the 
-	 * number of arguments for <i> s </i>. <br>
-	 * </p>
-	 * 
-	 * <p>
-	 * WARNING : the result may be inconsistent if the same symbol is found both in a terminal and non-terminal 
-	 * position, as <i> c </i> in <i> a/b/c, a/c/d/e, (...) </i>.
-	 * </p>
-	 * 
-	 * @param symbol any symbol that is used by the description
-	 * @return the number of arguments accepted by the specified symbol
-	 * @throws RepresentationException if the specified symbol is not actually used in the description
+	 * A String containing every word in this language, with the symbol separator ' / '.
+	 * @return a String containing every word in this language
 	 */
 	@Override
-	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;
+	String toString();
 	
 }

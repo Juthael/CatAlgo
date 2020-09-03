@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,26 +26,13 @@ import representation.stateMachine.impl.StateMachine;
 
 public class Language implements ILanguage {
 
-	private List<IWord> dictionary;
+	private static final char WORD_SEPARATOR = '/';
+	private final List<IWord> dictionary;
 	
 	public Language(Set<IWord> words) {
 		dictionary = getWordsInLexicographicOrder(words);
 	}
-
-	@Override
-	public ILanguage getLanguage() {
-		return this;
-	}
-
-	@Override
-	public boolean meets(IDescription description) {
-		boolean specifiedDescIsMet;
-		IBinaryRelation thisRelation = getBinaryRelation();
-		IBinaryRelation otherRelation = description.getBinaryRelation();
-		specifiedDescIsMet = otherRelation.getPairs().containsAll(thisRelation.getPairs());
-		return specifiedDescIsMet;
-	}
-
+	
 	@Override
 	public IBinaryRelation getBinaryRelation() {
 		IBinaryRelation relation;
@@ -64,8 +52,13 @@ public class Language implements ILanguage {
 		}
 		relation = new BinaryRelation(pairs);
 		return relation;
-	}
-
+	}	
+	
+	@Override
+	public List<IWord> getDictionary() {
+		return dictionary;
+	}	
+	
 	@Override
 	public IFunctionalExpression getFunctionalExpression() {
 		IFunctionalExpression functionalExpression;
@@ -133,25 +126,8 @@ public class Language implements ILanguage {
 		}
 		functionalExpression = new FunctionalExpression(coordinatesOntoSymbols);
 		return functionalExpression;
-	}
-
-	@Override
-	public Set<IWord> getWords() {
-		Set<IWord> words = new HashSet<IWord>(dictionary);
-		return words;
-	}
-
-	@Override
-	public List<IWord> getDictionary() {
-		return dictionary;
-	}
-
-	@Override
-	public IStateMachine getStateMachine() {
-		IStateMachine stateMachine = new StateMachine(this);
-		return stateMachine;
-	}
-
+	}	
+	
 	@Override
 	public IGrammar getGrammar() {
 		IGrammar grammar = new Grammar();
@@ -167,11 +143,15 @@ public class Language implements ILanguage {
 			}
 		}
 		return grammar;
-	}
+	}	
 
 	@Override
+	public ILanguage getLanguage() {
+		return this;
+	}
+	
+	@Override
 	public int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException {
-		//CHECK HERE
 		int nbOfArguments = 0;
 		//finds the first occurrence of a word containing the specified symbol
 		int firstWordWithSymbolIndex = -1;
@@ -183,7 +163,7 @@ public class Language implements ILanguage {
 		}
 		/*
 		 * If word found, retrieves the arguments given to the function ending with the specified symbol
-		 * (this function is the sublist (of the word's list of symbols) that ends with the 
+		 * (this function is the sublist of the word's list of symbols, that ends with the 
 		 * specified symbol)
 		 */
 		if (firstWordWithSymbolIndex != -1) {
@@ -198,7 +178,7 @@ public class Language implements ILanguage {
 				if (!currSymbol.equals(symbol))
 					symbolIndex++;
 			} while (!currSymbol.equals(symbol));
-			//finds the arguments, if the symbol is not terminal
+			//if the symbol is not terminal, finds the arguments in every word containing this function
 			if (symbolIndex < dictionary.get(wordIndex).size() - 1) {
 				boolean functionFoundInThisWord = true;
 				while (functionFoundInThisWord && wordIndex < dictionary.size()) {
@@ -214,6 +194,45 @@ public class Language implements ILanguage {
 		else throw new RepresentationException("Language.getNbOfArgumentsFor(ISymbol) : the specified symbol " 
 				+ System.lineSeparator() + "cannot be found in the words of this language");
 		return nbOfArguments;
+	}	
+	
+	@Override
+	public IStateMachine getStateMachine() {
+		IStateMachine stateMachine = new StateMachine(this);
+		return stateMachine;
+	}	
+	
+	@Override
+	public Set<IWord> getWords() {
+		Set<IWord> words = new HashSet<IWord>(dictionary);
+		return words;
+	}	
+
+	@Override
+	public boolean meets(IDescription description) {
+		boolean specifiedDescIsMet;
+		IBinaryRelation thisRelation = getBinaryRelation();
+		IBinaryRelation otherRelation = description.getBinaryRelation();
+		specifiedDescIsMet = otherRelation.getPairs().containsAll(thisRelation.getPairs());
+		return specifiedDescIsMet;
+	}
+	
+	@Override
+	public String toString() {
+		String languageString;
+		StringBuilder sB = new StringBuilder();
+		for (IWord word : dictionary) {
+			Iterator<ISymbol> symbolIterator = word.getListOfSymbols().iterator();
+			while (symbolIterator.hasNext()) {
+				ISymbol currentSymbol = symbolIterator.next();
+				sB.append(currentSymbol.toString());
+				if (symbolIterator.hasNext())
+					sB.append(WORD_SEPARATOR);
+			}
+			sB.append(System.lineSeparator());
+		}
+		languageString = sB.toString();
+		return languageString;
 	}
 	
 	private List<IWord> getWordsInLexicographicOrder(Set<IWord> words){
