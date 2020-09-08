@@ -71,8 +71,8 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 		IFunctionalExpression functionalExpression;
 		Map<List<Integer>, ISymbol> coordinatesOntoSymbols = new HashMap<List<Integer>, ISymbol>();
 		ISymbol thisFunction = new Symbol(getFunction().getName());
-		List<Integer> thisCoordinate = new ArrayList<Integer>();
 		//A function has no coordinate, unless it belongs to an argument of another function ; so the list remains empty
+		List<Integer> thisCoordinate = new ArrayList<Integer>();
 		coordinatesOntoSymbols.put(thisCoordinate, thisFunction);
 		int argIndex = 0;
 		for (ISyntacticStructure argument : getArguments()) {

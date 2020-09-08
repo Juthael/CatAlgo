@@ -37,9 +37,9 @@ public class SyntacticChainsTest {
 	@Test
 	public void whenGetPathToLeafIDsCalledThenMapIsReturned() {
 		boolean mapReturned = true;
-		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
+
 		try {
-			Map<List<String>, Set<Long>> pathToLeafIDs = groveClone.getTreePaths().getPathToLeafIDs();
+			Map<List<String>, List<Long>> pathToLeafIDs = grove.getListOfTrees().get(0).getTreePaths().getPathToLeafIDs();
 			if (pathToLeafIDs.isEmpty())
 				mapReturned = false;
 		}
@@ -52,86 +52,53 @@ public class SyntacticChainsTest {
 	}
 	
 	@Test
-	public void whenGetLeafCalledWithIDThenLeafReturned() {
+	public void whenLeafRequestedWithIDThenReturned() {
 		boolean leafReturned = true;
-		ITreePaths synChains = null;
-		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
+		ITreePaths treePaths = null;
 		try {
-			synChains = groveClone.getTreePaths();
+			treePaths = grove.getListOfTrees().get(0).getTreePaths();
 		}
 		catch (Exception e) {
-			System.out.println("SyntacticChainsTest.whenGetLeafCalledWithIDThenLeafReturned() : " 
+			System.out.println("SyntacticChainsTest.whenLeafRequestedWithIDThenReturned() : " 
 		+ "cannot instantiate ITreePaths. " + System.lineSeparator() + e.getMessage());
 		}
-		Map<List<String>, Set<Long>> pathToLeafIDs = null;
+		Map<List<String>, List<Long>> pathToLeafIDs = null;
 		try {
-			if (synChains != null) {
-				pathToLeafIDs = synChains.getPathToLeafIDs();
+			if (treePaths != null) {
+				pathToLeafIDs = treePaths.getPathToLeafIDs();
 				if (pathToLeafIDs == null || pathToLeafIDs.isEmpty())
-					throw new Exception("pathToLeafIDs map is empty.");
+					throw new Exception("pathToLeafIDs map is null or empty.");
 			}
-			else throw new Exception("synChains variable is null.");
+			else throw new Exception("treePaths variable is null.");
 		}
 		catch (Exception e) {
 			leafReturned = false;
-			System.out.println("SyntacticChainsTest.whenGetLeafCalledWithIDThenLeafReturned() : " 
+			System.out.println("SyntacticChainsTest.whenLeafRequestedWithIDThenReturned() : " 
 					+ System.lineSeparator() + "an error has occured" + System.lineSeparator() + e.getMessage());
 		}
 		if (leafReturned != false) {
-			Set<Long> values = new HashSet<Long>();
-			Set<Set<Long>> setsOfValues = new HashSet<Set<Long>>();
-			setsOfValues.addAll(pathToLeafIDs.values());
-			for (Set<Long> setOfValues : setsOfValues) {
-				values.addAll(setOfValues);
+			Set<Long> iDs = new HashSet<Long>();
+			Set<List<Long>> setsOfIDs = new HashSet<List<Long>>();
+			setsOfIDs.addAll(pathToLeafIDs.values());
+			for (List<Long> setOfIDs : setsOfIDs) {
+				iDs.addAll(setOfIDs);
 			}
-			for (Long value : values) {
+			for (Long iD : iDs) {
 				try {
-					String leafName = synChains.getLeaf(value);
+					String leafName = treePaths.getLeaf(iD);
 					if (leafName.isEmpty()) {
 						throw new Exception();
 					}
 				}
 				catch (Exception e) {
 					leafReturned = false;
-					System.out.println("SyntacticChainsTest.whenGetLeafCalledWithIDThenLeafReturned() : " 
-							+ System.lineSeparator() + "cannot get a leaf name with value " + Long.toString(value) 
+					System.out.println("SyntacticChainsTest.whenLeafRequestedWithIDThenReturned() : " 
+							+ System.lineSeparator() + "cannot get a leaf name with value " + Long.toString(iD) 
 							+ "." + e.getMessage());
 				}
 			}
 		}
 		assertTrue(leafReturned);
 	}
-	
-	@Test
-	public void whenHasPropertyCalledThenCorrectBooleanValueReturned() {
-		boolean valueReturnedIsCorrect = true;
-		ITreePaths synChains = null;
-		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
-		try {
-			synChains = groveClone.getTreePaths();
-			if (synChains == null)
-				throw new Exception("synChains variable is null.");
-		}
-		catch (Exception e) {
-			valueReturnedIsCorrect = false;
-			System.out.println("SyntacticChainsTest.whenHasPropertyCalledThenCorrectBooleanValueReturned() : " 
-					+ System.lineSeparator() + "ITreePaths instantiation failed. " 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		if (valueReturnedIsCorrect == true) {
-			try {
-				valueReturnedIsCorrect = synChains.hasProperty("FirstValue");
-				if (valueReturnedIsCorrect)
-					valueReturnedIsCorrect = !synChains.hasProperty("false property");	
-			}
-			catch (Exception e) {
-				valueReturnedIsCorrect = false;
-				System.out.println("SyntacticChainsTest.whenHasPropertyCalledThenCorrectBooleanValueReturned() : " 
-						+ System.lineSeparator() + "error while checking property. " 
-						+ System.lineSeparator() + e.getMessage());
-			}	
-		}
-		assertTrue(valueReturnedIsCorrect);
-	}	
 
 }

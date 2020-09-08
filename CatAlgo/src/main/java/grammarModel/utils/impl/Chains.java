@@ -111,6 +111,22 @@ public abstract class Chains implements IChains {
 		return chains;
 	}
 	
+	@Override
+	public String toString() {
+		String chains;
+		StringBuilder sB = new StringBuilder();
+		for (List<String> chain : listOfChains) {
+			for (int i = 0 ; i < chain.size() ; i++) {
+				sB.append(chain.get(i));
+				if (i < chain.size() - 1)
+					sB.append("/");
+			}
+			sB.append(System.lineSeparator());
+		}
+		chains = sB.toString();
+		return chains;
+	}
+	
 	/**
 	 * 
 	 * @return true if at least one element can still be returned on the current chain. 

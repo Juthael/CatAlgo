@@ -50,6 +50,9 @@ public interface IChains {
 	 */
 	void resetIndexes();
 	
+	@Override
+	String toString();	
+	
 	boolean equals(Object otherChains);
 
 }

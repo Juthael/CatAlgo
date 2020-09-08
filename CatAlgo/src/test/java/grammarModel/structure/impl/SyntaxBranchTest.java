@@ -4,157 +4,192 @@ import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import grammarModel.GrammarModelConstants;
+import grammarModel.exceptions.GrammarModelException;
+import grammarModel.structure.ISyntacticStructure;
+import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IGenericFileReader;
+import grammarModel.utils.ITreePaths;
 import grammars.copycat2Strings.utils.CcFileReaderB;
+import grammars.sphex.utils.SphexFileReader;
+import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IPair;
+import representation.dataFormats.impl.BinaryRelation;
+import representation.dataFormats.impl.utils.utilsBR.Pair;
+import representation.stateMachine.ISymbol;
+import representation.stateMachine.impl.Symbol;
 
 public class SyntaxBranchTest {
 
-	public static ISyntaxGrove grove;
+	public static ISyntaxGrove blackburnGrove;
+	public static ISyntaxGrove sphexGrove;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		Path backburnDozen1 = Paths.get(".", "src", "test", "java", "filesUsedForTests", "E2_a-bb-c_ijk.txt");
-		IGenericFileReader fileReader = new CcFileReaderB();
+		Path usualSphex = Paths.get(".", "src", "test", "java", "filesUsedForTests", "usualSphex.txt");
+		IGenericFileReader ccFileReader = new CcFileReaderB();
+		IGenericFileReader sphexFileReader = new SphexFileReader();
 		try {
-			grove = fileReader.getSyntacticGrove(backburnDozen1);
-			// printChains(grove.getListOfSyntacticStringChains());
+			blackburnGrove = ccFileReader.getSyntacticGrove(backburnDozen1);
+		}
+		catch (Exception e) {
+			System.out.println("SyntaxBranchTest.setUpBeforClass() : " + System.lineSeparator() + e.getMessage());
+		}
+		try {
+			sphexGrove = sphexFileReader.getSyntacticGrove(usualSphex);
 		}
 		catch (Exception e) {
 			System.out.println("SyntaxBranchTest.setUpBeforClass() : " + System.lineSeparator() + e.getMessage());
 		}
 	}
-
+	
+	@SuppressWarnings("unused")
 	@Test
-	public void whenGetListOfSyntacticStringChainsIsCalledThenANonEmptyListIsReturned() {
-		boolean nonEmptyListReturned = true;
-		List<List<String>> listOfSyntacticStringChains;
+	public void whenBinaryRelationRequestedThenExpectedBRReturned() {
+		boolean expectedBRReturned;
+		IBinaryRelation expectedRelation = buildExpectedRelation(); 
+		ISyntaxBranch tree = sphexGrove.getListOfTrees().get(0);
 		try {
-			listOfSyntacticStringChains = grove.getListOfTreeStringPaths();
-			if (listOfSyntacticStringChains == null || listOfSyntacticStringChains.isEmpty())
-				throw new Exception("'listOfSyntacticStringChains' variable is either null or empty.");
-		}
-		catch (Exception e) {
-			nonEmptyListReturned = false;
-			System.out.println("SyntaxBranchTest."
-					+ "whenGetListOfSyntacticStringChainsIsCalledThenANonEmptyListIsReturned() : "
-					+ System.lineSeparator() + "cannot retrieve syntactic string chains." 
+			ITreePaths paths = tree.getTreePaths();
+			//to see the paths : 
+			//System.out.println(paths.toString());
+		} catch (GrammarModelException e) {
+			System.out.println("SyntaxBranchTest.whenBinaryRelationRequestedThenExpectedBRReturned() : " 
 					+ System.lineSeparator() + e.getMessage());
+			expectedBRReturned = false;
 		}
-		assertTrue(nonEmptyListReturned);
+		IBinaryRelation relation = tree.getBinaryRelation();
+		//to see the relation : 
+		//System.out.println(relation.toString());
+		expectedBRReturned = relation.equals(expectedRelation);
+		assertTrue(expectedBRReturned);
 	}
 	
 	@Test
-	public void whenGetListOfPosetMaxStringChainsIsCalledThenANonEmptyListIsReturned()  {
-		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
-		boolean nonEmptyListReturned = true;
-		try {
-			groveClone.setPosetElementID();
-		}
-		catch (Exception e){
-			nonEmptyListReturned = false;
-			System.out.println("SyntaxBranchTest.whenGetListOfPosetMaxStringChainsIsCalledThenANonEmptyListIsReturned() : "
-					+ System.lineSeparator() + "error during poset ID setting." 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		List<List<String>> listOfPosetMaxStringChains;
-		try {
-			listOfPosetMaxStringChains = groveClone.getListOfPosetMaxStringChains();
-			if (listOfPosetMaxStringChains == null || listOfPosetMaxStringChains.isEmpty())
-				throw new Exception("'listOfPosetMaxStringChains' variable is either null or empty.");
-		}
-		catch (Exception e) {
-			nonEmptyListReturned = false;
-			System.out.println("SyntaxBranchTest."
-					+ "whenGetListOfPosetMaxStringChainsIsCalledThenANonEmptyListIsReturned() : "
-					+ System.lineSeparator() + "cannot retrieve poset string chains." 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		assertTrue(nonEmptyListReturned);
-	}
+	public void whenFunctionalExpressionRequestedThenExpectedFEReturned() {
+		System.out.print(sphexGrove.getListOfTrees().get(0).getFunctionalExpression().toString());
+		assertTrue(false);
+	}	
 	
 	@Test
 	public void whenGetListOfLeafIDsIsCalledThenANonEmptyListIsReturned() {
 		boolean nonEmptyListReturned = true;
-		try {
-			List<Long> leafIDs = grove.getListOfLeafIDs();
-			if (leafIDs == null || leafIDs.isEmpty())
-				throw new Exception("'leafIDs' variable is either null or empty");
+		for (ISyntaxBranch branch : blackburnGrove.getListOfTrees()) {
+			try {
+				//method tested
+				List<Long> leafIDs = branch.getListOfLeafIDs();
+				if (leafIDs == null || leafIDs.isEmpty())
+					throw new Exception("'leafIDs' variable is either null or empty");
+			}
+			catch (Exception e) {
+				nonEmptyListReturned = false;
+				System.out.println("SyntaxBranchTest."
+						+ "whenGetListOfLeafIDsIsCalledThenANonEmptyListIsReturned() : "
+						+ System.lineSeparator() + "cannot retrieve poset IDs." 
+						+ System.lineSeparator() + e.getMessage());
+			}
 		}
-		catch (Exception e) {
-			nonEmptyListReturned = false;
-			System.out.println("SyntaxBranchTest."
-					+ "whenGetListOfLeafIDsIsCalledThenANonEmptyListIsReturned() : "
-					+ System.lineSeparator() + "cannot retrieve poset IDs." 
-					+ System.lineSeparator() + e.getMessage());
+		assertTrue(nonEmptyListReturned);
+	}	
+
+	@Test
+	public void whenPathsRequestedThenNonEmptyListsReturned() {
+		boolean nonEmptyListReturned = true;
+		for (ISyntaxBranch branch : blackburnGrove.getListOfTrees()) {
+			List<List<String>> listOfSyntacticStringChains;
+			try {
+				//method tested
+				listOfSyntacticStringChains = branch.getPathsAsListsOfStrings();
+				if (listOfSyntacticStringChains == null || listOfSyntacticStringChains.isEmpty())
+					throw new Exception("'listOfSyntacticStringChains' variable is either null or empty.");
+			}
+			catch (Exception e) {
+				nonEmptyListReturned = false;
+				System.out.println("SyntaxBranchTest."
+						+ "whenGetListOfSyntacticStringChainsIsCalledThenANonEmptyListIsReturned() : "
+						+ System.lineSeparator() + "cannot retrieve syntactic string chains." 
+						+ System.lineSeparator() + e.getMessage());
+			}
 		}
 		assertTrue(nonEmptyListReturned);
 	}
 	
 	@Test
-	public void whenGetStringOfTerminalsIsCalledThenANonEmptyStringIsReturned() {
-		boolean nonEmptyStringReturned = true;
+	public void whenRecursionIndexSettingRequestedThenPerformed() {
+		boolean beforeSettingIndexesEqual0 = true;
+		boolean afterSettingThenExpectedIndexes = true;
+		Map<String, Set<Integer>> nameOntoIndexes = new HashMap<String, Set<Integer>>();
+		SyntaxBranch branch = (SyntaxBranch) blackburnGrove.getListOfTrees().get(0);
 		try {
-			String terminals = grove.getStringOfTerminals();
-			if (terminals == null || terminals.isEmpty())
-				throw new Exception("'terminals' String is either null or empty.");
+			ITreePaths paths = branch.getTreePaths();
+			//to see paths
+			System.out.println(paths.toString());
+		} catch (GrammarModelException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		catch (Exception e) {
-			nonEmptyStringReturned = false;
-			System.out.println("SyntaxBranchTest."
-					+ "whenGetStringOfTerminalsIsCalledThenANonEmptyStringIsReturned() : "
-					+ System.lineSeparator() + "cannot retrieve terminals String." 
-					+ System.lineSeparator() + e.getMessage());
+		//before setting, all indexes equal 0
+		Set<ISyntacticStructure> components = branch.getSetOfComponentsAndSubComponents();
+		for (ISyntacticStructure component : components) {
+			if (component.getRecursionIndex() != 0)
+				beforeSettingIndexesEqual0 = false;
 		}
-		assertTrue(nonEmptyStringReturned);
+		//method tested
+		branch.setRecursionIndex();
+		components = branch.getSetOfComponentsAndSubComponents();
+		for (ISyntacticStructure component : components) {
+			if (!nameOntoIndexes.containsKey(component.getName())) {
+				Set<Integer> indexes = new HashSet<Integer>();
+				indexes.add(component.getRecursionIndex());
+				nameOntoIndexes.put(component.getName(), indexes);
+			}
+			else {
+				nameOntoIndexes.get(component.getName()).add(component.getRecursionIndex());
+			}
+		}
+		if (nameOntoIndexes.get("letter").size() != 1)
+			afterSettingThenExpectedIndexes = false;
+		else if (nameOntoIndexes.get("cluster").size() != 2 || nameOntoIndexes.get("coordinate").size() != 2)
+			afterSettingThenExpectedIndexes = false;
+		assertTrue(beforeSettingIndexesEqual0 && afterSettingThenExpectedIndexes);
+		//HERE. Doesn't work. Start Here
 	}
 	
-	@Test
-	public void whenNumberOfLeafIDsAndTerminalComparedThenProveEquals() {
-		boolean sameNbOfLeafIDsAndTerminals = true;
-		String terminals;
-		String[] arrayOfTerminals = null;
-		List<Long> leafIDs = null;
-		try {
-			terminals = grove.getStringOfTerminals();
-			if (terminals == null || terminals.isEmpty())
-				throw new Exception("'terminals' String is either null or empty.");
-			else {
-				terminals.replaceFirst(GrammarModelConstants.SEPARATOR, "");
-				arrayOfTerminals = terminals.split(GrammarModelConstants.SEPARATOR);
-			}
-		}
-		catch (Exception e) {
-			sameNbOfLeafIDsAndTerminals = false;
-			System.out.println("SyntaxBranchTest."
-					+ "whenNumberOfLeafIDsAndTerminalComparedThenProveEquals() : "
-					+ System.lineSeparator() + "cannot retrieve terminals String." 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		if (sameNbOfLeafIDsAndTerminals) {
-			try {
-				leafIDs = grove.getListOfLeafIDs();
-				if (leafIDs == null || leafIDs.isEmpty())
-					throw new Exception("'leafIDs' variable is either null or empty");
-			}
-			catch (Exception e) {
-				sameNbOfLeafIDsAndTerminals = false;
-				System.out.println("SyntaxBranchTest."
-						+ "whenNumberOfLeafIDsAndTerminalComparedThenProveEquals() : "
-						+ System.lineSeparator() + "cannot retrieve leaf IDs." 
-						+ System.lineSeparator() + e.getMessage());
-			}
-		}
-		if (sameNbOfLeafIDsAndTerminals) {
-			sameNbOfLeafIDsAndTerminals = (arrayOfTerminals.length == leafIDs.size());
-		}
-		assertTrue(sameNbOfLeafIDsAndTerminals);
-	}	
+	private IBinaryRelation buildExpectedRelation() {
+		IBinaryRelation expectedRelation;
+		ISymbol prey = new Symbol("prey");
+		ISymbol position = new Symbol("position");
+		ISymbol randomPlace = new Symbol("randomPlace");
+		ISymbol grab = new Symbol("grab");
+		ISymbol predate = new Symbol("predate");
+		ISymbol provideFoodForTheGrubs = new Symbol("provideFoodForTheGrubs");
+		ISymbol timePosition = new Symbol("timePosition");
+		ISymbol step1 = new Symbol("step1");
+		Set<IPair> pairs = new HashSet<IPair>();
+		pairs.add(new Pair(grab, predate));
+		pairs.add(new Pair(prey, randomPlace));
+		pairs.add(new Pair(position, randomPlace));
+		pairs.add(new Pair(prey, grab));
+		pairs.add(new Pair(prey, timePosition));
+		pairs.add(new Pair(timePosition, step1));
+		pairs.add(new Pair(prey, predate));
+		pairs.add(new Pair(grab, provideFoodForTheGrubs));
+		pairs.add(new Pair(predate, provideFoodForTheGrubs));
+		pairs.add(new Pair(prey, step1));
+		pairs.add(new Pair(prey, position));
+		pairs.add(new Pair(prey, provideFoodForTheGrubs));
+		expectedRelation = new BinaryRelation(pairs);
+		return expectedRelation;
+	}
 
 }

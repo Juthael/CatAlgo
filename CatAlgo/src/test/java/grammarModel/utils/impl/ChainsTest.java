@@ -5,13 +5,12 @@ import static org.junit.Assert.assertTrue;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IChains;
 import grammarModel.utils.IGenericFileReader;
@@ -37,15 +36,15 @@ public class ChainsTest {
 
 	@Test
 	public void whenChainsInstantiatedThenAllElementsAreAttainableViaNext() {
-		boolean allElementsInstantiable;
+		boolean allElementsAttainable;
 		List<String> list1 = new ArrayList<String>();
 		List<String> list2 = new ArrayList<String>();
 		IChains chains = null;
 		try {
-			chains =  grove.getTreePaths();
+			chains =  grove.getListOfTrees().get(0).getTreePaths();
 		}
 		catch (Exception e) {
-			allElementsInstantiable = false;
+			allElementsAttainable = false;
 			System.out.println("ChainsTest.whenChainsInstantiatedThenAllElementsAreAttainableViaNext() : "
 					+ System.lineSeparator() + "chains cannot be instantiated." + System.lineSeparator() 
 					+ e.getMessage());
@@ -55,34 +54,35 @@ public class ChainsTest {
 				list1.add(chains.next());
 			}
 			catch (Exception e) {
-				allElementsInstantiable = false;
+				allElementsAttainable = false;
 				System.out.println("ChainsTest.whenChainsInstantiatedThenAllElementsAreAttainableViaNext() : "
 						+ System.lineSeparator() + "next element cannot be returned." + System.lineSeparator() 
 						+ e.getMessage());
 			}
 		}
-		List<List<String>> listOfStringChains = grove.getListOfTreeStringPaths();
+		List<List<String>> listOfStringChains = grove.getListOfTrees().get(0).getPathsAsListsOfStrings();
 		for (List<String> stringChain : listOfStringChains) {
 			for (String element : stringChain) {
 				list2.add(element);
 			}
 		}
 		if (list1.isEmpty() || list2.isEmpty()) {
-			allElementsInstantiable = false;
+			allElementsAttainable = false;
 		}
-		else allElementsInstantiable = list1.equals(list2);
-		assertTrue(allElementsInstantiable);
+		else allElementsAttainable = list1.equals(list2);
+		assertTrue(allElementsAttainable);
 	}
 	
 	@Test
-	public void whenIdenticalChainsAreComparedThenEqualsReturnsTrue() {
-		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
+	public void whenIdenticalChainsAreComparedThenEqual() {
+		ISyntaxBranch branch = grove.getListOfTrees().get(0);
+		ISyntaxBranch branchClone = (ISyntaxBranch) branch.clone();
 		boolean equals = true;
 		ITreePaths chains1 = null;
 		ITreePaths chains2 = null;
 		try {
-			chains1 = grove.getTreePaths();
-			chains2 = groveClone.getTreePaths();
+			chains1 = branch.getTreePaths();
+			chains2 = branchClone.getTreePaths();
 			if (chains1 == null || chains2 == null)
 				throw new Exception("one or both chains variable is null");
 		}
@@ -95,36 +95,6 @@ public class ChainsTest {
 		if (equals) {
 			equals = chains1.equals(chains2);
 		}
-	}
-	
-	@Test
-	public void whenTwoIdenticalChainsAreAddedToASetThenTheSetSizeIs1() {
-		Set<ITreePaths> setOfChains = new HashSet<ITreePaths>();
-		ISyntaxGrove groveClone = (ISyntaxGrove) grove.clone();
-		boolean sizeIs1 = true;
-		ITreePaths chains1 = null;
-		ITreePaths chains2 = null;
-		try {
-			chains1 = grove.getTreePaths();
-			chains2 = groveClone.getTreePaths();
-			if (chains1 == null || chains2 == null)
-				throw new Exception("one or both chains variable is null");
-		}
-		catch (Exception e){
-			sizeIs1 = false;
-			System.out.println("ChainsTest.whenIdenticalChainsAreComparedThenEqualsReturnsTrue() : "
-					+ System.lineSeparator() + "chains cannot be instantiated." + System.lineSeparator() 
-					+ e.getMessage());
-		}
-		if (sizeIs1) {
-			sizeIs1 = chains1.equals(chains2);
-			if (sizeIs1) {
-				setOfChains.add(chains1);
-				setOfChains.add(chains2);
-				sizeIs1 = (setOfChains.size() == 1);
-			}
-		}
-		assertTrue(sizeIs1);
 	}	
 
 }

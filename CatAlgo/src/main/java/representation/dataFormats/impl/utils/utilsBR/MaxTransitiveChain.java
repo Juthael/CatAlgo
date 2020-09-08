@@ -83,7 +83,7 @@ public class MaxTransitiveChain implements Cloneable {
 			 * -or the relation isn't well founded (as it should be too)
 			 */
 			throw new RepresentationException("MaxTransitiveChain.extend(ISymbol, Set<Pair>) : the specified set of "
-					+ "pairs should contain new elments.");
+					+ "pairs should contain new elements.");
 		}
 		else {
 			boolean newRelationIsTransitive = true;

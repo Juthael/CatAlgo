@@ -37,6 +37,9 @@ import representation.stateMachine.ISymbol;
  */
 public interface IBinaryRelation extends IDescription {
 	
+	@Override
+	boolean equals(Object other);
+	
 	/**
 	 * Returns the functional expression equivalent to this binary relation. <br>
 	 * 

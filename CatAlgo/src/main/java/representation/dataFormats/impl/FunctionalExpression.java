@@ -160,39 +160,47 @@ public class FunctionalExpression implements IFunctionalExpression {
 	@Override
 	public String toString() {
 		String functionalExpressionString;
+		/*
+		 * The "coordinates" of the root are an empty list (coordinates are meant to localize arguments, 
+		 * which the root is not)
+		 */
 		List<Integer> rootCoordinates = new ArrayList<Integer>();
-		rootCoordinates.add(0);
 		functionalExpressionString = toString(rootCoordinates);
 		return functionalExpressionString;
 	}
 	
+	//recursive
 	private String toString(List<Integer> coordinates) {
 		String functionalExpressionString;
-		if (coordinatesOntoSymbols.containsKey(coordinates)) {
-			List<List<Integer>> argumentsCoordinates = new ArrayList<List<Integer>>();
-			for (List<Integer> currentCoordinates : coordinatesOntoSymbols.keySet()) {
-				if ((currentCoordinates.size() == coordinates.size() + 1)
-						&& coordinates.equals(currentCoordinates.subList(0, coordinates.size()))) {
-					argumentsCoordinates.add(currentCoordinates);
-				}
-			}
-			if (argumentsCoordinates.isEmpty())
-				functionalExpressionString = coordinatesOntoSymbols.get(coordinates).toString();
-			else {
-				StringBuilder sB = new StringBuilder();
-				sB.append(coordinatesOntoSymbols.get(coordinates).toString());
-				if (argumentsCoordinates.size() == 1) {
-					sB.append(" ");
-					sB.append(coordinatesOntoSymbols.get(argumentsCoordinates.get(0)).toString());
-				}
-				else {
-					//HERE
-				}
-					
-					
+		List<List<Integer>> argumentsCoordinates = new ArrayList<List<Integer>>();
+		for (List<Integer> currentCoordinates : coordinatesOntoSymbols.keySet()) {
+			if ((currentCoordinates.size() == coordinates.size() + 1)
+					&& coordinates.equals(currentCoordinates.subList(0, coordinates.size()))) {
+				argumentsCoordinates.add(currentCoordinates);
 			}
 		}
-		
+		if (argumentsCoordinates.isEmpty())
+			functionalExpressionString = coordinatesOntoSymbols.get(coordinates).toString();
+		else {
+			StringBuilder sB = new StringBuilder();
+			sB.append(coordinatesOntoSymbols.get(coordinates).toString());
+			sB.append(" ");
+			if (argumentsCoordinates.size() == 1) {
+				sB.append(toString(argumentsCoordinates.get(0)));
+			}
+			else {
+				sB.append("(( ");
+				for (int i = 0 ; i < argumentsCoordinates.size() ; i++) {
+					List<Integer> argCoordinate = argumentsCoordinates.get(i);
+					sB.append(toString(argCoordinate));
+					if (i < argumentsCoordinates.size() - 1)
+						sB.append(") Λ (");
+				}
+				sB.append(")) ");
+			}
+			functionalExpressionString = sB.toString();
+		}
+		return functionalExpressionString;
 	}
 
 }

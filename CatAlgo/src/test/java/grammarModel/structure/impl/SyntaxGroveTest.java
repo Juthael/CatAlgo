@@ -4,17 +4,18 @@ import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import grammarModel.structure.ISyntacticStructure;
+import grammarModel.exceptions.GrammarModelException;
+import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxGrove;
-import grammarModel.utils.IChains;
 import grammarModel.utils.IGenericFileReader;
+import grammarModel.utils.ITreePaths;
 import grammars.copycat2Strings.utils.CcFileReaderB;
+import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IPair;
 
 public class SyntaxGroveTest {
 
@@ -26,108 +27,46 @@ public class SyntaxGroveTest {
 		IGenericFileReader fileReader = new CcFileReaderB();
 		try {
 			grove = fileReader.getSyntacticGrove(e2);
-			// printChains(grove.getListOfSyntacticStringChains());
+			grove.markRecursion();
 		}
 		catch (Exception e) {
 			System.out.println("SyntaxGroveTest.setUpBeforClass() : " + System.lineSeparator() + e.getMessage());
 		}
 	}
 	
-	/*
 	@Test
-	public void temporary() throws FileReaderException, GrammarModelException {
-		Path M1variations = Paths.get(".", "src", "test", "java", "filesUsedForTests", "M1_abc_xkj.txt");
-		CcFileReader fileReader2 = new CcFileReader();
-		ISyntaxGrove grove2 = fileReader2.getSyntacticGrove(M1variations);
-		grove2.markRedundancies();
-		grove2.setPosetElementID();
-		System.out.println(grove2.getPosetMaxChains().getChainsInASingleString());
+	public void whenCloneRequestedThenReturned() {
+		assertTrue(false);
 	}
-	*/
 	
 	@Test
-	public void whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() {
-		boolean everyStructureHasAnID = true;
-		ISyntaxGrove grove1 = (ISyntaxGrove) grove.clone();
+	public void whenContextInputRequiredThenReturned() {
+		assertTrue(false);
+	}
+	
+	@Test
+	public void whenRecursionIndexMarkingRequestedThenEffective() {
+		boolean markingEffective = true;
+		/*
+		 * If recursion marking is effective, then no pair in the binary relation associates a symbol to itself. 
+		 */
+		ISyntaxBranch anyTree = grove.getListOfTrees().get(0);
+		
 		try {
-			grove1.setPosetElementID();
-		}
-		catch (Exception e) {
-			everyStructureHasAnID = false;
-			System.out.println("SyntaxGroveTest.whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() : "
-					+ System.lineSeparator() +  "error during posetID setting." + System.lineSeparator()
+			ITreePaths treePaths = anyTree.getTreePaths();
+			//to see tree paths
+			System.out.println(treePaths.toString());
+		} catch (GrammarModelException e) {
+			System.out.println("SyntaxGroveTest.whenRecursionIndexMarkingRequestedThenEffective() :" + System.lineSeparator()
 					+ e.getMessage());
 		}
-		if (everyStructureHasAnID == true && grove1 != null) {
-			List<ISyntacticStructure> allcomponents = getAllComponents(grove1);
-			if (allcomponents.size() <= 1) {
-				everyStructureHasAnID = false;
-				System.out.println("SyntaxGroveTest.whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() : "
-						+ System.lineSeparator() +  "error during components retrieval." + System.lineSeparator());
-			}
-			else {
-				int allComponentsIndex = 0;
-				while (everyStructureHasAnID == true && allComponentsIndex < allcomponents.size()) {
-					ISyntacticStructure currentComponent = allcomponents.get(allComponentsIndex);
-					if (!currentComponent.getIDHasBeenSet()) {
-						everyStructureHasAnID = false;
-						System.out.println("SyntaxGroveTest"
-								+ ".whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() : "
-								+ System.lineSeparator() +  "ID hasn't been set for at least one element." 
-								+ System.lineSeparator());				
-					}
-					else {
-						try {
-							String currentPosetElementName = currentComponent.getPosetElementName();
-							// System.out.println(currentPosetElementName);
-							if (currentPosetElementName.isEmpty()) {
-								everyStructureHasAnID = false;
-								System.out.println("SyntaxGroveTest"
-										+ ".whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() : "
-										+ System.lineSeparator() +  "one poset element name at least is empty." + 
-										System.lineSeparator());
-							}
-						}
-						catch (Exception e) {
-							everyStructureHasAnID = false;
-							System.out.println("SyntaxGroveTest"
-									+ ".whenSetPosetElementIDIsCalledThenEveryStructureHasAPosetID() : "
-									+ System.lineSeparator() +  "a poset element name couldn't be retrieved." + System.lineSeparator()
-									+ e.getMessage());
-						}
-					}
-					allComponentsIndex++;
-				}	
-			}
+		IBinaryRelation binaryRelation = anyTree.getBinaryRelation();
+		for (IPair pair : binaryRelation.getPairs()) {
+			if (pair.getAntecedent().equals(pair.getConsequent()))
+				markingEffective = false;
 		}
-		assertTrue(everyStructureHasAnID);
-	}
-	
-	@SuppressWarnings("unused")
-	private static void printChains(IChains chains) {
-		printChains(chains.getChains());
-	}
-	
-	private static void printChains(List<List<String>> paths) {
-		StringBuilder sB = new StringBuilder();
-		for (List<String> path : paths) {
-			for (int i = 0 ; i < path.size() ; i++) {
-				sB.append(path.get(i));
-				if (i < path.size() - 1)
-					sB.append("/");
-			}
-			sB.append(System.lineSeparator());
-		}
-		System.out.println(sB.toString());
-	}	
-	
-	private static List<ISyntacticStructure> getAllComponents(ISyntacticStructure grove){
-		List<ISyntacticStructure> allComponents = new ArrayList<ISyntacticStructure>();
-		allComponents.add(grove);
-		for (ISyntacticStructure component : grove.getListOfComponents()) {
-			allComponents.addAll(getAllComponents(component));
-		}
-		return allComponents;
+		assertTrue(markingEffective);
+		//HERE Ensure that recursion index is done correctly.
 	}
 
 }

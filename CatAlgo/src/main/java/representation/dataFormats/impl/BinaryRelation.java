@@ -27,6 +27,20 @@ public class BinaryRelation implements IBinaryRelation {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		boolean isEqual;
+		if (o == this)
+			isEqual = true;
+		else if (!(o instanceof representation.dataFormats.impl.BinaryRelation))
+			isEqual = false;
+		else {
+			IBinaryRelation other = (IBinaryRelation) o;
+			isEqual = pairs.equals(other.getPairs());
+		}
+		return isEqual;
+	}
+	
+	@Override
 	public IBinaryRelation getBinaryRelation() {
 		return this;
 	}

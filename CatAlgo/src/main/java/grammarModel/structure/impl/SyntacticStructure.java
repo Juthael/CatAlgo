@@ -1,6 +1,8 @@
 package grammarModel.structure.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
@@ -19,12 +21,23 @@ public abstract class SyntacticStructure implements ISyntacticStructure, Cloneab
 	//getters
 	
 	@Override
-	public abstract ISyntacticStructure clone();	
+	public abstract ISyntacticStructure clone();		
 	
 	@Override
 	public int getRecursionIndex() {
 		return recursionIndex;
 	}
+	
+	//For unit testing use only
+	public Set<ISyntacticStructure> getSetOfComponentsAndSubComponents() {
+		Set<ISyntacticStructure> comp = new HashSet<ISyntacticStructure>();
+		comp.add(this);
+		for (ISyntacticStructure currComp : getListOfComponents()) {
+			SyntacticStructure component = (SyntacticStructure) currComp;
+			comp.addAll(component.getSetOfComponentsAndSubComponents());
+		}
+		return comp;
+	}	
 	
 	@Override
 	public ITreePaths getTreePaths() throws GrammarModelException {

@@ -64,6 +64,6 @@ public class TreePaths extends Chains implements ITreePaths {
 		}
 		else throw new GrammarModelException("TreePaths.getLeaf() : leaf not found.");
 		return leaf;
-	}
+	}	
 
 }

@@ -55,9 +55,9 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	 * 
 	 * <p>
 	 * The functional expression returned by a leaf contains a single term : the leaf's name. <br>
-	 * A leaf is a component of a syntax branch. As such, its single term will either be : <br> 
+	 * A leaf is a component of a syntax branch. As such, this single term will either be : <br> 
 	 * -a function applying to the the branch's arguments, if the leaf is the branch's <i> function leaf. </i> <br>
-	 * -an element of the branch's list of arguments otherwise. <br>
+	 * -an element of the branch's list of arguments. <br>
 	 * </p>  
 	 * 
 	 * <p>

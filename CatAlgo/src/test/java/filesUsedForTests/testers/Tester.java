@@ -1,26 +1,13 @@
 package filesUsedForTests.testers;
 
-import java.awt.Frame;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import fca.core.context.binary.BinaryContext;
-import fca.core.lattice.ConceptLattice;
-import fca.exception.LMLogger;
-import fca.gui.lattice.LatticeViewer;
-import fca.gui.lattice.element.GraphicalLattice;
-import fca.gui.lattice.element.LatticeStructure;
-import fca.gui.util.constant.LMIcons;
-import fca.gui.util.constant.LMImages;
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IGenericFileReader;
-import grammars.copycat2Strings.utils.CcFileReaderB;
 import grammars.sphex.utils.SphexFileReader;
-import propertyPoset.IPropertyPoset;
-import propertyPoset.impl.PropertyPoset;
 
 public class Tester {
 
@@ -33,34 +20,9 @@ public class Tester {
 	public static void main(String[] args) throws Exception {
 		ISyntaxGrove testGrove = setGrove(sphex, new SphexFileReader());
 		//ISyntaxGrove testGrove = setGrove(e2, new CcFileReaderB());
-		IPropertyPoset testPoset = null;
-		try {
-			System.out.println(testGrove.getPosetMaxChains().getChainsInASingleString());
-			testPoset = new PropertyPoset(testGrove.getPosetMaxChains());
-			System.out.println(System.lineSeparator() + testPoset.getChains().getChainsInASingleString());
-		}
-		catch (Exception e) {
-			System.out.println("PropertyPosetTest : error during PropertyPoset instantiation " 
-					+ System.lineSeparator() + e.getMessage());
-		}
-		//testPoset.reducePoset();
-		BinaryContext context = testPoset.getBinaryContext();
-	
-		LMLogger.getLMLogger();
-		LMImages.getLMImages();
-		LMIcons.getLMIcons();
-
-		ConceptLattice conLattice = new ConceptLattice(context);
-		LatticeStructure lattStruc = new LatticeStructure(conLattice, context, LatticeStructure.BEST);
-		GraphicalLattice graphLatt = new GraphicalLattice(conLattice, lattStruc);
-		LatticeViewer lattViewer = new LatticeViewer(graphLatt);
-		lattViewer.setExtendedState(Frame.MAXIMIZED_BOTH);
-		lattViewer.setVisible(true); 
 			
 		System.out.println(System.lineSeparator() + "Press any key");
 		readString();
-		
-
 	}
 	
 	private static String readString() {
@@ -81,7 +43,6 @@ public class Tester {
 		try {
 			grove = fileReader.getSyntacticGrove(path);
 			grove.markRecursion();
-			grove.setPosetElementID();
 		}
 		catch (Exception e) {
 			System.out.print("PropertySetTest : error during SyntacticGrove instantiation. " + System.lineSeparator() 
