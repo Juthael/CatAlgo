@@ -105,6 +105,18 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	 * {@inheritDoc}
 	 * 
 	 * <p>
+	 * If the syntactic structure is a leaf, it is a terminal element of the grammar (and a tree whith a single node), 
+	 * and therefore associated to a rule with no right-term. A recursion mark can be appended to its name (see 
+	 * {@link ISyntaxBranch#setRecursionIndex()}).
+	 * </p>  
+	 */
+	@Override
+	public String getName();
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * <p>
 	 * In the case of a leaf, there is only one path, that only contains one element. So the returned list contains a single 
 	 * list, that contains a single string : this leaf's name.
 	 * </p> 

@@ -18,7 +18,7 @@ public class NonProminentPositioN extends SyntaxLeaf implements ISyntaxLeaf, IPo
 
 	@Override
 	public String getName() {
-		return NAME;
+		return NAME.concat(recursionMark);
 	}
 
 	@Override

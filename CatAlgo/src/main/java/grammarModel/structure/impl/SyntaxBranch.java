@@ -133,19 +133,24 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	}
 	
 	@Override
-	public boolean replaceArguments(ISyntacticStructure newComp, List<Long> compIDs) {
+	public boolean replaceArguments(ISyntacticStructure newComp, List<Long> compIDs) throws GrammarModelException {
 		boolean compReplaced = false;
-		ListIterator<ISyntacticStructure> compIt = getListOfComponents().listIterator();
-		while (compIt.hasNext() && compReplaced == false) {
-			ISyntacticStructure comp = compIt.next();
-			List<Long> compLeafIDs = comp.getListOfLeafIDs();
-			if (compLeafIDs.removeAll(compIDs) == true) {
-				if (compLeafIDs.size() == 1) {
-					compIt.set(newComp);
-					compReplaced = true;
-				}
-				else {
-					compReplaced = comp.replaceArguments(newComp, compIDs);
+		if (recursionIndexHasBeenSet)
+			throw new GrammarModelException("SyntaxBranch.replaceArguments() : no replacement is allowed once "
+					+ "the recursion index has been set.");
+		else {
+			ListIterator<ISyntacticStructure> compIt = getListOfComponents().listIterator();
+			while (compIt.hasNext() && compReplaced == false) {
+				ISyntacticStructure comp = compIt.next();
+				List<Long> compLeafIDs = comp.getListOfLeafIDs();
+				if (compLeafIDs.removeAll(compIDs) == true) {
+					if (compLeafIDs.size() == 1) {
+						compIt.set(newComp);
+						compReplaced = true;
+					}
+					else {
+						compReplaced = comp.replaceArguments(newComp, compIDs);
+					}
 				}
 			}
 		}

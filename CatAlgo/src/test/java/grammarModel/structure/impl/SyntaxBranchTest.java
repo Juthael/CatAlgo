@@ -124,19 +124,20 @@ public class SyntaxBranchTest {
 		assertTrue(nonEmptyListReturned);
 	}
 	
+	@SuppressWarnings("unused")
 	@Test
 	public void whenRecursionIndexSettingRequestedThenPerformed() {
 		boolean beforeSettingIndexesEqual0 = true;
 		boolean afterSettingThenExpectedIndexes = true;
 		Map<String, Set<Integer>> nameOntoIndexes = new HashMap<String, Set<Integer>>();
-		SyntaxBranch branch = (SyntaxBranch) blackburnGrove.getListOfTrees().get(0);
+		SyntaxBranch branch = (SyntaxBranch) blackburnGrove.getListOfTrees().get(0).clone();
 		try {
 			ITreePaths paths = branch.getTreePaths();
-			//to see paths
-			System.out.println(paths.toString());
+			//to see paths :
+			//System.out.println(paths.toString());
 		} catch (GrammarModelException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("SyntaxBranchTest.whenRecursionIndexSettingRequestedThenPerformed()"
+					+ System.lineSeparator() + e.getMessage());
 		}
 		//before setting, all indexes equal 0
 		Set<ISyntacticStructure> components = branch.getSetOfComponentsAndSubComponents();
@@ -157,12 +158,60 @@ public class SyntaxBranchTest {
 				nameOntoIndexes.get(component.getName()).add(component.getRecursionIndex());
 			}
 		}
-		if (nameOntoIndexes.get("letter").size() != 1)
+		//to see indexes
+		/*
+		for (String name : nameOntoIndexes.keySet()) {
+			System.out.println(name + ":");
+			Set<Integer> indexes = nameOntoIndexes.get(name);
+			for (Integer index : indexes)
+				System.out.println(index + " ");
+		}
+		*/
+		if (nameOntoIndexes.get("Letter").size() != 1)
 			afterSettingThenExpectedIndexes = false;
-		else if (nameOntoIndexes.get("cluster").size() != 2 || nameOntoIndexes.get("coordinate").size() != 2)
+		else if (nameOntoIndexes.get("Cluster").size() != 2 || nameOntoIndexes.get("Coordinate").size() != 2)
 			afterSettingThenExpectedIndexes = false;
 		assertTrue(beforeSettingIndexesEqual0 && afterSettingThenExpectedIndexes);
-		//HERE. Doesn't work. Start Here
+	}
+	
+	@SuppressWarnings("unused")
+	@Test
+	public void whenRecursionMarkingRequestedThenPerformed() {
+		boolean markingPerformed = true;
+		Map<String, Set<Integer>> nameOntoIndexes = new HashMap<String, Set<Integer>>();
+		SyntaxBranch branch = (SyntaxBranch) blackburnGrove.getListOfTrees().get(0).clone();
+		branch.setRecursionIndex();
+		try {
+			ITreePaths paths = branch.getTreePaths();
+			//to see paths BEFORE index marking :
+			System.out.println(paths.toString());
+		} catch (GrammarModelException e) {
+			System.out.println("SyntaxBranch.whenRecursionMarkingRequestedThenPerformed()" 
+					+ System.lineSeparator() + e.getMessage());
+		}
+		try {
+			//method tested
+			branch.markRecursion();
+		} catch (GrammarModelException e) {
+			System.out.println("SyntaxBranch.whenRecursionMarkingRequestedThenPerformed()" 
+					+ System.lineSeparator() + e.getMessage());
+		}
+		try {
+			ITreePaths paths = branch.getTreePaths();
+			//to see paths AFTER index marking :
+			System.out.println(paths.toString());
+		} catch (GrammarModelException e) {
+			System.out.println("SyntaxBranch.whenRecursionMarkingRequestedThenPerformed()" 
+					+ System.lineSeparator() + e.getMessage());
+		}
+		for (ISyntacticStructure component : branch.getSetOfComponentsAndSubComponents()) {
+			if (component.getRecursionIndex() > 0) {
+				ISyntaxBranch branchComp = (ISyntaxBranch) component;
+				if (!branchComp.getFunction().getName().contains(SyntaxLeaf.RECURSION_SYMBOL))
+					markingPerformed = false;
+			}
+		}
+		assertTrue(markingPerformed);
 	}
 	
 	private IBinaryRelation buildExpectedRelation() {

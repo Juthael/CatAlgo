@@ -17,7 +17,7 @@ public class IncremenT extends SyntaxLeaf implements ISyntaxLeaf {
 
 	@Override
 	public String getName() {
-		return NAME;
+		return NAME.concat(recursionMark);
 	}
 
 	@Override

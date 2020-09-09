@@ -18,7 +18,7 @@ public class FromLeftToRighT extends SyntaxLeaf implements ISyntaxLeaf, IDirecti
 
 	@Override
 	public String getName() {
-		return NAME;
+		return NAME.concat(recursionMark);
 	}
 
 	@Override

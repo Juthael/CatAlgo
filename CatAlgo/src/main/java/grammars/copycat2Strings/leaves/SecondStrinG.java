@@ -18,7 +18,7 @@ public class SecondStrinG extends SyntaxLeaf implements ISyntaxLeaf, IStringName
 
 	@Override
 	public String getName() {
-		return NAME;
+		return NAME.concat(recursionMark);
 	}
 
 	@Override

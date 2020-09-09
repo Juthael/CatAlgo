@@ -92,11 +92,15 @@ public interface ISyntacticStructure extends Cloneable {
 	List<Long> getListOfLeafIDs();	
 	
 	/**
+	 * <p>
 	 * Returns the name of the syntactic structure, which is the left-term of the grammatical rule to which it is 
-	 * associated. <br> 
+	 * associated. <br>
+	 * </p> 
 	 * 
+	 * <p>
 	 * A syntactic structure instance can be regarded as a syntax tree ; in this case, the structure's name is the 
 	 * tree's root. <br>
+	 * </p>
 	 * 
 	 * @return the name of the syntactic structure
 	 */
@@ -169,11 +173,13 @@ public interface ISyntacticStructure extends Cloneable {
 	 * </p>
 	 * 
 	 * @see grammarModel.structure.ISyntaxLeaf
-	 * @param newComp new argument
+	 * @param newArg new argument
 	 * @param leafIDs IDs of the leaves to be replaced
+	 * @throws GrammarModelException if a replacement is attempted although the recursion index has already been set.
+	 * (See {@link ISyntaxBranch#setRecursionIndex()})
 	 * @return true if a replacement has occurred. 
 	 */
-	boolean replaceArguments(ISyntacticStructure newArg, List<Long> leafIDs);
+	boolean replaceArguments(ISyntacticStructure newArg, List<Long> leafIDs) throws GrammarModelException;
 	
 	/**
 	 * <p>
@@ -184,7 +190,12 @@ public interface ISyntacticStructure extends Cloneable {
 	 * 
 	 * <p>
 	 * How it works (<i> X </i> and <i> Y </i> are any substring) : <br>
-	 * <i> a -> X -> a -> Y -> a </i> : first <i> A </i>'s recursion index is 2 <br>
+	 * <i> A -> X -> A -> Y -> A -> Z </i> : first <i> A </i>'s recursion index is 2 <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * No structure replacement ( {@link ISyntaxBranch#replaceArguments(ISyntacticStructure, List)}) is allowed 
+	 * after the recursion index has been set. 
 	 * </p>
 	 * 
 	 * @see grammarModel.structure.ISyntaxLeaf

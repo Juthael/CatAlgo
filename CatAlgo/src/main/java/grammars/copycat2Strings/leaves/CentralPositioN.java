@@ -18,7 +18,7 @@ public class CentralPositioN extends SyntaxLeaf implements ISyntaxLeaf, ISpecifi
 
 	@Override
 	public String getName() {
-		return NAME;
+		return NAME.concat(recursionMark);
 	}
 
 	@Override

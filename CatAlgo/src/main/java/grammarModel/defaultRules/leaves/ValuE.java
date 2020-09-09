@@ -21,7 +21,7 @@ public class ValuE extends SyntaxLeaf implements ISyntaxLeaf, IValueOrClusteredV
 
 	@Override
 	public String getName() {
-		return value;
+		return value.concat(recursionMark);
 	}
 
 	@Override

@@ -20,9 +20,9 @@ import representation.stateMachine.impl.Symbol;
 
 public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLeaf {
 
-	private static final String RECURSION_SYMBOL = "#";
+	public static final String RECURSION_SYMBOL = "#";
 	private static int ID_COUNT = 0;
-	private String recursionMark = "";
+	protected String recursionMark = "";
 	private final long leafID;
 	
 	public SyntaxLeaf() {

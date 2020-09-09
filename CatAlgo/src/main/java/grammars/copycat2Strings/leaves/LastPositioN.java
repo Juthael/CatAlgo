@@ -18,7 +18,7 @@ public class LastPositioN extends SyntaxLeaf implements ISyntaxLeaf, IEndPositio
 
 	@Override
 	public String getName() {
-		return NAME;
+		return NAME.concat(recursionMark);
 	}
 
 	@Override
