@@ -4,27 +4,36 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import representation.dataFormats.IPair;
+
 public class MaxTransitiveChains {
 
-	private Set<MaxTransitiveChain> maxTransChains = new HashSet<MaxTransitiveChain>();
+	private Set<TransitiveChain> maxTransChains = new HashSet<TransitiveChain>();
 	
 	public MaxTransitiveChains() {
 	}
 	
 	//getters
 	
-	public Set<MaxTransitiveChain> getMaxTransChains() {
+	public Set<TransitiveChain> getMaxTransChains() {
 		return maxTransChains;
 	}
 	
 	//setters
 	
-	public boolean add(MaxTransitiveChain specifiedChain) {
+	/*
+	 * Ensures that (X, Y and Z being any substring) :
+	 * -if 'abcX' has already been added and 'acY' is given as parameter, then no addition occurs.
+	 * -if 'acX' has already been added and 'abcY' is given as parameter, then 'acX' is removed
+	 * and the addition occurs. 
+	 * This way, transitive chains are guaranteed to be maximal.
+	 */
+	public boolean add(TransitiveChain specifiedChain) {
 		boolean isMaxChain = true;
-		Set<MaxTransitiveChain> nonMaxChains = new HashSet<MaxTransitiveChain>();
-		Iterator<MaxTransitiveChain> chainIterator = maxTransChains.iterator();
+		Set<TransitiveChain> nonMaxChains = new HashSet<TransitiveChain>();
+		Iterator<TransitiveChain> chainIterator = maxTransChains.iterator();
 		while (isMaxChain && chainIterator.hasNext()) {
-			MaxTransitiveChain currentChain = chainIterator.next();
+			TransitiveChain currentChain = chainIterator.next();
 			if (currentChain.contains(specifiedChain))
 				isMaxChain = false;
 			else if (specifiedChain.contains(currentChain))

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.IGrammar;
@@ -28,8 +28,8 @@ public class FunctionalExpression implements IFunctionalExpression {
 	}
 	
 	@Override
-	public IBinaryRelation getBinaryRelation() {
-		IBinaryRelation relation;
+	public IRelationalDescription getRelationalDescription() {
+		IRelationalDescription relation;
 		Set<IPair> relationPairs = new HashSet<IPair>();
 		List<List<Integer>> listOfCoordinates = new ArrayList<List<Integer>>(coordinatesOntoSymbols.keySet());
 		for (int i = 0 ; i < listOfCoordinates.size() ; i++) {
@@ -152,7 +152,7 @@ public class FunctionalExpression implements IFunctionalExpression {
 	@Override
 	public boolean meets(IDescription description) {
 		boolean thisFunctExpMeetsSpecifiedDesc;
-		IBinaryRelation equivalentRelation = getBinaryRelation();
+		IRelationalDescription equivalentRelation = getRelationalDescription();
 		thisFunctExpMeetsSpecifiedDesc = equivalentRelation.meets(description);
 		return thisFunctExpMeetsSpecifiedDesc;
 	}
@@ -161,8 +161,8 @@ public class FunctionalExpression implements IFunctionalExpression {
 	public String toString() {
 		String functionalExpressionString;
 		/*
-		 * The "coordinates" of the root are an empty list (coordinates are meant to localize arguments, 
-		 * which the root is not)
+		 * The "coordinates" of the minimum are an empty list (coordinates are meant to localize arguments, 
+		 * which the minimum is not)
 		 */
 		List<Integer> rootCoordinates = new ArrayList<Integer>();
 		functionalExpressionString = toString(rootCoordinates);

@@ -8,18 +8,19 @@ import java.nio.file.Paths;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IGenericFileReader;
 import grammars.copycat2Strings.utils.CcFileReaderB;
 import grammars.sphex.utils.SphexFileReader;
-import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.ILanguage;
 import representation.exceptions.RepresentationException;
 
 public class BinaryRelationTest {
 
-	public static IBinaryRelation blackburnRelationA1;
-	public static IBinaryRelation sphexRelationPrey1;
+	public static IRelationalDescription blackburnRelationA1;
+	public static IRelationalDescription sphexRelationPrey1;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {

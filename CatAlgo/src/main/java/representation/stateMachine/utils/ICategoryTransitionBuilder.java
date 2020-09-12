@@ -57,8 +57,8 @@ import representation.stateMachine.IValueAttribution;
  * with every symbol that allows a transition from it). In this case, the interface <i> I </i> remains unchanged
  * in the output machine, and the symbol-operator of the returned transition ( {@link IOperator} ) does not need to account 
  * for this mapping. <br>     
- * .a <i> value </i>, i.e. a connected set of states composed of a "root" state (the state in the set having the highest rank) 
- * and all free states that can be reached from this root. Since this description of a value is also the very description of 
+ * .a <i> value </i>, i.e. a connected set of states composed of a "minimum" state (the state in the set having the highest rank) 
+ * and all free states that can be reached from this minimum. Since this description of a value is also the very description of 
  * a state machine, a value ( {@link IValue} ) is regarded as one ; it contains at least one state. The mapping of an output 
  * machine's value to an input machine's interface (allowed if the value meets the interface's specifications) triggers the 
  * registration of a value attribution ( {@link IValueAttribution} ) in the operator-symbol.  
@@ -69,7 +69,7 @@ import representation.stateMachine.IValueAttribution;
  * @see representation.stateMachine.ITransitionFunction
  * @see representation.stateMachine.ITransition
  * @see representation.stateMachine.IOperator
- * @see representation.dataFormats.IBinaryRelation
+ * @see representation.dataFormats.IRelationalDescription
  * @see representation.stateMachine.ISpecifications
  * @see representation.stateMachine.IInterfaceState
  * @see representation.dataFormats.IGrammar
@@ -133,8 +133,8 @@ public interface ICategoryTransitionBuilder {
 	 * A free interface is an input category's interface that hasn't found any counterpart amongst the output 
 	 * category's interfaces. <br> 
 	 * 
-	 * A value is a connected set of states composed of a "root" state (the state in the set having the highest rank) 
-	 * and all free states that can be reached from this root. <br>
+	 * A value is a connected set of states composed of a "minimum" state (the state in the set having the highest rank) 
+	 * and all free states that can be reached from this minimum. <br>
 	 * 
 	 * It must be verified first that a transition can actually be built from the input to the output category, and 
 	 * also that unimplemented interfaces pairs have been researched beforehand. <br>

@@ -2,7 +2,7 @@ package representation.stateMachine;
 
 import java.util.Set;
 
-import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.exceptions.RepresentationException;
@@ -24,7 +24,7 @@ import representation.stateMachine.infoQuantification.ITransitionCostCalculator;
  * A representation of a context is constructed out of a set of object's descriptions (one for every object 
  * in the context), provided by a "context input" ( {@link IContextInput} ). <br>
  * Among several equivalent description formats (see {@link IDescription}), an object can be described as a binary relation 
- * ( {@link IBinaryRelation} ) ; so can be a category. The contextually relevant categories that can be used 
+ * ( {@link IRelationalDescription} ) ; so can be a category. The contextually relevant categories that can be used 
  * for the description of a given context are to be found in the Galois lattice <i> Gal(O,P,M) </i>, 
  * where : <br>
  * -<i> O </i> is the set of objects <br>
@@ -83,7 +83,7 @@ import representation.stateMachine.infoQuantification.ITransitionCostCalculator;
  * 
  * @see representation.inputOutput.IContextInput
  * @see representation.dataFormats.IDescription
- * @see representation.dataFormats.IBinaryRelation
+ * @see representation.dataFormats.IRelationalDescription
  * @see representation.stateMachine.IAlgorithmicDescription
  * @see representation.stateMachine.IStateMachine
  * @see representation.stateMachine.ICategory
@@ -162,17 +162,17 @@ public interface IRepresentation extends IStateMachine {
 	Set<IContextObject> getObjects();
 	
 	/**
-	 * The specified property, expressed as a functional expression, is sought on the context objects. <br>  
+	 * The specified successorRelation, expressed as a functional expression, is sought on the context objects. <br>  
 	 * 
 	 * As any description ( {@link IDescription} ), a functional expression can be converted into any of
-	 * the other description formats. The binary relation format ( {@link IBinaryRelation} ) is particularly 
+	 * the other description formats. The binary relation format ( {@link IRelationalDescription} ) is particularly 
 	 * useful, because categories (and therefore, objects), can also be described as binary relations. So to 
-	 * find out whether a certain object has a certain property, one just has to verify that the relation 
-	 * associated with the property is actually as subset of the relation associated with the object. 
+	 * find out whether a certain object has a certain successorRelation, one just has to verify that the relation 
+	 * associated with the successorRelation is actually as subset of the relation associated with the object. 
 	 * 
-	 * @see representation.dataFormats.IBinaryRelation
-	 * @param specifiedProperty a property, expressed as a functional expression. 
-	 * @return the set of objects on which the specified property can be verified.
+	 * @see representation.dataFormats.IRelationalDescription
+	 * @param specifiedProperty a successorRelation, expressed as a functional expression. 
+	 * @return the set of objects on which the specified successorRelation can be verified.
 	 */
 	Set<IContextObject> getObjectsThatHave(IFunctionalExpression specifiedProperty);
 	
@@ -197,7 +197,7 @@ public interface IRepresentation extends IStateMachine {
 	 * contains a state whose extent includes only two objects : the target, and any other object 
 	 * meeting the constraint expressed in the second parameter. <br>
 	 * 
-	 * Having one category of their own in the representation's description, and sharing this property
+	 * Having one category of their own in the representation's description, and sharing this successorRelation
 	 * with no other object, makes these two objects (target and match) counterparts. <br> 
 	 * 
 	 * To know more about information quantification, see {@link IAlgorithmicDescription}, 
@@ -205,8 +205,8 @@ public interface IRepresentation extends IStateMachine {
 	 * 
 	 * @see representation.stateMachine.IAlgorithmicDescription
 	 * @see representation.stateMachine.infoQuantification.ITransitionCostCalculator
-	 * @param constraintOnTargetObj a property that can be found in a single object in the context
-	 * @param constraintOnMatch a property that can be found in at least one object in the context
+	 * @param constraintOnTargetObj a successorRelation that can be found in a single object in the context
+	 * @param constraintOnMatch a successorRelation that can be found in at least one object in the context
 	 * @return the optimal (with regard to information cost) description matching the target object 
 	 * with a counterpart
 	 * @throws RepresentationException if more than one target object, or no match object, have 
@@ -239,7 +239,7 @@ public interface IRepresentation extends IStateMachine {
 	 * contains a state whose extent includes only two objects : the target, and any other object 
 	 * meeting the constraint expressed in the second parameter. <br>
 	 * 
-	 * Having one category of their own in the representation's description, and sharing this property
+	 * Having one category of their own in the representation's description, and sharing this successorRelation
 	 * with no other object, these to objects (target and match) are regarded as counterparts. <br>
 	 * 
 	 * To know more about the signified's encoding, see {@link IAlgorithmicDescription}.
@@ -250,8 +250,8 @@ public interface IRepresentation extends IStateMachine {
 	 * @see representation.stateMachine.ISignified
 	 * @see representation.stateMachine.IAlgorithmicDescription
 	 * @see representation.stateMachine.infoQuantification.ITransitionCostCalculator
-	 * @param constraintOnTargetObj a property that can be found in a single object in the context
-	 * @param constraintOnMatch a property that can be found in at least one object in the context
+	 * @param constraintOnTargetObj a successorRelation that can be found in a single object in the context
+	 * @param constraintOnMatch a successorRelation that can be found in at least one object in the context
 	 * @return the optimal (with regard to coding efficiency) description matching the target object 
 	 * with a counterpart
 	 * @throws RepresentationException if more than one target object, or no match object, have 
@@ -275,11 +275,11 @@ public interface IRepresentation extends IStateMachine {
 	 * contains a state whose extent includes only two objects : the target, and any other object 
 	 * meeting the constraint expressed in the second parameter. 
 	 * 
-	 * Having one category of their own in the representation's description, and sharing this property
+	 * Having one category of their own in the representation's description, and sharing this successorRelation
 	 * with no other object, these to objects (target and match) are regarded as counterparts. 
 	 * 
-	 * @param constraintOnTargetObj a property that can be found in a single object in the context
-	 * @param constraintOnMatch a property that can be found in at least one object in the context
+	 * @param constraintOnTargetObj a successorRelation that can be found in a single object in the context
+	 * @param constraintOnMatch a successorRelation that can be found in at least one object in the context
 	 * @return all descriptions matching the target object with a counterpart
 	 * @throws RepresentationException if more than one target object, or no match object, have 
 	 * been found.  

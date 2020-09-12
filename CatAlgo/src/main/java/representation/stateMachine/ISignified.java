@@ -33,7 +33,7 @@ public interface ISignified extends ICategory {
 	 * A description of the signified is a description of what is true about any object in the 
 	 * representation this signified belongs to. 
 	 * 
-	 * @see representation.dataFormats.IBinaryRelation
+	 * @see representation.dataFormats.IRelationalDescription
 	 * @see representation.dataFormats.ILanguage
 	 * @see representation.dataFormats.IFunctionalExpression
 	 * @see representation.stateMachine.IRepresentation

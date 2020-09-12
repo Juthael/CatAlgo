@@ -2,7 +2,7 @@ package representation.stateMachine.impl;
 
 import java.util.Set;
 
-import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.IGrammar;
 import representation.dataFormats.ILanguage;
@@ -47,7 +47,7 @@ public class StateMachine implements IStateMachine {
 	}
 
 	@Override
-	public IBinaryRelation getBinaryRelation() {
+	public IRelationalDescription getBinaryRelation() {
 		// TODO Auto-generated method stub
 		return null;
 	}

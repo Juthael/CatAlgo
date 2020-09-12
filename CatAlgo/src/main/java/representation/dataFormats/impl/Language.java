@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.IGrammar;
@@ -34,8 +34,8 @@ public class Language implements ILanguage {
 	}
 	
 	@Override
-	public IBinaryRelation getBinaryRelation() {
-		IBinaryRelation relation;
+	public IRelationalDescription getRelationalDescription() {
+		IRelationalDescription relation;
 		Set<IPair> pairs = new HashSet<IPair>();
 		for (IWord word : dictionary) {
 			List<ISymbol> listOfSymbols = word.getListOfSymbols();
@@ -211,9 +211,9 @@ public class Language implements ILanguage {
 	@Override
 	public boolean meets(IDescription description) {
 		boolean specifiedDescIsMet;
-		IBinaryRelation thisRelation = getBinaryRelation();
-		IBinaryRelation otherRelation = description.getBinaryRelation();
-		specifiedDescIsMet = otherRelation.getPairs().containsAll(thisRelation.getPairs());
+		IRelationalDescription thisRelation = getRelationalDescription();
+		IRelationalDescription otherRelation = description.getRelationalDescription();
+		specifiedDescIsMet = otherRelation.getBinaryRelation().containsAll(thisRelation.getBinaryRelation());
 		return specifiedDescIsMet;
 	}
 	

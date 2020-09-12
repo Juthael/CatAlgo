@@ -11,7 +11,6 @@ import grammarModel.utils.impl.TreePaths;
 
 public abstract class SyntacticStructure implements ISyntacticStructure, Cloneable {
 	
-	protected String name;
 	protected int recursionIndex = 0;
 	protected boolean recursionIndexHasBeenSet = false;
 	

@@ -3,9 +3,11 @@ package representation.dataFormats;
 import java.util.Set;
 
 import grammarModel.structure.ISyntaxGrove;
+import representation.dataFormats.utils.ITotalOrder;
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 
+//RE-WRITE DOC
 /**
  * <p>
  * A binary relation is one of the three equivalent description format that can be used to describe an element 
@@ -21,7 +23,7 @@ import representation.stateMachine.ISymbol;
  * </p> 
  * 
  * <p>
- * Warning : the {@link IBinaryRelation} type can (and should) only deal with well-founded binary relations. Otherwise, 
+ * Warning : the {@link IRelationalDescription} type can (and should) only deal with well-founded binary relations. Otherwise, 
  * exceptions will be thrown and/or errors will occur. <br>
  * The {@link ISyntaxGrove#markRecursion()} method provides a recursion index mechanism. This allows to be sure that the 
  * descriptions in the generated context input ({@link ISyntaxGrove#getContextInput()}) will only yield well-founded relations. 
@@ -35,10 +37,21 @@ import representation.stateMachine.ISymbol;
  * @author Gael Tregouet
  *
  */
-public interface IBinaryRelation extends IDescription {
+public interface IRelationalDescription extends IDescription, Cloneable {
+	
+	//getters
+	
+	IRelationalDescription clone();
 	
 	@Override
 	boolean equals(Object other);
+	
+	/**
+	 * Returns the pair of symbols of the binary relation. 
+	 * 
+	 * @return the pairs of symbols of the binary relation
+	 */
+	Set<IPair> getBinaryRelation();	
 	
 	/**
 	 * Returns the functional expression equivalent to this binary relation. <br>
@@ -75,6 +88,7 @@ public interface IBinaryRelation extends IDescription {
 	@Override
 	IGrammar getGrammar() throws RepresentationException;	
 	
+	//RE-WRITE DOC
 	/**
 	 * The language <i> L<sub>M</sub> </i> associated with a binary relation <i> R </i> is the set of all the 
 	 * <i> maximal transitive non-redundant strings </i> in <i> R </i>. <br>
@@ -105,7 +119,7 @@ public interface IBinaryRelation extends IDescription {
 	 * or functional expression first, and then to call this same method on them.  
 	 * 
 	 * @see representation.dataFormats.ILanguage
-	 * @see representation.dataFormats.IBinaryRelation
+	 * @see representation.dataFormats.IRelationalDescription
 	 * @throws RepresentationException if the specified symbol is not actually used in the description
 	 * @throws RepresentationException if the language equivalent to this relation, 
 	 * which is needed as an intermediate format, cannot be built
@@ -113,12 +127,11 @@ public interface IBinaryRelation extends IDescription {
 	@Override
 	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;		
 	
-	/**
-	 * Returns the pair of symbols of the binary relation. 
-	 * 
-	 * @return the pairs of symbols of the binary relation
-	 */
-	Set<IPair> getPairs();
+	//WRITE DOC
+	Set<ITotalOrder> getOrderedSubRelations();
+	
+	@Override
+	int hashCode();
 	
 	/**
 	 * Returns the binary relation as a String
@@ -126,5 +139,9 @@ public interface IBinaryRelation extends IDescription {
 	 */
 	@Override
 	String toString();
-
+	
+	//setters
+	
+	//WRITE DOC
+	void restrictTo(Set<IPair> pairs) throws RepresentationException;
 }

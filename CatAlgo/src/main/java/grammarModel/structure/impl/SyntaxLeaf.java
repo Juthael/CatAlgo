@@ -10,7 +10,7 @@ import java.util.Set;
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxLeaf;
-import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.IPair;
 import representation.dataFormats.impl.BinaryRelation;
@@ -20,7 +20,7 @@ import representation.stateMachine.impl.Symbol;
 
 public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLeaf {
 
-	public static final String RECURSION_SYMBOL = "#";
+	public static final String RECURSION_SYMBOL = "'";
 	private static int ID_COUNT = 0;
 	protected String recursionMark = "";
 	private final long leafID;
@@ -38,8 +38,8 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 	//getters
 	
 	@Override
-	public IBinaryRelation getBinaryRelation() {
-		IBinaryRelation relation;
+	public IRelationalDescription getBinaryRelation() {
+		IRelationalDescription relation;
 		Set<IPair> relationPairs = new HashSet<IPair>();
 		relation = new BinaryRelation(relationPairs);
 		return relation;
@@ -48,7 +48,7 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 	@Override
 	public IFunctionalExpression getFunctionalExpression() {
 		IFunctionalExpression expression;
-		ISymbol leafSymbol = new Symbol(name);
+		ISymbol leafSymbol = new Symbol(getName());
 		Map<List<Integer>, ISymbol> coordinatesOntoSymbols = new HashMap<List<Integer>, ISymbol>();
 		coordinatesOntoSymbols.put(new ArrayList<Integer>(), leafSymbol);
 		expression = new FunctionalExpression(coordinatesOntoSymbols);
@@ -96,7 +96,7 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 	@Override
 	public Map<String, Integer> setRecursionIndex() {
 		Map<String, Integer> nameOntoRecursionIndex = new HashMap<String, Integer>();
-		nameOntoRecursionIndex.put(name, 0);
+		nameOntoRecursionIndex.put(getName(), 0);
 		return nameOntoRecursionIndex;
 	}
 	

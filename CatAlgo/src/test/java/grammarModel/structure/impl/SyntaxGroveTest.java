@@ -14,7 +14,7 @@ import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IGenericFileReader;
 import grammarModel.utils.ITreePaths;
 import grammars.copycat2Strings.utils.CcFileReaderB;
-import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IPair;
 
 public class SyntaxGroveTest {
@@ -60,8 +60,8 @@ public class SyntaxGroveTest {
 			System.out.println("SyntaxGroveTest.whenRecursionIndexMarkingRequestedThenEffective() :" + System.lineSeparator()
 					+ e.getMessage());
 		}
-		IBinaryRelation binaryRelation = anyTree.getBinaryRelation();
-		for (IPair pair : binaryRelation.getPairs()) {
+		IRelationalDescription relationalDescription = anyTree.getBinaryRelation();
+		for (IPair pair : relationalDescription.getBinaryRelation()) {
 			if (pair.getAntecedent().equals(pair.getConsequent()))
 				markingEffective = false;
 		}

@@ -45,7 +45,7 @@ public class CoordSubValue extends SyntaxBranch implements ISyntaxBranch, IValuE
 	}	
 	
 	@Override
-	public String getName() {
+	public String getName() {	
 		return name;
 	}
 

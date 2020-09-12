@@ -21,7 +21,7 @@ import grammarModel.utils.IGenericFileReader;
 import grammarModel.utils.ITreePaths;
 import grammars.copycat2Strings.utils.CcFileReaderB;
 import grammars.sphex.utils.SphexFileReader;
-import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IPair;
 import representation.dataFormats.impl.BinaryRelation;
 import representation.dataFormats.impl.utils.utilsBR.Pair;
@@ -57,7 +57,7 @@ public class SyntaxBranchTest {
 	@Test
 	public void whenBinaryRelationRequestedThenExpectedBRReturned() {
 		boolean expectedBRReturned;
-		IBinaryRelation expectedRelation = buildExpectedRelation(); 
+		IRelationalDescription expectedRelation = buildExpectedRelation(); 
 		ISyntaxBranch tree = sphexGrove.getListOfTrees().get(0);
 		try {
 			ITreePaths paths = tree.getTreePaths();
@@ -68,7 +68,7 @@ public class SyntaxBranchTest {
 					+ System.lineSeparator() + e.getMessage());
 			expectedBRReturned = false;
 		}
-		IBinaryRelation relation = tree.getBinaryRelation();
+		IRelationalDescription relation = tree.getBinaryRelation();
 		//to see the relation : 
 		//System.out.println(relation.toString());
 		expectedBRReturned = relation.equals(expectedRelation);
@@ -95,7 +95,7 @@ public class SyntaxBranchTest {
 				nonEmptyListReturned = false;
 				System.out.println("SyntaxBranchTest."
 						+ "whenGetListOfLeafIDsIsCalledThenANonEmptyListIsReturned() : "
-						+ System.lineSeparator() + "cannot retrieve poset IDs." 
+						+ System.lineSeparator() + "cannot retrieve totalOrder IDs." 
 						+ System.lineSeparator() + e.getMessage());
 			}
 		}
@@ -214,8 +214,8 @@ public class SyntaxBranchTest {
 		assertTrue(markingPerformed);
 	}
 	
-	private IBinaryRelation buildExpectedRelation() {
-		IBinaryRelation expectedRelation;
+	private IRelationalDescription buildExpectedRelation() {
+		IRelationalDescription expectedRelation;
 		ISymbol prey = new Symbol("prey");
 		ISymbol position = new Symbol("position");
 		ISymbol randomPlace = new Symbol("randomPlace");

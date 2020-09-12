@@ -4,13 +4,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.IGrammar;
 import representation.dataFormats.ILanguage;
 import representation.dataFormats.IPair;
-import representation.dataFormats.impl.utils.utilsBR.MaxTransitiveChain;
+import representation.dataFormats.impl.utils.utilsBR.TransitiveChain;
 import representation.dataFormats.impl.utils.utilsBR.MaxTransitiveChains;
 import representation.dataFormats.impl.utils.utilsBR.Pair;
 import representation.exceptions.RepresentationException;
@@ -18,7 +18,7 @@ import representation.stateMachine.ISymbol;
 import representation.stateMachine.IWord;
 import representation.stateMachine.impl.Word;
 
-public class BinaryRelation implements IBinaryRelation {
+public class BinaryRelation implements IRelationalDescription {
 	
 	private final Set<IPair> pairs;
 
@@ -34,14 +34,14 @@ public class BinaryRelation implements IBinaryRelation {
 		else if (!(o instanceof representation.dataFormats.impl.BinaryRelation))
 			isEqual = false;
 		else {
-			IBinaryRelation other = (IBinaryRelation) o;
-			isEqual = pairs.equals(other.getPairs());
+			IRelationalDescription other = (IRelationalDescription) o;
+			isEqual = pairs.equals(other.getBinaryRelation());
 		}
 		return isEqual;
 	}
 	
 	@Override
-	public IBinaryRelation getBinaryRelation() {
+	public IRelationalDescription getRelationalDescription() {
 		return this;
 	}
 	
@@ -76,24 +76,24 @@ public class BinaryRelation implements IBinaryRelation {
 	@Override
 	public ILanguage getLanguage() throws RepresentationException {
 		ILanguage language;
-		Set<MaxTransitiveChain> knownTransChains = new HashSet<MaxTransitiveChain>();
 		//maximal transitive chains that can't be extended
 		MaxTransitiveChains finalTransChains = new MaxTransitiveChains();
+		//maximal transitive chains known so far, but these chains may be extended
+		Set<TransitiveChain> knownTransChains = new HashSet<TransitiveChain>();
 		ISymbol root;
 		try {
 			root = getRoot();
 		}
 		catch (RepresentationException e) {
-			throw new RepresentationException("BinaryRelation.getLanguage() : root search failed. " + System.lineSeparator() 
+			throw new RepresentationException("BinaryRelation.getLanguage() : minimum search failed. " + System.lineSeparator() 
 				+ e.getMessage());
 		}
-		MaxTransitiveChain rootChain = new MaxTransitiveChain(root);
-		//maximal transitive chains known so far, but these chains may be extended
+		TransitiveChain rootChain = new TransitiveChain(root);
 		knownTransChains.add(rootChain);
 		while (!knownTransChains.isEmpty()) {
 			//new chains built on this run of the 'while' loop, by extending known transitive chains
-			Set<MaxTransitiveChain> newTransChains = new HashSet<MaxTransitiveChain>();
-			for (MaxTransitiveChain currentChain : knownTransChains) {
+			Set<TransitiveChain> newTransChains = new HashSet<TransitiveChain>();
+			for (TransitiveChain currentChain : knownTransChains) {
 				ISymbol lastSymbol = currentChain.getLast();
 				Set<IPair> newChainPairs = getPairsStartingWith(lastSymbol);
 				if (newChainPairs.isEmpty())
@@ -126,7 +126,7 @@ public class BinaryRelation implements IBinaryRelation {
 							chainIndex++;
 						}
 						if (remainsTransitive) {
-							MaxTransitiveChain newChain = currentChain.clone();
+							TransitiveChain newChain = currentChain.clone();
 							newChain.extend(newSymbol, relationExtensForTransitivity);
 							newTransChains.add(newChain);
 							currentChainHasBeenExtended = true;
@@ -139,7 +139,7 @@ public class BinaryRelation implements IBinaryRelation {
 			knownTransChains = newTransChains;
 		}
 		Set<IWord> words = new HashSet<IWord>();
-		for (MaxTransitiveChain chain : finalTransChains.getMaxTransChains())
+		for (TransitiveChain chain : finalTransChains.getMaxTransChains())
 			words.add(new Word(chain.getChain()));
 		language = new Language(words);
 		return language;
@@ -165,14 +165,14 @@ public class BinaryRelation implements IBinaryRelation {
 	}	
 	
 	@Override
-	public Set<IPair> getPairs() {
+	public Set<IPair> getBinaryRelation() {
 		return pairs;
 	}	
 
 	@Override
 	public boolean meets(IDescription description) {
 		boolean otherDescMeetsThis;
-		Set<IPair> otherSetOfPairs = description.getBinaryRelation().getPairs();
+		Set<IPair> otherSetOfPairs = description.getRelationalDescription().getBinaryRelation();
 		otherDescMeetsThis = (otherSetOfPairs.containsAll(pairs));
 		return otherDescMeetsThis;
 	}

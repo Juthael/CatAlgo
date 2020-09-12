@@ -140,9 +140,9 @@ public abstract class GenericFileReader implements IGenericFileReader {
 	}	
 	
 	/**
-	 * Builds a syntax tree incrementally, starting with its leaves, ending with its root. 
+	 * Builds a syntax tree incrementally, starting with its leaves, ending with its minimum. 
 	 * Each element attainable at a path index 'x' (x>0) is a component of another element at the path index 'x-1'.
-	 * The only element with a path index x=0 is the root of the syntax tree.     
+	 * The only element with a path index x=0 is the minimum of the syntax tree.     
 	 * @param treeIndex index of the tree in the treeDescriptions array
 	 * @return a syntax tree, i.e. a syntax branch whose name is the start element of the context-free grammar at use
 	 * @throws FileReaderException

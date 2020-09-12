@@ -21,7 +21,7 @@ public interface IGenericFileReader {
 	 * grammar. <br>
 	 * 2-Every tree description begins with a line containing only the character '/' <br>
 	 * 3-Descriptions of syntax trees take the form of the list of spanning paths a tree contains (i.e. paths 
-	 * from the root element of the tree to any of its terminals). <br>
+	 * from the minimum element of the tree to any of its terminals). <br>
 	 * 4-A path is a concatenation of symbols (i.e., strings) from the 'SeekWhence' grammar, separated by the 
 	 * character '/'. New path, new line. No empty line. <br>
 	 * 5-The list of paths must be generated using the following pattern : <br>

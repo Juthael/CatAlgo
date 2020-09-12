@@ -20,13 +20,13 @@ import representation.stateMachine.IWord;
  * As a regular language, a ILanguage is composed of all the words (i.e., strings of symbols) accepted by a given state 
  * machine of the 'finite state automaton' (FSA) type. For any regular language, a FSA machine can be found to accept it. 
  * If a language is a description of an object or a category, then each of its word describes an accessible 
- * property or an attainable goal on this object, or on any object of this category. <br>
+ * successorRelation or an attainable goal on this object, or on any object of this category. <br>
  * </p>  
  * 
  * @see representation.dataFormats.IDescription
  * @see representation.stateMachine.IWord
  * @see representation.stateMachine.IStateMachine
- * @see representation.dataFormats.IBinaryRelation
+ * @see representation.dataFormats.IRelationalDescription
  * @see representation.dataFormats.IFunctionalExpression
  * 
  * @author Gael Tregouet
@@ -42,7 +42,7 @@ public interface ILanguage extends IDescription {
 	 * @return a binary relation based on (and equivalent to) this language
 	 */
 	@Override
-	IBinaryRelation getBinaryRelation();
+	IRelationalDescription getRelationalDescription();
 	
 	/**
 	 * Returns the list of words that constitutes this language, in a lexicographic order

@@ -6,7 +6,7 @@ import representation.stateMachine.ISymbol;
  * A pair is an element of a binary relation. It associates a symbol (the <i> antecedent </i>) to another symbol 
  * (the <i> consequent </i>)
  * 
- * @see representation.dataFormats.IBinaryRelation
+ * @see representation.dataFormats.IRelationalDescription
  * @see representation.stateMachine.ISymbol
  * @author Gael Tregouet
  *

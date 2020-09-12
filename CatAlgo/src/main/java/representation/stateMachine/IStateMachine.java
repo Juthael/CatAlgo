@@ -2,7 +2,7 @@ package representation.stateMachine;
 
 import java.util.Set;
 
-import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.IGrammar;
 import representation.dataFormats.ILanguage;
@@ -83,7 +83,7 @@ public interface IStateMachine {
 	 * @see representation.dataFormats.ILanguage
 	 * @return a description of the machine in the form of a binary relation
 	 */
-	IBinaryRelation getBinaryRelation();
+	IRelationalDescription getBinaryRelation();
 	
 	/**
 	 * For every one of its states, the machine grammar maps every symbol that allows a transition to it with every 

@@ -12,7 +12,7 @@ import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
-import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.IPair;
 import representation.dataFormats.impl.BinaryRelation;
@@ -39,22 +39,22 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	}
 	
 	@Override
-	public IBinaryRelation getBinaryRelation() {
-		IBinaryRelation branchRelation;
+	public IRelationalDescription getBinaryRelation() {
+		IRelationalDescription branchRelation;
 		Set<IPair> branchRelationPairs = new HashSet<IPair>();
 		ISyntaxLeaf function = getFunction();
 		ISymbol functionSymbol = new Symbol(function.getName());
 		List<ISyntacticStructure> arguments = getArguments();
 		for (ISyntacticStructure argument : arguments) {
-			IBinaryRelation argRelation = argument.getBinaryRelation();
-			if (argRelation.getPairs().isEmpty()) {
+			IRelationalDescription argRelation = argument.getBinaryRelation();
+			if (argRelation.getBinaryRelation().isEmpty()) {
 				//then argument is a syntax leaf
 				ISymbol argSymbol = new Symbol(argument.getName());
 				branchRelationPairs.add(new Pair(functionSymbol, argSymbol));
 			}
 			else {
 				//then argument is a syntax branch
-				Set<IPair> argRelationPairs = argRelation.getPairs();
+				Set<IPair> argRelationPairs = argRelation.getBinaryRelation();
 				for (IPair currentArgPair : argRelationPairs) {
 					branchRelationPairs.add(new Pair(functionSymbol, currentArgPair.getAntecedent()));
 					branchRelationPairs.add(new Pair(functionSymbol, currentArgPair.getConsequent()));
@@ -159,24 +159,24 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	
 	@Override
 	public Map<String, Integer> setRecursionIndex() {
-		Map<String, Integer> nameToRecursionIdx = new HashMap<String, Integer>();
+		Map<String, Integer> nameOntoRecursionIdx = new HashMap<String, Integer>();
 		if (!recursionIndexHasBeenSet) {
 			for (ISyntacticStructure arguments : getArguments()) {
-				Map<String, Integer> argNameToRecursIdx = arguments.setRecursionIndex();
-				for (String argName : argNameToRecursIdx.keySet()) {
-					if (!nameToRecursionIdx.containsKey(argName) 
-							|| (nameToRecursionIdx.get(argName) < argNameToRecursIdx.get(argName))) {
-						nameToRecursionIdx.put(argName, argNameToRecursIdx.get(argName));
+				Map<String, Integer> argNameOntoRecursIdx = arguments.setRecursionIndex();
+				for (String argName : argNameOntoRecursIdx.keySet()) {
+					if (!nameOntoRecursionIdx.containsKey(argName) 
+							|| (nameOntoRecursionIdx.get(argName) < argNameOntoRecursIdx.get(argName))) {
+						nameOntoRecursionIdx.put(argName, argNameOntoRecursIdx.get(argName));
 					}
 				}
 			}
-			if (nameToRecursionIdx.containsKey(this.getName())) {
-				recursionIndex = nameToRecursionIdx.get(this.getName()) + 1;
+			if (nameOntoRecursionIdx.containsKey(this.getName())) {
+				recursionIndex = nameOntoRecursionIdx.get(this.getName()) + 1;
 			}
-			nameToRecursionIdx.put(this.getName(), recursionIndex);
+			nameOntoRecursionIdx.put(this.getName(), recursionIndex);
 			recursionIndexHasBeenSet = true;
 		}
-		return nameToRecursionIdx;
+		return nameOntoRecursionIdx;
 	}		
 
 }

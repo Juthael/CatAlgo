@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import grammarModel.exceptions.GrammarModelException;
-import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IFunctionalExpression;
 
 /**
@@ -60,7 +60,7 @@ public interface ISyntaxBranch extends ISyntacticStructure {
 	 * </p>
 	 */
 	@Override
-	IBinaryRelation getBinaryRelation();
+	IRelationalDescription getBinaryRelation();
 	
 	/**
 	 * Returns the branch's function, in the form of a syntax leaf. 

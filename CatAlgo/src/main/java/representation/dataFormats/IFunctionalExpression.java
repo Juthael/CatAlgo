@@ -38,7 +38,7 @@ import representation.stateMachine.ISymbol;
  * 
  * @see representation.dataFormats.IDescription
  * @see representation.dataFormats.ILanguage
- * @see representation.dataFormats.IBinaryRelation
+ * @see representation.dataFormats.IRelationalDescription
  * @author Gael Tregouet
  *
  */
@@ -59,7 +59,7 @@ public interface IFunctionalExpression extends IDescription {
 	 * @return the binary relation equivalent to this functional expression 
 	 */
 	@Override
-	IBinaryRelation getBinaryRelation();
+	IRelationalDescription getRelationalDescription();
 	
 	/**
 	 * The functional expression is encoded as a mapping of coordinates (that allow to locate every element in the expression) 

@@ -2,7 +2,7 @@ package representation.stateMachine;
 
 import java.util.Set;
 
-import representation.dataFormats.IBinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IDescription;
 
 /**
@@ -78,12 +78,12 @@ public interface ICategory extends IStateMachine, IState {
 	 * @param relation the description of the category as a binary relation
 	 * @return the transition function of the category state machine
 	 */
-	ITransitionFunction buildTransitionFunction(IBinaryRelation relation);
+	ITransitionFunction buildTransitionFunction(IRelationalDescription relation);
 	
 	/**
 	 * Descriptions can have the form of binary relations, functional expressions, or regular languages. 
 	 * 
-	 * @see representation.dataFormats.IBinaryRelation
+	 * @see representation.dataFormats.IRelationalDescription
 	 * @see representation.dataFormats.IFunctionalExpression
 	 * @see representation.dataFormats.ILanguage
 	 * @return the intent of the category (i.e. its meaning) 
