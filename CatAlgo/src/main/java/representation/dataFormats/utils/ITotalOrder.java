@@ -29,6 +29,8 @@ public interface ITotalOrder extends Cloneable {
 	
 	//setters
 	
+	void extendWithMinimum(ISymbol symbol);
+	
 	void restrictTo(Set<IPair> pairs) throws RepresentationException;
 	
 }

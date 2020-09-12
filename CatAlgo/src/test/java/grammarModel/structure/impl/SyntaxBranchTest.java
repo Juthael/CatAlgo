@@ -68,7 +68,7 @@ public class SyntaxBranchTest {
 					+ System.lineSeparator() + e.getMessage());
 			expectedBRReturned = false;
 		}
-		IRelationalDescription relation = tree.getBinaryRelation();
+		IRelationalDescription relation = tree.getRelationalDescription();
 		//to see the relation : 
 		//System.out.println(relation.toString());
 		expectedBRReturned = relation.equals(expectedRelation);

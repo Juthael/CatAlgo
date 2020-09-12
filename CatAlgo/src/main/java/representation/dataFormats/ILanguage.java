@@ -40,9 +40,10 @@ public interface ILanguage extends IDescription {
 	 * belongs to the relation returned.
 	 * 
 	 * @return a binary relation based on (and equivalent to) this language
+	 * @throws RepresentationException 
 	 */
 	@Override
-	IRelationalDescription getRelationalDescription();
+	IRelationalDescription getRelationalDescription() throws RepresentationException;
 	
 	/**
 	 * Returns the list of words that constitutes this language, in a lexicographic order

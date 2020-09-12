@@ -15,9 +15,9 @@ import representation.utils.HashCodeUtil;
 
 public class TotalOrder implements ITotalOrder {
 
-	Set<IPair> totalOrder;
-	ISymbol minimum;
-	List<ISymbol> property;
+	private Set<IPair> totalOrder;
+	private ISymbol minimum;
+	private List<ISymbol> property;
 	
 	public TotalOrder(Set<IPair> poset) throws RepresentationException {
 		this.totalOrder = poset;
@@ -35,7 +35,8 @@ public class TotalOrder implements ITotalOrder {
 	
 	@Override
 	public ITotalOrder clone() {
-		ITotalOrder cloneOrder = new TotalOrder(new HashSet<IPair>(totalOrder), new Symbol(minimum.toString()), new ArrayList<ISymbol>(property));
+		ITotalOrder cloneOrder = new TotalOrder(new HashSet<IPair>(totalOrder), new Symbol(minimum.toString()), 
+				new ArrayList<ISymbol>(property));
 		return cloneOrder;
 	}
 	
@@ -51,7 +52,7 @@ public class TotalOrder implements ITotalOrder {
 			thisEqualsOther = property.equals(other.getProperty());
 		}
 		return thisEqualsOther;
-	}
+	}	
 	
 	@Override
 	public Set<IPair> getPairs(){
@@ -83,6 +84,14 @@ public class TotalOrder implements ITotalOrder {
 	}
 	
 	//setters
+	
+	@Override
+	public void extendWithMinimum(ISymbol newMinimum) {
+		minimum = newMinimum;
+		for (ISymbol symbol : property)
+			totalOrder.add(new Pair(newMinimum, symbol));
+		property.add(0, newMinimum);
+	}	
 
 	@Override
 	public void restrictTo(Set<IPair> pairs) throws RepresentationException {
@@ -92,7 +101,6 @@ public class TotalOrder implements ITotalOrder {
 					+ "even after reduction");
 		}
 		else {
-			findMinimum();
 			setProperty();
 		}
 	}
@@ -185,12 +193,6 @@ public class TotalOrder implements ITotalOrder {
 		if (antecedents.size() != 1) {
 			throw new RepresentationException("TotalOrder.findMinimum() : there should be one (and only one) antecedent "
 					+ "that is the consequent of no other.");
-		}
-		else if (minimum != null) {
-			ISymbol newMinimum = antecedents.iterator().next();
-			if (!newMinimum.equals(minimum)) {
-				throw new RepresentationException("TotalOrder.findMinimum() : the minimum should never change.");
-			}
 		}
 		else minimum = antecedents.iterator().next();
 	}

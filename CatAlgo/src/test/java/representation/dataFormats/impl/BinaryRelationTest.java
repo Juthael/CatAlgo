@@ -35,14 +35,14 @@ public class BinaryRelationTest {
 			blackburnGrove.markRecursion();
 			//to see syntactic paths
 			System.out.println(blackburnGrove.getListOfTrees().get(0).getTreePaths().toString());
-			blackburnRelationA1 = blackburnGrove.getListOfTrees().get(0).getBinaryRelation();
+			blackburnRelationA1 = blackburnGrove.getListOfTrees().get(0).getRelationalDescription();
 		}
 		catch (Exception e) {
 			System.out.println("SyntaxBranchTest.setUpBeforClass() : " + System.lineSeparator() + e.getMessage());
 		}
 		try {
 			sphexGrove = sphexFileReader.getSyntacticGrove(usualSphex);
-			sphexRelationPrey1 = sphexGrove.getListOfTrees().get(0).getBinaryRelation();
+			sphexRelationPrey1 = sphexGrove.getListOfTrees().get(0).getRelationalDescription();
 		}
 		catch (Exception e) {
 			System.out.println("SyntaxBranchTest.setUpBeforClass() : " + System.lineSeparator() + e.getMessage());

@@ -60,7 +60,7 @@ public class SyntaxGroveTest {
 			System.out.println("SyntaxGroveTest.whenRecursionIndexMarkingRequestedThenEffective() :" + System.lineSeparator()
 					+ e.getMessage());
 		}
-		IRelationalDescription relationalDescription = anyTree.getBinaryRelation();
+		IRelationalDescription relationalDescription = anyTree.getRelationalDescription();
 		for (IPair pair : relationalDescription.getBinaryRelation()) {
 			if (pair.getAntecedent().equals(pair.getConsequent()))
 				markingEffective = false;

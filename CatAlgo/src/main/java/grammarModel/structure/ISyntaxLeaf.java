@@ -45,10 +45,10 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	 * However, a leaf being composed of a single element, the relation returned is an empty set of pairs. 
 	 * </p>
 	 * 
-	 * @see grammarModel.structure.ISyntaxBranch#getBinaryRelation()
+	 * @see grammarModel.structure.ISyntaxBranch#getRelationalDescription()
 	 */
 	@Override
-	public IRelationalDescription getBinaryRelation();
+	public IRelationalDescription getRelationalDescription();
 	
 	/**
 	 * {@inheritDoc}

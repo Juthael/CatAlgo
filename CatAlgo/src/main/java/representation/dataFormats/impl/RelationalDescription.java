@@ -31,8 +31,21 @@ public class RelationalDescription implements IRelationalDescription {
 		this.orderedSubRelations = orderedRelations;
 	}
 
-	//getters
+	//static
+	public static IRelationalDescription applyFunctionToArguments(ISymbol function, Set<IRelationalDescription> arguments) {
+		IRelationalDescription output;
+		Set<ITotalOrder> orderedSubRelations = new HashSet<ITotalOrder>();
+		for (IRelationalDescription argument : arguments) {
+			IRelationalDescription newArgument = argument.clone();
+			newArgument.applyFunction(function);
+			orderedSubRelations.addAll(newArgument.getOrderedSubRelations());
+		}
+		output = new RelationalDescription(orderedSubRelations);
+		return output;
+	}
 	
+	//getters
+
 	@Override
 	public IRelationalDescription clone() {
 		IRelationalDescription relationalDescriptionClone;
@@ -64,8 +77,15 @@ public class RelationalDescription implements IRelationalDescription {
 	}
 
 	@Override
-	public boolean meets(IDescription description) {
-		return meets(description.getRelationalDescription());
+	public boolean meets(IDescription description) throws RepresentationException {
+		IRelationalDescription other;
+		try {
+			other = description.getRelationalDescription();
+		} catch (RepresentationException e) {
+			throw new RepresentationException("RelationalDescription.meets(IDescription) : conversion from IDescription "
+					+ "to IRelationalDescription has failed." + System.lineSeparator() + e.getMessage());
+		}
+		return meets(other);
 	}
 
 	@Override
@@ -146,7 +166,25 @@ public class RelationalDescription implements IRelationalDescription {
 		return hashCode;
 	}
 	
+	@Override
+	public String toString() {
+		try {
+			return getLanguage().toString();
+		} catch (RepresentationException e) {
+			return e.getMessage();
+		}
+	}
+	
 	//setters
+	
+	@Override
+	public void applyFunction(ISymbol function) {
+		for (ITotalOrder order : orderedSubRelations) {
+			order.extendWithMinimum(function);
+			binaryRelation.addAll(order.getPairs());
+		}
+		setOfSymbols.add(function);
+	}	
 
 	@Override
 	public void restrictTo(Set<IPair> pairs) throws RepresentationException {
@@ -157,15 +195,18 @@ public class RelationalDescription implements IRelationalDescription {
 		}
 		setOfSymbols.retainAll(symbolsToRetain);
 		binaryRelation.retainAll(pairs);
+		Set<ITotalOrder> newOrderedSubRel = new HashSet<ITotalOrder>();
 		try {
 			for (ITotalOrder subRelation : orderedSubRelations) {
 				subRelation.restrictTo(pairs);
+				newOrderedSubRel.add(subRelation);
 			}
 		}
 		catch (RepresentationException e) {
 			throw new RepresentationException("RelationalDescription.restrictTo(Set<IPair>) : restriction has "
 					+ "failed." + System.lineSeparator() + e.getMessage());
 		}
+		orderedSubRelations = newOrderedSubRel;		
 	}
 	
 	//private

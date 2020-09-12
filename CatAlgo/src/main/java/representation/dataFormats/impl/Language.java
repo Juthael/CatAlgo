@@ -18,6 +18,8 @@ import representation.dataFormats.IGrammaticalRule;
 import representation.dataFormats.ILanguage;
 import representation.dataFormats.IPair;
 import representation.dataFormats.impl.utils.utilsBR.Pair;
+import representation.dataFormats.utils.ITotalOrder;
+import representation.dataFormats.utils.impl.TotalOrder;
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.IStateMachine;
 import representation.stateMachine.ISymbol;
@@ -34,14 +36,15 @@ public class Language implements ILanguage {
 	}
 	
 	@Override
-	public IRelationalDescription getRelationalDescription() {
-		IRelationalDescription relation;
-		Set<IPair> pairs = new HashSet<IPair>();
+	public IRelationalDescription getRelationalDescription() throws RepresentationException {
+		IRelationalDescription relationalDescription;
+		Set<ITotalOrder> propSubRelations = new HashSet<ITotalOrder>();
 		for (IWord word : dictionary) {
+			Set<IPair> pairs = new HashSet<IPair>();
 			List<ISymbol> listOfSymbols = word.getListOfSymbols();
 			int antecedentIdx = 0;
 			int consequentIdx;
-			while (antecedentIdx < listOfSymbols.size()) {
+			while (antecedentIdx < listOfSymbols.size() - 1) {
 				consequentIdx = antecedentIdx + 1;
 				while (consequentIdx < listOfSymbols.size()) {
 					pairs.add(new Pair(listOfSymbols.get(antecedentIdx), listOfSymbols.get(consequentIdx)));
@@ -49,9 +52,17 @@ public class Language implements ILanguage {
 				}
 				antecedentIdx++;
 			}
+			ITotalOrder propSubRelation;
+			try {
+				propSubRelation = new TotalOrder(pairs);
+			} catch (RepresentationException e) {
+				throw new RepresentationException("Language.getRelationalDescription() : sub-relation instantiation "
+						+ "has failed." + System.lineSeparator() + e.getMessage());
+			}
+			propSubRelations.add(propSubRelation);
 		}
-		relation = new BinaryRelation(pairs);
-		return relation;
+		relationalDescription = new RelationalDescription(propSubRelations);
+		return relationalDescription;
 	}	
 	
 	@Override
@@ -209,11 +220,21 @@ public class Language implements ILanguage {
 	}	
 
 	@Override
-	public boolean meets(IDescription description) {
+	public boolean meets(IDescription description) throws RepresentationException {
 		boolean specifiedDescIsMet;
-		IRelationalDescription thisRelation = getRelationalDescription();
-		IRelationalDescription otherRelation = description.getRelationalDescription();
-		specifiedDescIsMet = otherRelation.getBinaryRelation().containsAll(thisRelation.getBinaryRelation());
+		IRelationalDescription thisRelation = null;
+		try {
+			thisRelation = getRelationalDescription();
+		} catch (RepresentationException e) {
+			throw new RepresentationException("Language.meets(IDescription) : failed to convert this language into "
+					+ "a relational description." + System.lineSeparator() + e.getMessage());
+		}
+		try {
+			specifiedDescIsMet = thisRelation.meets(description);
+		} catch (RepresentationException e) {
+			throw new RepresentationException("Language.meets(IDescription) : an error has occured during relational "
+					+ "descriptions compliance test." + System.lineSeparator() + e.getMessage());
+		}
 		return specifiedDescIsMet;
 	}
 	

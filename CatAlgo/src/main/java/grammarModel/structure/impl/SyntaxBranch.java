@@ -39,14 +39,14 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	}
 	
 	@Override
-	public IRelationalDescription getBinaryRelation() {
+	public IRelationalDescription getRelationalDescription() {
 		IRelationalDescription branchRelation;
 		Set<IPair> branchRelationPairs = new HashSet<IPair>();
 		ISyntaxLeaf function = getFunction();
 		ISymbol functionSymbol = new Symbol(function.getName());
 		List<ISyntacticStructure> arguments = getArguments();
 		for (ISyntacticStructure argument : arguments) {
-			IRelationalDescription argRelation = argument.getBinaryRelation();
+			IRelationalDescription argRelation = argument.getRelationalDescription();
 			if (argRelation.getBinaryRelation().isEmpty()) {
 				//then argument is a syntax leaf
 				ISymbol argSymbol = new Symbol(argument.getName());

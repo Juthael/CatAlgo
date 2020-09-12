@@ -38,7 +38,7 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 	//getters
 	
 	@Override
-	public IRelationalDescription getBinaryRelation() {
+	public IRelationalDescription getRelationalDescription() {
 		IRelationalDescription relation;
 		Set<IPair> relationPairs = new HashSet<IPair>();
 		relation = new BinaryRelation(relationPairs);

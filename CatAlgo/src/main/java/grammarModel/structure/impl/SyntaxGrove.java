@@ -33,7 +33,7 @@ public class SyntaxGrove implements ISyntaxGrove {
 		IContextInput contextInput;
 		Set<IDescription> objectDescriptions = new HashSet<IDescription>();
 		for (ISyntaxBranch tree : listOfTrees) {
-			objectDescriptions.add(tree.getBinaryRelation());
+			objectDescriptions.add(tree.getRelationalDescription());
 		}
 		contextInput = new ContextInput(objectDescriptions);
 		return contextInput;

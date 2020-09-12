@@ -1,5 +1,9 @@
 package representation.dataFormats;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 
@@ -19,6 +23,30 @@ import representation.stateMachine.ISymbol;
  *
  */
 public interface IDescription {
+	
+	static IDescription doAbstract(Set<IDescription> descriptions) throws RepresentationException {
+		IRelationalDescription description;
+		List<IRelationalDescription> relationalDescriptions = new ArrayList<IRelationalDescription>();
+		try {
+			for (IDescription currentDescription : descriptions) {
+				relationalDescriptions.add(currentDescription.getRelationalDescription());
+			}
+		}
+		catch (RepresentationException e) {
+			throw new RepresentationException("IDescription.doAbstract(Set<IDescription>) : an error has occurred while "
+					+ "converting descriptions into relational descriptions." + System.lineSeparator() + e.getMessage());
+		}
+		description = relationalDescriptions.get(0);
+		for (int i = 1 ; i < relationalDescriptions.size() ; i++) {
+			try {
+				description.restrictTo(relationalDescriptions.get(i).getBinaryRelation());
+			} 
+			catch (RepresentationException e) {
+				throw new RepresentationException("IDescription.doAbstract() : restriction operation has failed.");
+			}
+		}
+		return description;
+	}
 	
 	/**
 	 * A functional expression is a statement that uses the function/argument(s) formalism to describe an object or a category. 
@@ -67,8 +95,9 @@ public interface IDescription {
 	 * relation is used to describe an object, then <i> x </i> and <i> y </i> are properties and <i> (x,y) ∈ R </i> (or 
 	 * <i> xRy </i>) means "<i> x </i> <b> implies </b> <i> y </i>" (e.g. "color implies blue").  
 	 * @return the description as a binary relation
+	 * @throws RepresentationException 
 	 */
-	IRelationalDescription getRelationalDescription();	
+	IRelationalDescription getRelationalDescription() throws RepresentationException;	
 	
 	/**
 	 * Returns true if this description is an instance of the specified description. <br>
@@ -83,7 +112,8 @@ public interface IDescription {
 	 * @see representation.dataFormats.IRelationalDescription
 	 * @param description
 	 * @return true if this description is an instance of the specified description
+	 * @throws RepresentationException 
 	 */
-	boolean meets(IDescription description);	
+	boolean meets(IDescription description) throws RepresentationException;	
 
 }

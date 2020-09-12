@@ -60,7 +60,7 @@ public interface ISyntaxBranch extends ISyntacticStructure {
 	 * </p>
 	 */
 	@Override
-	IRelationalDescription getBinaryRelation();
+	IRelationalDescription getRelationalDescription();
 	
 	/**
 	 * Returns the branch's function, in the form of a syntax leaf. 

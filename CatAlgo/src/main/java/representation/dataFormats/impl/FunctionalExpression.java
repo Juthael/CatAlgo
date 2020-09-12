@@ -6,14 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.IGrammar;
 import representation.dataFormats.IGrammaticalRule;
 import representation.dataFormats.ILanguage;
-import representation.dataFormats.IPair;
-import representation.dataFormats.impl.utils.utilsBR.Pair;
+import representation.dataFormats.IRelationalDescription;
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.IWord;
@@ -28,25 +26,16 @@ public class FunctionalExpression implements IFunctionalExpression {
 	}
 	
 	@Override
-	public IRelationalDescription getRelationalDescription() {
-		IRelationalDescription relation;
-		Set<IPair> relationPairs = new HashSet<IPair>();
-		List<List<Integer>> listOfCoordinates = new ArrayList<List<Integer>>(coordinatesOntoSymbols.keySet());
-		for (int i = 0 ; i < listOfCoordinates.size() ; i++) {
-			List<Integer> currentCoordinate = listOfCoordinates.get(i);
-			ISymbol currentAntecedent = coordinatesOntoSymbols.get(currentCoordinate);
-			for (int j = 0 ; i < listOfCoordinates.size() ; i++) {
-				if (j != i
-						&& currentCoordinate.size() < listOfCoordinates.get(j).size()
-						&& (currentCoordinate.equals(listOfCoordinates.get(j).subList(0, currentCoordinate.size())))) {
-					ISymbol currentConsequent = coordinatesOntoSymbols.get(listOfCoordinates.get(j));
-					IPair newPair = new Pair(currentAntecedent, currentConsequent);
-					relationPairs.add(newPair);
-				}
-			}
+	public IRelationalDescription getRelationalDescription() throws RepresentationException {
+		IRelationalDescription relationalDescription;
+		ILanguage language = getLanguage();
+		try {
+			relationalDescription = language.getRelationalDescription();
+		} catch (RepresentationException e) {
+			throw new RepresentationException("FunctionalExpression.getRelationalDescription() : the conversion from "
+					+ "language to relational description has failed." + System.lineSeparator() + e.getMessage());
 		}
-		relation = new BinaryRelation(relationPairs);
-		return relation;
+		return relationalDescription;
 	}	
 	
 	@Override
@@ -150,10 +139,23 @@ public class FunctionalExpression implements IFunctionalExpression {
 	}	
 
 	@Override
-	public boolean meets(IDescription description) {
+	public boolean meets(IDescription description) throws RepresentationException {
 		boolean thisFunctExpMeetsSpecifiedDesc;
-		IRelationalDescription equivalentRelation = getRelationalDescription();
-		thisFunctExpMeetsSpecifiedDesc = equivalentRelation.meets(description);
+		IRelationalDescription equivalentRelation;
+		try {
+			equivalentRelation = getRelationalDescription();
+		} catch (RepresentationException e) {
+			throw new RepresentationException("FunctionalExpression.meets(IDescription) : an error has "
+					+ "occurred while converting this expression into a relational description." 
+					+ System.lineSeparator() + e.getMessage());
+		}
+		try {
+			thisFunctExpMeetsSpecifiedDesc = equivalentRelation.meets(description);
+		} catch (RepresentationException e) {
+			throw new RepresentationException("FunctionalExpression.meets(IDescription) : an error has occurred "
+					+ "while evaluating compliance to specified description" + System.lineSeparator() 
+					+ e.getMessage());
+		}
 		return thisFunctExpMeetsSpecifiedDesc;
 	}
 	

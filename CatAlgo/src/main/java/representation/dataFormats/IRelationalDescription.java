@@ -143,5 +143,8 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	//setters
 	
 	//WRITE DOC
+	void applyFunction(ISymbol symbol);
+	
+	//WRITE DOC
 	void restrictTo(Set<IPair> pairs) throws RepresentationException;
 }

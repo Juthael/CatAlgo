@@ -57,9 +57,10 @@ public interface IFunctionalExpression extends IDescription {
 	 * 
 	 * @see representation.dataFormats.ILanguage
 	 * @return the binary relation equivalent to this functional expression 
+	 * @throws RepresentationException 
 	 */
 	@Override
-	IRelationalDescription getRelationalDescription();
+	IRelationalDescription getRelationalDescription() throws RepresentationException;
 	
 	/**
 	 * The functional expression is encoded as a mapping of coordinates (that allow to locate every element in the expression) 
