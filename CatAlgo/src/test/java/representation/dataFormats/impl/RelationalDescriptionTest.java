@@ -8,16 +8,16 @@ import java.nio.file.Paths;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IGenericFileReader;
 import grammars.copycat2Strings.utils.CcFileReaderB;
 import grammars.sphex.utils.SphexFileReader;
-import representation.dataFormats.IRelationalDescription;
+import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.ILanguage;
+import representation.dataFormats.IRelationalDescription;
 import representation.exceptions.RepresentationException;
 
-public class BinaryRelationTest {
+public class RelationalDescriptionTest {
 
 	public static IRelationalDescription blackburnRelationA1;
 	public static IRelationalDescription sphexRelationPrey1;
@@ -57,18 +57,27 @@ public class BinaryRelationTest {
 			language = blackburnRelationA1.getLanguage();
 			languageReturned = (language != null && !language.getWords().isEmpty());
 			//to see language : 
-			System.out.println(language.toString());
+			//System.out.println(language.toString());
 		} catch (RepresentationException e) {
-			System.out.println("BinaryRelationTest.whenLanguageRequestedThenReturned() :" + System.lineSeparator() 
+			System.out.println("RelationalDescriptionTest.whenLanguageRequestedThenReturned() :" + System.lineSeparator() 
 				+e.getMessage());
 		}
 		assertTrue(languageReturned);
-		//HERE ensure first that recursion can be marked. 
 	}
 	
 	@Test
-	public void whenFunctionalExpressionRequestedThenReturned() {
-		assertTrue(false);
+	public void whenFunctionalExpressionRequestedThenExpectedFEReturned() {
+		boolean expectedFEReturned = true;
+		IFunctionalExpression fE = null;
+		try {
+			fE = blackburnRelationA1.getFunctionalExpression();
+		} catch (RepresentationException e) {
+			System.out.println("RelationalDescription.whenFunctionalExpressionRequestedThenExpectedFEReturned()"
+					+ System.lineSeparator() + e.getMessage());
+			expectedFEReturned = false;
+		}
+		System.out.println(fE.toString());
+		assertTrue(expectedFEReturned);
 	}
 	
 	@Test

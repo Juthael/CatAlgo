@@ -73,7 +73,7 @@ public class Language implements ILanguage {
 	@Override
 	public IFunctionalExpression getFunctionalExpression() {
 		IFunctionalExpression functionalExpression;
-		//Sets the required map argument for the functional expression constructor
+	//Sets the required map argument for the functional expression constructor
 		Map<List<Integer>, ISymbol> coordinatesOntoSymbols = new HashMap<List<Integer>, ISymbol>();
 		int nbOfWords = dictionary.size();
 		int longestWordLength = 0;
@@ -83,57 +83,72 @@ public class Language implements ILanguage {
 		}
 		/**
 		 * The coordinates of the Nth symbol of the Mth word will be the list of 
-		 * integers given by the first (N) values on the (M)th line of the 
-		 * coordinates array. If no symbol at [M-1][N-1] (because the Mth word 
-		 * has less than N values), then array value = -1
+		 * integers given by the first N values on the Mth line of the 
+		 * coordinates array. If no symbol at [M-1][N-x] (because the Mth word 
+		 * has less than N-(x+1) values, then array value = -1
+		 * 
+		 * [word(1) - symbol(1)][word(2) - symbol(1)][(...) - symbol(1)][word(i) - symbol(1)]
+		 * [word(1) - symbol(2)][word(2) - symbol(2)][(...) - symbol(2)][word(i) - symbol(2)]
+		 * 		[(...)]				[(...)]				 [(...)]			[(...)]
+		 * [word(1) - symbol(j)][word(2) - symbol(j)][(...) - symbol(j)][word(i) - symbol(j)]
 		 */
-		int[][] coordinatesArray = new int[longestWordLength][nbOfWords];
-		//initializes the array with -1
+		int[][] coordinatesArray = new int[nbOfWords][longestWordLength];
+	//initializes the array with -1
 		for (int i = 0 ; i < nbOfWords ; i++) {
 			for (int j = 0 ; j < longestWordLength ; j++) {
 				coordinatesArray[i][j] = -1;
 			}
 		}
-		//populates the array from the first row to the last
+	//populates the array from the first row to the last
 		int rowIndex = 0;
-		int newCoordinateVal = 0;
+		//what the next coordinate value will be
+		int newCoordinateVal = -1;
+		//what the prefix (=coordinates minus last value) was the last time coordinates have changed
 		int[] lastCoordPrefix = new int[0];
+		//what the symbol was the last time coordinates have changed
 		ISymbol lastSymbol = null;
 		while (rowIndex < longestWordLength) {
 			for (int i = 0 ; i < dictionary.size() ; i++) {
 				if (dictionary.get(i).size() > rowIndex) {
 					ISymbol currentSymbol = dictionary.get(i).get(rowIndex);
+					//find current coordinates prefix
 					int[] currentCoordPrefix = new int[rowIndex];
 					for (int j = 0 ; j < rowIndex ; j++) {
-						currentCoordPrefix[j] = coordinatesArray[j][i];
+						currentCoordPrefix[j] = coordinatesArray[i][j];
 					}
 					if (Arrays.equals(lastCoordPrefix, currentCoordPrefix)) {
+						//same prefix, different symbol
 						if (!currentSymbol.equals(lastSymbol)) {
 							lastSymbol = currentSymbol;
 							newCoordinateVal++;
 						}
 					}
 					else {
+						//different prefix
 						lastCoordPrefix = currentCoordPrefix;
 						lastSymbol = currentSymbol;
 						newCoordinateVal = 0;
 					}
-					coordinatesArray[rowIndex][i] = newCoordinateVal;
+					coordinatesArray[i][rowIndex] = newCoordinateVal;
 				}
 			}
 			rowIndex++;
+			newCoordinateVal = -1;
+			lastSymbol = null;
 		}
-		//populates the map
+	//populates the map
 		for (int i = 0 ; i < dictionary.size() ; i++) {
 			List<Integer> coordinate = new ArrayList<Integer>();
 			rowIndex = 0;
-			newCoordinateVal = coordinatesArray[i][rowIndex];
-			while (newCoordinateVal != -1) {
-				coordinate.add(newCoordinateVal);
-				ISymbol symbol = dictionary.get(i).get(rowIndex);
-				coordinatesOntoSymbols.put(new ArrayList<Integer>(coordinate), symbol);
-				rowIndex++;
-			}
+			do {
+				newCoordinateVal = coordinatesArray[i][rowIndex];
+				if (newCoordinateVal != -1) {
+					coordinate.add(newCoordinateVal);
+					ISymbol symbol = dictionary.get(i).get(rowIndex);
+					coordinatesOntoSymbols.put(new ArrayList<Integer>(coordinate), symbol);
+					rowIndex++;
+				}
+			} while (newCoordinateVal != -1 && rowIndex < longestWordLength);
 		}
 		functionalExpression = new FunctionalExpression(coordinatesOntoSymbols);
 		return functionalExpression;

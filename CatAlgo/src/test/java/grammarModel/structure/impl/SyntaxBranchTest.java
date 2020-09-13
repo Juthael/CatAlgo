@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.management.relation.RelationException;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -21,10 +23,12 @@ import grammarModel.utils.IGenericFileReader;
 import grammarModel.utils.ITreePaths;
 import grammars.copycat2Strings.utils.CcFileReaderB;
 import grammars.sphex.utils.SphexFileReader;
-import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IPair;
-import representation.dataFormats.impl.BinaryRelation;
+import representation.dataFormats.IRelationalDescription;
+import representation.dataFormats.impl.RelationalDescription;
 import representation.dataFormats.impl.utils.utilsBR.Pair;
+import representation.dataFormats.utils.ITotalOrder;
+import representation.dataFormats.utils.impl.TotalOrder;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.impl.Symbol;
 
@@ -55,30 +59,48 @@ public class SyntaxBranchTest {
 	
 	@SuppressWarnings("unused")
 	@Test
-	public void whenBinaryRelationRequestedThenExpectedBRReturned() {
+	public void whenRelationalDescRequestedThenExpectedRelationalDescReturned() {
 		boolean expectedBRReturned;
-		IRelationalDescription expectedRelation = buildExpectedRelation(); 
-		ISyntaxBranch tree = sphexGrove.getListOfTrees().get(0);
+		IRelationalDescription expectedRD = null;
 		try {
-			ITreePaths paths = tree.getTreePaths();
-			//to see the paths : 
-			//System.out.println(paths.toString());
+			expectedRD = buildExpectedRelationalDesc();
+		} catch (RelationException e1) {
+			System.out.print("SyntaxBranchTest.whenRelationalDescRequestedThenExpectedRelationalDescReturned() : " 
+					+ System.lineSeparator() + e1.getMessage());
+			expectedBRReturned = false;
+		} 
+		ISyntaxBranch tree = sphexGrove.getListOfTrees().get(0);
+		//to see the paths :
+		/*
+		try {
+			ITreePaths paths = tree.getTreePaths(); 
+			System.out.println(paths.toString());
 		} catch (GrammarModelException e) {
 			System.out.println("SyntaxBranchTest.whenBinaryRelationRequestedThenExpectedBRReturned() : " 
 					+ System.lineSeparator() + e.getMessage());
 			expectedBRReturned = false;
 		}
-		IRelationalDescription relation = tree.getRelationalDescription();
+		*/
+		IRelationalDescription relationalDescription = null;
+		try {
+			relationalDescription = tree.getRelationalDescription();
+		} catch (GrammarModelException e) {
+			System.out.println("SyntaxBranchTest.whenBinaryRelationRequestedThenExpectedBRReturned() : " 
+					+ System.lineSeparator() + e.getMessage());
+		}
 		//to see the relation : 
-		//System.out.println(relation.toString());
-		expectedBRReturned = relation.equals(expectedRelation);
+		//System.out.println(relationalDescription.toString());
+		expectedBRReturned = relationalDescription.equals(expectedRD);
 		assertTrue(expectedBRReturned);
 	}
 	
 	@Test
 	public void whenFunctionalExpressionRequestedThenExpectedFEReturned() {
-		System.out.print(sphexGrove.getListOfTrees().get(0).getFunctionalExpression().toString());
-		assertTrue(false);
+		String expected = "prey ((grab predate provideFoodForTheGrubs) Λ (timePosition step1) Λ (position randomPlace)) ";
+		String returned = sphexGrove.getListOfTrees().get(0).getFunctionalExpression().toString();
+		//To see returned FE : 
+		System.out.println(returned);
+		assertTrue(expected.equals(returned));
 	}	
 	
 	@Test
@@ -214,8 +236,8 @@ public class SyntaxBranchTest {
 		assertTrue(markingPerformed);
 	}
 	
-	private IRelationalDescription buildExpectedRelation() {
-		IRelationalDescription expectedRelation;
+	private IRelationalDescription buildExpectedRelationalDesc() throws RelationException {
+		IRelationalDescription relationalDesc;
 		ISymbol prey = new Symbol("prey");
 		ISymbol position = new Symbol("position");
 		ISymbol randomPlace = new Symbol("randomPlace");
@@ -224,21 +246,33 @@ public class SyntaxBranchTest {
 		ISymbol provideFoodForTheGrubs = new Symbol("provideFoodForTheGrubs");
 		ISymbol timePosition = new Symbol("timePosition");
 		ISymbol step1 = new Symbol("step1");
-		Set<IPair> pairs = new HashSet<IPair>();
-		pairs.add(new Pair(grab, predate));
-		pairs.add(new Pair(prey, randomPlace));
-		pairs.add(new Pair(position, randomPlace));
-		pairs.add(new Pair(prey, grab));
-		pairs.add(new Pair(prey, timePosition));
-		pairs.add(new Pair(timePosition, step1));
-		pairs.add(new Pair(prey, predate));
-		pairs.add(new Pair(grab, provideFoodForTheGrubs));
-		pairs.add(new Pair(predate, provideFoodForTheGrubs));
-		pairs.add(new Pair(prey, step1));
-		pairs.add(new Pair(prey, position));
-		pairs.add(new Pair(prey, provideFoodForTheGrubs));
-		expectedRelation = new BinaryRelation(pairs);
-		return expectedRelation;
+		Set<ITotalOrder> propertiesAsOrders = new HashSet<ITotalOrder>();
+		Set<IPair> randomPlaceSet = new HashSet<IPair>();
+		Set<IPair> provideFoodSet = new HashSet<IPair>();
+		Set<IPair> step1Set = new HashSet<IPair>();
+		randomPlaceSet.add(new Pair(prey, position));
+		randomPlaceSet.add(new Pair(position, randomPlace));
+		randomPlaceSet.add(new Pair(prey, randomPlace));
+		provideFoodSet.add(new Pair(prey, grab));
+		provideFoodSet.add(new Pair(grab, predate));
+		provideFoodSet.add(new Pair(prey, predate));
+		provideFoodSet.add(new Pair(predate, provideFoodForTheGrubs));
+		provideFoodSet.add(new Pair(prey, provideFoodForTheGrubs));
+		provideFoodSet.add(new Pair(grab, provideFoodForTheGrubs));
+		step1Set.add(new Pair(prey, timePosition));
+		step1Set.add(new Pair(timePosition, step1));
+		step1Set.add(new Pair(prey, step1));
+		try {
+			propertiesAsOrders.add(new TotalOrder(randomPlaceSet));
+			propertiesAsOrders.add(new TotalOrder(provideFoodSet));
+			propertiesAsOrders.add(new TotalOrder(step1Set));
+		}
+		catch (Exception e) {
+			throw new RelationException("SyntaxBranchTest.buildExpectedRelationalDesc() : total orders instantiation "
+					+ "has failed." + System.lineSeparator() + e.getMessage());
+		}
+		relationalDesc = new RelationalDescription(propertiesAsOrders);
+		return relationalDesc;
 	}
 
 }

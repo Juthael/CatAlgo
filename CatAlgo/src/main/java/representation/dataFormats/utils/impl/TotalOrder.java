@@ -11,22 +11,21 @@ import representation.dataFormats.utils.ITotalOrder;
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.impl.Symbol;
-import representation.utils.HashCodeUtil;
 
 public class TotalOrder implements ITotalOrder {
 
-	private Set<IPair> totalOrder;
+	private Set<IPair> orderedRelation;
 	private ISymbol minimum;
 	private List<ISymbol> property;
 	
-	public TotalOrder(Set<IPair> poset) throws RepresentationException {
-		this.totalOrder = poset;
+	public TotalOrder(Set<IPair> orderedRelation) throws RepresentationException {
+		this.orderedRelation = orderedRelation;
 		findMinimum();
 		setProperty();
 	}
 	
-	private TotalOrder(Set<IPair> totalOrder, ISymbol minimum, List<ISymbol> property) {
-		this.totalOrder = totalOrder;
+	private TotalOrder(Set<IPair> orderedRelation, ISymbol minimum, List<ISymbol> property) {
+		this.orderedRelation = orderedRelation;
 		this.minimum = minimum;
 		this.property = property;
 	}
@@ -35,7 +34,7 @@ public class TotalOrder implements ITotalOrder {
 	
 	@Override
 	public ITotalOrder clone() {
-		ITotalOrder cloneOrder = new TotalOrder(new HashSet<IPair>(totalOrder), new Symbol(minimum.toString()), 
+		ITotalOrder cloneOrder = new TotalOrder(new HashSet<IPair>(orderedRelation), new Symbol(minimum.toString()), 
 				new ArrayList<ISymbol>(property));
 		return cloneOrder;
 	}
@@ -56,7 +55,7 @@ public class TotalOrder implements ITotalOrder {
 	
 	@Override
 	public Set<IPair> getPairs(){
-		return totalOrder;
+		return orderedRelation;
 	}
 	
 	@Override
@@ -66,21 +65,21 @@ public class TotalOrder implements ITotalOrder {
 	
 	@Override 
 	public int hashCode() {
-		int hashCode = 0;
+		int hashCode = 1;
 		for (ISymbol symbol : property) {
-			hashCode += (HashCodeUtil.SEED + symbol.hashCode());
+			hashCode += hashCode * symbol.hashCode();
 		}
 		return hashCode;
 	}
 
 	@Override
 	public boolean isSubSetOf(ITotalOrder other) {
-		return other.getPairs().containsAll(totalOrder);
+		return other.getPairs().containsAll(orderedRelation);
 	}	
 
 	@Override
 	public boolean isSuperSetOf(ITotalOrder other) {
-		return totalOrder.containsAll(other.getPairs());
+		return orderedRelation.containsAll(other.getPairs());
 	}
 	
 	//setters
@@ -89,15 +88,15 @@ public class TotalOrder implements ITotalOrder {
 	public void extendWithMinimum(ISymbol newMinimum) {
 		minimum = newMinimum;
 		for (ISymbol symbol : property)
-			totalOrder.add(new Pair(newMinimum, symbol));
+			orderedRelation.add(new Pair(newMinimum, symbol));
 		property.add(0, newMinimum);
 	}	
 
 	@Override
 	public void restrictTo(Set<IPair> pairs) throws RepresentationException {
-		totalOrder.retainAll(pairs);
-		if (totalOrder.isEmpty()) {
-			throw new RepresentationException("TotalOrder.reduceTo(Set<IPair) : an empty successorRelation totalOrder is not allowed, "
+		orderedRelation.retainAll(pairs);
+		if (orderedRelation.isEmpty()) {
+			throw new RepresentationException("TotalOrder.reduceTo(Set<IPair) : an empty successorRelation orderedRelation is not allowed, "
 					+ "even after reduction");
 		}
 		else {
@@ -111,7 +110,7 @@ public class TotalOrder implements ITotalOrder {
 		boolean propertyHasEverySymbol;
 		Set<ISymbol> propertySymbols = new HashSet<ISymbol>(property);
 		Set<ISymbol> allSymbols = new HashSet<ISymbol>();
-		for (IPair pair : totalOrder) {
+		for (IPair pair : orderedRelation) {
 			allSymbols.add(pair.getAntecedent());
 			allSymbols.add(pair.getConsequent());
 		}
@@ -121,10 +120,10 @@ public class TotalOrder implements ITotalOrder {
 		else {
 			boolean relationIsTransitive = true;
 			int propIndex1 = 0;
-			while (relationIsTransitive && propIndex1 < property.size()) {
-				int propIndex2 = 0;
-				while (relationIsTransitive && propIndex2 < propIndex1) {
-					relationIsTransitive = totalOrder.contains(new Pair(property.get(propIndex1), property.get(propIndex2)));
+			while (relationIsTransitive && propIndex1 < property.size() - 1) {
+				int propIndex2 = propIndex1 + 1;
+				while (relationIsTransitive && propIndex2 < property.size()) {
+					relationIsTransitive = orderedRelation.contains(new Pair(property.get(propIndex1), property.get(propIndex2)));
 					propIndex2++;
 				}
 				propIndex1++;
@@ -138,7 +137,7 @@ public class TotalOrder implements ITotalOrder {
 		List<List<IPair>> extendedChains = new ArrayList<List<IPair>>();
 		List<IPair> extensions = new ArrayList<IPair>();
 		ISymbol chainEnd = chain.get(chain.size() - 1).getConsequent();
-		for (IPair pair : totalOrder) {
+		for (IPair pair : orderedRelation) {
 			if (pair.getAntecedent().equals(chainEnd))
 				extensions.add(pair);
 		}
@@ -157,7 +156,7 @@ public class TotalOrder implements ITotalOrder {
 	private List<IPair> getSuccessorRelation() {
 		List<IPair> successorRelation = new ArrayList<IPair>();
 		List<IPair> rootPairs = new ArrayList<IPair>();
-		for (IPair pair : totalOrder) {
+		for (IPair pair : orderedRelation) {
 			if (pair.getAntecedent().equals(minimum))
 				rootPairs.add(pair);
 		}
@@ -185,7 +184,7 @@ public class TotalOrder implements ITotalOrder {
 	private void findMinimum() throws RepresentationException {
 		Set<ISymbol> antecedents = new HashSet<ISymbol>();
 		Set<ISymbol> consequents = new HashSet<ISymbol>();
-		for (IPair pair : totalOrder) {
+		for (IPair pair : orderedRelation) {
 			antecedents.add(pair.getAntecedent());
 			consequents.add(pair.getConsequent());
 		}

@@ -32,6 +32,20 @@ public class Word implements IWord {
 	}
 	
 	@Override
+	public boolean equals(Object o) {
+		boolean thisEqualsOther;
+		if (o == this)
+			thisEqualsOther = true;
+		else if (!(o instanceof representation.stateMachine.IWord))
+			thisEqualsOther = false;
+		else {
+			IWord other = (IWord) o;
+			thisEqualsOther = listOfSymbols.equals(other.getListOfSymbols());
+		}
+		return thisEqualsOther;
+	}
+	
+	@Override
 	public ISymbol get(int index) {
 		ISymbol symbol = null;
 		if (index < size())
@@ -47,6 +61,14 @@ public class Word implements IWord {
 	@Override
 	public Iterator<ISymbol> getSymbolIterator() {
 		return listOfSymbols.iterator();
+	}
+	
+	@Override
+	public int hashCode() {
+		int hashCode = 0;
+		for (ISymbol symbol : listOfSymbols)
+			hashCode += symbol.hashCode();
+		return hashCode;
 	}
 	
 	@Override

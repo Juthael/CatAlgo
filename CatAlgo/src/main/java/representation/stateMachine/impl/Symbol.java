@@ -5,7 +5,7 @@ import representation.utils.HashCodeUtil;
 
 public class Symbol implements ISymbol {
 
-	private String name;
+	private final String name;
 	
 	public Symbol(String name) {
 		this.name = name;
@@ -39,9 +39,9 @@ public class Symbol implements ISymbol {
 	
 	@Override
 	public final int hashCode() {
-		int hashCode = 0;
+		int hashCode = HashCodeUtil.SEED;
 		for (char thisChar : name.toCharArray()) {
-			hashCode += HashCodeUtil.hash(HashCodeUtil.SEED, thisChar);
+			hashCode = HashCodeUtil.hash(hashCode, thisChar);
 		}
 		return hashCode;
 	}

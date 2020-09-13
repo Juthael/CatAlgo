@@ -14,8 +14,9 @@ import grammarModel.structure.ISyntaxGrove;
 import grammarModel.utils.IGenericFileReader;
 import grammarModel.utils.ITreePaths;
 import grammars.copycat2Strings.utils.CcFileReaderB;
-import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IPair;
+import representation.dataFormats.IRelationalDescription;
+import representation.inputOutput.IContextInput;
 
 public class SyntaxGroveTest {
 
@@ -36,12 +37,23 @@ public class SyntaxGroveTest {
 	
 	@Test
 	public void whenCloneRequestedThenReturned() {
-		assertTrue(false);
+		ISyntaxGrove clone = grove.clone();
+		assertTrue(clone != grove);
 	}
 	
 	@Test
 	public void whenContextInputRequiredThenReturned() {
-		assertTrue(false);
+		boolean contextInputReturned = true;
+		@SuppressWarnings("unused")
+		IContextInput contextInput = null;
+		try {
+			contextInput = grove.getContextInput();
+		} catch (GrammarModelException e) {
+			contextInputReturned = false;
+			System.out.println("SyntaxGroveTest.whenContextInputRequiredThenReturned() : " + System.lineSeparator()
+					+ e.getMessage());
+		}
+		assertTrue(contextInputReturned);
 	}
 	
 	@Test
@@ -53,20 +65,27 @@ public class SyntaxGroveTest {
 		ISyntaxBranch anyTree = grove.getListOfTrees().get(0);
 		
 		try {
+			@SuppressWarnings("unused")
 			ITreePaths treePaths = anyTree.getTreePaths();
 			//to see tree paths
-			System.out.println(treePaths.toString());
+			//System.out.println(treePaths.toString());
 		} catch (GrammarModelException e) {
 			System.out.println("SyntaxGroveTest.whenRecursionIndexMarkingRequestedThenEffective() :" + System.lineSeparator()
 					+ e.getMessage());
 		}
-		IRelationalDescription relationalDescription = anyTree.getRelationalDescription();
+		IRelationalDescription relationalDescription = null;
+		try {
+			relationalDescription = anyTree.getRelationalDescription();
+		} catch (GrammarModelException e) {
+			System.out.println("SyntaxGroveTest.whenRecursionIndexMarkingRequestedThenEffective() :" + System.lineSeparator()
+			+ e.getMessage());
+			markingEffective = false;
+		}
 		for (IPair pair : relationalDescription.getBinaryRelation()) {
 			if (pair.getAntecedent().equals(pair.getConsequent()))
 				markingEffective = false;
 		}
 		assertTrue(markingEffective);
-		//HERE Ensure that recursion index is done correctly.
 	}
 
 }

@@ -1,7 +1,9 @@
 package representation.dataFormats.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import representation.dataFormats.IDescription;
@@ -10,38 +12,45 @@ import representation.dataFormats.IGrammar;
 import representation.dataFormats.ILanguage;
 import representation.dataFormats.IPair;
 import representation.dataFormats.IRelationalDescription;
+import representation.dataFormats.impl.utils.utilsBR.Pair;
 import representation.dataFormats.utils.ITotalOrder;
+import representation.dataFormats.utils.impl.TotalOrder;
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.IWord;
 import representation.stateMachine.impl.Word;
-import representation.utils.HashCodeUtil;
 
 public class RelationalDescription implements IRelationalDescription {
 
 	private Set<ISymbol> setOfSymbols = new HashSet<ISymbol>();
-	private Set<IPair> binaryRelation;
-	private Set<ITotalOrder> orderedSubRelations;
+	private Set<IPair> binaryRelation = new HashSet<IPair>();
+	private Set<ITotalOrder> propertiesAsOrders;
 	
-	public RelationalDescription(Set<ITotalOrder> orderedRelations) {
-		for (ITotalOrder orderedRelation : orderedRelations) {
+	/*
+	 * Caution : ITotalOrder members of this class are mutable and aggregated ; thus, only a set of cloned 
+	 * ITotalOrder objects should be given as a parameter to this constructor.
+	 */
+	public RelationalDescription(Set<ITotalOrder> propertiesAsOrders) {
+		for (ITotalOrder orderedRelation : propertiesAsOrders) {
 			binaryRelation.addAll(orderedRelation.getPairs());
 			setOfSymbols.addAll(orderedRelation.getProperty());
 		}
-		this.orderedSubRelations = orderedRelations;
+		this.propertiesAsOrders = propertiesAsOrders;
 	}
-
-	//static
-	public static IRelationalDescription applyFunctionToArguments(ISymbol function, Set<IRelationalDescription> arguments) {
-		IRelationalDescription output;
-		Set<ITotalOrder> orderedSubRelations = new HashSet<ITotalOrder>();
-		for (IRelationalDescription argument : arguments) {
-			IRelationalDescription newArgument = argument.clone();
-			newArgument.applyFunction(function);
-			orderedSubRelations.addAll(newArgument.getOrderedSubRelations());
-		}
-		output = new RelationalDescription(orderedSubRelations);
-		return output;
+	
+	public RelationalDescription(ISymbol leaf) {
+		setOfSymbols.add(leaf);
+		propertiesAsOrders = new HashSet<ITotalOrder>();
+	}
+	
+	/*
+	 * Caution : ITotalOrder members of this class are mutable and aggregated ; thus, only a set of cloned 
+	 * ITotalOrder objects should be given as a parameter to this constructor.
+	 */
+	private RelationalDescription(Set<ISymbol> setOfSymbols, Set<IPair> binaryRelation, Set<ITotalOrder> propertiesAsOrders) {
+		this.setOfSymbols = setOfSymbols;
+		this.binaryRelation = binaryRelation;
+		this.propertiesAsOrders = propertiesAsOrders;
 	}
 	
 	//getters
@@ -49,11 +58,11 @@ public class RelationalDescription implements IRelationalDescription {
 	@Override
 	public IRelationalDescription clone() {
 		IRelationalDescription relationalDescriptionClone;
-		Set<ITotalOrder> subRelationClones = new HashSet<ITotalOrder>();
-		for (ITotalOrder subRelation : orderedSubRelations) {
-			subRelationClones.add(subRelation.clone());
+		Set<ITotalOrder> orderClones = new HashSet<ITotalOrder>();
+		for (ITotalOrder order : propertiesAsOrders) {
+			orderClones.add(order.clone());
 		}
-		relationalDescriptionClone = new RelationalDescription(subRelationClones);
+		relationalDescriptionClone = new RelationalDescription(setOfSymbols, binaryRelation, orderClones);
 		return relationalDescriptionClone;
 	}
 	
@@ -66,26 +75,10 @@ public class RelationalDescription implements IRelationalDescription {
 			thisEqualsOther = false;
 		else {
 			IRelationalDescription other = (IRelationalDescription) o;
-			thisEqualsOther = (orderedSubRelations.equals(other.getOrderedSubRelations()));
+			thisEqualsOther = (setOfSymbols.equals(other.getSetOfSymbols()) 
+					&& propertiesAsOrders.equals(other.getPropertiesAsTotalOrders()));
 		}
 		return thisEqualsOther;
-	}
-	
-	@Override
-	public IRelationalDescription getRelationalDescription() {
-		return this;
-	}
-
-	@Override
-	public boolean meets(IDescription description) throws RepresentationException {
-		IRelationalDescription other;
-		try {
-			other = description.getRelationalDescription();
-		} catch (RepresentationException e) {
-			throw new RepresentationException("RelationalDescription.meets(IDescription) : conversion from IDescription "
-					+ "to IRelationalDescription has failed." + System.lineSeparator() + e.getMessage());
-		}
-		return meets(other);
 	}
 
 	@Override
@@ -125,23 +118,34 @@ public class RelationalDescription implements IRelationalDescription {
 	public ILanguage getLanguage() throws RepresentationException {
 		ILanguage language;
 		Set<IWord> words = new HashSet<IWord>();
-		for (ITotalOrder orderedSubRelation : orderedSubRelations) {
-			words.add(new Word(orderedSubRelation.getProperty()));
+		if (!propertiesAsOrders.isEmpty()) {
+			for (ITotalOrder order : propertiesAsOrders) {
+				words.add(new Word(order.getProperty()));
+			}	
+		}
+		else {
+			//then the set of symbols should contain only one element
+			if (setOfSymbols.size() == 1) {
+				List<ISymbol> listOfSymbols = new ArrayList<ISymbol>(setOfSymbols);
+				words.add(new Word(listOfSymbols));
+			}
+			else throw new RepresentationException("RelationalDescription.getLanguage() : inconsistency. The set of "
+					+ "orders is empty, so the set of symbols should contain only one element.");
 		}
 		language = new Language(words);
 		return language;
 	}
 
 	@Override
-	public int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException {
+	public int getNbOfArgumentsFor(ISymbol function) throws RepresentationException {
 		int nbOfArguments;
-		if (!setOfSymbols.contains(symbol)) {
-			throw new RepresentationException("RelationalDescription.getNbOfArguments(ISymbol) : the specified symbol "
+		if (!setOfSymbols.contains(function)) {
+			throw new RepresentationException("RelationalDescription.getNbOfArguments(ISymbol) : the specified function "
 					+ "cannot be found");
 		}
 		else {
 			try {
-				nbOfArguments =  getLanguage().getNbOfArgumentsFor(symbol);
+				nbOfArguments =  getLanguage().getNbOfArgumentsFor(function);
 			}
 			catch (RepresentationException e) {
 				throw new RepresentationException("RelationalDescription.getNbOfArgumentsFor(ISymbol) : the language is "
@@ -153,35 +157,80 @@ public class RelationalDescription implements IRelationalDescription {
 	}
 
 	@Override
-	public Set<ITotalOrder> getOrderedSubRelations() {
-		return orderedSubRelations;
+	public Set<ITotalOrder> getPropertiesAsTotalOrders() {
+		return propertiesAsOrders;
+	}
+	
+	@Override
+	public IRelationalDescription getRelationalDescription() {
+		return this;
+	}	
+	
+	@Override
+	public Set<ISymbol> getSetOfSymbols(){
+		return setOfSymbols;
 	}
 	
 	@Override
 	public int hashCode() {
 		int hashCode = 0;
-		for (ITotalOrder subRelation : orderedSubRelations) {
-			hashCode += (HashCodeUtil.SEED + subRelation.hashCode());
-		}
+		for (ISymbol symbol : setOfSymbols)
+			hashCode += symbol.hashCode();
+		for (ITotalOrder order : propertiesAsOrders)
+			hashCode += order.hashCode();
 		return hashCode;
 	}
+	
+	@Override
+	public boolean meets(IDescription description) throws RepresentationException {
+		IRelationalDescription other;
+		try {
+			other = description.getRelationalDescription();
+		} catch (RepresentationException e) {
+			throw new RepresentationException("RelationalDescription.meets(IDescription) : conversion from IDescription "
+					+ "to IRelationalDescription has failed." + System.lineSeparator() + e.getMessage());
+		}
+		return meets(other);
+	}	
 	
 	@Override
 	public String toString() {
 		try {
 			return getLanguage().toString();
 		} catch (RepresentationException e) {
-			return e.getMessage();
+			return "RelationalDescription.toString() : the language is "
+					+ "needed as an intermediate format ; an error has occured while building it." 
+					+ System.lineSeparator() + e.getMessage();
 		}
 	}
 	
 	//setters
 	
 	@Override
-	public void applyFunction(ISymbol function) {
-		for (ITotalOrder order : orderedSubRelations) {
-			order.extendWithMinimum(function);
-			binaryRelation.addAll(order.getPairs());
+	public void applyFunction(ISymbol function) throws RepresentationException {
+		if (propertiesAsOrders.isEmpty()) {
+			//then the set of symbols should contain only one element. 
+			if (setOfSymbols.size() == 1) {
+				IPair newPair = new Pair(function, setOfSymbols.iterator().next());
+				binaryRelation.add(newPair);
+				ITotalOrder propertyAsOrder;
+				try {
+					propertyAsOrder = new TotalOrder(binaryRelation);
+					propertiesAsOrders.add(propertyAsOrder);
+				}
+				catch (RepresentationException e) {
+					throw new RepresentationException("RelationalDescription.applyFunction(ISymbol) : TotalOrder "
+							+ "instantiation has failed." + System.lineSeparator() + e.getMessage());
+				}	
+			}
+			else throw new RepresentationException("RelationalDescription.applyFunction(ISymbol) : inconsistency. "
+					+ "The set of orders is empty, so the set of symbols should contain only one element.");
+		}
+		else {
+			for (ITotalOrder order : propertiesAsOrders) {
+				order.extendWithMinimum(function);
+				binaryRelation.addAll(order.getPairs());
+			}
 		}
 		setOfSymbols.add(function);
 	}	
@@ -195,30 +244,31 @@ public class RelationalDescription implements IRelationalDescription {
 		}
 		setOfSymbols.retainAll(symbolsToRetain);
 		binaryRelation.retainAll(pairs);
-		Set<ITotalOrder> newOrderedSubRel = new HashSet<ITotalOrder>();
+		Set<ITotalOrder> newProp = new HashSet<ITotalOrder>();
 		try {
-			for (ITotalOrder subRelation : orderedSubRelations) {
-				subRelation.restrictTo(pairs);
-				newOrderedSubRel.add(subRelation);
+			for (ITotalOrder order : propertiesAsOrders) {
+				order.restrictTo(pairs);
+				newProp.add(order);
 			}
 		}
 		catch (RepresentationException e) {
 			throw new RepresentationException("RelationalDescription.restrictTo(Set<IPair>) : restriction has "
 					+ "failed." + System.lineSeparator() + e.getMessage());
 		}
-		orderedSubRelations = newOrderedSubRel;		
+		propertiesAsOrders = newProp;		
 	}
 	
 	//private
 	
 	private boolean meets(IRelationalDescription other) {
 		boolean thisMeetsOther;
-		if (!binaryRelation.containsAll(other.getBinaryRelation())) {
+		if (!setOfSymbols.containsAll(other.getSetOfSymbols()) || 
+				!binaryRelation.containsAll(other.getBinaryRelation())) {
 			thisMeetsOther = false;
 		}
 		else {
 			boolean eachPropertyIsMet = true;
-			Iterator<ITotalOrder> otherPropIte = other.getOrderedSubRelations().iterator();
+			Iterator<ITotalOrder> otherPropIte = other.getPropertiesAsTotalOrders().iterator();
 			while (eachPropertyIsMet && otherPropIte.hasNext()) {
 				eachPropertyIsMet = meets(otherPropIte.next());
 			}
@@ -229,7 +279,7 @@ public class RelationalDescription implements IRelationalDescription {
 	
 	private boolean meets(ITotalOrder property) {
 		boolean propertyIsMet = false;
-		Iterator<ITotalOrder> propIte = orderedSubRelations.iterator(); 
+		Iterator<ITotalOrder> propIte = propertiesAsOrders.iterator(); 
 		while (!propertyIsMet && propIte.hasNext()) {
 			propertyIsMet = propIte.next().isSuperSetOf(property);
 		}

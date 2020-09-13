@@ -44,23 +44,7 @@ public interface ISyntaxBranch extends ISyntacticStructure {
 	 */
 	List<ISyntacticStructure> getArguments();
 	
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * <p>
-	 * A branch's binary relation <i> R </i> can be obtained this way (<i> f </i> is the branch's function) : <br>
-	 * .for each argument's relation <i> R<sub>a</sub> </i>, <br>
-	 * ..if <i> R<sub>a</sub> = ∅ </i>, <br>
-	 * ...then <i> a </i> is a leaf, and <i> R += (f,a) </i> <br>
-	 * ..else, <br>
-	 * ...<i> R += R<sub>a</sub> </i> <br>
-	 * ...for each <i> (x,y) </i> ∈ <i> R<sub>a</sub> </i>, <br> 
-	 * ....<i> (f,x) </i> ∈ <i> R </i> <br>
-	 * ....<i> (f,y) </i> ∈ <i> R </i> <br>
-	 * </p>
-	 */
-	@Override
-	IRelationalDescription getRelationalDescription();
+
 	
 	/**
 	 * Returns the branch's function, in the form of a syntax leaf. 
@@ -107,6 +91,14 @@ public interface ISyntaxBranch extends ISyntacticStructure {
 	List<List<String>> getPathsAsListsOfStrings();
 	
 	/**
+	 * {@inheritDoc}
+	 * 
+	 * REWRITE DOC
+	 */
+	@Override
+	IRelationalDescription getRelationalDescription() throws GrammarModelException ;	
+	
+	/**
 	 * Returns true if this syntax branch is a tree, i.e. if its name is the start element of the context-free
 	 * grammar at use.
 	 * 
@@ -130,6 +122,29 @@ public interface ISyntaxBranch extends ISyntacticStructure {
 	 */
 	@Override
 	void markRecursion() throws GrammarModelException;
+	
+	/**
+	 * <p>
+	 * Replaces a terminal ({@link ISyntaxLeaf}) argument by a new argument, provided that the terminal is 
+	 * declared as implementing an interface whose the new argument is also an implementation of. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * Syntax tree 'growth' involves the replacement of leaves by new branches ({@link ISyntaxBranch}) ; 
+	 * or, rarely, by new leaves. <br> 
+	 * These new argument are injected in the structure with the IDs of the leaf they are meant to replace. If one 
+	 * of the structure argument is a target leaf, then it is replaced ; otherwise, the same method is recursively 
+	 * called on every argument, with the same parameters. <br>
+	 * </p>
+	 * 
+	 * @see grammarModel.structure.ISyntaxLeaf
+	 * @param newArg new argument
+	 * @param targetIDs IDs of the leaves to be replaced
+	 * @throws GrammarModelException if a replacement is attempted although the recursion index has already been set.
+	 * (See {@link ISyntaxBranch#setRecursionIndex()})
+	 * @return true if a replacement has occurred. 
+	 */
+	boolean replaceComponents(ISyntacticStructure newArg, List<Long> targetIDs) throws GrammarModelException;	
 	
 	/**
 	 * {@inheritDoc}

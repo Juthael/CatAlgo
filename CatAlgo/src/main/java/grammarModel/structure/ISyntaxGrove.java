@@ -37,8 +37,9 @@ public interface ISyntaxGrove extends Cloneable {
 	 * Returns a context input, out of which a representation of the context can be built.
 	 * 
 	 * @return a context input
+	 * @throws GrammarModelException 
 	 */
-	IContextInput getContextInput();
+	IContextInput getContextInput() throws GrammarModelException;
 	
 	/**
 	 * Returns the list of the grove's syntax trees. 

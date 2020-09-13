@@ -20,6 +20,9 @@ public interface IWord extends Comparable<IWord> {
 	@Override
 	int compareTo(IWord anotherWord);	
 	
+	@Override
+	boolean equals(Object o);
+	
 	/**
 	 * Returns the symbol at the specified index.
 	 * @param index any integer

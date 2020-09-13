@@ -2,19 +2,16 @@ package grammarModel.structure.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxLeaf;
-import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IFunctionalExpression;
-import representation.dataFormats.IPair;
-import representation.dataFormats.impl.BinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.impl.FunctionalExpression;
+import representation.dataFormats.impl.RelationalDescription;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.impl.Symbol;
 
@@ -39,10 +36,7 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 	
 	@Override
 	public IRelationalDescription getRelationalDescription() {
-		IRelationalDescription relation;
-		Set<IPair> relationPairs = new HashSet<IPair>();
-		relation = new BinaryRelation(relationPairs);
-		return relation;
+		return new RelationalDescription(new Symbol(getName()));
 	}
 	
 	@Override
@@ -86,12 +80,7 @@ public abstract class SyntaxLeaf extends SyntacticStructure implements ISyntaxLe
 	
 	@Override
 	public void markRecursion() throws GrammarModelException { 
-	}	
-	
-	@Override
-	public boolean replaceArguments(ISyntacticStructure newComp, List<Long> compID) {
-		return false;
-	}	
+	}
 	
 	@Override
 	public Map<String, Integer> setRecursionIndex() {

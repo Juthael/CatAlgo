@@ -12,12 +12,10 @@ import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
-import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IFunctionalExpression;
-import representation.dataFormats.IPair;
-import representation.dataFormats.impl.BinaryRelation;
+import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.impl.FunctionalExpression;
-import representation.dataFormats.impl.utils.utilsBR.Pair;
+import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.impl.Symbol;
 
@@ -39,30 +37,19 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	}
 	
 	@Override
-	public IRelationalDescription getRelationalDescription() {
-		IRelationalDescription branchRelation;
-		Set<IPair> branchRelationPairs = new HashSet<IPair>();
-		ISyntaxLeaf function = getFunction();
-		ISymbol functionSymbol = new Symbol(function.getName());
-		List<ISyntacticStructure> arguments = getArguments();
-		for (ISyntacticStructure argument : arguments) {
-			IRelationalDescription argRelation = argument.getRelationalDescription();
-			if (argRelation.getBinaryRelation().isEmpty()) {
-				//then argument is a syntax leaf
-				ISymbol argSymbol = new Symbol(argument.getName());
-				branchRelationPairs.add(new Pair(functionSymbol, argSymbol));
-			}
-			else {
-				//then argument is a syntax branch
-				Set<IPair> argRelationPairs = argRelation.getBinaryRelation();
-				for (IPair currentArgPair : argRelationPairs) {
-					branchRelationPairs.add(new Pair(functionSymbol, currentArgPair.getAntecedent()));
-					branchRelationPairs.add(new Pair(functionSymbol, currentArgPair.getConsequent()));
-				}
-				branchRelationPairs.addAll(argRelationPairs);
-			}
+	public IRelationalDescription getRelationalDescription() throws GrammarModelException {
+		IRelationalDescription branchRelation = null;
+		ISymbol function = new Symbol(getFunction().getName());
+		Set<IRelationalDescription> argRelationalDescriptions = new HashSet<IRelationalDescription>();
+		for (ISyntacticStructure argument : getArguments()) {
+			argRelationalDescriptions.add(argument.getRelationalDescription());
 		}
-		branchRelation = new BinaryRelation(branchRelationPairs);
+		try {
+			branchRelation = IRelationalDescription.applyFunctionToArguments(function, argRelationalDescriptions);
+		} catch (RepresentationException e) {
+			throw new GrammarModelException("SyntaxBranch.getRelationalDescription() : function application has failed. "
+					+ System.lineSeparator() + e.getMessage());
+		}
 		return branchRelation;
 	}	
 	
@@ -133,7 +120,7 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	}
 	
 	@Override
-	public boolean replaceArguments(ISyntacticStructure newComp, List<Long> compIDs) throws GrammarModelException {
+	public boolean replaceComponents(ISyntacticStructure newComp, List<Long> compIDs) throws GrammarModelException {
 		boolean compReplaced = false;
 		if (recursionIndexHasBeenSet)
 			throw new GrammarModelException("SyntaxBranch.replaceArguments() : no replacement is allowed once "
@@ -145,11 +132,14 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 				List<Long> compLeafIDs = comp.getListOfLeafIDs();
 				if (compLeafIDs.removeAll(compIDs) == true) {
 					if (compLeafIDs.size() == 1) {
+						//then current iterator structure is a syntax leaf that must be replaced
 						compIt.set(newComp);
 						compReplaced = true;
 					}
 					else {
-						compReplaced = comp.replaceArguments(newComp, compIDs);
+						//then current iterator structure is a syntax branch
+						ISyntaxBranch branchComp = (ISyntaxBranch) comp;
+						compReplaced = branchComp.replaceComponents(newComp, compIDs);
 					}
 				}
 			}

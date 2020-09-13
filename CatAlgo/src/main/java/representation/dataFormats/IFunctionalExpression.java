@@ -45,24 +45,6 @@ import representation.stateMachine.ISymbol;
 public interface IFunctionalExpression extends IDescription {
 	
 	/**
-	 * <p>
-	 * Returns the binary relation equivalent to this functional expression. <br>
-	 * </p>
-	 * 
-	 * <p>
-	 * Let <i> x </i> and <i> y </i> be two symbols that can respectively be found in the functional expression at coordinates
-	 * <i>c<sub>1</sub></i> = [ <i>a, b, (...), i</i> ] and <i>c<sub>2</sub></i> = [ <i>a, b, (...), i, (...) </i> ], such as 
-	 * <i>c<sub>1</sub></i> is a substring of <i>c<sub>2</sub></i> ; then <i> xRy </i>.
-	 * </p> 
-	 * 
-	 * @see representation.dataFormats.ILanguage
-	 * @return the binary relation equivalent to this functional expression 
-	 * @throws RepresentationException 
-	 */
-	@Override
-	IRelationalDescription getRelationalDescription() throws RepresentationException;
-	
-	/**
 	 * The functional expression is encoded as a mapping of coordinates (that allow to locate every element in the expression) 
 	 * to symbols (that can be found on this location). <br>  
 	 * 
@@ -151,6 +133,24 @@ public interface IFunctionalExpression extends IDescription {
 	 */
 	@Override
 	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;	
+	
+	/**
+	 * <p>
+	 * Returns the binary relation equivalent to this functional expression. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * Let <i> x </i> and <i> y </i> be two symbols that can respectively be found in the functional expression at coordinates
+	 * <i>c<sub>1</sub></i> = [ <i>a, b, (...), i</i> ] and <i>c<sub>2</sub></i> = [ <i>a, b, (...), i, (...) </i> ], such as 
+	 * <i>c<sub>1</sub></i> is a substring of <i>c<sub>2</sub></i> ; then <i> xRy </i>.
+	 * </p> 
+	 * 
+	 * @see representation.dataFormats.ILanguage
+	 * @return the binary relation equivalent to this functional expression 
+	 * @throws RepresentationException 
+	 */
+	@Override
+	IRelationalDescription getRelationalDescription() throws RepresentationException;	
 	
 	/**
 	 * The functional expression as a String.

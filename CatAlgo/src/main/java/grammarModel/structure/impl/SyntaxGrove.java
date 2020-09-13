@@ -1,5 +1,6 @@
 package grammarModel.structure.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,15 +26,23 @@ public class SyntaxGrove implements ISyntaxGrove {
 	
 	@Override
 	public ISyntaxGrove clone() {
-		return new SyntaxGrove(getName(), getListOfTrees());
+		List<ISyntaxBranch> listOfTreesClone = new ArrayList<ISyntaxBranch>();
+		for (ISyntaxBranch tree : listOfTrees)
+			listOfTreesClone.add((ISyntaxBranch) tree.clone());
+		return new SyntaxGrove(getName(), listOfTreesClone);
 	}
 	
 	@Override
-	public IContextInput getContextInput() {
+	public IContextInput getContextInput() throws GrammarModelException {
 		IContextInput contextInput;
 		Set<IDescription> objectDescriptions = new HashSet<IDescription>();
 		for (ISyntaxBranch tree : listOfTrees) {
-			objectDescriptions.add(tree.getRelationalDescription());
+			try {
+				objectDescriptions.add(tree.getRelationalDescription());
+			} catch (GrammarModelException e) {
+				throw new GrammarModelException("SyntaxGrove.getContextInput() : failed to get tree's relational "
+						+ "descriptions." + System.lineSeparator() + e.getMessage());
+			}
 		}
 		contextInput = new ContextInput(objectDescriptions);
 		return contextInput;

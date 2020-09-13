@@ -6,8 +6,8 @@ import representation.utils.HashCodeUtil;
 
 public class Pair implements IPair {
 
-	private ISymbol antecedent;
-	private ISymbol consequent;
+	private final ISymbol antecedent;
+	private final ISymbol consequent;
 	
 	public Pair(ISymbol antecedent, ISymbol consequent) {
 		this.antecedent = antecedent;

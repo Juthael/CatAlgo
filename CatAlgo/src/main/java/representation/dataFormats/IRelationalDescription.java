@@ -1,8 +1,10 @@
 package representation.dataFormats;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import grammarModel.structure.ISyntaxGrove;
+import representation.dataFormats.impl.RelationalDescription;
 import representation.dataFormats.utils.ITotalOrder;
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
@@ -39,9 +41,30 @@ import representation.stateMachine.ISymbol;
  */
 public interface IRelationalDescription extends IDescription, Cloneable {
 	
+	//static
+	public static IRelationalDescription applyFunctionToArguments(ISymbol function, Set<IRelationalDescription> arguments) 
+			throws RepresentationException {
+		IRelationalDescription output;
+		Set<ITotalOrder> orders = new HashSet<ITotalOrder>();
+		for (IRelationalDescription argument : arguments) {
+			IRelationalDescription newArgument;
+			try {
+				newArgument = argument.clone();
+			}
+			catch (CloneNotSupportedException e) {
+				throw new RepresentationException("IRelationalDescription.applyFunctionToArgument(ISymbol, "
+						+ "Set<IRelationalDescription>) : error during cloning operation.");
+			}
+			newArgument.applyFunction(function);
+			orders.addAll(newArgument.getPropertiesAsTotalOrders());
+		}
+		output = new RelationalDescription(orders);
+		return output;
+	}	
+	
 	//getters
 	
-	IRelationalDescription clone();
+	IRelationalDescription clone() throws CloneNotSupportedException;
 	
 	@Override
 	boolean equals(Object other);
@@ -125,10 +148,13 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	 * which is needed as an intermediate format, cannot be built
 	 */
 	@Override
-	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;		
+	int getNbOfArgumentsFor(ISymbol function) throws RepresentationException;		
 	
 	//WRITE DOC
-	Set<ITotalOrder> getOrderedSubRelations();
+	Set<ITotalOrder> getPropertiesAsTotalOrders();
+	
+	//WRITE DOC
+	Set<ISymbol> getSetOfSymbols();
 	
 	@Override
 	int hashCode();
@@ -143,7 +169,7 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	//setters
 	
 	//WRITE DOC
-	void applyFunction(ISymbol symbol);
+	void applyFunction(ISymbol symbol) throws RepresentationException;
 	
 	//WRITE DOC
 	void restrictTo(Set<IPair> pairs) throws RepresentationException;

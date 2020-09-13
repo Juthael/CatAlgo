@@ -26,19 +26,6 @@ public class FunctionalExpression implements IFunctionalExpression {
 	}
 	
 	@Override
-	public IRelationalDescription getRelationalDescription() throws RepresentationException {
-		IRelationalDescription relationalDescription;
-		ILanguage language = getLanguage();
-		try {
-			relationalDescription = language.getRelationalDescription();
-		} catch (RepresentationException e) {
-			throw new RepresentationException("FunctionalExpression.getRelationalDescription() : the conversion from "
-					+ "language to relational description has failed." + System.lineSeparator() + e.getMessage());
-		}
-		return relationalDescription;
-	}	
-	
-	@Override
 	public Map<List<Integer>, ISymbol> getCoordinatesOntoSymbols() {
 		return coordinatesOntoSymbols;
 	}	
@@ -136,7 +123,20 @@ public class FunctionalExpression implements IFunctionalExpression {
 		else throw new RepresentationException("FunctionalExpression.getNbOfArgumentsFor(ISymbol) : the specified "
 				+ "symbol '" + symbol.toString() + "'cannot be found.");
 		return nbOfArguments;
-	}	
+	}
+	
+	@Override
+	public IRelationalDescription getRelationalDescription() throws RepresentationException {
+		IRelationalDescription relationalDescription;
+		ILanguage language = getLanguage();
+		try {
+			relationalDescription = language.getRelationalDescription();
+		} catch (RepresentationException e) {
+			throw new RepresentationException("FunctionalExpression.getRelationalDescription() : the conversion from "
+					+ "language to relational description has failed." + System.lineSeparator() + e.getMessage());
+		}
+		return relationalDescription;
+	}		
 
 	@Override
 	public boolean meets(IDescription description) throws RepresentationException {
@@ -166,6 +166,7 @@ public class FunctionalExpression implements IFunctionalExpression {
 		 * The "coordinates" of the minimum are an empty list (coordinates are meant to localize arguments, 
 		 * which the minimum is not)
 		 */
+		// HERE PB VERIFIER
 		List<Integer> rootCoordinates = new ArrayList<Integer>();
 		functionalExpressionString = toString(rootCoordinates);
 		return functionalExpressionString;
@@ -191,7 +192,7 @@ public class FunctionalExpression implements IFunctionalExpression {
 				sB.append(toString(argumentsCoordinates.get(0)));
 			}
 			else {
-				sB.append("(( ");
+				sB.append("((");
 				for (int i = 0 ; i < argumentsCoordinates.size() ; i++) {
 					List<Integer> argCoordinate = argumentsCoordinates.get(i);
 					sB.append(toString(argCoordinate));

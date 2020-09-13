@@ -11,7 +11,7 @@ import grammarModel.structure.ISyntacticStructure;
  * @see ValuE
  * @see ClusteR
  * @see ClusteredValue
- * @See {@link ISyntacticStructure#replaceArguments(ISyntacticStructure, java.util.List)}
+ * @See {@link ISyntacticStructure#replaceComponents(ISyntacticStructure, java.util.List)}
  * @author Gael Tregouet
  *
  */

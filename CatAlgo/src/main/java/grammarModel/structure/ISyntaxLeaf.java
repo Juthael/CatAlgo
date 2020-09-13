@@ -25,7 +25,7 @@ import representation.dataFormats.IFunctionalExpression;
  * <p>
  * The tree generation process imposes that a (variable) leaf can be replaced by a new branch. To allow this, 
  * any leaf must be associated with a unique ID number, which is used to identify it as the target of a replacement 
- * procedure (see {@link ISyntaxBranch#replaceArguments(ISyntacticStructure, List)}). <br>
+ * procedure (see {@link ISyntaxBranch#replaceComponents(ISyntacticStructure, List)}). <br>
  * </p>  
  * 
  * @see grammarModel.structure.ISyntacticStructure
@@ -37,18 +37,6 @@ import representation.dataFormats.IFunctionalExpression;
 public interface ISyntaxLeaf extends ISyntacticStructure {
 	
 	//getters
-	
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * <p>
-	 * However, a leaf being composed of a single element, the relation returned is an empty set of pairs. 
-	 * </p>
-	 * 
-	 * @see grammarModel.structure.ISyntaxBranch#getRelationalDescription()
-	 */
-	@Override
-	public IRelationalDescription getRelationalDescription();
 	
 	/**
 	 * {@inheritDoc}
@@ -68,13 +56,13 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	 * @see grammarModel.structure.ISyntaxBranch
 	 */
 	@Override
-	public IFunctionalExpression getFunctionalExpression();
+	public IFunctionalExpression getFunctionalExpression();	
 	
 	/**
 	 * Returns the leaf unique ID.
 	 * @return the leaf ID. 
 	 */
-	public long getLeafID();
+	public long getLeafID();	
 	
 	/**
 	 * {@inheritDoc}
@@ -87,7 +75,7 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	 * @return an empty list
 	 */
 	@Override
-	public List<ISyntacticStructure> getListOfComponents();
+	public List<ISyntacticStructure> getListOfComponents();	
 	
 	/**
 	 * {@inheritDoc}
@@ -99,19 +87,19 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	 * @return a list with only the leaf ID
 	 */
 	@Override
-	public List<Long> getListOfLeafIDs();	
+	public List<Long> getListOfLeafIDs();		
 	
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * <p>
-	 * If the syntactic structure is a leaf, it is a terminal element of the grammar (and a tree whith a single node), 
+	 * If the syntactic structure is a leaf, it is a terminal element of the grammar (and a tree with a single node), 
 	 * and therefore associated to a rule with no right-term. A recursion mark can be appended to its name (see 
 	 * {@link ISyntaxBranch#setRecursionIndex()}).
 	 * </p>  
 	 */
 	@Override
-	public String getName();
+	public String getName();	
 	
 	/**
 	 * {@inheritDoc}
@@ -124,7 +112,19 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	 * @return this structure's unique path, with this leaf as a single element
 	 */
 	@Override
-	public List<List<String>> getPathsAsListsOfStrings();
+	public List<List<String>> getPathsAsListsOfStrings();	
+	
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * <p>
+	 * However, a leaf being composed of a single element, the relation returned is an empty set of pairs. 
+	 * </p>
+	 * 
+	 * @see grammarModel.structure.ISyntaxBranch#getRelationalDescription()
+	 */
+	@Override
+	public IRelationalDescription getRelationalDescription();
 	
 	//setters
 	
@@ -137,18 +137,7 @@ public interface ISyntaxLeaf extends ISyntacticStructure {
 	 * </p>  
 	 */
 	@Override
-	public void markRecursion() throws GrammarModelException;	
-	
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * <p>
-	 * Since a leaf has no component, this method doesn't do anything when called on it. 
-	 * It only exists so it can be called on any syntactic structure component, regardless of the sub-type. <br>
-	 * </p> 
-	 */
-	@Override
-	public boolean replaceArguments(ISyntacticStructure newComp, List<Long> compID);
+	public void markRecursion() throws GrammarModelException;
 	
 	/**
 	 * {@inheritDoc}

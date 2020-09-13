@@ -35,17 +35,6 @@ import representation.stateMachine.IWord;
 public interface ILanguage extends IDescription {
 	
 	/**
-	 * For any pair of symbols <i> (x,y) </i>, if there exists a word in the language <i> L<sub>M</sub> </i> in which 
-	 * the symbol <i> y </i> is to the right of the symbol <i> x </i> (and not necessarily adjacent), then <i> (x,y) </i> 
-	 * belongs to the relation returned.
-	 * 
-	 * @return a binary relation based on (and equivalent to) this language
-	 * @throws RepresentationException 
-	 */
-	@Override
-	IRelationalDescription getRelationalDescription() throws RepresentationException;
-	
-	/**
 	 * Returns the list of words that constitutes this language, in a lexicographic order
 	 * @return the list of words that constitutes this language, in a lexicographic order
 	 */
@@ -100,6 +89,17 @@ public interface ILanguage extends IDescription {
 	 */
 	@Override
 	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;	
+	
+	/**
+	 * For any pair of symbols <i> (x,y) </i>, if there exists a word in the language <i> L<sub>M</sub> </i> in which 
+	 * the symbol <i> y </i> is to the right of the symbol <i> x </i> (and not necessarily adjacent), then <i> (x,y) </i> 
+	 * belongs to the relation returned.
+	 * 
+	 * @return a binary relation based on (and equivalent to) this language
+	 * @throws RepresentationException 
+	 */
+	@Override
+	IRelationalDescription getRelationalDescription() throws RepresentationException;
 	
 	/**
 	 * The machine <i> M </i> is built from its language <i> L<sub>M</sub> </i>. <br>
