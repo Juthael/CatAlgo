@@ -56,6 +56,13 @@ public interface IGrammar {
 	@Override
 	int hashCode();
 	
+	/**
+	 * 
+	 * @return the grammar as a String
+	 */
+	@Override
+	String toString();
+	
 	//setters
 	
 	void add(IGrammaticalRule grammaticalRule);

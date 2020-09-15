@@ -36,4 +36,11 @@ public interface IGrammaticalRule {
 	@Override
 	int hashCode();
 	
+	/**
+	 * 
+	 * @return the grammatical rule as a String
+	 */
+	@Override
+	String toString();
+	
 }

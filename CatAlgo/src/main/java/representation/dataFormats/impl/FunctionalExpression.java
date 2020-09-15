@@ -42,7 +42,7 @@ public class FunctionalExpression implements IFunctionalExpression {
 		for (List<Integer> antCoordinate : listOfCoordinates) {
 			ISymbol antecedent = coordinatesOntoSymbols.get(antCoordinate);
 			for (List<Integer> otherCoordinate : listOfCoordinates) {
-				if ((otherCoordinate.size() == antCoordinate.size() + 1)
+				if ((otherCoordinate.size() > antCoordinate.size())
 						&& antCoordinate.equals(otherCoordinate.subList(0, antCoordinate.size()))) {
 					ISymbol consequent = coordinatesOntoSymbols.get(otherCoordinate);
 					IGrammaticalRule newRule = new GrammaticalRule(antecedent, consequent);
@@ -87,6 +87,11 @@ public class FunctionalExpression implements IFunctionalExpression {
 		for (List<Integer> termCoord : coordinatesOfTerminals) {
 			List<ISymbol> listOfSymbols = new ArrayList<ISymbol>();
 			List<Integer> symbolsCoord = new ArrayList<Integer>();
+			/*
+			 * The function of a functional expression has an empty list for coordinates. 
+			 * See IFunctionalExpression.getCoordinatesOntoSymbols()
+			 */
+			listOfSymbols.add(coordinatesOntoSymbols.get(symbolsCoord));
 			for (Integer coordValue : termCoord) {
 				symbolsCoord.add(coordValue);
 				listOfSymbols.add(coordinatesOntoSymbols.get(symbolsCoord));
@@ -114,7 +119,7 @@ public class FunctionalExpression implements IFunctionalExpression {
 			}
 			for (List<Integer> currentCoordinates : listOfCoordinates) {
 				if ((currentCoordinates.size() == symbolCoordinates.size() + 1) 
-						&& (symbolCoordinates.equals(currentCoordinates.subList(0, currentCoordinates.size())))) {
+						&& (symbolCoordinates.equals(currentCoordinates.subList(0, symbolCoordinates.size())))) {
 					arguments.add(coordinatesOntoSymbols.get(currentCoordinates));
 				}
 			}
@@ -199,7 +204,7 @@ public class FunctionalExpression implements IFunctionalExpression {
 					if (i < argumentsCoordinates.size() - 1)
 						sB.append(") Λ (");
 				}
-				sB.append(")) ");
+				sB.append("))");
 			}
 			functionalExpressionString = sB.toString();
 		}

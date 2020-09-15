@@ -96,10 +96,10 @@ public class SyntaxBranchTest {
 	
 	@Test
 	public void whenFunctionalExpressionRequestedThenExpectedFEReturned() {
-		String expected = "prey ((grab predate provideFoodForTheGrubs) Λ (timePosition step1) Λ (position randomPlace)) ";
+		String expected = "prey ((grab predate provideFoodForTheGrubs) Λ (timePosition step1) Λ (position randomPlace))";
 		String returned = sphexGrove.getListOfTrees().get(0).getFunctionalExpression().toString();
 		//To see returned FE : 
-		System.out.println(returned);
+		//System.out.println(returned);
 		assertTrue(expected.equals(returned));
 	}	
 	
@@ -206,7 +206,7 @@ public class SyntaxBranchTest {
 		try {
 			ITreePaths paths = branch.getTreePaths();
 			//to see paths BEFORE index marking :
-			System.out.println(paths.toString());
+			//System.out.println(paths.toString());
 		} catch (GrammarModelException e) {
 			System.out.println("SyntaxBranch.whenRecursionMarkingRequestedThenPerformed()" 
 					+ System.lineSeparator() + e.getMessage());
@@ -221,7 +221,7 @@ public class SyntaxBranchTest {
 		try {
 			ITreePaths paths = branch.getTreePaths();
 			//to see paths AFTER index marking :
-			System.out.println(paths.toString());
+			//System.out.println(paths.toString());
 		} catch (GrammarModelException e) {
 			System.out.println("SyntaxBranch.whenRecursionMarkingRequestedThenPerformed()" 
 					+ System.lineSeparator() + e.getMessage());

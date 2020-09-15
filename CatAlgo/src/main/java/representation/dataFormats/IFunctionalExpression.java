@@ -45,15 +45,25 @@ import representation.stateMachine.ISymbol;
 public interface IFunctionalExpression extends IDescription {
 	
 	/**
+	 * <p>
 	 * The functional expression is encoded as a mapping of coordinates (that allow to locate every element in the expression) 
 	 * to symbols (that can be found on this location). <br>  
+	 * </p>
 	 * 
+	 * <p>
 	 * For a given functional expression <i> F = i(j(k ∧ l) ∧  m) </i>, here the resulting mapping : <br> 
-	 * [0] => <i> i </i> <br>
-	 * [0, 0] => <i> j </i> <br>
-	 * [0, 0, 0] => <i> k </i> <br>
-	 * [0, 0, 1] => <i> l </i> <br>
-	 * [0, 1] => <i> m </i> <br>
+	 * [] => <i> i </i> <br>
+	 * [0] => <i> j </i> <br>
+	 * [0, 0] => <i> k </i> <br>
+	 * [0, 1] => <i> l </i> <br>
+	 * [1] => <i> m </i> <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * Note that coordinates locate arguments to which a function applies, not the function itself (unless it is the argument 
+	 * of another function). Having no coordinates, the main function of a functional expression (i.e., its first term) is 
+	 * mapped with an empty list of integers.
+	 * </p>
 	 * 
 	 * @return the map that encodes the functional expression
 	 */

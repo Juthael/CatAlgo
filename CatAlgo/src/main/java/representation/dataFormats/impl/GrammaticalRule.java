@@ -49,5 +49,16 @@ public class GrammaticalRule implements IGrammaticalRule {
 			hashCode += HashCodeUtil.hash(HashCodeUtil.SEED, consCharac);
 		return hashCode;
 	}
+	
+	@Override
+	public String toString() {
+		String rule;
+		StringBuilder sB = new StringBuilder();
+		sB.append(antecedent.toString());
+		sB.append(" ::= ");
+		sB.append(consequent.toString());
+		rule = sB.toString();
+		return rule;
+	}
 
 }

@@ -75,6 +75,18 @@ public class Grammar implements IGrammar {
 		return hashCode;
 	}
 	
+	@Override
+	public String toString() {
+		String grammar;
+		StringBuilder sB = new StringBuilder();
+		for (IGrammaticalRule rule : grammaticalRules) {
+			sB.append(rule.toString());
+			sB.append(System.lineSeparator());
+		}
+		grammar = sB.toString();
+		return grammar;
+	}
+	
 	//setters
 	
 	@Override

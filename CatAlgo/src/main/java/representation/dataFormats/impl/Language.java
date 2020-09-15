@@ -143,7 +143,12 @@ public class Language implements ILanguage {
 			do {
 				newCoordinateVal = coordinatesArray[i][rowIndex];
 				if (newCoordinateVal != -1) {
-					coordinate.add(newCoordinateVal);
+					/*
+					 * If rowIndex = 0 then the symbol is the function leaf and its coordinates are an emptylist. 
+					 * See ISyntaxLeaf.getFunctionalExpression().
+					 */
+					if (rowIndex > 0)
+						coordinate.add(newCoordinateVal);
 					ISymbol symbol = dictionary.get(i).get(rowIndex);
 					coordinatesOntoSymbols.put(new ArrayList<Integer>(coordinate), symbol);
 					rowIndex++;
@@ -182,7 +187,7 @@ public class Language implements ILanguage {
 		//finds the first occurrence of a word containing the specified symbol
 		int firstWordWithSymbolIndex = -1;
 		int wordIndex = 0;
-		while ((firstWordWithSymbolIndex == -1) || (wordIndex < dictionary.size())) {
+		while ((firstWordWithSymbolIndex == -1) && (wordIndex < dictionary.size())) {
 			if (dictionary.get(wordIndex).getListOfSymbols().contains(symbol))
 				firstWordWithSymbolIndex = wordIndex;
 			else wordIndex++;
@@ -204,14 +209,21 @@ public class Language implements ILanguage {
 				if (!currSymbol.equals(symbol))
 					symbolIndex++;
 			} while (!currSymbol.equals(symbol));
-			//if the symbol is not terminal, finds the arguments in every word containing this function
+			/*
+			 * If the symbol is not terminal, finds the arguments in every word containing this function ; 
+			 * else, the number of arguments is 0.
+			 */
 			if (symbolIndex < dictionary.get(wordIndex).size() - 1) {
 				boolean functionFoundInThisWord = true;
 				while (functionFoundInThisWord && wordIndex < dictionary.size()) {
 					arguments.add(dictionary.get(wordIndex).get(symbolIndex + 1));
 					wordIndex++;
-					functionFoundInThisWord = 
-							function.equals(dictionary.get(wordIndex).getListOfSymbols().subList(0, function.size()));
+					if (wordIndex < dictionary.size()) {
+						functionFoundInThisWord = 
+								((dictionary.get(wordIndex).size() >  function.size()) 
+										&& (function.equals(
+												dictionary.get(wordIndex).getListOfSymbols().subList(0, function.size()))));
+					}
 				}
 			}
 			nbOfArguments = arguments.size();
