@@ -1,15 +1,28 @@
-package grammarModel.defaultRules.branches;
+package grammarModel.genericRules.branches;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import grammarModel.defaultRules.disjunctions.IRule;
-import grammarModel.defaultRules.leaves.ClusteR;
+import grammarModel.genericRules.disjunctions.IRule;
+import grammarModel.genericRules.leaves.ClusteR;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
 import grammarModel.structure.impl.SyntaxBranch;
 
+/**
+ * <p>
+ * This class defines a generic and domain-agnostic rule, that can integrate context-free grammars associated with various 
+ * microworlds. <br>
+ * </p>
+ * 
+ * <p>
+ * <b>Cluster</b> is used to denote a to-be-specified structure organizing a group of values. 
+ * </p>
+ * @see grammarModel.structure.ISyntacticStructure
+ * @author Gael Tregouet
+ *
+ */
 public class Cluster extends SyntaxBranch implements ISyntaxBranch {
 
 	private static final String NAME = "Cluster";

@@ -1,6 +1,6 @@
 package grammars.sphex.leaves;
 
-import grammarModel.defaultRules.leaves.ValuE;
+import grammarModel.genericRules.leaves.ValuE;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxLeaf;
 

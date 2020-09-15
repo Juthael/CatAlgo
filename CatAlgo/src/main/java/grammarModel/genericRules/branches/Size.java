@@ -1,10 +1,10 @@
-package grammarModel.defaultRules.branches;
+package grammarModel.genericRules.branches;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import grammarModel.defaultRules.disjunctions.IValueOrClusteredValue;
-import grammarModel.defaultRules.leaves.SizE;
+import grammarModel.genericRules.disjunctions.IValueOrClusteredValue;
+import grammarModel.genericRules.leaves.SizE;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
@@ -16,6 +16,19 @@ public class Size extends SyntaxBranch implements ISyntaxBranch {
 	private final SizE sizE;
 	private final IValueOrClusteredValue value;
 	
+	/**
+	 * <p>
+	 * This class defines a generic and domain-agnostic rule, that can integrate context-free grammars associated with various 
+	 * microworlds. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>Size</b> is used to indicate a size value (e.g., the size of a group). <br>
+	 * </p>
+	 * @see grammarModel.structure.ISyntacticStructure
+	 * @author Gael Tregouet
+	 *
+	 */
 	public Size(SizE sizE, IValueOrClusteredValue value) {
 		this.sizE = sizE;
 		this.value = value;

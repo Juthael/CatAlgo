@@ -3,8 +3,8 @@ package grammars.copycat2Strings.branches;
 import java.util.ArrayList;
 import java.util.List;
 
-import grammarModel.defaultRules.disjunctions.IRule;
-import grammarModel.defaultRules.disjunctions.IValueOrClusteredValue;
+import grammarModel.genericRules.disjunctions.IRule;
+import grammarModel.genericRules.disjunctions.IValueOrClusteredValue;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;

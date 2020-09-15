@@ -3,7 +3,7 @@ package grammars.copycat2Strings.branches;
 import java.util.ArrayList;
 import java.util.List;
 
-import grammarModel.defaultRules.branches.Coordinate;
+import grammarModel.genericRules.branches.Coordinate;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;

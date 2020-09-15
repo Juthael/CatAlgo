@@ -11,14 +11,14 @@ import representation.dataFormats.IFunctionalExpression;
  * <p>
  * Any <i> class </i> implementing the syntax leaf interface represents a terminal symbol of a context-free 
  * grammar. As is the case for any syntactic structure, the composition relationship that defines 
- * a leaf <i> L </i> as <i> contained </i> by a syntax branch <i> B </i> is an equivalent of a context-free 
+ * a leaf <i> L </i> as a <i> component </i> of a syntax branch <i> B </i> is an equivalent of a context-free 
  * grammar derivation rule such as <i> B ::= L | (...) </i>, with <i> L </i> being a terminal. <br>
  * </p>
  * 
  * <p>
- * Any syntax branch <i> instance </i> yields a string of terminals that forms a <i>functional expression</i>, which
- * consists in the application of a function to a list of arguments. Accordingly, a leaf can either be a 
- * "function" leaf, or a simple variable. This has no consequence on its implementation, since both types of 
+ * Any syntax branch instance yields a string of terminals that forms a <i>functional expression</i>, which
+ * consists in the application of a function to a list of arguments. Accordingly, a <i> leaf instance </i> can either 
+ * be a "function" leaf, or a simple variable. This has no consequence on its implementation, since both types of 
  * leaves refer to the same interface and the same implementation. <br>   
  * </p> 
  * 

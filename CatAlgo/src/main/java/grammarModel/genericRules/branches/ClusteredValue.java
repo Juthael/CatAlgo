@@ -1,10 +1,10 @@
-package grammarModel.defaultRules.branches;
+package grammarModel.genericRules.branches;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import grammarModel.defaultRules.disjunctions.IValueOrClusteredValue;
-import grammarModel.defaultRules.leaves.ValuE;
+import grammarModel.genericRules.disjunctions.IValueOrClusteredValue;
+import grammarModel.genericRules.leaves.ValuE;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
@@ -16,6 +16,20 @@ public class ClusteredValue extends SyntaxBranch implements ISyntaxBranch, IValu
 	private ValuE valuE;
 	private Cluster cluster;
 	
+	/**
+	 * <p>
+	 * This class defines a generic and domain-agnostic rule, that can integrate context-free grammars associated with various 
+	 * microworlds. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>ClusteredValue</b> is used to denote that a value is not to be taken for itself, but as an element of a broader 
+	 * structure. 
+	 * </p>
+	 * @see grammarModel.structure.ISyntacticStructure
+	 * @author Gael Tregouet
+	 *
+	 */
 	public ClusteredValue(ValuE valuE, Cluster cluster) {
 		name = valuE.getName();
 		this.valuE = valuE;

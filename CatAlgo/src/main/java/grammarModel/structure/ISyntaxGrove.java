@@ -8,10 +8,11 @@ import representation.stateMachine.IRepresentation;
 
 /**
  * <p>
- * A syntax grove is a container of syntax trees. Syntax trees are syntax branches ({@link ISyntaxBranch}) whose name is 
- * the start element of the context-free grammar at use. A syntax grove is associated to a context of objects ; each one 
- * of its syntax trees applies to a particular object and produces, as its string of terminals, a functional expression 
- * that is a description of this object. <br>
+ * A syntax grove is a container of syntax trees (i.e., syntax branches that aren't components of another syntax branch). <br>
+ * A grove is associated with context of objects ; each one of its syntax trees applies to a particular object and 
+ * produces, as its string of terminals, a functional expression that is a description of this object. This description can 
+ * also be provided in the equivalent form of a <i> relational description </i>, which uses order relations over a set of 
+ * symbols. <br>
  * </p> 
  * 
  * <p>
@@ -22,6 +23,7 @@ import representation.stateMachine.IRepresentation;
  * 
  * @see grammarModel.structure.ISyntaxBranch
  * @see representation.dataFormats.IFunctionalExpression
+ * @see representation.dataFormats.IRelationalDescription
  * @see representation.inputOutput.IContextInput
  * @see representation.stateMachine.IRepresentation
  * @author Gael Tregouet

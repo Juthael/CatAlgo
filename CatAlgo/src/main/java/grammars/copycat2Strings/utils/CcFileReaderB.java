@@ -2,19 +2,19 @@ package grammars.copycat2Strings.utils;
 
 import java.util.List;
 
-import grammarModel.defaultRules.branches.Cluster;
-import grammarModel.defaultRules.branches.ClusteredValue;
-import grammarModel.defaultRules.branches.CoordSubValue;
-import grammarModel.defaultRules.branches.Coordinate;
-import grammarModel.defaultRules.branches.Size;
-import grammarModel.defaultRules.disjunctions.IRule;
-import grammarModel.defaultRules.disjunctions.IValuEOrCoordSubValue;
-import grammarModel.defaultRules.disjunctions.IValueOrClusteredValue;
-import grammarModel.defaultRules.leaves.ClusteR;
-import grammarModel.defaultRules.leaves.CoordinatE;
-import grammarModel.defaultRules.leaves.SizE;
-import grammarModel.defaultRules.leaves.ValuE;
 import grammarModel.exceptions.FileReaderException;
+import grammarModel.genericRules.branches.Cluster;
+import grammarModel.genericRules.branches.ClusteredValue;
+import grammarModel.genericRules.branches.CoordSubValue;
+import grammarModel.genericRules.branches.Coordinate;
+import grammarModel.genericRules.branches.Size;
+import grammarModel.genericRules.disjunctions.IRule;
+import grammarModel.genericRules.disjunctions.IValuEOrCoordSubValue;
+import grammarModel.genericRules.disjunctions.IValueOrClusteredValue;
+import grammarModel.genericRules.leaves.ClusteR;
+import grammarModel.genericRules.leaves.CoordinatE;
+import grammarModel.genericRules.leaves.SizE;
+import grammarModel.genericRules.leaves.ValuE;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.utils.IGenericFileReader;
 import grammarModel.utils.impl.GenericFileReader;
@@ -722,13 +722,13 @@ public class CcFileReaderB extends GenericFileReader implements IGenericFileRead
 						try {
 							ValuE valuE = (ValuE) components.get(0);
 							Object obj = (Object) components.get(1);
-							if (obj instanceof grammarModel.defaultRules.branches.Cluster) {
+							if (obj instanceof grammarModel.genericRules.branches.Cluster) {
 								ClusteredValue clusteredValue;
 								Cluster cluster = (Cluster) obj;
 								clusteredValue = new ClusteredValue(valuE, cluster);
 								putStructureIntoArray(clusteredValue, treeIndex, pathIndex, nodeIndex);
 							}
-							else if (obj instanceof grammarModel.defaultRules.branches.Coordinate) {
+							else if (obj instanceof grammarModel.genericRules.branches.Coordinate) {
 								CoordSubValue coordSubValue;
 								Coordinate coordinate = (Coordinate) obj;
 								coordSubValue = new CoordSubValue(valuE, coordinate);

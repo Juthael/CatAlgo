@@ -21,11 +21,11 @@ import representation.dataFormats.IFunctionalExpression;
  * 
  * <p>
  * Thus, any <i> instance </i> of a class implementing the syntactic structure interface represents a 
- * derivation of a given symbol in the form of a syntax tree, which has this symbol as a minimum (and as its unique 
+ * derivation of a given symbol in the form of a syntax tree, which has this symbol as a root (and as its unique 
  * element if the symbol is a terminal). This symbol gives the structure its name. As a result of this derivation, 
- * any syntactic structure instance yields a string of terminals that forms a <i> functional expression </i>, which 
+ * any syntactic structure instance yields a string of terminals that forms a <i> functional expression</i>, which 
  * is a descriptive statement about the object to which this structure is associated. This description can also be 
- * provided as a <i> binary relation </i>. 
+ * provided as a <i> relational description </i>, using order relations over a set of symbols. 
  * (see {@link IDescription}) <br>
  * </p> 
  * 

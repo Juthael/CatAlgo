@@ -1,10 +1,10 @@
-package grammarModel.defaultRules.branches;
+package grammarModel.genericRules.branches;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import grammarModel.defaultRules.disjunctions.IValuEOrCoordSubValue;
-import grammarModel.defaultRules.leaves.ValuE;
+import grammarModel.genericRules.disjunctions.IValuEOrCoordSubValue;
+import grammarModel.genericRules.leaves.ValuE;
 import grammarModel.structure.ISyntacticStructure;
 import grammarModel.structure.ISyntaxBranch;
 import grammarModel.structure.ISyntaxLeaf;
@@ -16,6 +16,20 @@ public class CoordSubValue extends SyntaxBranch implements ISyntaxBranch, IValuE
 	private final ValuE valuE;
 	private final Coordinate coordinate;
 	
+	/**
+	 * <p>
+	 * This class defines a generic and domain-agnostic rule, that can integrate context-free grammars associated with various 
+	 * microworlds. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * <b>CoordSubValue</b> is used to indicate the position of an object in a group of objects that is characterized itself 
+	 * by a position in the context (or in the broader group) it belongs to. <br>
+	 * </p>
+	 * @see grammarModel.structure.ISyntacticStructure
+	 * @author Gael Tregouet
+	 *
+	 */
 	public CoordSubValue(ValuE valuE, Coordinate coordinate) {
 		name = valuE.getName();
 		this.valuE = valuE;
