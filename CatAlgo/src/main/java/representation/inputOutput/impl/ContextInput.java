@@ -7,14 +7,15 @@ import representation.inputOutput.IContextInput;
 
 public class ContextInput implements IContextInput {
 
+	private Set<IDescription> objectDescriptions;
+	
 	public ContextInput(Set<IDescription> objectDescriptions) {
-		// TODO Auto-generated constructor stub
+		this.objectDescriptions = objectDescriptions;
 	}
 
 	@Override
 	public Set<IDescription> getDescriptionsOfContextObjects() {
-		// TODO Auto-generated method stub
-		return null;
+		return objectDescriptions;
 	}
 
 }

@@ -6,10 +6,12 @@ import java.util.Set;
 import representation.dataFormats.IGrammar;
 
 /**
- * A state is an element of a state machine that is defined by its particular set of <i> rules </i>.
+ * <p>
+ * A <b>state</b> is an element of a state machine that is defined by its particular set of <i> rules </i>.
  * When a word is entered in a machine, its symbols are read one at a time. For each new symbol, a rule 
  * must be found in the machine current state to indicate, given that symbol, what state will be active 
  * at the next step ; if no rule can be found, then the machine stops. <br>
+ * </p>
  * 
  * @see representation.stateMachine.IStateMachine
  * @see representation.stateMachine.ITransitionFunction
@@ -21,20 +23,32 @@ import representation.dataFormats.IGrammar;
 public interface IState {
 	
 	/**
-	 * 
+	 * Returns the state ID. 
 	 * @return the state ID (a random int)
 	 */
 	int getID();
 	
 	/**
-	 * The name of a state is unique and reflects its particular situation in the flow chart of the machine.
+	 * <p>
+	 * Returns the state's name. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * The name of a state is unique and reflects its particular situation in the flow chart of the machine. <br>
+	 * </p>
 	 * 
 	 * @return the name of the state
 	 */
 	IStateName getStateName();
 	
 	/**
-	 * The rank of a state is the minimal number of transitions between this state and an accept state
+	 * <p>
+	 * Returns the state's rank. <br>
+	 * </p> 
+	 * 
+	 * <p>
+	 * The rank of a state is the minimal number of transitions between this state and an accept state. <br>
+	 * </p>
 	 * 
 	 * @see representation.stateMachine.IAcceptState
 	 * @see representation.stateMachine.ITransition
@@ -44,11 +58,19 @@ public interface IState {
 	int getRank();
 	
 	/**
+	 * <p>
+	 * Returns the specifications of this state. <br>
+	 * </p>
+	 * 
+	 * <p>
 	 * The specifications are a data structure that describes the role of a particular state in the machine it 
 	 * belongs to. <br>
+	 * </p>
 	 * 
+	 * <p>
 	 * It is composed of a set of "constraints". Its function is to provide the prerequisite to meet for any state or 
 	 * value from another machine, if they are to be defined as eligible counterparts of this state in their own machine.
+	 * </p>
 	 * 
 	 * @see representation.stateMachine.IConstraint
 	 * @see representation.stateMachine.IValue
@@ -58,8 +80,14 @@ public interface IState {
 	ISpecifications getSpecifications();
 	
 	/**
+	 * <p>
+	 * Returns the set of rules associated with this state. <br>
+	 * </p>
+	 * 
+	 * <p>
 	 * The set of rules (or "transitions") returned is the subset of the transition function composed of all elements
-	 * in which the input state is this state.  
+	 * in which the input state is this state. <br>
+	 * </p>  
 	 * 
 	 * @see representation.stateMachine.ITransitionFunction
 	 * @return the set or rules associated with this state
@@ -67,14 +95,21 @@ public interface IState {
 	Set<ITransition> getRules();
 	
 	/**
+	 * <p>
+	 * Returns the context-free grammar associated with this state. <br>
+	 * </p>
+	 * 
+	 * <p>
 	 * The local grammar maps every symbol that allows a transition to this state with every symbol that allows a 
 	 * transition from this state. <br>
+	 * </p>
 	 * 
 	 * @return the context-free grammar associated with this state
 	 */
 	IGrammar getLocalGrammar();
 	
 	/**
+	 * Checks if the specified state has the same local grammar than this state. 
 	 * 
 	 * @param specifiedState any state
 	 * @return true if the specified state's grammar equals this state's grammar ; false otherwise
@@ -82,15 +117,21 @@ public interface IState {
 	boolean hasSameGrammarAs(IState state);
 	
 	/**
-	 * The specifications of a state describes its role in the machine it belongs to. If they are met by another 
+	 * <p>
+	 * Checks if the specified state meets this state's specifications. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * The specifications of a state describe its role in the machine it belongs to. If they are met by another 
 	 * state in another machine, it means that those two states have an equivalent place in the flow chart 
-	 * of their respective machines. <br>
+	 * of their respective machines. Thus, they can be considered as counterparts. <br>
+	 * </p>
 	 * 
-	 * Thus, they can be considered as counterparts in the comparison process of the two machines. <br>
-	 * 
+	 * <p>
 	 * Specifications are met when the specified state's own specifications extend this state's specifications. 
 	 * It means that they can be considered as equal or more precise than this states' specifications (and in 
-	 * no way inconsistent with them).   
+	 * no way inconsistent with them). <br>
+	 * </p>   
 	 * 
 	 * @see representation.stateMachine.ISpecifications
 	 * @see representation.stateMachine.IStateMachine
@@ -101,6 +142,7 @@ public interface IState {
 	boolean specificationsAreMetBy(IState state);
 	
 	/**
+	 * Returns a report on the evaluation of the specified symbol by this state. 
 	 * 
 	 * @param symbolIterator an iterator on the word entered in the machine
 	 * @return a report on the evaluation of the iterator next symbol
@@ -108,14 +150,22 @@ public interface IState {
 	IEvaluation evaluateSymbol(Iterator<ISymbol> symbolIterator);
 	
 	/**
-	 * The name of a state is unique and reflects its particular situation in the flow chart of the machine. <br>
+	 * <p>
+	 * Sets the name of this state. <br> 
+	 * </p>
 	 * 
+	 * <p>
+	 * The name of a state is unique and reflects its particular situation in the flow chart of the machine. <br>
+	 * </p>
+	 * 
+	 * <p>
 	 * The name <i>N</i> of a state <i>q<sub>n</sub></i> is a non-empty set of symbol strings, such that a string  
 	 * <i> S = {s<sub>1</sub>, ..., s<sub>x</sub>} </i> belongs to <i> N </i> iff it meets the following requirements : <br>
 	 * 1-it can be mapped to a unique sequence of transitions in the transition function <i>δ</i> such that 
 	 * <i> [δ(s<sub>1</sub>, q<sub>1</sub>) = q<sub>2</sub>, ...,δ(s<sub>x</sub>, q<sub>n-1</sub>) = q<sub>n</sub>] </i> <br>
 	 * 2-no sub-string <i> S' = {s<sub>p</sub>, ..., s<sub>x</sub>} </i> of <i> S </i> can be found that meets the first 
-	 * requirement.
+	 * requirement. <br>
+	 * </p>
 	 * 
 	 * @see representation.stateMachine.IStateName
 	 * @param transitionFunction the transition function of the machine to which this state belongs
@@ -123,6 +173,14 @@ public interface IState {
 	void setName(ITransitionFunction transitionFunction);
 	
 	/**
+	 * <p>
+	 * Sets the set of rules associated with this state. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * This set of rules (or <i>transitions</i>) is the subset of the specified transition function composed 
+	 * of all transitions in which the input state is this state. <br>
+	 * </p>  
 	 * 
 	 * @see representation.stateMachine.ITransition
 	 * @param transitionFunction the transition function of the machine to which this states belongs
@@ -130,18 +188,14 @@ public interface IState {
 	void setRules(ITransitionFunction transitionFunction);
 	
 	/**
+	 * Indicates whether some other object is "equal to" this one.
 	 * 
-	 * @param state any object
 	 * @return true if the specified object is a state that meets this state's specifications and has the same 
 	 * local grammar ; false otherwise
 	 */
 	@Override
 	boolean equals(Object state);
 	
-	/**
-	 * 
-	 * @return this state hashCode
-	 */
 	@Override
 	int hashCode();
 

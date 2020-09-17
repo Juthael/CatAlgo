@@ -29,7 +29,7 @@ public class StateMachine implements IStateMachine {
 	}
 
 	@Override
-	public representation.stateMachine.ITransitionFunction ITransitionFunction() {
+	public representation.stateMachine.ITransitionFunction getTransitionFunction() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -47,16 +47,16 @@ public class StateMachine implements IStateMachine {
 	}
 
 	@Override
-	public IRelationalDescription getBinaryRelation() {
+	public IGrammar getMachineGrammar() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public IGrammar getMachineGrammar() {
+	public IRelationalDescription getRelationalDescription() {
 		// TODO Auto-generated method stub
 		return null;
-	}
+	}	
 
 	@Override
 	public ISpecifications getSpecifications() {

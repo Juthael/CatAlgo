@@ -2,14 +2,14 @@ package representation.stateMachine;
 
 import java.util.Set;
 
-import representation.dataFormats.IRelationalDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.IGrammar;
 import representation.dataFormats.ILanguage;
+import representation.dataFormats.IRelationalDescription;
 
 /**
  * <p> 
- * A state machine is a finite-state automaton if it is a categorical state machine ( {@link ICategory} ), and a finite-state
+ * A <b>state machine</b> is a finite-state automaton if it is a categorical state machine ( {@link ICategory} ), and a finite-state
  * automaton with some additional features if it is a representational state machine ( {@link IRepresentation} ). <br>
  * </p> 
  * 
@@ -21,12 +21,12 @@ import representation.dataFormats.ILanguage;
  * 
  * <p>
  * Every state machine has a <i> language </i>, and can be described by specifying this language. It is composed of all words 
- * (i.e., string of symbols) that, when entered into the machine, result in a sequence of transitions ending with an accept 
+ * (i.e., strings of symbols) that, when entered into the machine, result in a sequence of transitions ending with an accept 
  * state. 
  * </p>
  * 
  * <p> Every state also has an ID, which is a random integer, and a name, which is a designation of this state in a more 
- * human-like way. <br>
+ * natural language-like way. <br>
  * 
  * @see representation.stateMachine.ICategory
  * @see representation.stateMachine.IRepresentation
@@ -58,7 +58,7 @@ public interface IStateMachine {
 	 * @see representation.stateMachine.ISymbol
 	 * @return the transition function of the machine
 	 */
-	ITransitionFunction ITransitionFunction();
+	ITransitionFunction getTransitionFunction();
 	
 	/**
 	 * The language of a machine is composed of all the words it <i> accepts </i>. A word is accepted by a machine 
@@ -69,21 +69,24 @@ public interface IStateMachine {
 	ILanguage getLanguage();
 	
 	/**
-	 * Since every state machine can be defined by its language, and every language can be condensed in a single functional 
-	 * expression, then every machine can be defined by a functional expression. <br>
+	 * Since every state machine can be defined by its language, and every language can be converted into a single 
+	 * functional expression, then every machine can be defined by a functional expression. <br>
+	 * 
+	 * @see representation.dataFormats.IDescription
 	 * @see representation.dataFormats.ILanguage
 	 * @return a description of the machine in the form of a functional expression
 	 */
 	IFunctionalExpression getFunctionalExpression();
 	
 	/**
-	 * Since every state machine can be defined by its language, and every language coded in a binary relation, 
-	 * then every machine can be defined by a binary relation. <br>
+	 * Since every state machine can be defined by its language, and every language converted into a relational 
+	 * description, then every machine can be defined by a relational description. <br>
 	 * 
+	 * @see representation.dataFormats.IDescription
 	 * @see representation.dataFormats.ILanguage
-	 * @return a description of the machine in the form of a binary relation
+	 * @return a description of the machine in the form of a relationalDescription
 	 */
-	IRelationalDescription getBinaryRelation();
+	IRelationalDescription getRelationalDescription();
 	
 	/**
 	 * For every one of its states, the machine grammar maps every symbol that allows a transition to it with every 
@@ -100,37 +103,47 @@ public interface IStateMachine {
 	 * Specifications are constraints that can be associated with any state of a state machine. They provide the prerequisite 
 	 * to meet for any state or value from another machine, if they are to be defined as eligible counterparts of this 
 	 * state. <br>
+	 * @see representation.stateMachine.IState
+	 * @see representation.stateMachine.IValue
 	 * @return the state's specifications
 	 */
 	ISpecifications getSpecifications();
 	
 	/**
-	 * 
+	 * Returns the log of the evaluation of the specified word
 	 * @param word the word entered into the state machine
-	 * @return true if this word belongs to the language of this machine ; false otherwise
+	 * @return the log of the evaluation of the specified word
 	 */
 	IEvaluationLog evaluateWord(IWord word);
 	
 	/**
 	 * The name of a state is a designation of this state in a roughly human-like way. <br> 
 	 * It makes use of the flow chart of the state's machine, and contains the smallest sequences of symbols in this 
-	 * flow chart that leads unequivocally to the state at hand. <br>
+	 * flow chart that leads unequivocally to this state. <br>
 	 * 
 	 * @see representation.stateMachine.ISymbol
+	 * @see representation.stateMachine.IState
 	 * @param name the name of a state
 	 * @return the state of the machine having the specified name if it can be found ; null otherwise
 	 */
 	IState getState(IStateName name);
 	
 	/**
+	 * Returns the state of the machine having the specified ID if it can be found ; null otherwise.
 	 * 
-	 * @param iD a random integer
+	 * @param iD an integer, randomly determined by the constructor.
 	 * @return the state of the machine having the specified ID if it can be found ; null otherwise
 	 */
 	IState getState (int iD);
 	
 	/**
-	 * The start state of the machine is the one that reads the first symbol of any input word. 
+	 * <p>
+	 * Returns the start state of the machine. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * The start state of the machine is the one that reads the first symbol of any input word. <br>
+	 * </p> 
 	 * 
 	 * @see representation.stateMachine.ISymbol
 	 * @see representation.stateMachine.IWord
@@ -139,9 +152,14 @@ public interface IStateMachine {
 	IStartState getStartState();
 	
 	/**
+	 * <p>
+	 * Returns interface states. <br>
+	 * </p>
+	 * <p>
 	 * An interface state is a place-holder state, in a state machine that is partially undetermined. <br> 
-	 * It is meant to be implemented by a value, i.e. a state or a block of state having the configuration of 
-	 * a sub-machine.
+	 * It is meant to be implemented by a value, i.e. a state or a block of states having the configuration of 
+	 * a sub-machine. <br>
+	 * </p>
 	 * 
 	 * @see representation.stateMachine.IValue
 	 * @see representation.stateMachine.IValueAttribution
@@ -150,9 +168,15 @@ public interface IStateMachine {
 	Set<IInterfaceState> getInterfaces();
 	
 	/**
+	 * <p>
+	 * Returns the number of interfaces states. <br>
+	 * </p>
+	 * 
+	 * <p>
 	 * An interface state is a place-holder state, in a state machine that is partially undetermined. <br> 
 	 * It is meant to be implemented by a value, i.e. a state or a block of state having the configuration of 
-	 * a sub-machine.
+	 * a sub-machine. <br>
+	 * </p>
 	 * 
 	 * @see representation.stateMachine.IInterfaceState
 	 * @see representation.stateMachine.IValue
@@ -162,8 +186,14 @@ public interface IStateMachine {
 	int getNbOfInterfaces();
 	
 	/**
-	 * An accept state is state that, if it becomes active as a result of a transition triggered by the reading 
-	 * of the last symbol of a word, defines this word as part of the machine's language.
+	 * <p>
+	 * Returns the set of <i> accept </i> states.
+	 * </p>
+	 * 
+	 * <p>
+	 * If, as a result of a transition triggered by the reading of the last symbol of a word, the current state 
+	 * of a machine is an accept state, then this word as part of the machine's language. <br>
+	 * </p>
 	 * 
 	 * @see representation.stateMachine.ITransition
 	 * @see representation.stateMachine.ISymbol
@@ -174,8 +204,14 @@ public interface IStateMachine {
 	Set<IAcceptState> getAcceptStates();
 	
 	/**
+	 * <p>
+	 * Returns the information <i>cost</i> of a machine. <br>
+	 * </p> 
+	 * 
+	 * <p>
 	 * The cost of a machine is a measure of the amount of information it contains. It equals the cost of its 
-	 * transition function.  
+	 * transition function. <br>
+	 * </p>  
 	 * 
 	 * @see ITransitionFunction
 	 * @return the cost of the machine
@@ -183,8 +219,14 @@ public interface IStateMachine {
 	float getCost();
 	
 	/**
+	 * <p>
+	 * Sets the <i> names </i> of the machine's states. <br>
+	 * </p>
+	 * 
+	 * <p>
 	 * Since the name of a state depends on the structure of the machine it belongs to, state names are derived 
 	 * from the transition function. <br>
+	 * </p>
 	 * 
 	 * @see representation.stateMachine.IState
 	 * @see representation.stateMachine.IStateName
@@ -194,8 +236,14 @@ public interface IStateMachine {
 	void setStateNames(ITransitionFunction tFunction);
 	
 	/**
+	 * <p>
+	 * Sets the rules associated with each state. <br>
+	 * </p>  
+	 * 
+	 * <p>
 	 * The rules associated with a given state are a subset of the transition function, composed of all the 
-	 * transitions that have this state as their input state. 
+	 * transitions that have this state as their input state. <br>
+	 * </p> 
 	 * 
 	 * @see representation.stateMachine.IState
 	 * @see representation.stateMachine.ITransitionFunction
@@ -205,12 +253,16 @@ public interface IStateMachine {
 	void setStateRules(ITransitionFunction tFunction);
 	
 	/**
+	 * <p>
 	 * Specifications are constraints that can be associated with any state of a state machine. They provide the 
 	 * prerequisite to meet for any state or value from another machine, if they are to be defined as eligible 
 	 * counterparts of this state. <br>
+	 * </p>
 	 * 
+	 * <p>
 	 * Since the specifications of a state depend on the structure of the machine it belongs to, specifications are 
 	 * derived from the transition function. <br>
+	 * </p>
 	 * 
 	 * @see representation.stateMachine.IState
 	 * @see representation.stateMachine.ISpecifications

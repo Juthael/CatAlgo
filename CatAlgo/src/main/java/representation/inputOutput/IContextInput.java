@@ -18,8 +18,8 @@ import representation.dataFormats.IDescription;
 public interface IContextInput {
 	
 	/**
-	 * 
-	 * @return a set of descriptions, each of which applies to an object in the context
+	 * Returns a set of descriptions, each of which applies to an object in the context. 
+	 * @return a set of descriptions
 	 */
 	Set<IDescription> getDescriptionsOfContextObjects();
 

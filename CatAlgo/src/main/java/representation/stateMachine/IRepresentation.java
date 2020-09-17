@@ -11,8 +11,8 @@ import representation.stateMachine.infoQuantification.ITransitionCostCalculator;
 
 /**
  * <p>
- * A <i> representation </i> is an information structure that determines which categories are 
- * being perceived in a given context (a context is a set of objects), and which relations bind them. 
+ * A <b> representation </b> is an information structure that determines which categories are 
+ * being perceived in a given context (a context is a set of objects), and which relations bind them together. 
  * For a subject, to develop a representation of a given context consists in the building of a structured 
  * and tailor-made category network. This will allow him to : <br>
  * -abstract the context, i.e. access to general categories that summarize what is true about any object 
@@ -23,13 +23,16 @@ import representation.stateMachine.infoQuantification.ITransitionCostCalculator;
  * <p> 
  * A representation of a context is constructed out of a set of object's descriptions (one for every object 
  * in the context), provided by a "context input" ( {@link IContextInput} ). <br>
- * Among several equivalent description formats (see {@link IDescription}), an object can be described as a binary relation 
- * ( {@link IRelationalDescription} ) ; so can be a category. The contextually relevant categories that can be used 
- * for the description of a given context are to be found in the Galois lattice <i> Gal(O,P,M) </i>, 
- * where : <br>
+ * Among several equivalent description formats (see {@link IDescription}), an object can be described by a 
+ * relational description ( {@link IRelationalDescription} ) ; so can be a category. A relational description 
+ * associated with an object <i> o </i> is characterized by a set of orders <i> O </i>. Each order <i> p ∈  O </i> 
+ * denotes a <i> property </i> of this object or category. If an      
+ * The contextually relevant 
+ * categories that can be used for the description of a given context can be found by the following procedure. are to be found in the Galois lattice 
+ * <i> Gal(O,P,M) </i>, where : <br>
  * -<i> O </i> is the set of objects <br>
- * -<i> P </i> is the set of <i> pairs of attributes </i> formed by the union of the binary relations describing 
- * objects. <br> 
+ * -<i> P </i> is the set of <i> pairs of attributes </i> formed by the union of the binary relations contained 
+ * in every relational description of an object. <br>
  * -<i> M </i> is the mapping of <i> O </i> in <i> P </i>. <br>
  * Every element in this lattice, except for its minimum, is a category that can be described in terms of its 
  * <i> intent </i> (i.e. its meaning, expressed by a binary relation) or in terms of its <i> extent </i> (the 
