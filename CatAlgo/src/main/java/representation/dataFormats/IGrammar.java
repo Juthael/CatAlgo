@@ -5,8 +5,9 @@ import java.util.Set;
 import representation.stateMachine.ISymbol;
 
 /**
- * A IGrammar is a context-free grammar, implemented as a collection of rules mapping an antecedent with a consequent. 
+ * A context-free grammar is a collection of rules, each of them mapping an antecedent with a consequent. 
  * 
+ * @see representation.dataFormats.IGrammaticalRule
  * @author Gael Tregouet
  *
  */
@@ -57,7 +58,7 @@ public interface IGrammar {
 	int hashCode();
 	
 	/**
-	 * 
+	 * Returns the grammar as a String.
 	 * @return the grammar as a String
 	 */
 	@Override
@@ -65,6 +66,10 @@ public interface IGrammar {
 	
 	//setters
 	
+	/**
+	 * Adds the specified rule to this grammar.
+	 * @param grammaticalRule the rule to be added
+	 */
 	void add(IGrammaticalRule grammaticalRule);
 	
 	

@@ -91,11 +91,14 @@ public interface ILanguage extends IDescription {
 	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;	
 	
 	/**
-	 * For any pair of symbols <i> (x,y) </i>, if there exists a word in the language <i> L<sub>M</sub> </i> in which 
-	 * the symbol <i> y </i> is to the right of the symbol <i> x </i> (and not necessarily adjacent), then <i> (x,y) </i> 
-	 * belongs to the relation returned.
+	 * {@inheritDoc}
 	 * 
-	 * @return a binary relation based on (and equivalent to) this language
+	 * Each word of a language is defined by a set of symbols, and a total order over it. A language is therefore 
+	 * associated with a set of total orders, out of which a relational description can be built.  <br>
+	 * </p>   
+	 * 
+	 * @see representation.dataFormats.ILanguage
+	 * @return the binary relation equivalent to this functional expression 
 	 * @throws RepresentationException 
 	 */
 	@Override

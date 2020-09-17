@@ -9,32 +9,46 @@ import representation.dataFormats.utils.ITotalOrder;
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 
-//RE-WRITE DOC
 /**
  * <p>
- * A binary relation is one of the three equivalent description format that can be used to describe an element 
- * of a context ; the two others being a regular language (i.e. a set of words accepted by a finite state machine) and 
+ * A <b>relational description</b> is one of the three equivalent description format that can be used to describe an object 
+ * or a category ; the two others being a regular language (i.e. a set of words accepted by a finite state machine) and 
  * a functional expression. Each one of this format can be translated in one of the others, in order to proceed some 
- * format-specific operations (e.g., set operations with binary relations).<br>
+ * format-specific operations (e.g., set operations with a relational description).<br>
  * </p>
  * 
  * <p>
- * A binary relation <i> R </i> is a set of pairs <i> (x,y) </i>, where <i> x </i> and <i> y </i> are symbols. If this 
- * relation is used to describe an object, then <i> x </i> and <i> y </i> are properties and <i> (x,y) ∈ R </i> (or 
- * <i> xRy </i>) means "<i> x </i> <b> is </b> <i> y </i>" (e.g. "color is blue"). <br>
- * </p> 
+ * A relational description is composed of : <br> 
+ * <ul> 
+ * <li> A set of total orders over sets of symbols. The successor relation in each order ({@link ITotalOrder}) yields a string 
+ * of symbols. If the description is about an object or a category, then this string denotes an observable property on this 
+ * object or category. 
+ * <li> A binary relation formed by the union of all ordered sets. This relation is usually not an order itself.    
+ * </ul>
+ * </p>
+ * 
+ * <P>
+ * The relational description format is mainly used to determine the common features in a set of objects or categories. 
+ * It allows to proceed this calculation easily and with great flexibility, by simple intersection operations on binary 
+ * relations. <br>
+ * This "abstraction" function ( {@link IDescription#doAbstract(Set)} ) applies to a set of descriptions, and returns a 
+ * single description. Although any description format is bound to implement this method, it actually does so by converting 
+ * the descriptions given as arguments in a <i> relational description </i> format. Once the abstraction operation is 
+ * executed, the result can be converted back into any other description format (regular language or functional expression).   
+ * </p>
  * 
  * <p>
  * Warning : the {@link IRelationalDescription} type can (and should) only deal with well-founded binary relations. Otherwise, 
  * exceptions will be thrown and/or errors will occur. <br>
- * The {@link ISyntaxGrove#markRecursion()} method provides a recursion index mechanism. This allows to be sure that the 
+ * The {@link ISyntaxGrove#markRecursion()} method provides a recursion index mechanism, which ensures that the 
  * descriptions in the generated context input ({@link ISyntaxGrove#getContextInput()}) will only yield well-founded relations. 
  * </p>
  * 
  * @see representation.dataFormats.IDescription
  * @see representation.dataFormats.ILanguage
+ * @see representation.dataFormats.utils.ITotalOrder
  * @see representation.dataFormats.IFunctionalExpression
- * @see representation.stateMachine.ISymbol
+ * @see grammarModel.structure.ISyntaxGrove
  * 
  * @author Gael Tregouet
  *
@@ -42,6 +56,37 @@ import representation.stateMachine.ISymbol;
 public interface IRelationalDescription extends IDescription, Cloneable {
 	
 	//static
+	
+	/**
+	 * <p>
+	 * Returns a description resulting of the application of the function passed by the first parameter, to a set of arguments 
+	 * passed by the second parameter. <br>
+	 * </p>  
+	 * 
+	 * <p>
+	 * Example : <br>
+	 * -function : <i> airbusA320  </i> <br>
+	 * -arguments : {(<i>latitude 48.240</i>) ; (<i>longitude -3,9</i>), (<i>altitude 39025ft</i>), 
+	 * (<i>time 20-09-17_09:25</i>)} <br>
+	 * -result : <i> airbusA320((latitude 48.240) Λ (longitude -3,9) Λ (altitude 39025ft) Λ (time 20-09-17_09:25))</i>
+	 * </p>
+	 * 
+	 * <p>
+	 * How to proceed this application on a set of relational descriptions : <br>
+	 * 1-build the set <i> S </i> of strictly ordered sets of symbols, formed by the union of the sets of ordered sets 
+	 * ({@link ITotalOrder}) in every relational description argument. <br>
+	 * 2-build the new relational descriptor <i>newDesc(S)</i> <br>
+	 * 3-extend every total order in <i>newDesc</i> ( {@link IRelationalDescription#applyFunction(ISymbol)} ), so that 
+	 * their associated strictly ordered sets all have the specified function as their new minimum. <br>
+	 * 4-return <i>newDesc</i>.
+	 * </p>
+	 * 
+	 * @see representation.dataFormats.utils.ITotalOrder
+	 * @param function a symbol denoting the function to be applied to arguments
+	 * @param arguments a set of relational descriptions to which the function is to be applied
+	 * @return the result of this application 
+	 * @throws RepresentationException
+	 */
 	public static IRelationalDescription applyFunctionToArguments(ISymbol function, Set<IRelationalDescription> arguments) 
 			throws RepresentationException {
 		IRelationalDescription output;
@@ -64,23 +109,36 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	
 	//getters
 	
+	/**
+	 * Returns a deep copy of this relational description. 
+	 * @return a clone relational description. 
+	 * @throws CloneNotSupportedException
+	 */
 	IRelationalDescription clone() throws CloneNotSupportedException;
 	
 	@Override
 	boolean equals(Object other);
 	
 	/**
-	 * Returns the pair of symbols of the binary relation. 
+	 * <p>
+	 * Returns the set of pairs of symbols that form the binary relation of this relational description. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * This binary relation is formed by the union of all strictly ordered sets contained in a relational description. <br>
+	 * </p>
 	 * 
 	 * @return the pairs of symbols of the binary relation
 	 */
 	Set<IPair> getBinaryRelation();	
 	
 	/**
-	 * Returns the functional expression equivalent to this binary relation. <br>
+	 * {@inheritDoc}
 	 * 
-	 * The most convenient way to get this functional expression is to transform the relation into a language first, and 
-	 * then to call {@link ILanguage#getFunctionalExpression()}.
+	 * <p>
+	 * The most convenient way to get this functional expression is to transform the relational description into a language 
+	 * first, and then to call {@link ILanguage#getFunctionalExpression()}.
+	 * </p>
 	 * 
 	 * @see representation.dataFormats.ILanguage
 	 * @return the functional expression equivalent to this binary relation
@@ -90,44 +148,36 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	IFunctionalExpression getFunctionalExpression() throws RepresentationException;	
 	
 	/**
-	 * <p>
-	 * A description's grammar is the minimal knowledge base required to proceed the description of a 
-	 * given object or category (regardless of the format at use). <br>
+	 * {@inheritDoc}
 	 * 
-	 * A rule <i> x ::= y </i> exists in the returned grammar iff <i> xRy </i> and no <i> z </i> can be found 
-	 * such that <i> xRz </i> and <i> zRy </i>. <br>
+	 * <p>
+	 * A rule <i> x ::= y </i> exists in the returned grammar iff : <br> 
+	 * 1-<i> xRy </i>, <i> R </i> being the binary relation of the relational description <br>
+	 * 2-In the set of total orders of this relational descriptions, there exist an order <i>O</i> whose successor 
+	 * relation is <i>S<sub>O</sub></i>, such as <i>(x, y) ∈  S<sub>O</sub></i> <br> (Note that 2- implies 1-)
 	 * </p>
 	 * 
 	 * <p>
-	 * The most convenient way to get a grammar out of a relation is to transform the relation into a language 
-	 * first, and then call {@link ILanguage#getGrammar()}.
+	 * An easy way to get a grammar out of a relation is to transform the relation into a language 
+	 * first, and then call {@link ILanguage#getGrammar()}. <br>
+	 * </p>
 	 * 
 	 * @see representation.dataFormats.IDescription
 	 * @see representation.dataFormats.ILanguage
 	 * @return the grammar associated with this description
-	 * @throws RepresentationException if the language equivalent to this relation, 
-	 * and which is needed as an intermediate format, cannot be built
+	 * @throws RepresentationException
 	 */
 	@Override
 	IGrammar getGrammar() throws RepresentationException;	
 	
-	//RE-WRITE DOC
 	/**
-	 * The language <i> L<sub>M</sub> </i> associated with a binary relation <i> R </i> is the set of all the 
-	 * <i> maximal transitive non-redundant strings </i> in <i> R </i>. <br>
+	 * {@inheritDoc}
 	 * 
-	 * A string <i> S </i> is <i> transitive </i> in <i> R </i> if for any <i> x,y,z ∈ S </i>, if <i> xSy </i> and 
-	 * <i> ySz </i>, then <i> xRz </i>. Thus, every string <i> S </i> is associated with <i> R' ⊆ R</i>, <i> R' </i> 
-	 * being the minimal subset of <i> R </i> such that <i> S </i> remains transitive in <i> R' </i>. <br>
-	 * 
-	 * A transitive string <i> S </i> is <i> non-redundant </i> if for any non-terminal element <i> s<sub>i</sub> </i> in 
-	 * <i> S </i>, the subsets <i> R'<sub>i</sub> </i> and <i> R'<sub>i+1</sub> </i> associated with 
-	 * <i> (s<sub>i</sub>] </i> and <i> (s<sub>i+1</sub>] </i> verify <i> R'<sub>i</sub> ⊂ R'<sub>i+1</sub> </i>.
-	 * (Notation : <i> (s<sub>i</sub>] </i> is the substring of <i> S </i> beginning with its first character and 
-	 * ending with <i> s </i>). <br>
-	 * 
-	 * A transitive non-redundant string <i> S </i> is <i> maximal </i> if no transitive non-redundant string can be found in 
-	 * <i> R </i> that contains <i> S </i>. 
+	 * <p>
+	 * Since a language is a set of chains of symbols, and since each total order of a relational description defines 
+	 * a strictly ordered set of symbols (i.e., a chain), a relational description is converted into a regular language 
+	 * by returning this set of strictly ordered sets. <br>
+	 * </p>  
 	 * 
 	 * @return the language associated with this relation
 	 * @throws RepresentationException if an error has occurred while transforming the binary relation into a language
@@ -138,39 +188,90 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	/**
 	 * {@inheritDoc}
 	 * 
+	 * <p>
 	 * The most convenient way to obtain this number from a binary relation is to build its equivalent language 
-	 * or functional expression first, and then to call this same method on them.  
+	 * or functional expression first, and then to call this same method on them. <br>
+	 * </p>  
 	 * 
 	 * @see representation.dataFormats.ILanguage
 	 * @see representation.dataFormats.IRelationalDescription
 	 * @throws RepresentationException if the specified symbol is not actually used in the description
-	 * @throws RepresentationException if the language equivalent to this relation, 
-	 * which is needed as an intermediate format, cannot be built
 	 */
 	@Override
 	int getNbOfArgumentsFor(ISymbol function) throws RepresentationException;		
 	
-	//WRITE DOC
+	/**
+	 * <p> 
+	 * Returns the set of total orders of this relational description. <br> 
+	 * </p>
+	 * 
+	 * <p>
+	 * Each total order defines a strictly ordered set (i.e., a chain) of symbols. This chain denotes a property 
+	 * of the object or category associated with this description. <br>
+	 * </p>
+	 * @return a set of properties, provided in the form of total orders over sets of symbols. 
+	 */
 	Set<ITotalOrder> getPropertiesAsTotalOrders();
 	
-	//WRITE DOC
+	/**
+	 * <p>
+	 * Returns the set of symbols over which this relational description's binary relation is defined.
+	 * </p>
+	 * @return the set of symbols used by this relational description
+	 */
 	Set<ISymbol> getSetOfSymbols();
 	
 	@Override
 	int hashCode();
 	
 	/**
-	 * Returns the binary relation as a String
+	 * <p>
+	 * Returns the language associated with this relational description, provided in a single string.
+	 * </p>
 	 * @return a string containing every pair <i>(x, y)</i> such as <i>xRy</i> 
 	 */
 	@Override
 	String toString();
 	
 	//setters
-	
-	//WRITE DOC
+
+	/**
+	 * <p>
+	 * Applies the specified function to the set of arguments constituted by this relational description's set of 
+	 * total orders. <br>
+	 * </p>  
+	 * 
+	 * <p>
+	 * Example  : <br>
+	 * -function : <i> airbusA320  </i> <br>
+	 * -arguments : {(<i>latitude 48.240</i>) ; (<i>longitude -3,9</i>), (<i>altitude 39025ft</i>), 
+	 * (<i>time 20-09-17_09:25</i>)} <br>
+	 * -result : <i> airbusA320((latitude 48.240) Λ (longitude -3,9) Λ (altitude 39025ft) Λ (time 20-09-17_09:25))</i>
+	 * </p>
+	 * 
+	 * <p>
+	 * This is done by simply extending the relation's total orders ( {@link ITotalOrder#extendWithMinimum(ISymbol)} ) so 
+	 * that their associated strictly ordered sets all have the specified function as their new minimum. <br>
+	 * </p>
+	 * @param symbol the function to apply
+	 * @throws RepresentationException
+	 */
 	void applyFunction(ISymbol symbol) throws RepresentationException;
 	
-	//WRITE DOC
+	/**
+	 * <p>
+	 * Restricts this relational description's binary relation, and each one of its total orders, to their intersection 
+	 * with the specified pairs. <br>
+	 * </p>
+	 * 
+	 * <p>
+	 * A consistency check is performed in {@link ITotalOrder#restrictTo(Set)} to ensure that the resulting relation 
+	 * remains a total order. <br>
+	 * </p>
+	 * @see representation.dataFormats.utils.ITotalOrder
+	 * 
+	 * @param pairs the set of pairs to which this relational description is restricted.  
+	 * @throws RepresentationException
+	 */
 	void restrictTo(Set<IPair> pairs) throws RepresentationException;
 }

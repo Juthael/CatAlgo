@@ -8,8 +8,8 @@ import representation.stateMachine.ISymbol;
 
 /**
  * <p>
- * A functional expression is one of the three equivalent description format that can be used to describe an element 
- * of a context ; the two others being a regular language (i.e. a set of words accepted by a finite state machine) and 
+ * A functional expression is one of the three equivalent description formats that can be used to describe an object 
+ * or a category ; the two others being a regular language (i.e. a set of words accepted by a finite state machine) and 
  * a binary relation. Each one of this format can be translated in one of the others, in order to proceed some 
  * format-specific operations (e.g., set operations with binary relations).<br>
  * </p>
@@ -17,7 +17,7 @@ import representation.stateMachine.ISymbol;
  * <p>
  * A functional expression is a statement that uses the function/argument(s) formalism to describe an object or a category. 
  * It is made up of a string of symbols provided by the alphabet of the domain at use, plus the conjunction symbol 
- * <i> " ∧ " </i>. <br>
+ * " ∧ " . <br>
  * </p>
  * 
  * <p>
@@ -46,8 +46,8 @@ public interface IFunctionalExpression extends IDescription {
 	
 	/**
 	 * <p>
-	 * The functional expression is encoded as a mapping of coordinates (that allow to locate every element in the expression) 
-	 * to symbols (that can be found on this location). <br>  
+	 * The functional expression is encoded as a mapping of coordinates (that allow to locate every element in the 
+	 * expression) onto symbols (that can be found on this location). <br>  
 	 * </p>
 	 * 
 	 * <p>
@@ -60,7 +60,7 @@ public interface IFunctionalExpression extends IDescription {
 	 * </p>
 	 * 
 	 * <p>
-	 * Note that coordinates locate arguments to which a function applies, not the function itself (unless it is the argument 
+	 * Note that coordinates locate arguments to which a function applies, not the function itself (unless it is an argument 
 	 * of another function). Having no coordinates, the main function of a functional expression (i.e., its first term) is 
 	 * mapped with an empty list of integers.
 	 * </p>
@@ -70,23 +70,21 @@ public interface IFunctionalExpression extends IDescription {
 	Map<List<Integer>, ISymbol> getCoordinatesOntoSymbols();	
 	
 	/**
-	 * <p>
-	 * A description's grammar is the minimal knowledge base required to proceed the description of a 
-	 * given object or category (regardless of the format at use). <br>
-	 * </p>
+	 * {@inheritDoc}
 	 * 
 	 * Let <i> x </i> and <i> y </i> be two symbols that can respectively be found in the functional expression at coordinates
 	 * <i>c<sub>1</sub></i> = [ <i>a, b, (...), i</i> ] and <i>c<sub>2</sub></i> = [ <i>a, b, (...), i, j </i> ], such as 
 	 * <i>c<sub>1</sub></i> is a substring of <i>c<sub>2</sub></i> and |<i>c<sub>2</sub></i>| = |<i>c<sub>1</sub></i>+1| ; 
 	 * then <i>x</i> ::= <i>y</i>.
 	 * 
-	 * @see representation.dataFormats.ILanguage
 	 * @return the grammar associated with this description
 	 */
 	@Override
 	IGrammar getGrammar();	
 	
 	/**
+	 * {@inheritDoc}
+	 * 
 	 * <p>
 	 * The regular language equivalent to this functional expression is built following the procedure described 
 	 * below. <br>
@@ -100,17 +98,16 @@ public interface IFunctionalExpression extends IDescription {
 	 * <p>
 	 * <b>'Natural' procedure : </b> <br> 
 	 * Out of a functional expression with one or more conjunction, a set of words is built 
-	 * by iterating the procedure below, until no more conjunction is left <br>
+	 * by iterating the procedure below, until no more conjunction is left : <br>
 	 * 
 	 * -If <i> a(b ∧ c) </i> then <i> (ab, ac) </i> <br>  
-	 * 
-
-	 * 
+	 *  
 	 * Procedure : <br>
-	 * .<i> ij(k ∧ l) </i> <br>
-	 * ..<i> ijk => ∈ L<sub>M</sub> </i> <br>
-	 * ..<i> ijl => ∈ L<sub>M</sub> </i> <br>
-	 * .<i> im => ∈ L<sub>M</sub> </i> <br>
+	 * .<i> i(j(k ∧ l) ∧  m) </i> <br>
+	 * ..<i> ij(k ∧ l) </i> <br>
+	 * ...<i> ijk => ∈ L<sub>M</sub> </i> <br>
+	 * ...<i> ijl => ∈ L<sub>M</sub> </i> <br>
+	 * ..<i> im => ∈ L<sub>M</sub> </i> <br>
 	 * </p>
 	 * 
 	 * <p>
@@ -145,25 +142,21 @@ public interface IFunctionalExpression extends IDescription {
 	int getNbOfArgumentsFor(ISymbol symbol) throws RepresentationException;	
 	
 	/**
+	 * {@inheritDoc}
 	 * <p>
-	 * Returns the binary relation equivalent to this functional expression. <br>
-	 * </p>
-	 * 
-	 * <p>
-	 * Let <i> x </i> and <i> y </i> be two symbols that can respectively be found in the functional expression at coordinates
-	 * <i>c<sub>1</sub></i> = [ <i>a, b, (...), i</i> ] and <i>c<sub>2</sub></i> = [ <i>a, b, (...), i, (...) </i> ], such as 
-	 * <i>c<sub>1</sub></i> is a substring of <i>c<sub>2</sub></i> ; then <i> xRy </i>.
-	 * </p> 
+	 * The most convenient way to get a relational description out of a functional expression is to convert this 
+	 * expression into a regular language first, and then call this same method on it.   
+	 * </p>   
 	 * 
 	 * @see representation.dataFormats.ILanguage
-	 * @return the binary relation equivalent to this functional expression 
+	 * @return the relational description equivalent to this functional expression 
 	 * @throws RepresentationException 
 	 */
 	@Override
 	IRelationalDescription getRelationalDescription() throws RepresentationException;	
 	
 	/**
-	 * The functional expression as a String.
+	 * Returns the functional expression as a String.
 	 * @return the functional expression as a String
 	 */
 	@Override

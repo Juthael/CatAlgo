@@ -16,8 +16,16 @@ public interface IPair {
 	@Override
 	boolean equals(Object o);
 	
+	/**
+	 * Returns the antecedent symbol
+	 * @return the antecedent symbol
+	 */
 	ISymbol getAntecedent();
 	
+	/**
+	 * Returns the consequent symbol
+	 * @return the consequent symbol
+	 */
 	ISymbol getConsequent();
 	
 	@Override

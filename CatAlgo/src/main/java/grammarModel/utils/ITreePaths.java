@@ -6,7 +6,7 @@ import java.util.Map;
 import grammarModel.exceptions.GrammarModelException;
 import grammarModel.structure.ISyntacticStructure;
 /**
- * A ITreePaths is a list (endowed with navigation functionalities) of all the paths of a syntactic structure 
+ * A ITreePaths is a list (endowed with navigation functionalities) of all the paths in a syntactic structure, 
  * from its minimum to any of its terminals.
  * @see ISyntacticStructure
  * @author Gael Tregouet

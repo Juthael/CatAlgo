@@ -32,7 +32,7 @@ import representation.stateMachine.infoQuantification.ITransitionCostCalculator;
  * objects. <br> 
  * -<i> M </i> is the mapping of <i> O </i> in <i> P </i>. <br>
  * Every element in this lattice, except for its minimum, is a category that can be described in terms of its 
- * <i> intent <i> (i.e. its meaning, expressed by a binary relation) or in terms of its <i> extent </i> (the 
+ * <i> intent </i> (i.e. its meaning, expressed by a binary relation) or in terms of its <i> extent </i> (the 
  * subset of objects to which it applies). The lattice's atoms are categories whose extent includes a single object, 
  * so they can be assimilated to this object. <br>
  * The lattice provides an inclusion order over the set of categories such as, <i> A </i> and <i> B </i> being two 

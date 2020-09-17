@@ -285,5 +285,7 @@ public class RelationalDescription implements IRelationalDescription {
 		}
 		return propertyIsMet;
 	}
+	
+	
 
 }
