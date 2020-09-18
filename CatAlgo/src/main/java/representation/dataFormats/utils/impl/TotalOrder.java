@@ -2,6 +2,7 @@ package representation.dataFormats.utils.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -23,6 +24,18 @@ public class TotalOrder implements ITotalOrder {
 		findMinimum();
 		setProperty();
 	}
+	
+	//The list should never be empty. 
+	public TotalOrder(List<ISymbol> property) {
+		this.property = property;
+		orderedRelation = new HashSet<IPair>();
+		minimum = property.get(0);
+		for (int i = 0 ; i < property.size() ; i++) {
+			for (int j = i+1 ; j< property.size() ; j++) {
+				orderedRelation.add(new Pair(property.get(i), property.get(j)));
+			}
+		}
+	}	
 	
 	private TotalOrder(Set<IPair> orderedRelation, ISymbol minimum, List<ISymbol> property) {
 		this.orderedRelation = orderedRelation;
@@ -80,6 +93,46 @@ public class TotalOrder implements ITotalOrder {
 	@Override
 	public boolean isSuperSetOf(ITotalOrder other) {
 		return orderedRelation.containsAll(other.getPairs());
+	}
+	
+	@Override
+	public Set<ITotalOrder> getSetOfSubOrders(){
+		Set<ITotalOrder> setOfSubOrders = new HashSet<ITotalOrder>();
+		if (property.size() > 1) {
+			/*
+			 * By convention, every property on every object or category has to start with the "root" attribute 
+			 * associated with the microworld it belongs to ("letter" in Copycat, "integer" in SeekWhence, etc.)
+			 */
+			List<ISymbol> propMinusMinimum = property.subList(1, property.size());
+			int propMinusMinSize = propMinusMinimum.size();
+			List<ISymbol> subProperty;
+			for (int i = 0 ; i < (1<<propMinusMinSize) ; i++) {
+				subProperty = new ArrayList<ISymbol>();
+				subProperty.add(minimum);
+				for (int j = 0 ; j < propMinusMinSize ; j++) {
+					if ((i & (1<<j)) > 0) {
+						subProperty.add(propMinusMinimum.get(j));
+					}
+				}
+				setOfSubOrders.add(new TotalOrder(subProperty));
+			}
+		}
+		else setOfSubOrders.add(this);
+		return setOfSubOrders;
+	}
+	
+	@Override
+	public String toString() {
+		String propertyString;
+		StringBuilder sB = new StringBuilder();
+		Iterator<ISymbol> propIterator = property.iterator();
+		while (propIterator.hasNext()) {
+			sB.append(propIterator.next().toString());
+			if (propIterator.hasNext())
+				sB.append(" ");
+		}
+		propertyString = sB.toString();
+		return propertyString;
 	}
 	
 	//setters

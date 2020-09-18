@@ -24,7 +24,8 @@ public class RelationalDescription implements IRelationalDescription {
 
 	private Set<ISymbol> setOfSymbols = new HashSet<ISymbol>();
 	private Set<IPair> binaryRelation = new HashSet<IPair>();
-	private Set<ITotalOrder> propertiesAsOrders;
+	private Set<ITotalOrder> maxOrders;
+	private Set<ITotalOrder> subOrders = null;
 	
 	/*
 	 * Caution : ITotalOrder members of this class are mutable and aggregated ; thus, only a set of cloned 
@@ -35,12 +36,12 @@ public class RelationalDescription implements IRelationalDescription {
 			binaryRelation.addAll(orderedRelation.getPairs());
 			setOfSymbols.addAll(orderedRelation.getProperty());
 		}
-		this.propertiesAsOrders = propertiesAsOrders;
+		this.maxOrders = propertiesAsOrders;
 	}
 	
 	public RelationalDescription(ISymbol leaf) {
 		setOfSymbols.add(leaf);
-		propertiesAsOrders = new HashSet<ITotalOrder>();
+		maxOrders = new HashSet<ITotalOrder>();
 	}
 	
 	/*
@@ -50,7 +51,7 @@ public class RelationalDescription implements IRelationalDescription {
 	private RelationalDescription(Set<ISymbol> setOfSymbols, Set<IPair> binaryRelation, Set<ITotalOrder> propertiesAsOrders) {
 		this.setOfSymbols = setOfSymbols;
 		this.binaryRelation = binaryRelation;
-		this.propertiesAsOrders = propertiesAsOrders;
+		this.maxOrders = propertiesAsOrders;
 	}
 	
 	//getters
@@ -59,7 +60,7 @@ public class RelationalDescription implements IRelationalDescription {
 	public IRelationalDescription clone() {
 		IRelationalDescription relationalDescriptionClone;
 		Set<ITotalOrder> orderClones = new HashSet<ITotalOrder>();
-		for (ITotalOrder order : propertiesAsOrders) {
+		for (ITotalOrder order : maxOrders) {
 			orderClones.add(order.clone());
 		}
 		relationalDescriptionClone = new RelationalDescription(setOfSymbols, binaryRelation, orderClones);
@@ -76,7 +77,7 @@ public class RelationalDescription implements IRelationalDescription {
 		else {
 			IRelationalDescription other = (IRelationalDescription) o;
 			thisEqualsOther = (setOfSymbols.equals(other.getSetOfSymbols()) 
-					&& propertiesAsOrders.equals(other.getPropertiesAsTotalOrders()));
+					&& maxOrders.equals(other.getPropertiesAsTotalOrders()));
 		}
 		return thisEqualsOther;
 	}
@@ -118,8 +119,8 @@ public class RelationalDescription implements IRelationalDescription {
 	public ILanguage getLanguage() throws RepresentationException {
 		ILanguage language;
 		Set<IWord> words = new HashSet<IWord>();
-		if (!propertiesAsOrders.isEmpty()) {
-			for (ITotalOrder order : propertiesAsOrders) {
+		if (!maxOrders.isEmpty()) {
+			for (ITotalOrder order : maxOrders) {
 				words.add(new Word(order.getProperty()));
 			}	
 		}
@@ -158,7 +159,7 @@ public class RelationalDescription implements IRelationalDescription {
 
 	@Override
 	public Set<ITotalOrder> getPropertiesAsTotalOrders() {
-		return propertiesAsOrders;
+		return maxOrders;
 	}
 	
 	@Override
@@ -176,7 +177,7 @@ public class RelationalDescription implements IRelationalDescription {
 		int hashCode = 0;
 		for (ISymbol symbol : setOfSymbols)
 			hashCode += symbol.hashCode();
-		for (ITotalOrder order : propertiesAsOrders)
+		for (ITotalOrder order : maxOrders)
 			hashCode += order.hashCode();
 		return hashCode;
 	}
@@ -208,7 +209,7 @@ public class RelationalDescription implements IRelationalDescription {
 	
 	@Override
 	public void applyFunction(ISymbol function) throws RepresentationException {
-		if (propertiesAsOrders.isEmpty()) {
+		if (maxOrders.isEmpty()) {
 			//then the set of symbols should contain only one element. 
 			if (setOfSymbols.size() == 1) {
 				IPair newPair = new Pair(function, setOfSymbols.iterator().next());
@@ -216,7 +217,7 @@ public class RelationalDescription implements IRelationalDescription {
 				ITotalOrder propertyAsOrder;
 				try {
 					propertyAsOrder = new TotalOrder(binaryRelation);
-					propertiesAsOrders.add(propertyAsOrder);
+					maxOrders.add(propertyAsOrder);
 				}
 				catch (RepresentationException e) {
 					throw new RepresentationException("RelationalDescription.applyFunction(ISymbol) : TotalOrder "
@@ -227,7 +228,7 @@ public class RelationalDescription implements IRelationalDescription {
 					+ "The set of orders is empty, so the set of symbols should contain only one element.");
 		}
 		else {
-			for (ITotalOrder order : propertiesAsOrders) {
+			for (ITotalOrder order : maxOrders) {
 				order.extendWithMinimum(function);
 				binaryRelation.addAll(order.getPairs());
 			}
@@ -246,7 +247,7 @@ public class RelationalDescription implements IRelationalDescription {
 		binaryRelation.retainAll(pairs);
 		Set<ITotalOrder> newProp = new HashSet<ITotalOrder>();
 		try {
-			for (ITotalOrder order : propertiesAsOrders) {
+			for (ITotalOrder order : maxOrders) {
 				order.restrictTo(pairs);
 				newProp.add(order);
 			}
@@ -255,7 +256,7 @@ public class RelationalDescription implements IRelationalDescription {
 			throw new RepresentationException("RelationalDescription.restrictTo(Set<IPair>) : restriction has "
 					+ "failed." + System.lineSeparator() + e.getMessage());
 		}
-		propertiesAsOrders = newProp;		
+		maxOrders = newProp;		
 	}
 	
 	//private
@@ -279,7 +280,7 @@ public class RelationalDescription implements IRelationalDescription {
 	
 	private boolean meets(ITotalOrder property) {
 		boolean propertyIsMet = false;
-		Iterator<ITotalOrder> propIte = propertiesAsOrders.iterator(); 
+		Iterator<ITotalOrder> propIte = maxOrders.iterator(); 
 		while (!propertyIsMet && propIte.hasNext()) {
 			propertyIsMet = propIte.next().isSuperSetOf(property);
 		}

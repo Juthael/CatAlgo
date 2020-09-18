@@ -51,10 +51,12 @@ public interface ITotalOrder extends Cloneable {
 	/**
 	 * <p>
 	 * Returns the set of sub-orders of this order. <br>
-	 * A sub-order is a totally ordered binary relation that is a sub-relation of this order (and not necessarily a 
-	 * <i> proper </i> sub-relation ; so the returned set includes this order). 
+	 * </p>
+	 * 
+	 * <p>
+	 * A sub-order is a totally ordered binary relation that is a sub-relation of this order (this includes this order). <br> 
 	 * </p> 
-	 * @return
+	 * @return the set of sub-orders of this order
 	 */
 	Set<ITotalOrder> getSetOfSubOrders();
 	
@@ -64,6 +66,9 @@ public interface ITotalOrder extends Cloneable {
 	boolean isSuperSetOf(ITotalOrder property);
 	
 	boolean isSubSetOf(ITotalOrder property);
+	
+	@Override
+	String toString();
 	
 	//setters
 	
