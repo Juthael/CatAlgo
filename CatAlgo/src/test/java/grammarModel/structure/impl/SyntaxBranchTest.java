@@ -25,10 +25,10 @@ import grammars.copycat2Strings.utils.CcFileReaderB;
 import grammars.sphex.utils.SphexFileReader;
 import representation.dataFormats.IPair;
 import representation.dataFormats.IRelationalDescription;
+import representation.dataFormats.ITotalOrder;
+import representation.dataFormats.impl.Pair;
 import representation.dataFormats.impl.RelationalDescription;
-import representation.dataFormats.impl.utils.utilsBR.Pair;
-import representation.dataFormats.utils.ITotalOrder;
-import representation.dataFormats.utils.impl.TotalOrder;
+import representation.dataFormats.impl.TotalOrder;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.impl.Symbol;
 
@@ -271,7 +271,7 @@ public class SyntaxBranchTest {
 			throw new RelationException("SyntaxBranchTest.buildExpectedRelationalDesc() : total orders instantiation "
 					+ "has failed." + System.lineSeparator() + e.getMessage());
 		}
-		relationalDesc = new RelationalDescription(propertiesAsOrders);
+		relationalDesc = new RelationalDescription(propertiesAsOrders, RelationalDescription.MAX_ORDERS);
 		return relationalDesc;
 	}
 

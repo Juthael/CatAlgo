@@ -1,4 +1,4 @@
-package representation.dataFormats.impl.utils.utilsBR;
+package representation.dataFormats.impl;
 
 import representation.dataFormats.IPair;
 import representation.stateMachine.ISymbol;

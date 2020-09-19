@@ -38,7 +38,7 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 	
 	@Override
 	public IRelationalDescription getRelationalDescription() throws GrammarModelException {
-		IRelationalDescription branchRelation = null;
+		IRelationalDescription branchRelation;
 		ISymbol function = new Symbol(getFunction().getName());
 		Set<IRelationalDescription> argRelationalDescriptions = new HashSet<IRelationalDescription>();
 		for (ISyntacticStructure argument : getArguments()) {
@@ -48,7 +48,8 @@ public abstract class SyntaxBranch extends SyntacticStructure implements ISyntax
 			branchRelation = IRelationalDescription.applyFunctionToArguments(function, argRelationalDescriptions);
 		} catch (RepresentationException e) {
 			throw new GrammarModelException("SyntaxBranch.getRelationalDescription() : function application has failed. "
-					+ System.lineSeparator() + e.getMessage());
+					+ System.lineSeparator() 
+					+ e.getMessage());
 		}
 		return branchRelation;
 	}	

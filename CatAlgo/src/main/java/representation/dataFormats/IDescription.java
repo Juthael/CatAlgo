@@ -1,17 +1,25 @@
 package representation.dataFormats;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
+import representation.dataFormats.impl.RelationalDescription;
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 
 /**
+ * <p>
  * A <b>description</b> can apply to any category, including objects (which are regarded as categories whose extent includes 
- * only themselves). It can be displayed as a relational description, as a regular language or as a functional expression. 
+ * only themselves). It can be displayed as a relational description, as a regular language or as a functional expression. <br>
+ * </p>
+ * <p> 
  * All of these formats are equivalent and interchangeable, although some operations are format-specific (like set 
- * operations on a relational description, or the evaluation of words of a regular language by a state machine). 
+ * operations on a relational description, or the evaluation of words of a regular language by a state machine). If a relational 
+ * description <i>A</i> is converted into a language <i>A'</i> and a functional expression <i>A''</i>, then <code> A.equals(A') 
+ * </code>, <code>A'.equals(A'')</code> and <code>A.equals(A'')</code> will always return <code> true </code> : only the 
+ * <i> meaning </i> matters, and not the format or implementation. <br>
+ * </p>
  * 
  * @see representation.stateMachine.ICategory
  * @see representation.stateMachine.IContextObject
@@ -26,37 +34,49 @@ public interface IDescription {
 	
 	/**
 	 * <p>
-	 * Returns a description of what the descriptions given as parameter have in common. <br>
+	 * Returns a description of what the descriptions given as argument have in common. <br>
+	 * Does so by converting the descriptions given as arguments in a relational description format. Then the intersection 
+	 * of the set of orders returned by each relational description is calculated ; its set of maximal elements yields the 
+	 * properties of a new description, that defines what is true about any argument. <br>  
 	 * </p>
 	 * 
-	 * @see representation.dataFormats.IRelationalDescription#restrictTo(Set)
+	 * <p>
+	 * Once the abstraction operation is executed, the result can be converted back into any other description format 
+	 * (regular language or functional expression). <br>
+	 * </p>
+	 * 
+	 * @see representation.dataFormats.IRelationalDescription
 	 * @param descriptions a set of descriptions
-	 * @return the description of what parameters have in common. 
-	 * @throws RepresentationException
+	 * @return the description of what arguments have in common. 
+	 * @throws RepresentationException if the set given as argument is null or empty
 	 */
 	static IDescription doAbstract(Set<IDescription> descriptions) throws RepresentationException {
 		IRelationalDescription description;
-		List<IRelationalDescription> relationalDescriptions = new ArrayList<IRelationalDescription>();
-		try {
-			for (IDescription currentDescription : descriptions) {
-				relationalDescriptions.add(currentDescription.getRelationalDescription());
+		if (!descriptions.isEmpty() || descriptions == null) {
+			Set<ITotalOrder> orders = new HashSet<ITotalOrder>();
+			Iterator<IDescription> descIte = descriptions.iterator();
+			IDescription firstDescription = descIte.next();
+			if (firstDescription != null) {
+				Set<ITotalOrder> currentDescOrders = firstDescription.getRelationalDescription().getTotalOrders();
+				orders.addAll(currentDescOrders);
 			}
-		}
-		catch (RepresentationException e) {
-			throw new RepresentationException("IDescription.doAbstract(Set<IDescription>) : an error has occurred while "
-					+ "converting descriptions into relational descriptions." + System.lineSeparator() + e.getMessage());
-		}
-		description = relationalDescriptions.get(0);
-		for (int i = 1 ; i < relationalDescriptions.size() ; i++) {
-			try {
-				description.restrictTo(relationalDescriptions.get(i).getBinaryRelation());
-			} 
-			catch (RepresentationException e) {
-				throw new RepresentationException("IDescription.doAbstract() : restriction operation has failed.");
+			else throw new RepresentationException("IDescription.doAbstract() : first description is null.");
+			while (descIte.hasNext()) {
+				IDescription currentDescription = descIte.next();
+				if (currentDescription != null) {
+					orders.retainAll(currentDescription.getRelationalDescription().getTotalOrders());
+				}
+				else throw new RepresentationException("IDescription.doAbstract() : current description is null.");
 			}
+			description = new RelationalDescription(orders, RelationalDescription.ORDERS);
 		}
+		else throw new RepresentationException("IDescription.doAbstract(Set<IDescription>) : cannot abstract "
+				+ "an empty/null set.");
 		return description;
 	}
+	
+	@Override
+	boolean equals(Object o);
 	
 	/**
 	 * <p>
@@ -153,6 +173,15 @@ public interface IDescription {
 	 * @throws RepresentationException 
 	 */
 	IRelationalDescription getRelationalDescription() throws RepresentationException;	
+	
+	/**
+	 * Returns the symbols at use in this description.
+	 * @return the symbols at use in this description
+	 */
+	Set<ISymbol> getSymbols();
+	
+	@Override
+	int hashCode();
 	
 	/**
 	 * <p>

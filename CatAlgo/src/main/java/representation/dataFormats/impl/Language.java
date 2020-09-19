@@ -11,34 +11,33 @@ import java.util.Map;
 import java.util.Set;
 
 import representation.dataFormats.IRelationalDescription;
+import representation.dataFormats.ITotalOrder;
 import representation.dataFormats.IDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.IGrammar;
 import representation.dataFormats.IGrammaticalRule;
 import representation.dataFormats.ILanguage;
 import representation.dataFormats.IPair;
-import representation.dataFormats.impl.utils.utilsBR.Pair;
-import representation.dataFormats.utils.ITotalOrder;
-import representation.dataFormats.utils.impl.TotalOrder;
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.IStateMachine;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.IWord;
 import representation.stateMachine.impl.StateMachine;
 
-public class Language implements ILanguage {
+public class Language extends Description implements ILanguage {
 
 	private static final char WORD_SEPARATOR = '/';
 	private final List<IWord> dictionary;
 	
 	public Language(Set<IWord> words) {
 		dictionary = getWordsInLexicographicOrder(words);
+		setHashCode();
 	}
 	
 	@Override
 	public IRelationalDescription getRelationalDescription() throws RepresentationException {
 		IRelationalDescription relationalDescription;
-		Set<ITotalOrder> propSubRelations = new HashSet<ITotalOrder>();
+		Set<ITotalOrder> propOrders = new HashSet<ITotalOrder>();
 		for (IWord word : dictionary) {
 			Set<IPair> pairs = new HashSet<IPair>();
 			List<ISymbol> listOfSymbols = word.getListOfSymbols();
@@ -52,16 +51,16 @@ public class Language implements ILanguage {
 				}
 				antecedentIdx++;
 			}
-			ITotalOrder propSubRelation;
+			ITotalOrder propOrder;
 			try {
-				propSubRelation = new TotalOrder(pairs);
+				propOrder = new TotalOrder(pairs);
 			} catch (RepresentationException e) {
-				throw new RepresentationException("Language.getRelationalDescription() : sub-relation instantiation "
+				throw new RepresentationException("Language.getRelationalDescription() : propOrder instantiation "
 						+ "has failed." + System.lineSeparator() + e.getMessage());
 			}
-			propSubRelations.add(propSubRelation);
+			propOrders.add(propOrder);
 		}
-		relationalDescription = new RelationalDescription(propSubRelations);
+		relationalDescription = new RelationalDescription(propOrders, RelationalDescription.MAX_ORDERS);
 		return relationalDescription;
 	}	
 	
@@ -238,6 +237,14 @@ public class Language implements ILanguage {
 	public IStateMachine getStateMachine() {
 		IStateMachine stateMachine = new StateMachine(this);
 		return stateMachine;
+	}	
+	
+	@Override
+	public Set<ISymbol> getSymbols(){
+		Set<ISymbol> symbols = new HashSet<ISymbol>();
+		for (IWord word : dictionary)
+			symbols.addAll(word.getListOfSymbols());
+		return symbols;
 	}	
 	
 	@Override

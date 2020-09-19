@@ -17,12 +17,13 @@ import representation.stateMachine.ISymbol;
 import representation.stateMachine.IWord;
 import representation.stateMachine.impl.Word;
 
-public class FunctionalExpression implements IFunctionalExpression {
+public class FunctionalExpression extends Description implements IFunctionalExpression {
 
 	private final Map<List<Integer>, ISymbol> coordinatesOntoSymbols;
 	
 	public FunctionalExpression(Map<List<Integer>, ISymbol> coordinatesOntoSymbols) {
 		this.coordinatesOntoSymbols = coordinatesOntoSymbols;
+		setHashCode();
 	}
 	
 	@Override
@@ -141,7 +142,12 @@ public class FunctionalExpression implements IFunctionalExpression {
 					+ "language to relational description has failed." + System.lineSeparator() + e.getMessage());
 		}
 		return relationalDescription;
-	}		
+	}	
+	
+	@Override
+	public Set<ISymbol> getSymbols(){
+		return new HashSet<ISymbol>(coordinatesOntoSymbols.values());
+	}
 
 	@Override
 	public boolean meets(IDescription description) throws RepresentationException {

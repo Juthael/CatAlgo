@@ -3,9 +3,7 @@ package representation.dataFormats;
 import java.util.HashSet;
 import java.util.Set;
 
-import grammarModel.structure.ISyntaxGrove;
 import representation.dataFormats.impl.RelationalDescription;
-import representation.dataFormats.utils.ITotalOrder;
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 
@@ -20,40 +18,39 @@ import representation.stateMachine.ISymbol;
  * <p>
  * A relational description is composed of : <br> 
  * <ul> 
- * <li> A set of total orders over sets of symbols. The successor relation in each order ({@link ITotalOrder}) yields a string 
- * of symbols. If the description is about an object or a category, then this string denotes an observable property on this 
- * object or category. 
- * <li> A binary relation formed by the union of all ordered sets. This relation is usually not an order itself.    
+ * <li> A set of <i> maximal total orders </i> , i.e. orders over sets of symbols such as no order is a subset of another. 
+ * The successor relation of each order yields a chain of symbols. If the description is about an object or a category, then 
+ * this chain denotes an observable property on this object or category (ex : <i> ball </i> < <i> colored </i> < 
+ * <i> blue </i>) . All orders have the same conventional (and domain-dependent) minimum.
+ * <li> A set of <i> orders </i> that includes the previous set, plus any sub-relation of an order having the same conventional 
+ * minimum, and also being an order. <br> 
+ * Ex : max total order [<i>ball < colored < blue</i>] => orders { [<i>ball < colored</i>], [<i>ball < blue</i>], 
+ * [<i>ball < colored < blue</i>] }      
  * </ul>
  * </p>
  * 
  * <P>
  * The relational description format is mainly used to determine the common features in a set of objects or categories. 
- * It allows to proceed this calculation easily and with great flexibility, by simple intersection operations on binary 
- * relations. <br>
- * This "abstraction" function ( {@link IDescription#doAbstract(Set)} ) applies to a set of descriptions, and returns a 
+ * It does so by simple intersection of the sets of orders returned by each input element. The set of maximal elements 
+ * in this intersection yields the properties of a new description, that defines what is true about any input element. <br>
+ * This "abstraction" function ( {@link IDescription#doAbstract(Set)} ) hence applies to a set of descriptions, and returns a 
  * single description. Although any description format is bound to implement this method, it actually does so by converting 
- * the descriptions given as arguments in a <i> relational description </i> format. Once the abstraction operation is 
+ * the descriptions given as arguments in this relational description format. Once the abstraction operation is 
  * executed, the result can be converted back into any other description format (regular language or functional expression).   
- * </p>
- * 
- * <p>
- * Warning : the {@link IRelationalDescription} type can (and should) only deal with well-founded binary relations. Otherwise, 
- * exceptions will be thrown and/or errors will occur. <br>
- * The {@link ISyntaxGrove#markRecursion()} method provides a recursion index mechanism, which ensures that the 
- * descriptions in the generated context input ({@link ISyntaxGrove#getContextInput()}) will only yield well-founded relations. 
  * </p>
  * 
  * @see representation.dataFormats.IDescription
  * @see representation.dataFormats.ILanguage
- * @see representation.dataFormats.utils.ITotalOrder
+ * @see representation.dataFormats.ITotalOrder
  * @see representation.dataFormats.IFunctionalExpression
- * @see grammarModel.structure.ISyntaxGrove
+ * @see representation.stateMachine.ISymbol
  * 
  * @author Gael Tregouet
  *
  */
 public interface IRelationalDescription extends IDescription, Cloneable {
+	
+	//HERE vérifier relationalDesc, mettre à jour UML, refaire tests 
 	
 	//static
 	
@@ -81,7 +78,7 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	 * 4-return <i>newDesc</i>.
 	 * </p>
 	 * 
-	 * @see representation.dataFormats.utils.ITotalOrder
+	 * @see representation.dataFormats.ITotalOrder
 	 * @param function a symbol denoting the function to be applied to arguments
 	 * @param arguments a set of relational descriptions to which the function is to be applied
 	 * @return the result of this application 
@@ -90,24 +87,54 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	public static IRelationalDescription applyFunctionToArguments(ISymbol function, Set<IRelationalDescription> arguments) 
 			throws RepresentationException {
 		IRelationalDescription output;
-		Set<ITotalOrder> orders = new HashSet<ITotalOrder>();
-		for (IRelationalDescription argument : arguments) {
-			IRelationalDescription newArgument;
-			try {
-				newArgument = argument.clone();
+		if (!arguments.isEmpty()) {
+			Set<ITotalOrder> maxOrders = new HashSet<ITotalOrder>();
+			for (IRelationalDescription argument : arguments) {
+				IRelationalDescription newArg;
+				try {
+					newArg = argument.applyFunction(function);
+				} catch (RepresentationException e) {
+					throw new RepresentationException("RelationalDescription.applyFunctionToArguments("
+							+ "ISymbol, Set<IRelationalDescription>) : failed to apply function." + System.lineSeparator()
+							+ e.getMessage());
+				}
+				maxOrders.addAll(newArg.getMaxTotalOrders());
 			}
-			catch (CloneNotSupportedException e) {
-				throw new RepresentationException("IRelationalDescription.applyFunctionToArgument(ISymbol, "
-						+ "Set<IRelationalDescription>) : error during cloning operation.");
-			}
-			newArgument.applyFunction(function);
-			orders.addAll(newArgument.getPropertiesAsTotalOrders());
+			//interface reference to an implementing class
+			output = new RelationalDescription(maxOrders, RelationalDescription.MAX_ORDERS);
 		}
-		output = new RelationalDescription(orders);
+		else {
+			throw new RepresentationException("RelationalDescription.applyFunctionToArguments("
+					+ "ISymbol, Set<IRelationalDescription>) : cannot apply function to an empty set of "
+					+ "arguments." + System.lineSeparator());
+		}
 		return output;
 	}	
 	
 	//getters
+	
+	/**
+	 * <p>
+	 * Returns the result of the application of the specified function to the set of arguments constituted by this 
+	 * relational description's set of total orders. <br>
+	 * </p>  
+	 * 
+	 * <p>
+	 * Example  : <br>
+	 * -function : <i> airbusA320  </i> <br>
+	 * -arguments : {(<i>latitude 48.240</i>) ; (<i>longitude -3,9</i>), (<i>altitude 39025ft</i>), 
+	 * (<i>time 20-09-17_09:25</i>)} <br>
+	 * -result : <i> airbusA320((latitude 48.240) Λ (longitude -3,9) Λ (altitude 39025ft) Λ (time 20-09-17_09:25))</i>
+	 * </p>
+	 * 
+	 * <p>
+	 * This is done by simply extending the relation's total orders ( {@link ITotalOrder#extendWithMinimum(ISymbol)} ) so 
+	 * that their associated strictly ordered sets all have the specified function as their new minimum. <br>
+	 * </p>
+	 * @param symbol the function to apply
+	 * @throws RepresentationException
+	 */
+	IRelationalDescription applyFunction(ISymbol symbol) throws RepresentationException;	
 	
 	/**
 	 * Returns a deep copy of this relational description. 
@@ -186,6 +213,24 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	ILanguage getLanguage() throws RepresentationException;
 	
 	/**
+	 * <p> 
+	 * Returns the set of maximal total orders of this relational description. <br> 
+	 * </p>
+	 * 
+	 * <p>
+	 * Maximal orders are elements in the set of orders that are sub-relations of no other element in this 
+	 * same set. <br> 
+	 * </p>
+	 * 
+	 * <p>
+	 * Each total order defines a strictly ordered set (i.e., a chain) of symbols. This chain denotes a property 
+	 * of the object or category associated with this description. <br>
+	 * </p>
+	 * @return a set of properties, provided in the form of total orders over sets of symbols. 
+	 */
+	Set<ITotalOrder> getMaxTotalOrders();	
+	
+	/**
 	 * {@inheritDoc}
 	 * 
 	 * <p>
@@ -198,7 +243,7 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	 * @throws RepresentationException if the specified symbol is not actually used in the description
 	 */
 	@Override
-	int getNbOfArgumentsFor(ISymbol function) throws RepresentationException;		
+	int getNbOfArgumentsFor(ISymbol function) throws RepresentationException;	
 	
 	/**
 	 * <p> 
@@ -211,15 +256,7 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	 * </p>
 	 * @return a set of properties, provided in the form of total orders over sets of symbols. 
 	 */
-	Set<ITotalOrder> getPropertiesAsTotalOrders();
-	
-	/**
-	 * <p>
-	 * Returns the set of symbols over which this relational description's binary relation is defined.
-	 * </p>
-	 * @return the set of symbols used by this relational description
-	 */
-	Set<ISymbol> getSetOfSymbols();
+	Set<ITotalOrder> getTotalOrders();		
 	
 	@Override
 	int hashCode();
@@ -232,46 +269,5 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	 */
 	@Override
 	String toString();
-	
-	//setters
 
-	/**
-	 * <p>
-	 * Applies the specified function to the set of arguments constituted by this relational description's set of 
-	 * total orders. <br>
-	 * </p>  
-	 * 
-	 * <p>
-	 * Example  : <br>
-	 * -function : <i> airbusA320  </i> <br>
-	 * -arguments : {(<i>latitude 48.240</i>) ; (<i>longitude -3,9</i>), (<i>altitude 39025ft</i>), 
-	 * (<i>time 20-09-17_09:25</i>)} <br>
-	 * -result : <i> airbusA320((latitude 48.240) Λ (longitude -3,9) Λ (altitude 39025ft) Λ (time 20-09-17_09:25))</i>
-	 * </p>
-	 * 
-	 * <p>
-	 * This is done by simply extending the relation's total orders ( {@link ITotalOrder#extendWithMinimum(ISymbol)} ) so 
-	 * that their associated strictly ordered sets all have the specified function as their new minimum. <br>
-	 * </p>
-	 * @param symbol the function to apply
-	 * @throws RepresentationException
-	 */
-	void applyFunction(ISymbol symbol) throws RepresentationException;
-	
-	/**
-	 * <p>
-	 * Restricts this relational description's binary relation, and each one of its total orders, to their intersection 
-	 * with the specified pairs. <br>
-	 * </p>
-	 * 
-	 * <p>
-	 * A consistency check is performed in {@link ITotalOrder#restrictTo(Set)} to ensure that the resulting relation 
-	 * remains a total order. <br>
-	 * </p>
-	 * @see representation.dataFormats.utils.ITotalOrder
-	 * 
-	 * @param pairs the set of pairs to which this relational description is restricted.  
-	 * @throws RepresentationException
-	 */
-	void restrictTo(Set<IPair> pairs) throws RepresentationException;
 }

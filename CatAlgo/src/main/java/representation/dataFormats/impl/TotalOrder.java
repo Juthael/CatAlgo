@@ -1,4 +1,4 @@
-package representation.dataFormats.utils.impl;
+package representation.dataFormats.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,22 +7,22 @@ import java.util.List;
 import java.util.Set;
 
 import representation.dataFormats.IPair;
-import representation.dataFormats.impl.utils.utilsBR.Pair;
-import representation.dataFormats.utils.ITotalOrder;
+import representation.dataFormats.ITotalOrder;
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.impl.Symbol;
 
 public class TotalOrder implements ITotalOrder {
 
-	private Set<IPair> orderedRelation;
-	private ISymbol minimum;
-	private List<ISymbol> property;
+	private final Set<IPair> orderedRelation;
+	private final ISymbol minimum;
+	private final List<ISymbol> property;
 	
 	public TotalOrder(Set<IPair> orderedRelation) throws RepresentationException {
 		this.orderedRelation = orderedRelation;
-		findMinimum();
-		setProperty();
+		minimum = findMinimum();
+		property = setProperty();
+		consistencyCheck();
 	}
 	
 	//The list should never be empty. 
@@ -57,13 +57,25 @@ public class TotalOrder implements ITotalOrder {
 		boolean thisEqualsOther;
 		if (o == this)
 			thisEqualsOther = true;
-		else if (!(o instanceof representation.dataFormats.utils.ITotalOrder))
+		else if (!(o instanceof representation.dataFormats.ITotalOrder))
 			thisEqualsOther = false;
 		else {
 			ITotalOrder other = (ITotalOrder) o;
 			thisEqualsOther = property.equals(other.getProperty());
 		}
 		return thisEqualsOther;
+	}	
+	
+	@Override
+	public ITotalOrder extendWithMinimum(ISymbol newMinimum) {
+		ITotalOrder extendedOrder;
+		Set<IPair> orderedRel = new HashSet<IPair>(orderedRelation);
+		List<ISymbol> prop = new ArrayList<ISymbol>(property);
+		for (ISymbol symbol : property)
+			orderedRel.add(new Pair(newMinimum, symbol));
+		prop.add(0, newMinimum);
+		extendedOrder = new TotalOrder(orderedRel, newMinimum, prop);
+		return extendedOrder;
 	}	
 	
 	@Override
@@ -85,14 +97,22 @@ public class TotalOrder implements ITotalOrder {
 		return hashCode;
 	}
 
+	//REWRITE	
 	@Override
 	public boolean isSubSetOf(ITotalOrder other) {
-		return other.getPairs().containsAll(orderedRelation);
+		boolean subsetOfOther = 
+				(other.getProperty().containsAll(property)
+						&& other.getPairs().containsAll(orderedRelation));
+		return subsetOfOther;
 	}	
 
+	//REWRITE
 	@Override
 	public boolean isSuperSetOf(ITotalOrder other) {
-		return orderedRelation.containsAll(other.getPairs());
+		boolean supersetOfOther = 
+				(property.containsAll(other.getProperty())
+						&& orderedRelation.containsAll(other.getPairs()));
+		return supersetOfOther;
 	}
 	
 	@Override
@@ -133,28 +153,6 @@ public class TotalOrder implements ITotalOrder {
 		}
 		propertyString = sB.toString();
 		return propertyString;
-	}
-	
-	//setters
-	
-	@Override
-	public void extendWithMinimum(ISymbol newMinimum) {
-		minimum = newMinimum;
-		for (ISymbol symbol : property)
-			orderedRelation.add(new Pair(newMinimum, symbol));
-		property.add(0, newMinimum);
-	}	
-
-	@Override
-	public void restrictTo(Set<IPair> pairs) throws RepresentationException {
-		orderedRelation.retainAll(pairs);
-		if (orderedRelation.isEmpty()) {
-			throw new RepresentationException("TotalOrder.reduceTo(Set<IPair) : an empty successorRelation orderedRelation is not allowed, "
-					+ "even after reduction");
-		}
-		else {
-			setProperty();
-		}
 	}
 	
 	//private
@@ -224,17 +222,17 @@ public class TotalOrder implements ITotalOrder {
 		return successorRelation;
 	}
 	
-	private void setProperty() throws RepresentationException {
-		List<ISymbol> newProperty = new ArrayList<ISymbol>();
+	private List<ISymbol> setProperty() throws RepresentationException {
+		List<ISymbol> property = new ArrayList<ISymbol>();
 		List<IPair> successorSequence = getSuccessorRelation();
-		newProperty.add(minimum);
+		property.add(minimum);
 		for (IPair pair : successorSequence)
-			newProperty.add(pair.getConsequent());
-		property = newProperty;		
-		consistencyCheck();
+			property.add(pair.getConsequent());
+		return property;
 	}	
 	
-	private void findMinimum() throws RepresentationException {
+	private ISymbol findMinimum() throws RepresentationException {
+		ISymbol minimum;
 		Set<ISymbol> antecedents = new HashSet<ISymbol>();
 		Set<ISymbol> consequents = new HashSet<ISymbol>();
 		for (IPair pair : orderedRelation) {
@@ -247,6 +245,7 @@ public class TotalOrder implements ITotalOrder {
 					+ "that is the consequent of no other.");
 		}
 		else minimum = antecedents.iterator().next();
+		return minimum;
 	}
 
 }

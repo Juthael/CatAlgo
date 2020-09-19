@@ -1,10 +1,8 @@
-package representation.dataFormats.utils;
+package representation.dataFormats;
 
 import java.util.List;
 import java.util.Set;
 
-import representation.dataFormats.IPair;
-import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 
 /**
@@ -30,6 +28,8 @@ public interface ITotalOrder extends Cloneable {
 	
 	@Override
 	boolean equals(Object o);
+	
+	ITotalOrder extendWithMinimum(ISymbol symbol);
 	
 	/**
 	 * <p>
@@ -70,10 +70,6 @@ public interface ITotalOrder extends Cloneable {
 	@Override
 	String toString();
 	
-	//setters
 	
-	void extendWithMinimum(ISymbol symbol);
-	
-	void restrictTo(Set<IPair> pairs) throws RepresentationException;
 	
 }

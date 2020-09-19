@@ -1,4 +1,4 @@
-package representation.dataFormats.utils.impl;
+package representation.dataFormats.impl;
 
 import static org.junit.Assert.assertTrue;
 
@@ -12,8 +12,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import representation.dataFormats.IPair;
-import representation.dataFormats.impl.utils.utilsBR.Pair;
-import representation.dataFormats.utils.ITotalOrder;
+import representation.dataFormats.ITotalOrder;
+import representation.dataFormats.impl.Pair;
+import representation.dataFormats.impl.TotalOrder;
 import representation.exceptions.RepresentationException;
 import representation.stateMachine.ISymbol;
 import representation.stateMachine.impl.Symbol;
