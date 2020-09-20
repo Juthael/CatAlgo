@@ -10,9 +10,10 @@ import representation.utils.HashCodeUtil;
 
 public class Grammar implements IGrammar {
 
-	private Set<IGrammaticalRule> grammaticalRules = new HashSet<IGrammaticalRule>();
+	private final Set<IGrammaticalRule> grammaticalRules;
 	
 	public Grammar() {
+		grammaticalRules = new HashSet<IGrammaticalRule>();
 	}
 	
 	public Grammar(Set<IGrammaticalRule> grammaticalRules) {

@@ -128,15 +128,14 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	 * @param symbol the function to apply
 	 * @throws RepresentationException
 	 */
-	IRelationalDescription applyFunction(ISymbol symbol) throws RepresentationException;	
+	IRelationalDescription applyFunction(ISymbol function) throws RepresentationException;	
 	
 	/**
 	 * Returns a deep copy of this relational description. 
 	 * 
 	 * @return a clone relational description. 
-	 * @throws CloneNotSupportedException
 	 */
-	IRelationalDescription clone() throws CloneNotSupportedException;
+	IRelationalDescription clone();
 	
 	/**
 	 * {@inheritDoc}

@@ -24,7 +24,7 @@ public interface IState {
 	
 	/**
 	 * Returns the state ID. 
-	 * @return the state ID (a random int)
+	 * @return the state ID (a random integer)
 	 */
 	int getID();
 	
