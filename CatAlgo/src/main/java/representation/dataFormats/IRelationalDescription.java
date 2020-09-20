@@ -50,8 +50,6 @@ import representation.stateMachine.ISymbol;
  */
 public interface IRelationalDescription extends IDescription, Cloneable {
 	
-	//HERE vérifier relationalDesc, mettre à jour UML, refaire tests 
-	
 	//static
 	
 	/**
@@ -69,13 +67,9 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	 * </p>
 	 * 
 	 * <p>
-	 * How to proceed this application on a set of relational descriptions : <br>
-	 * 1-build the set <i> S </i> of strictly ordered sets of symbols, formed by the union of the sets of ordered sets 
-	 * ({@link ITotalOrder}) in every relational description argument. <br>
-	 * 2-build the new relational descriptor <i>newDesc(S)</i> <br>
-	 * 3-extend every total order in <i>newDesc</i> ( {@link IRelationalDescription#applyFunction(ISymbol)} ), so that 
-	 * their associated strictly ordered sets all have the specified function as their new minimum. <br>
-	 * 4-return <i>newDesc</i>.
+	 * In order to proceed this application, all maximal total orders returned by arguments are modified so that they 
+	 * have the function as their new minimum. Out of the union of these modified orders, a new relational description is 
+	 * built that represent the result of the application of the function to the set of arguments. <br>
 	 * </p>
 	 * 
 	 * @see representation.dataFormats.ITotalOrder
@@ -128,8 +122,8 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	 * </p>
 	 * 
 	 * <p>
-	 * This is done by simply extending the relation's total orders ( {@link ITotalOrder#extendWithMinimum(ISymbol)} ) so 
-	 * that their associated strictly ordered sets all have the specified function as their new minimum. <br>
+	 * The returned relational description is identical to this one, except for the fact all its orders 
+	 * now have the function as their new minimum. <br>
 	 * </p>
 	 * @param symbol the function to apply
 	 * @throws RepresentationException
@@ -138,26 +132,11 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	
 	/**
 	 * Returns a deep copy of this relational description. 
+	 * 
 	 * @return a clone relational description. 
 	 * @throws CloneNotSupportedException
 	 */
 	IRelationalDescription clone() throws CloneNotSupportedException;
-	
-	@Override
-	boolean equals(Object other);
-	
-	/**
-	 * <p>
-	 * Returns the set of pairs of symbols that form the binary relation of this relational description. <br>
-	 * </p>
-	 * 
-	 * <p>
-	 * This binary relation is formed by the union of all strictly ordered sets contained in a relational description. <br>
-	 * </p>
-	 * 
-	 * @return the pairs of symbols of the binary relation
-	 */
-	Set<IPair> getBinaryRelation();	
 	
 	/**
 	 * {@inheritDoc}
@@ -178,15 +157,8 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	 * {@inheritDoc}
 	 * 
 	 * <p>
-	 * A rule <i> x ::= y </i> exists in the returned grammar iff : <br> 
-	 * 1-<i> xRy </i>, <i> R </i> being the binary relation of the relational description <br>
-	 * 2-In the set of total orders of this relational descriptions, there exist an order <i>O</i> whose successor 
-	 * relation is <i>S<sub>O</sub></i>, such as <i>(x, y) ∈  S<sub>O</sub></i> <br> (Note that 2- implies 1-)
-	 * </p>
-	 * 
-	 * <p>
-	 * An easy way to get a grammar out of a relation is to transform the relation into a language 
-	 * first, and then call {@link ILanguage#getGrammar()}. <br>
+	 * A rule <i> x ::= y </i> exists in the returned grammar iff there exists a maximal total order in this relational 
+	 * description such as <i> x </i> and <i> y </i> are successors. <br>
 	 * </p>
 	 * 
 	 * @see representation.dataFormats.IDescription
@@ -195,19 +167,19 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	 * @throws RepresentationException
 	 */
 	@Override
-	IGrammar getGrammar() throws RepresentationException;	
+	IGrammar getGrammar();	
 	
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * <p>
-	 * Since a language is a set of chains of symbols, and since each total order of a relational description defines 
-	 * a strictly ordered set of symbols (i.e., a chain), a relational description is converted into a regular language 
-	 * by returning this set of strictly ordered sets. <br>
+	 * Since the words of a language are chains of symbols, and since each total order of a relational description defines 
+	 * a strictly ordered set of symbols (i.e., a chain), the language equivalent to this relational description is composed 
+	 * of all the chains returned by its maximal total orders. <br>
 	 * </p>  
 	 * 
 	 * @return the language associated with this relation
-	 * @throws RepresentationException if an error has occurred while transforming the binary relation into a language
+	 * @throws RepresentationException
 	 */
 	@Override
 	ILanguage getLanguage() throws RepresentationException;
@@ -218,14 +190,14 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	 * </p>
 	 * 
 	 * <p>
-	 * Maximal orders are elements in the set of orders that are sub-relations of no other element in this 
-	 * same set. <br> 
+	 * Maximal total orders are elements in the set of total orders that are sub-relations of no other order. <br> 
 	 * </p>
 	 * 
 	 * <p>
 	 * Each total order defines a strictly ordered set (i.e., a chain) of symbols. This chain denotes a property 
 	 * of the object or category associated with this description. <br>
 	 * </p>
+	 * @see #getTotalOrders()
 	 * @return a set of properties, provided in the form of total orders over sets of symbols. 
 	 */
 	Set<ITotalOrder> getMaxTotalOrders();	
@@ -254,12 +226,17 @@ public interface IRelationalDescription extends IDescription, Cloneable {
 	 * Each total order defines a strictly ordered set (i.e., a chain) of symbols. This chain denotes a property 
 	 * of the object or category associated with this description. <br>
 	 * </p>
+	 * 
+	 * <p>
+	 * If an order belongs to the returned set, so does any sub-relation of this order such as : <br>
+	 * 1-it is an order too, and <br>
+	 * 2-it has the same minimum. <br> 
+	 * So if [ <i>a b c</i> ] is returned, so are [<i> a </i>], [<i>a b</i>] and [<i>a c</i>].
+	 * 
+	 * @see #getMaxTotalOrders()
 	 * @return a set of properties, provided in the form of total orders over sets of symbols. 
 	 */
-	Set<ITotalOrder> getTotalOrders();		
-	
-	@Override
-	int hashCode();
+	Set<ITotalOrder> getTotalOrders();
 	
 	/**
 	 * <p>

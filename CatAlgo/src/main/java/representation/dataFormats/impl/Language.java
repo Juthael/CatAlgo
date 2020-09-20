@@ -166,10 +166,9 @@ public class Language extends Description implements ILanguage {
 			int antIndex;
 			int consIndex;
 			for (antIndex = 0 ; antIndex < word.size() - 1 ; antIndex++) {
-				for(consIndex = antIndex + 1 ; consIndex < word.size() ; consIndex++) {
-					IGrammaticalRule rule = new GrammaticalRule(listOfSymbols.get(antIndex), listOfSymbols.get(consIndex));
-					grammar.add(rule);
-				}
+				consIndex = antIndex + 1;
+				IGrammaticalRule rule = new GrammaticalRule(listOfSymbols.get(antIndex), listOfSymbols.get(consIndex));
+				grammar.add(rule);
 			}
 		}
 		return grammar;

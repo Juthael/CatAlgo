@@ -116,13 +116,11 @@ public class LanguageTest {
 	@Test
 	public void whenGrammarRequestedThenExpectedReturned() {
 		IGrammar expectedGrammar = buildExpectedGrammar();
-		IGrammar returnedGrammar = null;
-		try {
-			returnedGrammar = sphexRelationalDesc.getGrammar();
-		} catch (RepresentationException e) {
-			System.out.println("LanguageTest.whenGrammarRequestedThenExpectedReturned() : " + System.lineSeparator()
-					+ e.getMessage());
-		}
+		//To see expected grammar :
+		//System.out.println("EXPECTED : " + System.lineSeparator() + expectedGrammar.toString());
+		IGrammar returnedGrammar = sphexLanguage.getGrammar();
+		//To see returned grammar :
+		//System.out.println("RETURNED : " + System.lineSeparator() + returnedGrammar.toString());
 		assertTrue(expectedGrammar.equals(returnedGrammar));
 	}
 	
@@ -190,16 +188,11 @@ public class LanguageTest {
 		IGrammar expectedGrammar;
 		Set<IGrammaticalRule> rules = new HashSet<IGrammaticalRule>();
 		rules.add(buildGrammaticalRule("prey", "grab"));
-		rules.add(buildGrammaticalRule("prey", "predate"));
-		rules.add(buildGrammaticalRule("prey", "provideFoodForTheGrubs"));
 		rules.add(buildGrammaticalRule("grab", "predate"));
-		rules.add(buildGrammaticalRule("grab", "provideFoodForTheGrubs"));
 		rules.add(buildGrammaticalRule("predate", "provideFoodForTheGrubs"));
 		rules.add(buildGrammaticalRule("prey", "position"));
-		rules.add(buildGrammaticalRule("prey", "randomPlace"));
 		rules.add(buildGrammaticalRule("position", "randomPlace"));
 		rules.add(buildGrammaticalRule("prey", "timePosition"));
-		rules.add(buildGrammaticalRule("prey", "step1"));
 		rules.add(buildGrammaticalRule("timePosition", "step1"));
 		expectedGrammar = new Grammar(rules);
 		return expectedGrammar;

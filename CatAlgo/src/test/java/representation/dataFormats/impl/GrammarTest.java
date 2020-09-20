@@ -44,7 +44,7 @@ public class GrammarTest {
 	@Test
 	public void whenAskedIfContainsSpecifiedRuleThenReturnsExpectedValue() {
 		ISymbol preySymbol = new Symbol("prey");
-		ISymbol predateSymbol = new Symbol("predate");
+		ISymbol predateSymbol = new Symbol("grab");
 		IGrammaticalRule rule = new GrammaticalRule(preySymbol, predateSymbol);
 		assertTrue(sphexGrammar.contains(rule));
 	}
@@ -57,7 +57,6 @@ public class GrammarTest {
 		ISymbol grabSymbol = new Symbol("grab");
 		ISymbol predateSymbol = new Symbol("predate");
 		subsetOfRules.add(new GrammaticalRule(preySymbol, grabSymbol));
-		subsetOfRules.add(new GrammaticalRule(preySymbol, predateSymbol));
 		subsetOfRules.add(new GrammaticalRule(grabSymbol, predateSymbol));
 		subGrammar = new Grammar(subsetOfRules);
 		assertTrue(sphexGrammar.contains(subGrammar));
@@ -72,16 +71,11 @@ public class GrammarTest {
 		IGrammar expectedGrammar;
 		Set<IGrammaticalRule> rules = new HashSet<IGrammaticalRule>();
 		rules.add(buildGrammaticalRule("prey", "grab"));
-		rules.add(buildGrammaticalRule("prey", "predate"));
-		rules.add(buildGrammaticalRule("prey", "provideFoodForTheGrubs"));
 		rules.add(buildGrammaticalRule("grab", "predate"));
-		rules.add(buildGrammaticalRule("grab", "provideFoodForTheGrubs"));
 		rules.add(buildGrammaticalRule("predate", "provideFoodForTheGrubs"));
 		rules.add(buildGrammaticalRule("prey", "position"));
-		rules.add(buildGrammaticalRule("prey", "randomPlace"));
 		rules.add(buildGrammaticalRule("position", "randomPlace"));
 		rules.add(buildGrammaticalRule("prey", "timePosition"));
-		rules.add(buildGrammaticalRule("prey", "step1"));
 		rules.add(buildGrammaticalRule("timePosition", "step1"));
 		expectedGrammar = new Grammar(rules);
 		return expectedGrammar;

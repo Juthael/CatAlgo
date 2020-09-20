@@ -4,6 +4,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -16,6 +18,7 @@ import grammarModel.utils.ITreePaths;
 import grammars.copycat2Strings.utils.CcFileReaderB;
 import representation.dataFormats.IPair;
 import representation.dataFormats.IRelationalDescription;
+import representation.dataFormats.ITotalOrder;
 import representation.inputOutput.IContextInput;
 
 public class SyntaxGroveTest {
@@ -81,7 +84,10 @@ public class SyntaxGroveTest {
 			+ e.getMessage());
 			markingEffective = false;
 		}
-		for (IPair pair : relationalDescription.getBinaryRelation()) {
+		Set<IPair> binaryRelation = new HashSet<IPair>();
+		for (ITotalOrder maxOrder : relationalDescription.getMaxTotalOrders())
+			binaryRelation.addAll(maxOrder.getPairs());			
+		for (IPair pair : binaryRelation) {
 			if (pair.getAntecedent().equals(pair.getConsequent()))
 				markingEffective = false;
 		}

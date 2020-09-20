@@ -9,6 +9,7 @@ import java.util.Set;
 import representation.dataFormats.IDescription;
 import representation.dataFormats.IFunctionalExpression;
 import representation.dataFormats.IGrammar;
+import representation.dataFormats.IGrammaticalRule;
 import representation.dataFormats.ILanguage;
 import representation.dataFormats.IPair;
 import representation.dataFormats.IRelationalDescription;
@@ -24,39 +25,36 @@ public class RelationalDescription extends Description implements IRelationalDes
 	public static final boolean ORDERS = false;
 	
 	private final Set<ISymbol> setOfSymbols;
-	private final Set<IPair> binaryRelation;
 	private final Set<ITotalOrder> maxOrders;
 	//orders initialization may be costly, so only if requested
 	private Set<ITotalOrder> orders = null;
 	
+	
 	public RelationalDescription(Set<ITotalOrder> orders, boolean theseAreMaxOrders) {
 		setOfSymbols = new HashSet<ISymbol>();
-		binaryRelation = new HashSet<IPair>();
 		if (theseAreMaxOrders)
 			this.maxOrders = orders;
 		else {
 			this.orders = orders;
 			maxOrders = setMaxOrdersFromOrders(orders);
 		}
-		for (ITotalOrder maxOrder : orders) {
-			binaryRelation.addAll(maxOrder.getPairs());
+		for (ITotalOrder maxOrder : orders)
 			setOfSymbols.addAll(maxOrder.getProperty());
-		}
 		setHashCode();
 	}
 	
 	public RelationalDescription(ISymbol leaf) {
 		setOfSymbols = new HashSet<ISymbol>();
 		setOfSymbols.add(leaf);
-		binaryRelation = new HashSet<IPair>();
 		maxOrders = new HashSet<ITotalOrder>();
 		setHashCode();
 	}
 	
-	private RelationalDescription(Set<ISymbol> setOfSymbols, Set<IPair> binaryRelation, Set<ITotalOrder> propertiesAsOrders) {
+	private RelationalDescription(Set<ISymbol> setOfSymbols, Set<ITotalOrder> maxOrders, Set<ITotalOrder> orders) {
 		this.setOfSymbols = setOfSymbols;
-		this.binaryRelation = binaryRelation;
-		this.maxOrders = propertiesAsOrders;
+		this.maxOrders = maxOrders;
+		if (orders != null)
+			this.orders = orders;
 		setHashCode();
 	}
 	
@@ -96,17 +94,12 @@ public class RelationalDescription extends Description implements IRelationalDes
 	@Override
 	public IRelationalDescription clone() {
 		IRelationalDescription relationalDescriptionClone;
-		Set<ITotalOrder> orderClones = new HashSet<ITotalOrder>();
-		for (ITotalOrder order : maxOrders) {
-			orderClones.add(order.clone());
-		}
-		relationalDescriptionClone = new RelationalDescription(setOfSymbols, binaryRelation, orderClones);
+		Set<ISymbol> setOfSymbolsClone = new HashSet<ISymbol>(setOfSymbols);
+		Set<ITotalOrder> maxOrdersClone = new HashSet<ITotalOrder>(maxOrders);
+		Set<ITotalOrder> ordersClone = new HashSet<ITotalOrder>(orders);
+		relationalDescriptionClone = 
+				new RelationalDescription(setOfSymbolsClone, maxOrdersClone, ordersClone);
 		return relationalDescriptionClone;
-	}
-
-	@Override
-	public Set<IPair> getBinaryRelation() {
-		return binaryRelation;
 	}
 
 	@Override
@@ -124,16 +117,16 @@ public class RelationalDescription extends Description implements IRelationalDes
 	}
 
 	@Override
-	public IGrammar getGrammar() throws RepresentationException {
+	public IGrammar getGrammar() {
 		IGrammar grammar;
-		try {
-			grammar =  getLanguage().getGrammar();
+		Set<IGrammaticalRule> rules = new HashSet<IGrammaticalRule>();
+		for (ITotalOrder maxOrder : maxOrders) {
+			List<ISymbol> property = maxOrder.getProperty();
+			for (int i = 0 ; i < property.size() - 1 ; i++) {
+				rules.add(new GrammaticalRule(property.get(i), property.get(i+1)));
+			}
 		}
-		catch (RepresentationException e) {
-			throw new RepresentationException("RelationalDescription.getGrammar() : the language is needed as "
-					+ "an intermediate format ; an error has occured while building it." + System.lineSeparator() 
-					+ e.getMessage());
-		}
+		grammar = new Grammar(rules);
 		return grammar;
 	}
 
@@ -229,8 +222,7 @@ public class RelationalDescription extends Description implements IRelationalDes
 	
 	private boolean meets(IRelationalDescription other) {
 		boolean thisMeetsOther;
-		if (!setOfSymbols.containsAll(other.getSymbols()) || 
-				!binaryRelation.containsAll(other.getBinaryRelation())) {
+		if (!setOfSymbols.containsAll(other.getSymbols())) {
 			thisMeetsOther = false;
 		}
 		else {

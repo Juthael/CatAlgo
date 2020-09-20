@@ -114,7 +114,7 @@ public interface IDescription {
 	 * @return the grammar associated with this description
 	 * @throws RepresentationException 
 	 */
-	IGrammar getGrammar() throws RepresentationException;	
+	IGrammar getGrammar();	
 	
 	/**
 	 * <p>
